@@ -7,52 +7,65 @@ public class Task {
 	private String taskDescription;
 	private Date taskStartDate;
 	private Date taskEndDate;
-
-	public Task(int taskId, String taskDescription, Date taskStartDate, Date taskEndDate) {
-		
+	public Task(int taskId, String taskDescription, Date taskStartDate,
+			Date taskEndDate) {
+		super();
 		this.taskId = taskId;
 		this.taskDescription = taskDescription;
 		this.taskStartDate = taskStartDate;
 		this.taskEndDate = taskEndDate;
 	}
-	
 	public int getTaskId() {
 		return taskId;
 	}
-	
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
 	public String getTaskDescription() {
 		return taskDescription;
 	}
-	
+	public void setTaskDescription(String taskDescription) {
+		this.taskDescription = taskDescription;
+	}
 	public Date getTaskStartDate() {
 		return taskStartDate;
 	}
-	
-	public Date getTaskEndDate()	{
+	public void setTaskStartDate(Date taskStartDate) {
+		this.taskStartDate = taskStartDate;
+	}
+	public Date getTaskEndDate() {
 		return taskEndDate;
 	}
-	
-	public void setTaskId(int newTaskId)	{
-		taskId = newTaskId;
+	public void setTaskEndDate(Date taskEndDate) {
+		this.taskEndDate = taskEndDate;
+	}
+	@Override
+	public String toString() {
+		return "Task [taskId=" + taskId + ", taskDescription="
+				+ taskDescription + ", taskStartDate=" + taskStartDate
+				+ ", taskEndDate=" + taskEndDate + "]";
 	}
 	
-	public void setTaskDescription(String newTaskDescription) {
-		taskDescription = newTaskDescription;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + taskId;
+		return result;
 	}
 	
-	public void setTaskStartDate(Date newTaskStartDate) {
-		taskStartDate = newTaskStartDate;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (taskId != other.taskId)
+			return false;
+		return true;
 	}
-	
-	public void setTaskEndDate(Date newTaskEndDate) {
-		taskEndDate = newTaskEndDate;
-	}
-	
-	public void displayTask() {
-		System.out.println("Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate);
-	}
-	
-	public String toString(){
-		return "Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate;
-	}
+
 }
