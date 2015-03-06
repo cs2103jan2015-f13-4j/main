@@ -16,6 +16,7 @@ public class SmtSurvival extends Composite {
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, style);
+		System.out.println("Testing");
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				toolkit.dispose();
