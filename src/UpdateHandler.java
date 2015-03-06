@@ -4,14 +4,11 @@ import java.util.Date;
 
 public class UpdateHandler {
 
-	//private static final int 
-	
 	public static String executeUpdate(String[] commandInput, ArrayList<Task> listTask){
 		
 		if(commandInput.length == 1){
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Delete");
 		}
-		
 		if(!isStringAnInteger(commandInput[1])){
 			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Delete");
 		}
@@ -58,4 +55,5 @@ public class UpdateHandler {
 
 		return true;
 	}
+
 }
