@@ -1,6 +1,6 @@
 
 public class Menu {
-
+	
 	public static String commandExecution(String fileName,String input) {
 		CommandType.Command_Types cmd = CommandType.getType(input.split(" "));
 
@@ -13,7 +13,7 @@ public class Menu {
 			return executeDisplay(fileName, input);
 		}
 		case DELETE: {
-			return executeDelete(fileName,input);
+			return DeleteHandler.delete(fileName, input, listTask);
 		}
 		case CLEAR: {
 			return executeClear(fileName, input);
@@ -42,6 +42,3 @@ public class Menu {
 
 }
 
-
-
-}
