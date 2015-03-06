@@ -13,10 +13,32 @@ public class UpdateHandler {
 		}
 		
 		if(!isStringAnInteger(commandInput[1])){
-			//return String.for
+			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Delete");
+		}
+		
+		if(searchTaskIndexStored(Integer.parseInt(commandInput[1]), listTask) >=0){
+			
 		}
 		
 		//dummy
+		return "";
+	}
+	
+	private static int searchTaskIndexStored(int taskId, ArrayList<Task> listTask){
+		for(int i = 0; i < listTask.size(); i++){
+			if(taskId == listTask.get(i).getTaskId()){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private static String updateContents(String[] commandInput, int index, ArrayList<Task> listTask){
+		if(commandInput.length < 3)
+		{
+			return "There is nothing to update";
+		}
+		
 		return "";
 	}
 	
