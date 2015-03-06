@@ -8,7 +8,6 @@ public class CommandType {
 		if (commandTypeString == null || commandTypeString.length == 0) {
 			return Command_Types.INVALID;
 		}
-
 		if (commandTypeString[0].equalsIgnoreCase("add")) {
 			return Command_Types.ADD;
 		} else if (commandTypeString[0].equalsIgnoreCase("delete")) {

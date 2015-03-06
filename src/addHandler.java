@@ -18,7 +18,6 @@ public class AddHandler {
 			startDate = dateFormat.parse("06-03-2015");
 			endDate = dateFormat.parse("09-03-2015");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
