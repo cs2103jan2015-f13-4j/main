@@ -1,9 +1,14 @@
 import java.util.ArrayList;
 
-public class deleteHandler {
+public class DeleteHandler {
 	
-	public static String delete(String fileName, String[] text, ArrayList<String> list) {
+	public static String delete(String fileName, String[] text, ArrayList<Task> list) {
 
+		//list.add("Submission for EE2024 Assignment ");
+		int i;
+		int index = Integer.parseInt(text[1]);
+		Task removedText = list.get(index - 1);
+		
 		if (text.length != 2) {
 			return "Arguments invalid";
 		}
@@ -11,15 +16,20 @@ public class deleteHandler {
 		if (!checkInteger(text[1])) {
 			return "Invalid delete argument";
 		}
-
-		int index = Integer.parseInt(text[1]);
-
-		if (index > 0 && index <= list.size()) {
-			String removedText = list.get(index - 1);
-			list.remove(index - 1);
+		
+		// will search the task id from the list and delete the task
+		for(i = 0; i < list.size(); i++){
+			if(list.get(i).getTaskId() == index){
+				break;
+			}
+		}
+		
+		if(i >= 0)
+		{
+			list.remove(i);
 			return String.format(MessageList.MESSAGE_DELETE, fileName, removedText);
 		}
-
+			
 		return MessageList.MESSAGE_NOFILEDELETED;
 	}
 	
