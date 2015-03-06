@@ -43,9 +43,10 @@ public class FileHandler {
 		if(taskComponent.length == 4){
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			Date startDate;
+			Date endDate;
 			try {
 				startDate = dateFormat.parse(taskComponent[2]);
-				Date endDate = dateFormat.parse(taskComponent[3]);
+				endDate = dateFormat.parse(taskComponent[3]);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
