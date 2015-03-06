@@ -48,7 +48,7 @@ public class Task {
 		taskEndDate = newTaskEndDate;
 	}
 	
-	public void displayTask() {
-		System.out.println("Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate);
+	public String displayTask() {
+		return "Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate;
 	}
 }
