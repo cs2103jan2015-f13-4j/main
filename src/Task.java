@@ -7,8 +7,8 @@ public class Task {
 	private String taskDescription;
 	private Date taskStartDate;
 	private Date taskEndDate;
-	public Task(int taskId, String taskDescription, Date taskStartDate,
-			Date taskEndDate) {
+	
+	public Task(int taskId, String taskDescription, Date taskStartDate, Date taskEndDate) {
 		super();
 		this.taskId = taskId;
 		this.taskDescription = taskDescription;
@@ -67,5 +67,4 @@ public class Task {
 			return false;
 		return true;
 	}
-
 }
