@@ -27,7 +27,7 @@ public class KeywordType {
 	
 	public static boolean contains(String input){
 		for (List_Keywords aKey : List_Keywords.values()) {
-	        if (aKey.name().equals(input)) {
+	        if (aKey.name().equals(input.toUpperCase())) {
 	            return true;
 	        }
 	    }
