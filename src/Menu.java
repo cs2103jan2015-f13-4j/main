@@ -10,22 +10,22 @@ public class Menu {
 			return AddHandler.executeAdd(fileName,input,listTask);
 		}
 		case DISPLAY: {
-			return executeDisplay(fileName, input);
+			return DisplayHandler.executeDisplay(fileName, input, listTask);
 		}
 		case DELETE: {
 			return DeleteHandler.delete(fileName, input, listTask);
 		}
 		case CLEAR: {
-			return executeClear(fileName, input);
+			return ClearHandler.executeClear(fileName, input, listTask);
 		}
 		case INVALID: {
 			return "Invalid Command!";
 		}
 		case SEARCH: {
-			return executeSearch(input);
+			return ExecuteHandler.executeSearch(input);
 		}
 		case SORT: {
-			return executeSort(fileName);
+			return SortHandler.executeSort(fileName);
 		}
 		case EXIT: {
 			System.exit(0);
