@@ -3,6 +3,7 @@ public class MessageList {
 
 	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command."; 
 	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid Type to Integer for %1$s command";
+	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
 	/**
 	 * This method will print out the error message before exiting the system
 	 * 
