@@ -3,7 +3,7 @@ import java.util.Date;
 
 
 public class UpdateHandler {
-
+	
 	public static String executeUpdate(String[] commandInput, ArrayList<Task> listTask){
 		
 		if(commandInput.length == 1){
@@ -13,12 +13,16 @@ public class UpdateHandler {
 			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Delete");
 		}
 		
-		if(searchTaskIndexStored(Integer.parseInt(commandInput[1]), listTask) >=0){
-			
+		int index = searchTaskIndexStored(Integer.parseInt(commandInput[1]), listTask);
+		
+		if(index < 0){
+			return MessageList.MESSAGE_NO_SUCH_TASK;
 		}
 		
+		return updateContents(commandInput, index, listTask);
+		
 		//dummy
-		return "";
+		//return "";
 	}
 	
 	private static int searchTaskIndexStored(int taskId, ArrayList<Task> listTask){
@@ -31,13 +35,10 @@ public class UpdateHandler {
 	}
 	
 	private static String updateContents(String[] commandInput, int index, ArrayList<Task> listTask){
-		if(commandInput.length < 3)
-		{
-			return "There is nothing to update";
-		}
 		
 		return "";
 	}
+	
 	
 	/**
 	 * This method check if the given string can be converted to integer
