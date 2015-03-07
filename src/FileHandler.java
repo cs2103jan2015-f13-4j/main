@@ -18,6 +18,60 @@ public class FileHandler {
 	private static final int FILE_EXTENSION_LENGTH = 4;
 	
 	/**
+	 * Check if file exists and load it to a list
+	 * 
+	 * @param args
+	 *            receive argument which will contains the filename
+	 * @return the filename if the argument fulfill the condition
+	 */
+	public static void checkAndLoadTaskFile(String fileName, ArrayList<Task> taskList) {
+
+		exitIfWrongFileFormat(fileName);
+
+		File filepath = new File(fileName);
+
+
+		if (filepath.exists() && !filepath.isDirectory()) {
+			loadToArrayList(fileName, taskList);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				MessageList.printErrorMessageAndExit(e.toString());
+			}
+		}
+	}
+	
+
+	/**
+	 * Check if file exists and return the index of last unused task list
+	 * @param fileName receive argument which will contains the filename
+	 * @return an integer which indicate the last unused task id
+	 */
+	public static int checkAndLoadLastTaskIndexFile(String fileName) {
+
+		// Call to check for file format
+		exitIfWrongFileFormat(fileName);
+
+		File filepath = new File(fileName);
+
+		/*
+		 * Check if the file exists, it will load the data into the arraylist
+		 * else it will create a new file
+		 */
+		if (filepath.exists() && !filepath.isDirectory()) {
+			return loadLastIndexUnused(fileName);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				MessageList.printErrorMessageAndExit(e.toString());
+			}
+		}
+		return 1;
+	}
+	
+	/**
 	 * This method will load the contents from the text file to ArrayList
 	 * 
 	 * @param fileName
@@ -37,11 +91,11 @@ public class FileHandler {
 					
 				}
 			} catch (IOException e) {
-				System.out.println(e.toString());
+				MessageList.printErrorMessageAndExit(e.toString());
 			}
 
 		} catch (FileNotFoundException e) {
-			System.out.println(e.toString());
+			MessageList.printErrorMessageAndExit(e.toString());
 		}
 	}
 
@@ -58,10 +112,10 @@ public class FileHandler {
 					}
 				}
 			} catch (IOException e) {
-				System.out.println(e.toString());
+				MessageList.printErrorMessageAndExit(e.toString());
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println(e.toString());
+			MessageList.printErrorMessageAndExit(e.toString());
 		}
 		return 1;
 	}
@@ -77,8 +131,7 @@ public class FileHandler {
 				startDate = dateFormat.parse(taskComponent[2]);
 				endDate = dateFormat.parse(taskComponent[3]);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MessageList.printErrorMessageAndExit(e.toString());
 			}
 			return new Task(Integer.parseInt(taskComponent[0]),taskComponent[1], startDate, endDate);
 		}
@@ -104,7 +157,7 @@ public class FileHandler {
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
-			System.out.println(e.toString());
+			MessageList.printErrorMessageAndExit(e.toString());
 		}
 	}
 	
@@ -126,64 +179,7 @@ public class FileHandler {
 	}
 	
 	
-	/**
-	 * Check if file exists and load it to a list
-	 * 
-	 * @param args
-	 *            receive argument which will contains the filename
-	 * @return the filename if the argument fulfill the condition
-	 */
-	public static void checkAndLoadTaskFile(String fileName, ArrayList<Task> taskList) {
-
-		// Call to check for file format
-		exitIfWrongFileFormat(fileName);
-
-		File filepath = new File(fileName);
-
-		/*
-		 * Check if the file exists, it will load the data into the arraylist
-		 * else it will create a new file
-		 */
-		if (filepath.exists() && !filepath.isDirectory()) {
-			loadToArrayList(fileName, taskList);
-		} else {
-			try {
-				filepath.createNewFile();
-			} catch (IOException e) {
-				MessageList.printErrorMessageAndExit(e.toString());
-			}
-		}
-	}
 	
-	/**
-	 * Check if file exists and return the index of last unused task list
-	 * 
-	 * @param args
-	 *            receive argument which will contains the filename
-	 * @return the filename if the argument fulfill the condition
-	 */
-	public static int checkAndLoadLastTaskIndexFile(String fileName) {
-
-		// Call to check for file format
-		exitIfWrongFileFormat(fileName);
-
-		File filepath = new File(fileName);
-
-		/*
-		 * Check if the file exists, it will load the data into the arraylist
-		 * else it will create a new file
-		 */
-		if (filepath.exists() && !filepath.isDirectory()) {
-			return loadLastIndexUnused(fileName);
-		} else {
-			try {
-				filepath.createNewFile();
-			} catch (IOException e) {
-				MessageList.printErrorMessageAndExit(e.toString());
-			}
-		}
-		return 1;
-	}
 
 
 	/**
