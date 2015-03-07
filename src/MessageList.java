@@ -11,6 +11,10 @@ public class MessageList {
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
 	
 	public static final String MESSAGE_UPDATE_SUCCESS = "Update successful.";
+	
+	public static final String MESSAGE_DELETE = "deleted from %s: \"%s\"";
+	public static final String MESSAGE_NOFILEDELETED = "No file to be deleted";
+	public static final String MESSAGE_ADDED = "Message Added.";
 	/**
 	 * This method will print out the error message before exiting the system
 	 * 
@@ -21,9 +25,4 @@ public class MessageList {
 		System.out.println(message);
 		System.exit(0);
 	}
-	
-	public static final String MESSAGE_DELETE = "deleted from %s: \"%s\"";
-	public static final String MESSAGE_NOFILEDELETED = "No file to be deleted";
-	public static final String MESSAGE_ADDED = "Message Added.";
-
 }
