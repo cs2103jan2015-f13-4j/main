@@ -1,9 +1,15 @@
 
 public class KeywordType {
+	
 	public enum List_Keywords{
 		FROM, BY, TASKDESC, TASKSTART, TASKEND, FIELD
 	}
 	
+	/**
+	 * This method is to determine the type of keyword that the parameter string has received
+	 * @param keywordTypeString the string to be converted
+	 * @return keyword a keyword
+	 */
 	public static List_Keywords getKeyword(String keywordTypeString){
 		if (keywordTypeString == null) {
 			return List_Keywords.FIELD;
@@ -25,6 +31,12 @@ public class KeywordType {
 		}
 	}
 	
+	
+	/**
+	 * This method will check whether the given parameter has a match with the list of keyword
+	 * @param input the string to compare
+	 * @return true if there is a match, else is false
+	 */
 	public static boolean contains(String input){
 		for (List_Keywords aKey : List_Keywords.values()) {
 	        if (aKey.name().equals(input.toUpperCase())) {
