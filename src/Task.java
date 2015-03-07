@@ -41,9 +41,9 @@ public class Task {
 	}
 	@Override
 	public String toString() {
-		return "Task [taskId=" + taskId + ", taskDescription="
-				+ taskDescription + ", taskStartDate=" + taskStartDate
-				+ ", taskEndDate=" + taskEndDate + "]";
+		return taskId + "|"
+				+ taskDescription + "|" + taskStartDate
+				+ "|" + taskEndDate;
 	}
 	
 	@Override
