@@ -10,10 +10,10 @@ public class Task {
 
 	public Task(int taskId, String taskDescription, Date taskStartDate, Date taskEndDate) {
 		
-			taskId = taskId;
-			taskDescription = taskDescription;
-			taskStartDate = taskStartDate;
-			taskEndDate = taskEndDate;
+		this.taskId = taskId;
+		this.taskDescription = taskDescription;
+		this.taskStartDate = taskStartDate;
+		this.taskEndDate = taskEndDate;
 	}
 	
 	public int getTaskId() {
@@ -48,7 +48,11 @@ public class Task {
 		taskEndDate = newTaskEndDate;
 	}
 	
-	public String displayTask() {
+	public void displayTask() {
+		System.out.println("Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate);
+	}
+	
+	public String toString(){
 		return "Task ID: "+taskId+" Task Description: "+taskDescription+" Task Start Date: "+taskStartDate+" Task End Date: "+taskEndDate;
 	}
 }
