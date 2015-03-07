@@ -14,7 +14,7 @@ public class DisplayHandler {
 			}
 			
 			for (Task taskData : listTask) {
-				taskDetails = taskData.displayTask();
+				taskDetails = taskData.toString();
 				message = "\n" + (dataCounter++) + ". " + taskDetails;
 			}
 			
