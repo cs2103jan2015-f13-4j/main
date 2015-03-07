@@ -1,53 +1,42 @@
 
-public class  HelpCommandListHandler{
-	
-	
-	public static String (String fileName,String helpCommand) {
-		help_Command help = CommandType.getType(input.split(" "));
+public class HelpCommandListHandler {
 
-		switch (cmd) {
-		
+	public static String getCommandHelp(String helpCommand) {
+		CommandListHelp.CommandListHelp_Type commandList = CommandListHelp
+				.getType(helpCommand.split(" "));
+
+		if (helpCommand == "help") {
+			return MessageList.MESSAGE_HELP;
+		}
+		switch (commandList) {
+
 		case ADD: {
-			return AddHandler.executeAdd(fileName,input,listTask);
+			return MessageList.MESSAGE_ADD_HELP;
 		}
 		case DISPLAY: {
-			return DisplayHandler.executeDisplay(fileName, input, listTask);
+			return MessageList.MESSAGE_DISPLAY_HELP;
 		}
 		case DELETE: {
-			return DeleteHandler.delete(fileName, input, listTask);
+			return MessageList.MESSAGE_DELETE;
 		}
 		case CLEAR: {
-			return ClearHandler.executeClear(fileName, input, listTask);
-		}
-		case INVALID: {
-			return "Invalid Command!";
+			return MessageList.MESSAGE_CLEAR_HELP;
 		}
 		case SEARCH: {
-			return ExecuteHandler.executeSearch(input);
+			return MessageList.MESSAGE_SEARCH_HELP;
 		}
 		case SORT: {
-			return SortHandler.executeSort(fileName);
+			return MessageList.MESSAGE_SORT_HELP;
+		}
+		case UPDATE: {
+			return MessageList.MESSAGE_UPDATE_HELP;
 		}
 		case EXIT: {
-			System.exit(0);
-			break;
+			return MessageList.MESSAGE_EXIT_HELP;
 		}
 		default: {
-
-			return "Command Unrecognized!";
+			return MessageList.MESSAGE_INVAILD;
 		}
 		}
-
-		return "No command entered";
 	}
-
-}
-
-
-	
-	
-
-		
-
-
 }

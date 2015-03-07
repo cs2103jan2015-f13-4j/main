@@ -1,13 +1,15 @@
+import java.util.ArrayList;
+
 
 public class Menu {
 	
-	public static String commandExecution(String fileName,String input) {
-		CommandType.Command_Types cmd = CommandType.getType(input.split(" "));
+	public static String commandExecution(String fileName,String input[], ArrayList<Task> listTask) {
+		CommandType.Command_Types cmd = CommandType.getType(input[].split(" "));
 
 		switch (cmd) {
 		
 		case ADD: {
-			return AddHandler.executeAdd(fileName,input,listTask);
+			return AddHandler.executeAdd(fileName, input, listTask);
 		}
 		case DISPLAY: {
 			return DisplayHandler.executeDisplay(fileName, input, listTask);
@@ -26,6 +28,9 @@ public class Menu {
 		}
 		case SORT: {
 			return SortHandler.executeSort(fileName);
+		}
+		case UPDATE:{
+			return UpdateHandler.executeUpdate(input, listTask);
 		}
 		case EXIT: {
 			System.exit(0);
