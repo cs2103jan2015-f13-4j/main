@@ -21,7 +21,7 @@ public class Menu {
 			return ClearHandler.executeClear(fileName, input, listTask);
 		}
 		case INVALID: {
-			return "Invalid Command!";
+			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
 			return ExecuteHandler.executeSearch(input);
