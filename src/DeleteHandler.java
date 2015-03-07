@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class DeleteHandler {
 	
-	public static String delete(String fileName, String[] text, ArrayList<Task> list) {
+	public static String executeDelete(String fileName, String[] text, ArrayList<Task> list) {
 
 		int i;
 		int index = Integer.parseInt(text[1]);
