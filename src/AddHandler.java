@@ -11,7 +11,8 @@ public class AddHandler {
 	private static Date startDate;
 	private static Date endDate; 
 	
-	public static String executeAdd(String fileName,String input, ArrayList<Task> listTask) {
+	
+	public static String executeAdd(String fileName, String input, ArrayList<Task> listTask) {
 		
 		String inputTxt = removeFirstWord(input);
 		try {
@@ -21,10 +22,11 @@ public class AddHandler {
 			e.printStackTrace();
 		}
 		
-		listTask.add(new Task(taskId, inputTxt, startDate, endDate));
+	listTask.add(new Task(taskId, inputTxt, startDate, endDate));
 		
 		return MessageList.MESSAGE_ADDED;
 	}
+	
 	
 	private static String removeFirstWord(String input)
 	{

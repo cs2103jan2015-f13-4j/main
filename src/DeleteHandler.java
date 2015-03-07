@@ -2,9 +2,8 @@ import java.util.ArrayList;
 
 public class DeleteHandler {
 	
-	public static String delete(String fileName, String[] text, ArrayList<Task> list) {
+	public static String executeDelete(String fileName, String[] text, ArrayList<Task> list) {
 
-		//list.add("Submission for EE2024 Assignment ");
 		int i;
 		int index = Integer.parseInt(text[1]);
 		Task removedText = list.get(index - 1);
