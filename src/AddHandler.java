@@ -11,21 +11,22 @@ public class AddHandler {
 	private static Date startDate;
 	private static Date endDate; 
 	
-	public static String executeAdd(String fileName,String input, ArrayList<Task> listTask) {
+	
+	public static String executeAdd(String fileName, String input, ArrayList<Task> listTask) {
 		
 		String inputTxt = removeFirstWord(input);
 		try {
 			startDate = dateFormat.parse("06-03-2015");
 			endDate = dateFormat.parse("09-03-2015");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		listTask.add(new Task(taskId, inputTxt, startDate, endDate));
+	listTask.add(new Task(taskId, inputTxt, startDate, endDate));
 		
 		return MessageList.MESSAGE_ADDED;
 	}
+	
 	
 	private static String removeFirstWord(String input)
 	{
