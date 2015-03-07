@@ -91,4 +91,11 @@ public class InputStringParserTest {
 		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
 	}
 
+	@Test
+	public void testProcessStringAddWithReturnKeyParamPairNumberRegular() {
+		String command = "add Do homework by Friday";
+		int expected = 2;
+		InputStringParser.processString(command, keyParamTest);
+		assertTrue(expected == keyParamTest.size());
+	}
 }
