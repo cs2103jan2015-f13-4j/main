@@ -1,32 +1,34 @@
-
 public class CommandType {
 	public enum Command_Types {
 		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT
 	}
-	
-	public static Command_Types getType(String[] commandTypeString){
-		if (commandTypeString == null || commandTypeString.length == 0) {
+
+	public static Command_Types getType(String[] commandTypeString) {
+
+		if (commandTypeString == null) {
 			return Command_Types.INVALID;
 		}
-
-		if (commandTypeString[0].equalsIgnoreCase("add")) {
+		
+		switch (commandTypeString[0].toLowerCase()) {
+		case "add": 
 			return Command_Types.ADD;
-		} else if (commandTypeString[0].equalsIgnoreCase("delete")) {
+		case "delete": 
 			return Command_Types.DELETE;
-		} else if (commandTypeString[0].equalsIgnoreCase("display")) {
+		case "display": 
 			return Command_Types.DISPLAY;
-		} else if (commandTypeString[0].equalsIgnoreCase("update")) {
+		case "update": 
 			return Command_Types.UPDATE;
-		} else if (commandTypeString[0].equalsIgnoreCase("clear")) {
+		case "clear": 
 			return Command_Types.CLEAR;
-		} else if (commandTypeString[0].equalsIgnoreCase("exit")) {
+		case "exit": 
 			return Command_Types.EXIT;
-		} else if (commandTypeString[0].equalsIgnoreCase("search")) {
+		case "search": 
 			return Command_Types.SEARCH;
-		} else if (commandTypeString[0].equalsIgnoreCase("sort")) {
+		case "sort": 
 			return Command_Types.SORT;
-		} else {
+		default: 
 			return Command_Types.INVALID;
 		}
 	}
+
 }
