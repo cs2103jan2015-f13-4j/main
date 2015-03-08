@@ -12,9 +12,10 @@ public class MessageList {
 	
 	public static final String MESSAGE_UPDATE_SUCCESS = "Update successful.";
 	
-	public static final String MESSAGE_DELETE = "deleted from %s: \"%s\"";
-	public static final String MESSAGE_NOFILEDELETED = "No file to be deleted";
+	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
+	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
 	public static final String MESSAGE_ADDED = "Message Added.";
+	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
 
 	/**
 	 * This method will print out the error message before exiting the system

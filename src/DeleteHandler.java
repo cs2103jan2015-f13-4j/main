@@ -2,34 +2,40 @@ import java.util.ArrayList;
 
 public class DeleteHandler {
 	
-	public static String executeDelete(String fileName, String[] text, ArrayList<Task> list) {
+	public static String executeDelete(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
 
 		int i;
-		int index = Integer.parseInt(text[1]);
-		Task removedText = list.get(index - 1);
+		int index;
+		Task removedText;
 		
-		if (text.length != 2) {
-			return "Arguments invalid";
+		if(keyParamList == null || keyParamList.isEmpty()){
+			return MessageList.MESSAGE_INVALID_DELETE;
 		}
-
-		if (!checkInteger(text[1])) {
-			return "Invalid delete argument";
+		
+		if(listTask == null || listTask.isEmpty()){
+			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
+		
+		if(!(keyParamList.size() == 1) || !(checkInteger(keyParamList.get(0).getParam()))){
+			return MessageList.MESSAGE_INVALID_DELETE;
+		}
+		
+		index = Integer.parseInt(keyParamList.get(0).getParam());
 		
 		// will search the task id from the list and delete the task
-		for(i = 0; i < list.size(); i++){
-			if(list.get(i).getTaskId() == index){
+		for(i = 0; i < listTask.size(); i++){
+			if(listTask.get(i).getTaskId() == index){
 				break;
 			}
 		}
 		
 		if(i >= 0)
 		{
-			list.remove(i);
-			return String.format(MessageList.MESSAGE_DELETE, fileName, removedText);
+			removedText = listTask.remove(i);
+			return String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, removedText.getTaskDescription());
 		}
 			
-		return MessageList.MESSAGE_NOFILEDELETED;
+		return MessageList.MESSAGE_NO_FILE_DELETED;
 	}
 	
 	private static boolean checkInteger(String text){
