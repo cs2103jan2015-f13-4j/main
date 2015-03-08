@@ -1,36 +1,42 @@
 import java.util.ArrayList;
 
-
 public class Menu {
-	
-	public static String commandExecution(String fileName,String input[], ArrayList<Task> listTask) {
-		CommandType.Command_Types cmd = CommandType.getType(input[].split(" "));
+	private static ArrayList<Task> listTask;
+	private static int lastUnusedIndex = 1;	//stub
+	public Menu() {
+		listTask = new ArrayList<Task>();
+	}
+
+	public static String commandExecution(String fileName, String input) {
+		ArrayList<KeyParamPair> keyParamList = new ArrayList<KeyParamPair>();
+		CommandType.Command_Types cmd = InputStringParser.processString(input,
+				keyParamList);
 
 		switch (cmd) {
-		
+
 		case ADD: {
-			return AddHandler.executeAdd(fileName, input, listTask);
+			return AddHandler.executeAdd(fileName, keyParamList, listTask, lastUnusedIndex);
 		}
 		case DISPLAY: {
-			return DisplayHandler.executeDisplay(fileName, input, listTask);
+			//return DisplayHandler.executeDisplay(fileName, input, listTask);
 		}
 		case DELETE: {
-			return DeleteHandler.delete(fileName, input, listTask);
+			//return DeleteHandler.executedelete(fileName, input, listTask);
 		}
 		case CLEAR: {
-			return ClearHandler.executeClear(fileName, input, listTask);
+			//return ClearHandler.executeClear(fileName, input, listTask);
 		}
 		case INVALID: {
-			return "Invalid Command!";
+			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			return ExecuteHandler.executeSearch(input);
+			//return ExecuteHandler.executeSearch(input);
 		}
 		case SORT: {
-			return SortHandler.executeSort(fileName);
+			//return SortHandler.executeSort(fileName);
 		}
-		case UPDATE:{
-			return UpdateHandler.executeUpdate(input, listTask);
+		case UPDATE: {
+			return UpdateHandler.executeUpdate(keyParamList, listTask);
 		}
 		case EXIT: {
 			System.exit(0);
@@ -38,12 +44,11 @@ public class Menu {
 		}
 		default: {
 
-			return "Command Unrecognized!";
+			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
 		}
 		}
 
-		return "No command entered";
+		return MessageList.MESSAGE_MENU_NO_COMMAND;
 	}
 
 }
-

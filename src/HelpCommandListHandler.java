@@ -5,7 +5,7 @@ public class HelpCommandListHandler {
 		CommandListHelp.CommandListHelp_Type commandList = CommandListHelp
 				.getType(helpCommand.split(" "));
 
-		if (helpCommand == "help") {
+		if (helpCommand.equalsIgnoreCase("help")) {
 			return MessageList.MESSAGE_HELP;
 		}
 		switch (commandList) {
@@ -17,7 +17,7 @@ public class HelpCommandListHandler {
 			return MessageList.MESSAGE_DISPLAY_HELP;
 		}
 		case DELETE: {
-			return MessageList.MESSAGE_DELETE;
+			return MessageList.MESSAGE_DELETE_HELP;
 		}
 		case CLEAR: {
 			return MessageList.MESSAGE_CLEAR_HELP;

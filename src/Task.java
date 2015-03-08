@@ -16,6 +16,13 @@ public class Task {
 		this.taskStartDate = taskStartDate;
 		this.taskEndDate = taskEndDate;
 	}
+	
+	public Task(){
+		this.taskId = -1;
+		this.taskDescription = "";
+		this.taskStartDate = null;
+		this.taskEndDate = null;
+	}
 	public int getTaskId() {
 		return taskId;
 	}
