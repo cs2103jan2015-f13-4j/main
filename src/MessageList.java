@@ -26,8 +26,9 @@ public class MessageList {
 		System.out.println(message);
 		System.exit(0);
 	}
-
-	//message for HelpCommandList class
+	/**
+	 * This message are for HelpCommandList class
+	 */
 	public static final String MESSAGE_HELP = "1) Add<Task Name> <Desc>\n 2) Remove<Task #>\n 3) Update<Task #><Desc>\n 4) Display<Task #>\n 5) Search <Task #>\n 6)Switchview <tabname>\n 7) Block <Task #><period>\n 8) Unblock <Task #><Period>";
 	public static final String MESSAGE_ADD_HELP = "Add<Task Name> <Desc>";
 	public static final String MESSAGE_DELETE_HELP = "Remove<Task #>";
@@ -41,6 +42,12 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Desc>";
 	public static final String MESSAGE_UNBLOCK_HELP = "Unblock<Task Name> <Desc>";
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
+	
+	/**
+	 * This command is for the Menu
+	 */
+	public static final String MESSAGE_MENU_NO_COMMAND ="There is no command.";
+	public static final String MESSAGE_MENU_COMMAND_UNRECOGNISED = "Command Unrecognised!";
 
 }
 
