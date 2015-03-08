@@ -37,10 +37,10 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 
-	@Test 
-	public void testAddWithDescAndDate()	
-	{
-		keyParamTest.add(new KeyParamPair("add", "1"));
-		keyParamTest.add(new KeyParamPair("by",))
-	}
+	//@Test 
+	//public void testAddWithDescAndDate()	
+	//{
+		//keyParamTest.add(new KeyParamPair("add", "1"));
+		//keyParamTest.add(new KeyParamPair("by",))
+	//}
 }
