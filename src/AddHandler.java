@@ -37,8 +37,7 @@ public class AddHandler {
 				indicMsg = addTaskDesc(newTask, lastUnusedIndex, keyParamList.get(i));
 				break;
 			default:
-				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
-						"Update");
+				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,"Add");
 			}
 
 			if (!indicMsg.isTrue()) {
