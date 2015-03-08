@@ -5,38 +5,77 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AddHandler {
-	
-	private static int taskId = 1;
-	private static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	private static Date startDate;
-	private static Date endDate; 
-	
-	
-	public static String executeAdd(String fileName, String input, ArrayList<Task> listTask) {
-		
-		String inputTxt = removeFirstWord(input);
-		try {
-			startDate = dateFormat.parse("06-03-2015");
-			endDate = dateFormat.parse("09-03-2015");
-		} catch (ParseException e) {
-			e.printStackTrace();
+
+	public static String executeAdd(String fileName,
+			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
+			Integer lastUnusedIndex) {
+		if (keyParamList == null || keyParamList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
 		}
-		
-	listTask.add(new Task(taskId, inputTxt, startDate, endDate));
-		
+
+		if (listTask == null) {
+			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+		}
+
+		return addContents(keyParamList, listTask, lastUnusedIndex);
+
+	}
+
+	private static String addContents(ArrayList<KeyParamPair> keyParamList,
+			ArrayList<Task> listTask, Integer lastUnusedIndex) {
+		IndicatorMessagePair indicMsg;
+		KeywordType.List_Keywords getKey;
+		Task newTask = new Task();
+		newTask.setTaskId(lastUnusedIndex);
+		for (int i = 1; i < keyParamList.size(); i++) {
+			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
+			switch (getKey) {
+			case BY:
+				indicMsg = addTaskByWhen(newTask, lastUnusedIndex, keyParamList.get(i));
+				break;
+			case FIELD:
+				indicMsg = addTaskDesc(newTask, lastUnusedIndex, keyParamList.get(i));
+				break;
+			default:
+				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+						"Update");
+			}
+
+			if (!indicMsg.isTrue()) {
+				return indicMsg.getMessage();
+			}
+		}
+		listTask.add(newTask);
+		lastUnusedIndex++;
 		return MessageList.MESSAGE_ADDED;
 	}
-	
-	
-	private static String removeFirstWord(String input)
-	{
-			return input.replace(getFirstWord(input), "").trim();
+
+	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
+			KeyParamPair keyParam) {
+		if (keyParam.getParam() == null || keyParam.getParam().isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Date endDate = new Date();
+		try {
+			endDate = dateFormat.parse(keyParam.getParam());
+		} catch (ParseException e) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		}
+		newTask.setTaskEndDate(endDate);
+		return new IndicatorMessagePair(true, "");
 	}
-	
-	private static String getFirstWord(String input)
-	{
-		String commandTypeString = input.split("\\s+")[0];
-		return commandTypeString;
+
+	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
+			KeyParamPair keyParam) {
+		if (keyParam.getParam() == null || keyParam.getParam().isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		newTask.setTaskDescription(keyParam.getParam());
+		return null;
 	}
 
 }
