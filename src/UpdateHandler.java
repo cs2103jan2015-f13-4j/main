@@ -159,7 +159,6 @@ public class UpdateHandler {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-
 		return true;
 	}
 

@@ -35,6 +35,19 @@ public class UpdateHandlerTest {
 	}
 	
 	@Test
+	public void testUpdateWithDescCheckRegular() {
+		keyParamTest.add(new KeyParamPair("update", "2"));
+		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
+		String expected = "Submit report to Ms Sarah and to IVLE";
+		UpdateHandler.executeUpdate(keyParamTest, taskList);
+		for(int i = 0; i < taskList.size(); i++){
+			if(taskList.get(i).getTaskId() == 2){
+				assertEquals(expected, taskList.get(i).getTaskDescription());
+			}
+		}
+	}
+	
+	@Test
 	public void testUpdateWithDescAndEndDateRegular() {
 		keyParamTest.add(new KeyParamPair("update", "2"));
 		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
