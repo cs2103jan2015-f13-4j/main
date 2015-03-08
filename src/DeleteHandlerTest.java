@@ -23,6 +23,7 @@ public class DeleteHandlerTest {
 	@After
 	public void tearDown() {
 		keyParamTest.clear();
+		taskList.clear();
 	}
 	
 	@Test
