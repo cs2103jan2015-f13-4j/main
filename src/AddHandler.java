@@ -15,12 +15,13 @@ public class AddHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		return addContents(keyParamList, listTask, lastUnusedIndex);
+		return addContents(fileName, keyParamList, listTask, lastUnusedIndex);
 
 	}
 
-	private static String addContents(ArrayList<KeyParamPair> keyParamList,
-			ArrayList<Task> listTask, Integer lastUnusedIndex) {
+	private static String addContents(String fileName,
+			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
+			Integer lastUnusedIndex) {
 		IndicatorMessagePair indicMsg;
 		KeywordType.List_Keywords getKey;
 		Task newTask = new Task();
@@ -29,13 +30,15 @@ public class AddHandler {
 			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
 			switch (getKey) {
 			case BY:
-				indicMsg = addTaskByWhen(newTask, lastUnusedIndex, keyParamList.get(i));
+				indicMsg = addTaskByWhen(newTask, lastUnusedIndex,
+						keyParamList.get(i));
 				break;
 			case FIELD:
-				indicMsg = addTaskDesc(newTask, lastUnusedIndex, keyParamList.get(i));
+				indicMsg = addTaskDesc(newTask, lastUnusedIndex,
+						keyParamList.get(i));
 				break;
 			default:
-				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,"Add");
+				return String.format(MessageList.MESSAGE_INVALID_COMMAND,"Add");
 			}
 
 			if (!indicMsg.isTrue()) {
@@ -44,6 +47,11 @@ public class AddHandler {
 		}
 		listTask.add(newTask);
 		lastUnusedIndex++;
+		indicMsg = new IndicatorMessagePair();
+		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		if (indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
 		return MessageList.MESSAGE_ADDED;
 	}
 
@@ -54,8 +62,9 @@ public class AddHandler {
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
 		DateTime endDate = DateParser.generateDate(keyParam.getParam());
-		if(endDate == null){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
 		newTask.setTaskStartDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
