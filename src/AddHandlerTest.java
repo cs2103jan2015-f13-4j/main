@@ -64,7 +64,7 @@ public class AddHandlerTest {
 	}
 	
 	@Test
-	public void testInvaildCommand()
+	public void testInvalidCommand()
 	{
 		keyParamTest.add(new KeyParamPair("plus", "Submit Report"));
 		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
@@ -73,13 +73,14 @@ public class AddHandlerTest {
 	}
 	
 	@Test
-	public void testInvaildDate()
+	public void testInvalidDate()
 	{
 		keyParamTest.add(new KeyParamPair("add", "Submit Assignment"));
 		keyParamTest.add(new KeyParamPair("by", "AA-12-2015"));
 		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
+	
 }
 	
 
