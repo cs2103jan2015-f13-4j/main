@@ -7,8 +7,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class SmtSurvival extends Composite {
 
-	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-
+    private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+    
 	/**
 	 * Create the composite.
 	 * @param parent

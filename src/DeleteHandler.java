@@ -32,6 +32,13 @@ public class DeleteHandler {
 		if(i >= 0)
 		{
 			removedText = listTask.remove(i);
+			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+			FileHandler.writeToFile(fileName, listTask, indicMsg);
+			
+			if(!indicMsg.isTrue()){
+				return indicMsg.getMessage();
+			}
+			
 			return String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, removedText.getTaskDescription());
 		}
 			
