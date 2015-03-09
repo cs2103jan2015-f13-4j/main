@@ -1,8 +1,5 @@
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class UpdateHandler {
 	
@@ -12,7 +9,7 @@ public class UpdateHandler {
 	 * @param listTask contains the list of current tasks
 	 * @return message
 	 */
-	public static String executeUpdate(ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask){
+	public static String executeUpdate(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask){
 		
 		if(keyParamList == null || keyParamList.isEmpty()){
 			return MessageList.MESSAGE_NULL;
@@ -32,7 +29,7 @@ public class UpdateHandler {
 			return MessageList.MESSAGE_NO_SUCH_TASK;
 		}
 		
-		return updateContents(keyParamList, index, listTask);
+		return updateContents(fileName, keyParamList, index, listTask);
 	}
 	
 	/**
@@ -57,7 +54,7 @@ public class UpdateHandler {
 	 * @param listTask contains the list of current tasks
 	 * @return message
 	 */
-	private static String updateContents(ArrayList<KeyParamPair> keyParamList, int index, ArrayList<Task> listTask){
+	private static String updateContents(String fileName, ArrayList<KeyParamPair> keyParamList, int index, ArrayList<Task> listTask){
 		IndicatorMessagePair indicMsg;
 		KeywordType.List_Keywords getKey;
 		for(int i = 1; i < keyParamList.size(); i++){
@@ -83,6 +80,11 @@ public class UpdateHandler {
 				return indicMsg.getMessage();
 			}
 		}
+		indicMsg = new IndicatorMessagePair();
+		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		if(!indicMsg.isTrue()){
+			return indicMsg.getMessage();
+		}
 		return MessageList.MESSAGE_UPDATE_SUCCESS;
 	}
 	
@@ -97,14 +99,11 @@ public class UpdateHandler {
 		if(keyParam.getParam() == null || keyParam.getParam().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		Date startDate = new Date();
-		try {
-			startDate = dateFormat.parse(keyParam.getParam());
-		} catch (ParseException e) {
+		DateTime endDate = DateParser.generateDate(keyParam.getParam());
+		if(endDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
-		listTask.get(index).setTaskStartDate(startDate);
+		listTask.get(index).setTaskStartDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -134,14 +133,13 @@ public class UpdateHandler {
 		if(keyParam.getParam() == null || keyParam.getParam().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		Date endDate = new Date();
-		try {
-			endDate = dateFormat.parse(keyParam.getParam());
-		} catch (ParseException e) {
+		
+		DateTime startDate = DateParser.generateDate(keyParam.getParam());
+		if(startDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}
-		listTask.get(index).setTaskEndDate(endDate);
+		
+		listTask.get(index).setTaskStartDateTime(startDate);
 		return new IndicatorMessagePair(true, "");
 	}
 	

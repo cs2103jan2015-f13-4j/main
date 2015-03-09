@@ -36,7 +36,7 @@ public class Menu {
 			//return SortHandler.executeSort(fileName);
 		}
 		case UPDATE: {
-			return UpdateHandler.executeUpdate(keyParamList, listTask);
+			return UpdateHandler.executeUpdate(fileName, keyParamList, listTask);
 		}
 		case EXIT: {
 			System.exit(0);
