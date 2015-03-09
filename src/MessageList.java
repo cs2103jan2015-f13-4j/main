@@ -1,6 +1,11 @@
-
+import javax.swing.JOptionPane;
 public class MessageList {
 
+	public static final String MESSAGE_FILENAME_INVALID_UNSPECIFIED = "Filename not specified.";
+	public static final String MESSAGE_FILENAME_INVALID_FORMAT = "Filename is in wrong format.";
+	public static final String MESSAGE_TEXTFILE_INFO_CORRUPTED = "Contents in the %1$s has been corrupted.";
+	public static final String MESSAGE_ERROR_ON_WRITING_TO_FILE = "Error on saving to file.";
+	
 	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command."; 
 	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid Type to Integer for %1$s command";
 	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
@@ -17,6 +22,9 @@ public class MessageList {
 	public static final String MESSAGE_ADDED = "Message Added.";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
 
+	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
+	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
+	
 	/**
 	 * This method will print out the error message before exiting the system
 	 * 
@@ -24,7 +32,7 @@ public class MessageList {
 	 *            the message from various methods
 	 */
 	public static void printErrorMessageAndExit(String message) {
-		System.out.println(message);
+		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);;
 		System.exit(0);
 	}
 	/**
