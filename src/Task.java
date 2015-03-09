@@ -1,27 +1,30 @@
-import java.util.Date;
+import org.joda.time.DateTime;
 
 
 public class Task {
 	
 	private int taskId;
 	private String taskDescription;
-	private Date taskStartDate;
-	private Date taskEndDate;
+	private DateTime taskStartDateTime;
+	private DateTime taskEndDateTime;
+	private String weeklyDay;
 
 	
-	public Task(int taskId, String taskDescription, Date taskStartDate, Date taskEndDate) {
+	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, String weeklyDay) {
 		super();
 		this.taskId = taskId;
 		this.taskDescription = taskDescription;
-		this.taskStartDate = taskStartDate;
-		this.taskEndDate = taskEndDate;
+		this.taskStartDateTime = taskStartDateTime;
+		this.taskEndDateTime = taskEndDateTime;
+		this.weeklyDay = weeklyDay;
 	}
 	
 	public Task(){
 		this.taskId = -1;
 		this.taskDescription = "";
-		this.taskStartDate = null;
-		this.taskEndDate = null;
+		this.taskStartDateTime = null;
+		this.taskEndDateTime = null;
+		this.weeklyDay = "";
 	}
 	public int getTaskId() {
 		return taskId;
@@ -35,23 +38,30 @@ public class Task {
 	public void setTaskDescription(String taskDescription) {
 		this.taskDescription = taskDescription;
 	}
-	public Date getTaskStartDate() {
-		return taskStartDate;
+	public DateTime getTaskStartDateTime() {
+		return taskStartDateTime;
 	}
-	public void setTaskStartDate(Date taskStartDate) {
-		this.taskStartDate = taskStartDate;
+	public void setTaskStartDateTime(DateTime taskStartDateTime) {
+		this.taskStartDateTime = taskStartDateTime;
 	}
-	public Date getTaskEndDate() {
-		return taskEndDate;
+	public DateTime getTaskEndDateTime() {
+		return taskEndDateTime;
 	}
-	public void setTaskEndDate(Date taskEndDate) {
-		this.taskEndDate = taskEndDate;
+	public void setTaskEndDateTime(DateTime taskEndDateTime) {
+		this.taskEndDateTime = taskEndDateTime;
 	}
+	public String getWeeklyDay() {
+		return weeklyDay;
+	}
+	public void setWeeklyDay(String weeklyDay) {
+		this.weeklyDay = weeklyDay;
+	}
+	
 	@Override
 	public String toString() {
 		return taskId + "|"
-				+ taskDescription + "|" + taskStartDate
-				+ "|" + taskEndDate;
+				+ taskDescription + "|" + taskStartDateTime
+				+ "|" + taskEndDateTime + "|" + weeklyDay;
 	}
 	
 	@Override
