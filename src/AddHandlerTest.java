@@ -51,7 +51,7 @@ public class AddHandlerTest {
 	{
 		keyParamTest.add(new KeyParamPair("add","Submit Report"));
 		keyParamTest.add(new KeyParamPair("by","03-March-2014"));
-		String expected = MessageList.MESSAGE_WRONG_DATE_FORMAT;
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 	@Test
@@ -59,7 +59,7 @@ public class AddHandlerTest {
 	{
 		keyParamTest.add(new KeyParamPair("add","Submit Report"));
 		keyParamTest.add(new KeyParamPair("by","03-2015-08"));
-		String expected = MessageList.MESSAGE_WRONG_DATE_FORMAT;
+		String expected = String.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 	
@@ -68,7 +68,7 @@ public class AddHandlerTest {
 	{
 		keyParamTest.add(new KeyParamPair("plus", "Submit Report"));
 		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
-		String expected = MessageList.MESSAGE_INVALID_ARGUMENT;
+		String expected = MessageList.MESSAGE_INVALID_COMMAND;
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 	
@@ -77,7 +77,7 @@ public class AddHandlerTest {
 	{
 		keyParamTest.add(new KeyParamPair("add", "Submit Assignment"));
 		keyParamTest.add(new KeyParamPair("by", "AA-12-2015"));
-		String expected = MessageList.MESSAGE_INVALID_ARGUMENT;
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 }

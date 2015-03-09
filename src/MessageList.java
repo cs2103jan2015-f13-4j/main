@@ -14,6 +14,8 @@ public class MessageList {
 	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
+	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
+	public static final String MESSAGE_INCORRECT_DATE_FORMAT ="Date Format is incorrect";
 	
 	public static final String MESSAGE_UPDATE_SUCCESS = "Update successful.";
 	
