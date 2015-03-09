@@ -37,10 +37,49 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 
-	//@Test 
-	//public void testAddWithDescAndDate()	
-	//{
-		//keyParamTest.add(new KeyParamPair("add", "1"));
-		//keyParamTest.add(new KeyParamPair("by",))
-	//}
+	@Test 
+	public void testAddWithDescWithoutDate()	
+	{
+		keyParamTest.add(new KeyParamPair("add", "Submit Proposal"));
+		keyParamTest.add(new KeyParamPair("by",""));
+		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+	}
+	
+	@Test
+	public void testAddWithDescWithWrongDateFormat()
+	{
+		keyParamTest.add(new KeyParamPair("add","Submit Report"));
+		keyParamTest.add(new KeyParamPair("by","03-March-2014"));
+		String expected = MessageList.MESSAGE_WRONG_DATE_FORMAT;
+		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+	}
+	@Test
+	public void testAddWithDescWithWrongDateFormatforMonth()
+	{
+		keyParamTest.add(new KeyParamPair("add","Submit Report"));
+		keyParamTest.add(new KeyParamPair("by","03-2015-08"));
+		String expected = MessageList.MESSAGE_WRONG_DATE_FORMAT;
+		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+	}
+	
+	@Test
+	public void testInvaildCommand()
+	{
+		keyParamTest.add(new KeyParamPair("plus", "Submit Report"));
+		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
+		String expected = MessageList.MESSAGE_INVALID_ARGUMENT;
+		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+	}
+	
+	@Test
+	public void testInvaildDate()
+	{
+		keyParamTest.add(new KeyParamPair("add", "Submit Assignment"));
+		keyParamTest.add(new KeyParamPair("by", "AA-12-2015"));
+		String expected = MessageList.MESSAGE_INVALID_ARGUMENT;
+		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+	}
 }
+	
+
