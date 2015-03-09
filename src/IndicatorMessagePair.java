@@ -9,9 +9,13 @@ public class IndicatorMessagePair {
 	 * @param message
 	 */
 	public IndicatorMessagePair(boolean isTrue, String message) {
-		super();
 		this.isTrue = isTrue;
 		this.message = message;
+	}
+	
+	public IndicatorMessagePair(){
+		this.isTrue = false;
+		this.message = "";
 	}
 
 	/**
