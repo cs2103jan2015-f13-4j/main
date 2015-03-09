@@ -1,8 +1,6 @@
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
+import org.joda.time.DateTime;
 
 public class AddHandler {
 
@@ -55,15 +53,11 @@ public class AddHandler {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		Date endDate = new Date();
-		try {
-			endDate = dateFormat.parse(keyParam.getParam());
-		} catch (ParseException e) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		DateTime endDate = DateParser.generateDate(keyParam.getParam());
+		if(endDate == null){
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
-		newTask.setTaskEndDate(endDate);
+		newTask.setTaskStartDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
 	}
 

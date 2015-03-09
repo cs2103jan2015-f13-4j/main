@@ -1,8 +1,8 @@
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,9 +28,9 @@ public class DeleteHandlerTest {
 	
 	@Test
 	public void testDeleteWithIDRegular() {
-		taskList.add(new Task(1, "Prepare a proposal", new Date(), new Date()));
-		taskList.add(new Task(2, "Submit report to Ms Sarah", new Date(), new Date()));
-		taskList.add(new Task(3, "Prepare OP1", new Date(), new Date()));
+		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+		taskList.add(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 		keyParamTest.add(new KeyParamPair("delete", "2"));
 		String expected = String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, "Submit report to Ms Sarah");
 		assertEquals(expected, DeleteHandler.executeDelete(fileName, keyParamTest, taskList));
@@ -45,9 +45,9 @@ public class DeleteHandlerTest {
 	
 	@Test
 	public void testDeleteWithIDInvalid(){
-		taskList.add(new Task(1, "Prepare a proposal", new Date(), new Date()));
-		taskList.add(new Task(2, "Submit report to Ms Sarah", new Date(), new Date()));
-		taskList.add(new Task(3, "Prepare OP1", new Date(), new Date()));
+		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+		taskList.add(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 		keyParamTest.add(new KeyParamPair("delete", "1. Prepare a proposal"));
 		String expected = MessageList.MESSAGE_INVALID_DELETE;
 		assertEquals(expected, DeleteHandler.executeDelete(fileName, keyParamTest, taskList));
