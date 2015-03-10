@@ -26,7 +26,7 @@ public class Task {
 		this.taskDescription = taskDescription;
 		this.taskStartDateTime = taskStartDateTime;
 		this.taskEndDateTime = taskEndDateTime;
-		taskStatus = false;
+		this.taskStatus = taskStatus;
 		this.weeklyDay = weeklyDay;
 	}
 	
