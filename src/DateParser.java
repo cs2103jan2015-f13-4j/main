@@ -27,18 +27,6 @@ public class DateParser {
 		if(!validFormat) {
 			return null;
 		}
-		
-		//DateTimeFormatter dtfout = DateTimeFormat.forPattern(standardFormat);
-		//dtf = DateTimeFormat.forPattern(standardFormat);
-		//String newFormatToBeConverted = dtfout.print(convertedDateTime);
-		//convertedDateTime = null;
-		//convertedDateTime = dtf.parseDateTime(newFormatToBeConverted);
-		
-		//DateTime jodaTime = dtfout.parseDateTime(newFormatToBeConverted); 
-		
-		//System.out.println("1st: "+newFormatToBeConverted);
-		//System.out.println("2nd: "+jodaTime.toString(standardFormat));
-
 		return convertedDateTime;
 	}
 	
