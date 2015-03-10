@@ -7,6 +7,7 @@ public class Task {
 	private String taskDescription;
 	private DateTime taskStartDateTime;
 	private DateTime taskEndDateTime;
+	private boolean taskStatus;
 	private String weeklyDay;
 
 	
@@ -19,11 +20,22 @@ public class Task {
 		this.weeklyDay = weeklyDay;
 	}
 	
+	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, boolean taskStatus, String weeklyDay) {
+		super();
+		this.taskId = taskId;
+		this.taskDescription = taskDescription;
+		this.taskStartDateTime = taskStartDateTime;
+		this.taskEndDateTime = taskEndDateTime;
+		taskStatus = false;
+		this.weeklyDay = weeklyDay;
+	}
+	
 	public Task(){
 		this.taskId = -1;
 		this.taskDescription = "";
 		this.taskStartDateTime = null;
 		this.taskEndDateTime = null;
+		this.taskStatus = false;
 		this.weeklyDay = "";
 	}
 	public int getTaskId() {
@@ -49,6 +61,12 @@ public class Task {
 	}
 	public void setTaskEndDateTime(DateTime taskEndDateTime) {
 		this.taskEndDateTime = taskEndDateTime;
+	}
+	public boolean getTaskStatus() {
+		return taskStatus;
+	}
+	public void setTaskStatus(boolean taskStatus) {
+		this.taskStatus = taskStatus;
 	}
 	public String getWeeklyDay() {
 		return weeklyDay;
