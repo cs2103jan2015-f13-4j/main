@@ -7,7 +7,7 @@
 public class TaskFieldList {
 
 	public enum List_Task_Field{
-		TASKID, TASKDESC, TASKSTARTDATETIME, TASKENDDATETIME, WEEKLYDAY, INVALID
+		TASKID, TASKDESC, TASKSTARTDATETIME, TASKENDDATETIME, WEEKLYDAY, TASKSTATUS, INVALID
 	}
 	
 	/**
@@ -31,6 +31,8 @@ public class TaskFieldList {
 			return List_Task_Field.TASKENDDATETIME;
 		case "WEEKLYDAY":
 			return List_Task_Field.WEEKLYDAY;
+		case "TASKSTATUS":
+			return List_Task_Field.TASKSTATUS;
 		default:
 			return List_Task_Field.INVALID;
 		}

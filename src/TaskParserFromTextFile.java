@@ -54,6 +54,9 @@ public class TaskParserFromTextFile {
 			case WEEKLYDAY:
 				indicMsg = setWeeklyDay(newTask, separateFieldData[TASK_FIELD_DATA_SLOT]);
 				break;
+			case TASKSTATUS:
+				indicMsg = setTaskStatus(newTask, separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
 			default:
 				return null;
 			}
@@ -130,6 +133,17 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	private static IndicatorMessagePair setTaskStatus(Task newTask, String taskStatus){
+		if(taskStatus == null || !isStringAnBoolean(taskStatus)){
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_STATUS);
+		}
+		
+		newTask.setTaskStatus(Boolean.parseBoolean(taskStatus));
+		
+		return new IndicatorMessagePair(true, "");
+	}
+	
+	
 	
 	/**
 	 * This method check if the given string can be converted to integer
@@ -141,6 +155,16 @@ public class TaskParserFromTextFile {
 	private static boolean isStringAnInteger(String inputStr) {
 		try {
 			Integer.parseInt(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	private static boolean isStringAnBoolean(String inputStr) {
+		try {
+			Boolean.parseBoolean(inputStr);
 		} catch (NumberFormatException e) {
 			return false;
 		}

@@ -25,7 +25,9 @@ public class FileHandler {
 	private static final int TASKENDDATETIME_OFFSET = 3;
 	// task fields list taskweeklyday offset
 	private static final int TASKWEEKLYDAY_OFFSET = 4;
-
+	// task fields list taskstatus offset
+	private static final int TASKSTATUS_OFFSET = 5;
+	
 	/**
 	 * Check if file exists and load it to a list
 	 * 
@@ -296,9 +298,16 @@ public class FileHandler {
 			textLine += oneTask.getWeeklyDay();
 			textLine += TASK_COMPONENT_SEPARATOR;
 		}
+		
 		if (textLine.isEmpty()) {
 			return null;
 		}
+		
+		textLine += taskFields[TASKSTATUS_OFFSET].name();
+		textLine += TASK_FIELD_DATA_SEPARATOR;
+		textLine += oneTask.getTaskStatus();
+		textLine += TASK_COMPONENT_SEPARATOR;
+		
 		return textLine.substring(0, textLine.length() - 1);
 	}
 

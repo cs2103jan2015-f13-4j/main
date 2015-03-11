@@ -5,6 +5,7 @@ public class MessageList {
 	public static final String MESSAGE_FILENAME_INVALID_FORMAT = "Filename is in wrong format.";
 	public static final String MESSAGE_TEXTFILE_INFO_CORRUPTED = "Contents in the %1$s has been corrupted.";
 	public static final String MESSAGE_ERROR_ON_WRITING_TO_FILE = "Error on saving to file.";
+	public static final String MESSAGE_INVALID_STATUS = "Invalid status for a task.";
 	
 	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command."; 
 	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid Type to Integer for %1$s command";
