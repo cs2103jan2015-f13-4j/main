@@ -128,6 +128,8 @@ public class SmtSurvival extends Composite {
 			output = controller.commandExecution(cmdTxtBox.getText());
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
+			
+			cmdTxtBox.setText("");
 		}
 	}
 	
