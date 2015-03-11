@@ -3,14 +3,29 @@ import java.util.ArrayList;
 public class Menu {
 	private static ArrayList<Task> listTask;
 	private static int lastUnusedIndex = 1;	//stub
+	private static String fileName = "tasklist.txt";
+	
 	public Menu() {
 		listTask = new ArrayList<Task>();
 	}
+	
+	public static void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair){
+		//IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		FileHandler.checkAndLoadTaskFile(fileName, listTask, msgPair);
+		if(!msgPair.isTrue){
+			return;
+		}
+		lastUnusedIndex = FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		if(!msgPair.isTrue){
+			return;
+		}
+	}
 
-	public static String commandExecution(String fileName, String input) {
+	public static String commandExecution(String input) {
 		ArrayList<KeyParamPair> keyParamList = new ArrayList<KeyParamPair>();
 		CommandType.Command_Types cmd = InputStringParser.processString(input,
 				keyParamList);
+		
 
 		switch (cmd) {
 
@@ -18,10 +33,10 @@ public class Menu {
 			return AddHandler.executeAdd(fileName, keyParamList, listTask, lastUnusedIndex);
 		}
 		case DISPLAY: {
-			//return DisplayHandler.executeDisplay(fileName, input, listTask);
+			return DisplayHandler.executeDisplay(fileName, keyParamList, listTask);
 		}
 		case DELETE: {
-			//return DeleteHandler.executedelete(fileName, input, listTask);
+			return DeleteHandler.executeDelete(fileName, keyParamList, listTask);
 		}
 		case CLEAR: {
 			//return ClearHandler.executeClear(fileName, input, listTask);
