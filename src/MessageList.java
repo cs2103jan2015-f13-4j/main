@@ -21,7 +21,7 @@ public class MessageList {
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
-	public static final String MESSAGE_ADDED = "Message Added.";
+	public static final String MESSAGE_ADDED = "Task Added.";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
 
 	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
