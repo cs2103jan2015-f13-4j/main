@@ -26,15 +26,13 @@ public class AddHandler {
 		KeywordType.List_Keywords getKey;
 		Task newTask = new Task();
 		newTask.setTaskId(lastUnusedIndex);
+		addTaskDesc(newTask, lastUnusedIndex, keyParamList.get(0));//field is here so no need to do in switch case
+		
 		for (int i = 1; i < keyParamList.size(); i++) {
 			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
 			switch (getKey) {
 			case BY:
 				indicMsg = addTaskByWhen(newTask, lastUnusedIndex,
-						keyParamList.get(i));
-				break;
-			case FIELD:
-				indicMsg = addTaskDesc(newTask, lastUnusedIndex,
 						keyParamList.get(i));
 				break;
 			default:
@@ -49,7 +47,7 @@ public class AddHandler {
 		lastUnusedIndex++;
 		indicMsg = new IndicatorMessagePair();
 		FileHandler.writeToFile(fileName, listTask, indicMsg);
-		if (indicMsg.isTrue()) {
+		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
 		return MessageList.MESSAGE_ADDED;
@@ -66,7 +64,7 @@ public class AddHandler {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
-		newTask.setTaskStartDateTime(endDate);
+		newTask.setTaskEndDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
 	}
 
