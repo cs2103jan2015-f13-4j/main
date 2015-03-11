@@ -81,7 +81,7 @@ public class Task {
 		String fullDetails = "";
 		
 		if(taskId > 0) {
-			fullDetails += "Task ID: " + taskId + "\n";
+			fullDetails += "\nTask ID: " + taskId + "\n";
 		}
 		
 		if(taskDescription != null && !taskDescription.isEmpty()) {
