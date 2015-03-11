@@ -63,6 +63,7 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 	
+	/*
 	@Test
 	public void testInvalidCommand()
 	{
@@ -71,6 +72,7 @@ public class AddHandlerTest {
 		String expected = MessageList.MESSAGE_INVALID_COMMAND;
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
+	*/
 	
 	@Test
 	public void testInvalidDate()
