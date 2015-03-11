@@ -63,17 +63,6 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
 	}
 	
-	/*
-	@Test
-	public void testInvalidCommand()
-	{
-		keyParamTest.add(new KeyParamPair("plus", "Submit Report"));
-		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
-		String expected = MessageList.MESSAGE_INVALID_COMMAND;
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
-	}
-	*/
-	
 	@Test
 	public void testInvalidDate()
 	{
