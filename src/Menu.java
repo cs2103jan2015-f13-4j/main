@@ -21,7 +21,7 @@ public class Menu {
 		}
 	}
 
-	public static String commandExecution(String input) {
+	public String commandExecution(String input) {
 		ArrayList<KeyParamPair> keyParamList = new ArrayList<KeyParamPair>();
 		CommandType.Command_Types cmd = InputStringParser.processString(input,
 				keyParamList);
