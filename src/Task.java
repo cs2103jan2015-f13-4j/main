@@ -77,9 +77,26 @@ public class Task {
 	
 	@Override
 	public String toString() {
-		return taskId + "|"
-				+ taskDescription + "|" + taskStartDateTime
-				+ "|" + taskEndDateTime + "|" + weeklyDay;
+		
+		String fullDetails = "";
+		
+		if(taskId > 0) {
+			fullDetails += "Task ID: " + taskId + "\n";
+		}
+		
+		if(taskDescription != null && !taskDescription.isEmpty()) {
+			fullDetails += "Description: " + taskDescription + "\n";
+		}
+		
+		if(taskStartDateTime != null) {
+			fullDetails += "Start Date: " + taskStartDateTime.toLocalDate() + "\n";
+		}
+		
+		if(taskEndDateTime != null) {
+			fullDetails += "End Date: " + taskEndDateTime.toLocalDate();
+		}
+
+		return fullDetails;
 	}
 	
 	@Override
