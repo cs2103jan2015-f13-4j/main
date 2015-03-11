@@ -123,6 +123,7 @@ public class SmtSurvival extends Composite {
 	private void passControl(KeyEvent e)
 	{
 		String output = new String();
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
 			output = controller.commandExecution(cmdTxtBox.getText());
 			tbtmMain.setControl(lblDisplay);
