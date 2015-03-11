@@ -103,7 +103,7 @@ public class UpdateHandler {
 		if(endDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
-		listTask.get(index).setTaskStartDateTime(endDate);
+		listTask.get(index).setTaskEndDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
 	}
 	
