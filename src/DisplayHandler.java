@@ -31,17 +31,17 @@ public class DisplayHandler {
 		KeywordType.List_Keywords getKey;
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
 
-		getKey = KeywordType.getKeyword(keyParamList.get(0).getKeyword());
+		getKey = KeywordType.getKeyword(keyParamList.get(1).getKeyword());
 		
 		switch(getKey) {
 		case TODAY:
-			indicMsg = displayTodayTasks(keyParamList.get(0), listTask, displayTasksList);
+			indicMsg = displayTodayTasks(keyParamList.get(1), listTask, displayTasksList);
 			break;
 		case TODO:
-			indicMsg = displayCompletedTasks(keyParamList.get(0), listTask, displayTasksList);
+			indicMsg = displayCompletedTasks(keyParamList.get(1), listTask, displayTasksList);
 			break;
 		case PENDING:
-			indicMsg = displayNotCompletedTasks(keyParamList.get(0), listTask, displayTasksList);
+			indicMsg = displayNotCompletedTasks(keyParamList.get(1), listTask, displayTasksList);
 			break;
 		default:
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
