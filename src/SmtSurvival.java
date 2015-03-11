@@ -173,6 +173,14 @@ public class SmtSurvival extends Composite {
 	    Smt.pack();
 	    shell.pack();
 	    
+	    // setting up the files
+	    IndicatorMessagePair msgPair = new IndicatorMessagePair();
+	    controller.retrieveTasksAndLastUsedIndex(msgPair);
+	    
+	    if(!msgPair.isTrue){
+	    	MessageList.printErrorMessageAndExit(msgPair.getMessage());
+	    }
+	    
 	    while(!shell.isDisposed()){
 	        if(!display.readAndDispatch()) display.sleep();
 	    }
