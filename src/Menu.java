@@ -48,6 +48,9 @@ public class Menu {
 		case SORT: {
 			// return SortHandler.executeSort(fileName);
 		}
+		case HELP:{
+			return HelpCommandListHandler.getCommandHelp(keyParamList);
+		}
 		case UPDATE: {
 			return UpdateHandler
 					.executeUpdate(fileName, keyParamList, listTask);

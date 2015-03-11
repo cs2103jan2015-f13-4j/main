@@ -1,6 +1,6 @@
 public class CommandType {
 	public enum Command_Types {
-		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT
+		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP
 	}
 
 	public static Command_Types getType(String[] commandTypeString) {
@@ -26,6 +26,8 @@ public class CommandType {
 			return Command_Types.SEARCH;
 		case "sort": 
 			return Command_Types.SORT;
+		case "help":
+			return Command_Types.HELP;
 		default: 
 			return Command_Types.INVALID;
 		}

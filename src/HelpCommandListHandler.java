@@ -1,14 +1,24 @@
+import java.util.ArrayList;
+
 
 public class HelpCommandListHandler {
 
-	public static String getCommandHelp(String helpCommand) {
-		CommandListHelp.CommandListHelp_Type commandList = CommandListHelp
-				.getType(helpCommand.split(" "));
+	public static String getCommandHelp(ArrayList<KeyParamPair> keyParamList) {
+		if (keyParamList == null || keyParamList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
+		}
+		
+		if(keyParamList.size() != 1){
+			return MessageList.MESSAGE_INVAILD;
+		}
 
-		if (helpCommand.equalsIgnoreCase("help")) {
+		if (keyParamList.get(0).getParam().isEmpty()) {
 			return MessageList.MESSAGE_HELP;
 		}
-		switch (commandList) {
+		
+		CommandType.Command_Types getType = CommandType.getType(keyParamList.get(0).getParam().split(" "));
+		
+		switch (getType) {
 
 		case ADD: {
 			return MessageList.MESSAGE_ADD_HELP;
