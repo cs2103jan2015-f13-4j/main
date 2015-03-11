@@ -109,12 +109,10 @@ public class SmtSurvival extends Composite {
 		
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
+			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
-				{
-					displayTaskFolder.setSelection(tbtmMain);
-				}
+				passControl(e);
 			}
 		});
 		
