@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 public class AddHandler {
 
-	public static String executeAdd(String fileName,
+	public static String executeAdd(String fileName, String lastUnUsedIndexFileName,
 			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
 			Integer lastUnusedIndex) {
 		if (keyParamList == null || keyParamList.isEmpty()) {
@@ -15,11 +15,11 @@ public class AddHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		return addContents(fileName, keyParamList, listTask, lastUnusedIndex);
+		return addContents(fileName, lastUnUsedIndexFileName,  keyParamList, listTask, lastUnusedIndex);
 
 	}
 
-	private static String addContents(String fileName,
+	private static String addContents(String fileName, String lastUnUsedIndexFileName, 
 			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
 			Integer lastUnusedIndex) {
 		IndicatorMessagePair indicMsg;
@@ -47,9 +47,16 @@ public class AddHandler {
 		lastUnusedIndex++;
 		indicMsg = new IndicatorMessagePair();
 		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+		indicMsg = new IndicatorMessagePair();
+		FileHandler.writeToFile(fileName, lastUnusedIndex, indicMsg);
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
 		return MessageList.MESSAGE_ADDED;
 	}
 

@@ -31,7 +31,7 @@ public class Menu {
 		switch (cmd) {
 
 		case ADD: {
-			return AddHandler.executeAdd(fileName, keyParamList, listTask, lastUnusedIndex);
+			return AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamList, listTask, lastUnusedIndex);
 		}
 		case DISPLAY: {
 			return DisplayHandler.executeDisplay(fileName, keyParamList, listTask);

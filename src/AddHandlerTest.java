@@ -10,6 +10,7 @@ import org.junit.Test;
 public class AddHandlerTest {
 	
 	String fileName = "testFile.txt";
+	String lastUsedIndexFileName = "testLastUnusedIndex.txt";
 
 	ArrayList<KeyParamPair> keyParamTest;
 	ArrayList<Task> taskList;
@@ -34,7 +35,7 @@ public class AddHandlerTest {
 		keyParamTest.add(new KeyParamPair("add", "submit proposal"));
 		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
 		String expected = MessageList.MESSAGE_ADDED;
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList, 4));
 	}
 
 	@Test 
@@ -43,7 +44,7 @@ public class AddHandlerTest {
 		keyParamTest.add(new KeyParamPair("add", "Submit Proposal"));
 		keyParamTest.add(new KeyParamPair("by",""));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList, 4));
 	}
 	
 	@Test
@@ -52,7 +53,7 @@ public class AddHandlerTest {
 		keyParamTest.add(new KeyParamPair("add","Submit Report"));
 		keyParamTest.add(new KeyParamPair("by","03-March-2014"));
 		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList, 4));
 	}
 	@Test
 	public void testAddWithDescWithWrongDateFormatforMonth()
@@ -60,7 +61,7 @@ public class AddHandlerTest {
 		keyParamTest.add(new KeyParamPair("add","Submit Report"));
 		keyParamTest.add(new KeyParamPair("by","03-2015-08"));
 		String expected = String.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList, 4));
 	}
 	
 	@Test
@@ -69,7 +70,7 @@ public class AddHandlerTest {
 		keyParamTest.add(new KeyParamPair("add", "Submit Assignment"));
 		keyParamTest.add(new KeyParamPair("by", "AA-12-2015"));
 		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
-		assertEquals(expected, AddHandler.executeAdd(fileName, keyParamTest, taskList, 4));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList, 4));
 	}
 	
 }
