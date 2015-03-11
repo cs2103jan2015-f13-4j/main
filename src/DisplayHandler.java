@@ -8,7 +8,7 @@ public class DisplayHandler {
 
 	public static String executeDisplay(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
 
-		int numItemExpected = 1;
+		int numItemExpected = 2;
 		
 		if(keyParamList == null || keyParamList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
