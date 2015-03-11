@@ -126,7 +126,7 @@ public class SmtSurvival extends Composite {
 	{
 		String output = new String();
 		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
-			output = controller.commandExecution(cmdTxtBox);
+			output = controller.commandExecution(cmdTxtBox.getText());
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
 		}
