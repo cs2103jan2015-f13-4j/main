@@ -4,6 +4,7 @@ public class Menu {
 	private static ArrayList<Task> listTask;
 	private static int lastUnusedIndex = 1;	//stub
 	private static String fileName = "tasklist.txt";
+	private static String lastUsedIndexFileName = "lastUsedIndex.txt";
 	
 	public Menu() {
 		listTask = new ArrayList<Task>();
@@ -15,7 +16,7 @@ public class Menu {
 		if(!msgPair.isTrue){
 			return;
 		}
-		lastUnusedIndex = FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		lastUnusedIndex = FileHandler.checkAndLoadLastTaskIndexFile(lastUsedIndexFileName, msgPair);
 		if(!msgPair.isTrue){
 			return;
 		}
