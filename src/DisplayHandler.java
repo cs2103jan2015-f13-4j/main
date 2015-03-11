@@ -107,7 +107,7 @@ public class DisplayHandler {
 	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
 		String taskDetails = "";
 		for (int i = 0; i < displayTasksList.size(); i++) {
-			taskDetails = displayTasksList.get(i).toString() +"\n";
+			taskDetails += displayTasksList.get(i).toString() +"\n";
 		}
 		return taskDetails;
 	}
