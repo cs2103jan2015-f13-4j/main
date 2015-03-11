@@ -3,10 +3,9 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 
 public class AddHandler {
-
+	
 	public static String executeAdd(String fileName, String lastUnUsedIndexFileName,
-			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
-			Integer lastUnusedIndex) {
+			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
 		if (keyParamList == null || keyParamList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
@@ -15,24 +14,27 @@ public class AddHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		return addContents(fileName, lastUnUsedIndexFileName,  keyParamList, listTask, lastUnusedIndex);
+		return addContents(fileName, lastUnUsedIndexFileName,  keyParamList, listTask);
 
 	}
 
 	private static String addContents(String fileName, String lastUnUsedIndexFileName, 
-			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask,
-			Integer lastUnusedIndex) {
-		IndicatorMessagePair indicMsg;
+			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		KeywordType.List_Keywords getKey;
 		Task newTask = new Task();
-		newTask.setTaskId(lastUnusedIndex);
-		addTaskDesc(newTask, lastUnusedIndex, keyParamList.get(0));//field is here so no need to do in switch case
+		
+		int lastUnUsedIndex = loadLastUsedIndex(lastUnUsedIndexFileName, indicMsg);
+		indicMsg = new IndicatorMessagePair();
+		
+		newTask.setTaskId(lastUnUsedIndex);
+		addTaskDesc(newTask, lastUnUsedIndex, keyParamList.get(0));//field is here so no need to do in switch case
 		
 		for (int i = 1; i < keyParamList.size(); i++) {
 			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
 			switch (getKey) {
 			case BY:
-				indicMsg = addTaskByWhen(newTask, lastUnusedIndex,
+				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
 						keyParamList.get(i));
 				break;
 			default:
@@ -43,16 +45,19 @@ public class AddHandler {
 				return indicMsg.getMessage();
 			}
 		}
+		
 		listTask.add(newTask);
-		lastUnusedIndex++;
+		lastUnUsedIndex++;
 		indicMsg = new IndicatorMessagePair();
 		FileHandler.writeToFile(fileName, listTask, indicMsg);
 		
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+		
 		indicMsg = new IndicatorMessagePair();
-		FileHandler.writeToFile(lastUnUsedIndexFileName, lastUnusedIndex, indicMsg);
+		FileHandler.writeToFile(lastUnUsedIndexFileName, lastUnUsedIndex, indicMsg);
+		
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
@@ -83,6 +88,20 @@ public class AddHandler {
 		}
 		newTask.setTaskDescription(keyParam.getParam());
 		return null;
+	}
+	
+	/**
+	 * This method call the file handler to retrieve the last unused index and return that index back
+	 * @param lastUsedIndexFileName
+	 * @param msgPair
+	 * @return either -1 or the last unused index
+	 */
+	private static int loadLastUsedIndex(String lastUsedIndexFileName, IndicatorMessagePair msgPair){
+		int lastUnusedIndex = FileHandler.checkAndLoadLastTaskIndexFile(lastUsedIndexFileName, msgPair);
+		if(!msgPair.isTrue){
+			return -1;
+		}
+		return lastUnusedIndex;
 	}
 
 }

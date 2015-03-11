@@ -2,22 +2,17 @@ import java.util.ArrayList;
 
 public class Menu {
 	private static ArrayList<Task> listTask;
-	private static Integer lastUnusedIndex = 1;	//stub
 	private static String fileName = "tasklist.txt";
 	private static String lastUsedIndexFileName = "lastUsedIndex.txt";
-	
+
 	public Menu() {
 		listTask = new ArrayList<Task>();
 	}
-	
-	public void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair){
-		//IndicatorMessagePair msgPair = new IndicatorMessagePair();
+
+	public void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair) {
+		// IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		FileHandler.checkAndLoadTaskFile(fileName, listTask, msgPair);
-		if(!msgPair.isTrue){
-			return;
-		}
-		lastUnusedIndex = FileHandler.checkAndLoadLastTaskIndexFile(lastUsedIndexFileName, msgPair);
-		if(!msgPair.isTrue){
+		if (!msgPair.isTrue) {
 			return;
 		}
 	}
@@ -26,33 +21,36 @@ public class Menu {
 		ArrayList<KeyParamPair> keyParamList = new ArrayList<KeyParamPair>();
 		CommandType.Command_Types cmd = InputStringParser.processString(input,
 				keyParamList);
-		
 
 		switch (cmd) {
 
 		case ADD: {
-			return AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamList, listTask, lastUnusedIndex);
+			return AddHandler.executeAdd(fileName, lastUsedIndexFileName,
+					keyParamList, listTask);
 		}
 		case DISPLAY: {
-			return DisplayHandler.executeDisplay(fileName, keyParamList, listTask);
+			return DisplayHandler.executeDisplay(fileName, keyParamList,
+					listTask);
 		}
 		case DELETE: {
-			return DeleteHandler.executeDelete(fileName, keyParamList, listTask);
+			return DeleteHandler
+					.executeDelete(fileName, keyParamList, listTask);
 		}
 		case CLEAR: {
-			//return ClearHandler.executeClear(fileName, input, listTask);
+			// return ClearHandler.executeClear(fileName, input, listTask);
 		}
 		case INVALID: {
 			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			//return ExecuteHandler.executeSearch(input);
+			// return ExecuteHandler.executeSearch(input);
 		}
 		case SORT: {
-			//return SortHandler.executeSort(fileName);
+			// return SortHandler.executeSort(fileName);
 		}
 		case UPDATE: {
-			return UpdateHandler.executeUpdate(fileName, keyParamList, listTask);
+			return UpdateHandler
+					.executeUpdate(fileName, keyParamList, listTask);
 		}
 		case EXIT: {
 			System.exit(0);
