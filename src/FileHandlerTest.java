@@ -84,5 +84,13 @@ public class FileHandlerTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
+	
+	@Test
+	public void testLastUnusedIndexWriteToFile() {
+		String lastUnUsedIndexfileName = "testLastUnUsedIndex.txt";
+		Integer lastUnusedIndex = 1;
+		FileHandler.writeToFile(lastUnUsedIndexfileName, lastUnusedIndex,  msgPair);
+		assertTrue(msgPair.isTrue());
+	}
 
 }
