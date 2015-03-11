@@ -38,6 +38,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayTodayTasks() {
 		
+		keyParamTest.add(new KeyParamPair("display", ""));
 		keyParamTest.add(new KeyParamPair("today", ""));
 		
 		String expected = "Success";
@@ -47,6 +48,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayCompletedTasks() {
 		
+		keyParamTest.add(new KeyParamPair("display", ""));
 		keyParamTest.add(new KeyParamPair("todo", ""));
 		
 		String expected = "Success";
@@ -56,6 +58,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayNotCompletedTasks() {
 		
+		keyParamTest.add(new KeyParamPair("display", ""));
 		keyParamTest.add(new KeyParamPair("pending", ""));
 		
 		String expected = "Success";
