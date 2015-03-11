@@ -38,13 +38,13 @@ public class FileHandler {
 
 		// Call to check for file is empty
 		exitIfUnspecificFileName(fileName, msgPair);
-		if(!msgPair.isTrue()){
+		if (!msgPair.isTrue()) {
 			return;
 		}
 
 		// Call to check for file format
 		exitIfWrongFileFormat(fileName, msgPair);
-		if(!msgPair.isTrue()){
+		if (!msgPair.isTrue()) {
 			return;
 		}
 
@@ -69,17 +69,18 @@ public class FileHandler {
 	 *            receive argument which will contains the filename
 	 * @return an integer which indicate the last unused task id
 	 */
-	public static int checkAndLoadLastTaskIndexFile(String fileName, IndicatorMessagePair msgPair) {
+	public static int checkAndLoadLastTaskIndexFile(String fileName,
+			IndicatorMessagePair msgPair) {
 
 		// Call to check for file is empty
 		exitIfUnspecificFileName(fileName, msgPair);
-		if(!msgPair.isTrue()){
+		if (!msgPair.isTrue()) {
 			return -1;
 		}
 
 		// Call to check for file format
 		exitIfWrongFileFormat(fileName, msgPair);
-		if(!msgPair.isTrue()){
+		if (!msgPair.isTrue()) {
 			return -1;
 		}
 
@@ -117,7 +118,8 @@ public class FileHandler {
 			String txtLine = "";
 			try {
 				while ((txtLine = bufferRead.readLine()) != null) {
-					Task taskObj = TaskParserFromTextFile.generateStringFromTextFileToTask(txtLine);
+					Task taskObj = TaskParserFromTextFile
+							.generateStringFromTextFileToTask(txtLine);
 					if (taskObj == null) {
 						setIndicatorMessagePair(msgPair, false, String.format(
 								MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
@@ -137,7 +139,7 @@ public class FileHandler {
 			return;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
-		
+
 	}
 
 	/**
@@ -146,15 +148,17 @@ public class FileHandler {
 	 * @param fileName
 	 * @return last unused index number
 	 */
-	private static Integer loadLastIndexUnused(String fileName, IndicatorMessagePair msgPair) {
+	private static Integer loadLastIndexUnused(String fileName,
+			IndicatorMessagePair msgPair) {
 		try {
 			FileReader reader = new FileReader(fileName);
 			BufferedReader bufferRead = new BufferedReader(reader);
 			String txtLine = "";
 			try {
 				while ((txtLine = bufferRead.readLine()) != null) {
-					if(!isStringAnInteger(txtLine)){
-						setIndicatorMessagePair(msgPair, false, MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
+					if (!isStringAnInteger(txtLine)) {
+						setIndicatorMessagePair(msgPair, false,
+								MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
 						return -1;
 					}
 					bufferRead.close();
@@ -174,12 +178,13 @@ public class FileHandler {
 	}
 
 	/**
-	 * This method write the contents to the text file
+	 * This method write the task list to the text file
 	 * 
 	 * @param fileName
 	 *            an filename for saving
 	 */
-	public static void writeToFile(String fileName, ArrayList<Task> taskList, IndicatorMessagePair msgPair) {
+	public static void writeToFile(String fileName, ArrayList<Task> taskList,
+			IndicatorMessagePair msgPair) {
 		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(fileName);// setup a file writer
@@ -188,14 +193,38 @@ public class FileHandler {
 			String formattedString = new String();
 			for (int i = 0; i < taskList.size(); i++) {
 				formattedString = concatTaskFieldToString(taskList.get(i));
-				if(formattedString == null){
-					setIndicatorMessagePair(msgPair, false, MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
+				if (formattedString == null) {
+					setIndicatorMessagePair(msgPair, false,
+							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
 					bw.close();
 					return;
 				}
 				bw.write(formattedString);
 				bw.newLine();
 			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return;
+		}
+		setIndicatorMessagePair(msgPair, true, "");
+	}
+
+	/**
+	 * This method write the last unused index to the text file
+	 * 
+	 * @param fileName
+	 *            an filename for saving
+	 */
+	public static void writeToFile(String fileName, Integer lastUnUsedIdex,
+			IndicatorMessagePair msgPair) {
+		// Add the string to the file
+		try {
+			FileWriter fw = new FileWriter(fileName);// setup a file writer
+			fw.flush();
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(lastUnUsedIdex.toString());
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
@@ -261,7 +290,7 @@ public class FileHandler {
 			textLine += TASK_COMPONENT_SEPARATOR;
 		}
 
-		if (oneTask.getWeeklyDay() != null && !oneTask.getWeeklyDay().isEmpty()){
+		if (oneTask.getWeeklyDay() != null && !oneTask.getWeeklyDay().isEmpty()) {
 			textLine += taskFields[TASKWEEKLYDAY_OFFSET].name();
 			textLine += TASK_FIELD_DATA_SEPARATOR;
 			textLine += oneTask.getWeeklyDay();
@@ -279,9 +308,11 @@ public class FileHandler {
 	 * 
 	 * @param fileName
 	 */
-	private static void exitIfUnspecificFileName(String fileName, IndicatorMessagePair msgPair) {
+	private static void exitIfUnspecificFileName(String fileName,
+			IndicatorMessagePair msgPair) {
 		if (fileName == null || fileName.trim().isEmpty()) {
-			setIndicatorMessagePair(msgPair, false, MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED);
+			setIndicatorMessagePair(msgPair, false,
+					MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED);
 			return;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
@@ -294,7 +325,8 @@ public class FileHandler {
 	 * @param fileName
 	 *            the string to compare
 	 */
-	private static void exitIfWrongFileFormat(String fileName, IndicatorMessagePair msgPair) {
+	private static void exitIfWrongFileFormat(String fileName,
+			IndicatorMessagePair msgPair) {
 		boolean isFileContainsADot = fileName.contains(".");
 		int fileExtLength = fileName.length() - fileName.indexOf(".");
 		String fileExt = fileName.substring(fileName.length()
@@ -302,13 +334,15 @@ public class FileHandler {
 
 		if (!(isFileContainsADot) || !(fileExtLength == FILE_EXTENSION_LENGTH)
 				|| !(fileExt.equals(".txt"))) {
-			setIndicatorMessagePair(msgPair, false, MessageList.MESSAGE_FILENAME_INVALID_FORMAT);
+			setIndicatorMessagePair(msgPair, false,
+					MessageList.MESSAGE_FILENAME_INVALID_FORMAT);
 			return;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
 	}
-	
-	private static void setIndicatorMessagePair(IndicatorMessagePair msgPair, boolean isTrue, String msg){
+
+	private static void setIndicatorMessagePair(IndicatorMessagePair msgPair,
+			boolean isTrue, String msg) {
 		msgPair.setTrue(isTrue);
 		msgPair.setMessage(msg);
 	}
