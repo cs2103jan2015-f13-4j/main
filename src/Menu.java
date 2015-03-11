@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Menu {
 	private static ArrayList<Task> listTask;
-	private static int lastUnusedIndex = 1;	//stub
+	private static Integer lastUnusedIndex = 1;	//stub
 	private static String fileName = "tasklist.txt";
 	private static String lastUsedIndexFileName = "lastUsedIndex.txt";
 	
