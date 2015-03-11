@@ -69,7 +69,7 @@ public class DisplayHandler {
 		DateTime endDate = DateParser.generateDate(date.toString());
 		
 		for(int i = 0; i < listTask.size(); i++) {
-			if(listTask.get(i).getTaskEndDateTime().equals(endDate)) {
+			if(listTask.get(i).getTaskEndDateTime().equals(endDate.toLocalDate())) {
 				displayTasksList.add(listTask.get(i));		
 			}
 		}
