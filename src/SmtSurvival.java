@@ -4,26 +4,31 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-//import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.layout.GridData;
-//import java.awt.FlowLayout;
-//import org.eclipse.swt.layout.FormLayout;
-//import org.eclipse.swt.layout.FormData;
-//import org.eclipse.swt.layout.FormAttachment;
-//import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-//import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class SmtSurvival extends Composite {
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-	private Text text_1;
+	private Text cmdTxtBox;
+	private TabItem tbtmMain;
+	private TabItem tbtmSchedule;
+	private TabItem tbtmToday;
+	private TabItem tbtmCompleted;
+	private TabItem tbtmPending;
+	private TabFolder displayTaskFolder;
+	private static Label lblDisplay;
+	private static Menu controller = new Menu();
 
 	/**
 	 * Create the composite.
@@ -52,32 +57,42 @@ public class SmtSurvival extends Composite {
 		toolkit.adapt(group);
 		toolkit.paintBordersFor(group);
 		
-		TabFolder tabFolder = new TabFolder(group, SWT.NONE);
-		tabFolder.setBounds(0, 10, 430, 476);
-		toolkit.adapt(tabFolder);
-		toolkit.paintBordersFor(tabFolder);
+		displayTaskFolder = new TabFolder(group, SWT.NONE);
 		
-		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
+		displayTaskFolder.setBounds(0, 10, 430, 371);
+		toolkit.adapt(displayTaskFolder);
+		toolkit.paintBordersFor(displayTaskFolder);
+		
+		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
-		Label lblNewLabel1 = new Label(tabFolder, SWT.NONE);
-		tbtmMain.setControl(lblNewLabel1);
-		lblNewLabel1.setText("You are now in the today tab");
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		tbtmMain.setControl(lblDisplay);
+		lblDisplay.setText("Welcome to Smart Management Tool");
 		
-		TabItem tbtmSchedule = new TabItem(tabFolder, SWT.NONE);
+		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmSchedule.setText("Schedule");
 		
-		TabItem tbtmToday = new TabItem(tabFolder, SWT.NONE);
+		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmToday.setText("Today");
 		
-		TabItem tbtmCompleted = new TabItem(tabFolder, SWT.NONE);
+		tbtmCompleted = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmCompleted.setText("Completed");
 		
-		TabItem tbtmPending = new TabItem(tabFolder, SWT.NONE);
+		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmPending.setText("Pending");
+		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
+		
+		// add a listener to listen to the tab behavior
+		displayTaskFolder.addSelectionListener(new SelectionAdapter()
+		{
+			public void widgetSelected(SelectionEvent event){
+				tabControl(event);
+			}
+		});
 		
 		Composite composite_1 = new Composite(this, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -92,22 +107,69 @@ public class SmtSurvival extends Composite {
 		toolkit.adapt(lblCommand, true, true);
 		lblCommand.setText("Command :");
 		
-		text_1 = new Text(composite_1, SWT.BORDER);
-		text_1.setBounds(100, 10, 319, 63);
-		toolkit.adapt(text_1, true, true);
+		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+		cmdTxtBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
+				{
+					displayTaskFolder.setSelection(tbtmMain);
+				}
+			}
+		});
+		
+		cmdTxtBox.setBounds(100, 10, 319, 63);
+		toolkit.adapt(cmdTxtBox, true, true);
+	}
+	
+	private void passControl(KeyEvent e)
+	{
+		String output = new String();
+		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
+			output = controller.commandExecution(cmdTxtBox);
+			tbtmMain.setControl(lblDisplay);
+			lblDisplay.setText(output);
+		}
+	}
+	
+	/**
+	 * This method will toggle the respective tab
+	 * @param event
+	 */
+	private void tabControl(SelectionEvent event){
+		
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		
+		if(displayTaskFolder.getSelection()[0].equals(tbtmMain)){
+			tbtmMain.setControl(lblDisplay);
+			lblDisplay.setText("");
+		}
+		else if(displayTaskFolder.getSelection()[0].equals(tbtmSchedule)){
+			tbtmSchedule.setControl(lblDisplay);
+			lblDisplay.setText("You are now in the Schedule tab");
+		}
+		else if(displayTaskFolder.getSelection()[0].equals(tbtmToday)){
+			tbtmToday.setControl(lblDisplay);
+			lblDisplay.setText("You are now in the Today tab");
+		}
+		else if(displayTaskFolder.getSelection()[0].equals(tbtmCompleted)){
+			tbtmCompleted.setControl(lblDisplay);
+			lblDisplay.setText("You are now in the Completed tab");
+		}
+		else if(displayTaskFolder.getSelection()[0].equals(tbtmPending)){
+			tbtmPending.setControl(lblDisplay);
+			lblDisplay.setText("You are now in the Pending tab");
+		}
 	}
 	
 	public static void main(String[] args){
 		
 	    Display display = new Display();
 	    Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
-	    //shell.s
 	    shell.setText("Smart Management Tool");
 	    
 	    shell.open();
-	    
 	    SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
-	    
 	    Smt.pack();
 	    shell.pack();
 	    
