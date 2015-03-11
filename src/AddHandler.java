@@ -52,7 +52,7 @@ public class AddHandler {
 			return indicMsg.getMessage();
 		}
 		indicMsg = new IndicatorMessagePair();
-		FileHandler.writeToFile(fileName, lastUnusedIndex, indicMsg);
+		FileHandler.writeToFile(lastUnUsedIndexFileName, lastUnusedIndex, indicMsg);
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
