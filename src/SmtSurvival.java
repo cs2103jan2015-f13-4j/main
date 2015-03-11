@@ -16,6 +16,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class SmtSurvival extends Composite {
 
@@ -66,6 +67,7 @@ public class SmtSurvival extends Composite {
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
 		
@@ -108,6 +110,8 @@ public class SmtSurvival extends Composite {
 		lblCommand.setText("Command :");
 		
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+		cmdTxtBox.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		cmdTxtBox.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 			
 			@Override
