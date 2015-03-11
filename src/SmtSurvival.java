@@ -123,6 +123,7 @@ public class SmtSurvival extends Composite {
 	private void passControl(KeyEvent e)
 	{
 		String output = new String();
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
 			output = controller.commandExecution(cmdTxtBox.getText());
 			tbtmMain.setControl(lblDisplay);
@@ -148,15 +149,15 @@ public class SmtSurvival extends Composite {
 		}
 		else if(displayTaskFolder.getSelection()[0].equals(tbtmToday)){
 			tbtmToday.setControl(lblDisplay);
-			lblDisplay.setText("You are now in the Today tab");
+			lblDisplay.setText(controller.commandExecution("display today"));
 		}
 		else if(displayTaskFolder.getSelection()[0].equals(tbtmCompleted)){
 			tbtmCompleted.setControl(lblDisplay);
-			lblDisplay.setText("You are now in the Completed tab");
+			lblDisplay.setText(controller.commandExecution("display todo"));
 		}
 		else if(displayTaskFolder.getSelection()[0].equals(tbtmPending)){
 			tbtmPending.setControl(lblDisplay);
-			lblDisplay.setText("You are now in the Pending tab");
+			lblDisplay.setText(controller.commandExecution("display pending"));
 		}
 	}
 	
