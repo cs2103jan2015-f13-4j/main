@@ -9,7 +9,7 @@ public class Menu {
 		listTask = new ArrayList<Task>();
 	}
 	
-	public static void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair){
+	public void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair){
 		//IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		FileHandler.checkAndLoadTaskFile(fileName, listTask, msgPair);
 		if(!msgPair.isTrue){
