@@ -42,7 +42,7 @@ public class MessageList {
 	/**
 	 * This message are for HelpCommandList class
 	 */
-	public static final String MESSAGE_HELP = "**************************************************\n1. Add <Desc>\n 2. Remove <Task #>\n 3) 1. Update <Task #> TaskDes <description> 2.Update <Task #> By <date/day>\n 4) Display <Task #>\n 5) Search <Task #>\n 6)Switchview <tabname>\n 7) Block <Task #><period>\n 8) Unblock <Task #><Period>\n**************************************************";
+	public static final String MESSAGE_HELP = "**************************************************\n1) Add <Desc>\n 2) Remove <Task #>\n 3) 1. Update <Task #> TaskDes <description> 2.Update <Task #> By <date/day>\n 4) Display <Task #>\n 5) Search <Task #>\n 6)Switchview <tabname>\n 7) Block <Task #><period>\n 8) Unblock <Task #><Period>\n**************************************************";
 	public static final String MESSAGE_ADD_HELP = "Add <Desc>";
 	public static final String MESSAGE_DELETE_HELP = "Delete <Task #>";
 	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>";
