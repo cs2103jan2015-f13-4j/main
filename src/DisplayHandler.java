@@ -47,9 +47,15 @@ public class DisplayHandler {
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
 		}
 		
-		displayTaskDetails(displayTasksList);
+		if(!indicMsg.isTrue) {
+			return indicMsg.getMessage();
+		}
 		
-		return indicMsg.getMessage();
+		if(displayTasksList.isEmpty()) {
+			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		}
+		
+		return displayTaskDetails(displayTasksList);
 	}
 		
 	private static IndicatorMessagePair displayTodayTasks(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
@@ -67,7 +73,6 @@ public class DisplayHandler {
 				displayTasksList.add(listTask.get(i));		
 			}
 		}
-		System.out.println("TODAY SIZE: " +displayTasksList.size());
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
@@ -99,9 +104,11 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static void displayTaskDetails(ArrayList<Task> displayTasksList) {
+	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
+		String taskDetails = "";
 		for (int i = 0; i < displayTasksList.size(); i++) {
-			System.out.println(displayTasksList.get(i).toString());
+			taskDetails = displayTasksList.get(i).toString() +"\n";
 		}
+		return taskDetails;
 	}
 }

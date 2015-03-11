@@ -11,6 +11,7 @@ public class MessageList {
 	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
 	public static final String MESSAGE_NULL = "Command is empty. Please enter again";
 	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
+	public static final String MESSAGE_NO_TASK_IN_DISPLAY_LIST = "There is no task in the display list.";
 	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
