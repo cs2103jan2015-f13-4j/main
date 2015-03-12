@@ -34,6 +34,9 @@ public class DisplayHandler {
 		getKey = KeywordType.getKeyword(keyParamList.get(1).getKeyword());
 		
 		switch(getKey) {
+		case SCHEDULE:
+			indicMsg = displaySchedule(keyParamList.get(1), listTask, displayTasksList);
+			break;
 		case TODAY:
 			indicMsg = displayTodayTasks(keyParamList.get(1), listTask, displayTasksList);
 			break;
@@ -57,10 +60,21 @@ public class DisplayHandler {
 		
 		return displayTaskDetails(displayTasksList);
 	}
+	
+	private static IndicatorMessagePair displaySchedule(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		if(!keyParam.getParam().isEmpty()) {
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
+		}
+		
+		for(int i = 0; i < listTask.size(); i++) {
+			displayTasksList.add(listTask.get(i));		
+		}
+		return new IndicatorMessagePair(true, "Success");
+	}
 		
 	private static IndicatorMessagePair displayTodayTasks(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		//if(keyParam.getParam() != null || !keyParam.getParam().isEmpty()) {
 		if(!keyParam.getParam().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
