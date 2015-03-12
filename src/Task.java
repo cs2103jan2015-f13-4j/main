@@ -89,11 +89,11 @@ public class Task {
 		}
 		
 		if(taskStartDateTime != null) {
-			fullDetails += "Start from: " + taskStartDateTime.toLocalDate() + "\n";
+			fullDetails += "Start from: " + DateParser.displayDateTime(taskStartDateTime) + "\n";
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + taskEndDateTime.toLocalDate();
+			fullDetails += "Deadline: " + DateParser.displayDateTime(taskEndDateTime);
 		}
 
 		return fullDetails;
