@@ -4,7 +4,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateParser {
 	
-	private static String[] dateFormatList = {"MM-dd-yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
+	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
 	private static String standardFormat = "d MMMM, yyyy";
 	
 	public static DateTime generateDate(String dateValue) {

@@ -30,6 +30,12 @@ public class MessageList {
 	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
 	
 	/**
+	 * This message are for CacheCommandsHandler class
+	 */
+	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
+	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
+	
+	/**
 	 * This method will print out the error message before exiting the system
 	 * 
 	 * @param message
