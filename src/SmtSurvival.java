@@ -148,7 +148,7 @@ public class SmtSurvival extends Composite {
 		}
 		else if(displayTaskFolder.getSelection()[0].equals(tbtmSchedule)){
 			tbtmSchedule.setControl(lblDisplay);
-			lblDisplay.setText("You are now in the Schedule tab");
+			lblDisplay.setText(controller.commandExecution("display schedule"));
 		}
 		else if(displayTaskFolder.getSelection()[0].equals(tbtmToday)){
 			tbtmToday.setControl(lblDisplay);
