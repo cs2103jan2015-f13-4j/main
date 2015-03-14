@@ -43,10 +43,11 @@ public class Menu {
 			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			// return ExecuteHandler.executeSearch(input);
+			 //return SearchHandler.executeSearch(ArrayList<KeyParamPair> keyParamList,
+						//ArrayList<Task> listTask);
 		}
 		case SORT: {
-			 //return SortHandler.executeSort(fileName, keyParamList, listTask);
+			 return SortHandler.executeSort(fileName, keyParamList, listTask);
 		}
 		case HELP:{
 			return HelpCommandListHandler.getCommandHelp(keyParamList);
