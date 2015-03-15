@@ -37,6 +37,8 @@ public class AddHandler {
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
 						keyParamList.get(i));
 				break;
+			//case EVERY:
+				//indicMsg = 
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_COMMAND,"Add");
 			}
