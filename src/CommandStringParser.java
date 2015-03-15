@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class CommandStringParser {
 	
 	
-	public static CommandType.Command_Types processString(String input, ArrayList<KeyFieldPair> keyFields){
+	public static CommandType.Command_Types processString(String input, ArrayList<KeyFieldPair> keyFieldsList){
 		if(input == null || input.equals("")){
 			return CommandType.Command_Types.INVALID;
 		}
@@ -16,12 +16,12 @@ public class CommandStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		generateKeykeyFieldPair(keyFields, inputCmd);
+		generateKeykeyFieldPair(keyFieldsList, inputCmd);
 		
 		return command;
 	}
 
-	private static void generateKeykeyFieldPair(ArrayList<KeyFieldPair> keyFields,
+	private static void generateKeykeyFieldPair(ArrayList<KeyFieldPair> keyFieldsList,
 			String[] inputCmd) {
 		String key = inputCmd[0];
 		String eachWord = new String();
@@ -30,7 +30,7 @@ public class CommandStringParser {
 		for(int i = 1; i < inputCmd.length; i++){
 			eachWord = inputCmd[i];
 			if(KeywordType.contains(eachWord)){
-				keyFields.add(new KeyFieldPair(key, tempFields.trim()));
+				keyFieldsList.add(new KeyFieldPair(key, tempFields.trim()));
 				key = eachWord;
 				tempFields = "";
 			}
@@ -39,6 +39,6 @@ public class CommandStringParser {
 			}
 		}
 		
-		keyFields.add(new KeyFieldPair(key, tempFields.trim()));
+		keyFieldsList.add(new KeyFieldPair(key, tempFields.trim()));
 	}
 }
