@@ -2,7 +2,7 @@
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, BY, TASKDESC, TASKSTART, TASKEND, SCHEDULE, TODAY, TODO, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
+		FROM, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, SCHEDULE, TODAY, TODO, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
 	}
 	
 	/**
@@ -20,6 +20,10 @@ public class KeywordType {
 			return List_Keywords.FROM;
 		case "by":
 			return List_Keywords.BY;
+		case "taskid":
+			return List_Keywords.TASKID;
+		case "every":
+			return List_Keywords.EVERY;
 		case "taskdesc":
 			return List_Keywords.TASKDESC;
 		case "taskstart":
@@ -38,7 +42,7 @@ public class KeywordType {
 			return List_Keywords.PENDING;
 		case "description":
 			return List_Keywords.DESCRIPTION;
-		case "start":
+		case "startdate":
 			return List_Keywords.STARTDATE;
 		case "deadline":
 			return List_Keywords.DEADLINE;

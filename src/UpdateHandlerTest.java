@@ -9,12 +9,12 @@ import org.junit.Test;
 
 public class UpdateHandlerTest {
 
-	ArrayList<KeyParamPair> keyParamTest;
+	ArrayList<KeyFieldPair> keyFieldsTest;
 	ArrayList<Task> taskList;
 	String fileName = "taskList.txt";
 	@Before
 	public void setUp() {
-		keyParamTest = new ArrayList<KeyParamPair>();
+		keyFieldsTest = new ArrayList<KeyFieldPair>();
 		taskList = new ArrayList<Task>();
 		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
 		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
@@ -23,23 +23,23 @@ public class UpdateHandlerTest {
 
 	@After
 	public void tearDown() {
-		keyParamTest.clear();
+		keyFieldsTest.clear();
 	}
 
 	@Test
 	public void testUpdateWithDescRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithDescCheckRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
 		String expected = "Submit report to Ms Sarah and to IVLE";
-		UpdateHandler.executeUpdate(fileName, keyParamTest, taskList);
+		UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList);
 		for(int i = 0; i < taskList.size(); i++){
 			if(taskList.get(i).getTaskId() == 2){
 				assertEquals(expected, taskList.get(i).getTaskDescription());
@@ -49,53 +49,53 @@ public class UpdateHandlerTest {
 	
 	@Test
 	public void testUpdateWithDescAndEndDateRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
-		keyParamTest.add(new KeyParamPair("taskend", "03-03-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", "03-03-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithDescAndByRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
-		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah and to IVLE"));
+		keyFieldsTest.add(new KeyFieldPair("by", "03-03-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithByRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("by", "03-03-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithStartDateRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskstart", "02-01-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskstart", "02-01-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithEndDateRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskend", "02-01-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", "02-01-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithStartDateAndEndDateRegular() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskstart", "02-01-2015"));
-		keyParamTest.add(new KeyParamPair("taskend", "03-01-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskstart", "02-01-2015"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", "03-01-2015"));
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
@@ -106,83 +106,83 @@ public class UpdateHandlerTest {
 	
 	@Test
 	public void testUpdateWithNullTaskList() {
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah."));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah."));
 		String expected = MessageList.MESSAGE_NO_TASK_IN_LIST;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, null));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, null));
 	}
 	
 	@Test
 	public void testUpdateWithDescEmpty(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", ""));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", ""));
 		String expected = MessageList.MESSAGE_DESCRIPTION_EMPTY;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithDescNull(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskdesc", null));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", null));
 		String expected = MessageList.MESSAGE_DESCRIPTION_EMPTY;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithStartDateNull(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskstart", null));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskstart", null));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithStartDateEmpty(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskstart", ""));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskstart", ""));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithStartDateInvalid(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskstart", "aa-22-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskstart", "aa-22-2015"));
 		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start");
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithEndDateNull(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskend", null));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", null));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithEndDateEmpty(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskend", ""));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", ""));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testUpdateWithEndDateInvalid(){
-		keyParamTest.add(new KeyParamPair("update", "2"));
-		keyParamTest.add(new KeyParamPair("taskend", "aa-22-2015"));
+		keyFieldsTest.add(new KeyFieldPair("update", "2"));
+		keyFieldsTest.add(new KeyFieldPair("taskend", "aa-22-2015"));
 		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End");
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 	
 	
 	@Test
 	public void testInvalidConvertAnInteger() {
-		keyParamTest.add(new KeyParamPair("update", "ser@"));
-		keyParamTest.add(new KeyParamPair("taskdesc", "Submit report to Ms Sarah."));
+		keyFieldsTest.add(new KeyFieldPair("update", "ser@"));
+		keyFieldsTest.add(new KeyFieldPair("taskdesc", "Submit report to Ms Sarah."));
 		String expected = String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
-		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyParamTest, taskList));
+		assertEquals(expected, UpdateHandler.executeUpdate(fileName, keyFieldsTest, taskList));
 	}
 
 }
