@@ -3,20 +3,20 @@ import java.util.ArrayList;
 
 public class HelpCommandListHandler {
 
-	public static String getCommandHelp(ArrayList<KeyParamPair> keyParamList) {
-		if (keyParamList == null || keyParamList.isEmpty()) {
+	public static String getCommandHelp(ArrayList<KeyFieldPair> keyFieldsList) {
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 		
-		if(keyParamList.size() != 1){
+		if(keyFieldsList.size() != 1){
 			return MessageList.MESSAGE_INVAILD;
 		}
 
-		if (keyParamList.get(0).getParam().isEmpty()) {
+		if (keyFieldsList.get(0).getFields().isEmpty()) {
 			return MessageList.MESSAGE_HELP;
 		}
 		
-		CommandType.Command_Types getType = CommandType.getType(keyParamList.get(0).getParam().split(" "));
+		CommandType.Command_Types getType = CommandType.getType(keyFieldsList.get(0).getFields().split(" "));
 		
 		switch (getType) {
 

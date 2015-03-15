@@ -18,23 +18,23 @@ public class Menu {
 	}
 
 	public String commandExecution(String input) {
-		ArrayList<KeyFieldPair> KeyFieldsList = new ArrayList<KeyFieldPair>();
+		ArrayList<KeyFieldPair> keyFieldsList = new ArrayList<KeyFieldPair>();
 		CommandType.Command_Types cmd = CommandStringParser.processString(input,
-				KeyFieldsList);
+				keyFieldsList);
 
 		switch (cmd) {
 
 		case ADD: {
 			return AddHandler.executeAdd(fileName, lastUsedIndexFileName,
-					KeyFieldsList, listTask);
+					keyFieldsList, listTask);
 		}
 		case DISPLAY: {
-			return DisplayHandler.executeDisplay(fileName, KeyFieldsList,
+			return DisplayHandler.executeDisplay(fileName, keyFieldsList,
 					listTask);
 		}
 		case DELETE: {
 			return DeleteHandler
-					.executeDelete(fileName, KeyFieldsList, listTask);
+					.executeDelete(fileName, keyFieldsList, listTask);
 		}
 		case CLEAR: {
 			// return ClearHandler.executeClear(fileName, input, listTask);
@@ -43,18 +43,18 @@ public class Menu {
 			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			 //return SearchHandler.executeSearch(ArrayList<KeyFieldPair> KeyFieldsList,
+			 //return SearchHandler.executeSearch(ArrayList<KeyFieldPair> keyFieldsList,
 						//ArrayList<Task> listTask);
 		}
 		case SORT: {
-			 return SortHandler.executeSort(fileName, KeyFieldsList, listTask);
+			 return SortHandler.executeSort(fileName, keyFieldsList, listTask);
 		}
 		case HELP:{
-			return HelpCommandListHandler.getCommandHelp(KeyFieldsList);
+			return HelpCommandListHandler.getCommandHelp(keyFieldsList);
 		}
 		case UPDATE: {
 			return UpdateHandler
-					.executeUpdate(fileName, KeyFieldsList, listTask);
+					.executeUpdate(fileName, keyFieldsList, listTask);
 		}
 		case EXIT: {
 			System.exit(0);
