@@ -99,7 +99,7 @@ public class UpdateHandlerTest {
 	}
 	
 	@Test
-	public void testUpdateWithNullKeyParam() {
+	public void testUpdateWithNullKeyFields() {
 		String expected = MessageList.MESSAGE_NULL;
 		assertEquals(expected, UpdateHandler.executeUpdate(fileName, null, taskList));
 	}
