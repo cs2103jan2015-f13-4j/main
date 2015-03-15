@@ -38,7 +38,7 @@ public class KeywordType {
 			return List_Keywords.PENDING;
 		case "description":
 			return List_Keywords.DESCRIPTION;
-		case "start":
+		case "startdate":
 			return List_Keywords.STARTDATE;
 		case "deadline":
 			return List_Keywords.DEADLINE;
