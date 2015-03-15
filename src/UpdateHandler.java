@@ -72,6 +72,12 @@ public class UpdateHandler {
 			case TASKEND:
 				indicMsg = updateTaskByOrEndWhen(listTask, index, keyParamList.get(i));
 				break;
+			case COMPLETED:
+				indicMsg = updateTaskByOrEndWhen(listTask, index, keyParamList.get(i));
+				break;
+			case PENDING:
+				indicMsg = updateTaskByOrEndWhen(listTask, index, keyParamList.get(i));
+				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
 			}
