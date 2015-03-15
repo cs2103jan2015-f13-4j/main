@@ -1,7 +1,7 @@
 import org.joda.time.DateTime;
 
 
-public class Task {
+public class Task implements Comparable<Task> {
 	
 	private int taskId;
 	private String taskDescription;
@@ -89,11 +89,11 @@ public class Task {
 		}
 		
 		if(taskStartDateTime != null) {
-			fullDetails += "Start from: " + taskStartDateTime.toLocalDate() + "\n";
+			fullDetails += "Start from: " + DateParser.displayDateTime(taskStartDateTime) + "\n";
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + taskEndDateTime.toLocalDate();
+			fullDetails += "Deadline: " + DateParser.displayDateTime(taskEndDateTime);
 		}
 
 		return fullDetails;
@@ -119,5 +119,11 @@ public class Task {
 		if (taskId != other.taskId)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Task arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

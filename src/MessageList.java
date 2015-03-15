@@ -19,7 +19,11 @@ public class MessageList {
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
 	public static final String MESSAGE_INCORRECT_DATE_FORMAT ="Date Format is incorrect";
 	
+	/**
+	 * These message are for update class
+	 */
 	public static final String MESSAGE_UPDATE_SUCCESS = "Update successful.";
+	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
@@ -63,10 +67,16 @@ public class MessageList {
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
 	
 	/**
-	 * This command is for the Menu
+	 * These message are for the Menu
 	 */
 	public static final String MESSAGE_MENU_NO_COMMAND ="There is no command.";
 	public static final String MESSAGE_MENU_COMMAND_UNRECOGNISED = "Command Unrecognised!";
 
+	/**
+	 * These message are for search class
+	 */
+	public static final String MESSAGE_NO_MATCH_FOUND = "No Match Found";
+	public static final String MESSAGE_INVAILD_SEARCH = "This is a invaild search.";
+	public static final String MESSAGE_INVAILD_SEARCH_CRITERIA = "This is a invaild search criteria.";
 }
 

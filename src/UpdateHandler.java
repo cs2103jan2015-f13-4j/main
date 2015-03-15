@@ -9,9 +9,10 @@ public class UpdateHandler {
 	 * @param listTask contains the list of current tasks
 	 * @return message
 	 */
-	public static String executeUpdate(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask){
+	public static String executeUpdate(String fileName, ArrayList<KeyFieldPair> keyFieldsList, ArrayList<Task> listTask){
+		int firstKeyFieldsPair = 0, minTaskListSize = 0;
 		
-		if(keyParamList == null || keyParamList.isEmpty()){
+		if(keyFieldsList == null || keyFieldsList.isEmpty()){
 			return MessageList.MESSAGE_NULL;
 		}
 		
@@ -19,17 +20,17 @@ public class UpdateHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 		
-		if(!isStringAnInteger(keyParamList.get(0).getParam())){
+		if(!isStringAnInteger(keyFieldsList.get(firstKeyFieldsPair).getFields())){
 			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		}
 		
-		int index = searchTaskIndexStored(Integer.parseInt(keyParamList.get(0).getParam()), listTask);
+		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList.get(firstKeyFieldsPair).getFields()), listTask);
 		
-		if(index < 0){
+		if(index < minTaskListSize){
 			return MessageList.MESSAGE_NO_SUCH_TASK;
 		}
 		
-		return updateContents(fileName, keyParamList, index, listTask);
+		return updateContents(fileName, keyFieldsList, index, listTask);
 	}
 	
 	/**
@@ -49,28 +50,34 @@ public class UpdateHandler {
 	
 	/**
 	 * This method will update the contents based on the key word
-	 * @param keyParam contains the list of keyword and the data it has
+	 * @param keyFieldsList contains the list of keyword and the data it has
 	 * @param index indicate the location of the intended task to be updated
 	 * @param listTask contains the list of current tasks
 	 * @return message
 	 */
-	private static String updateContents(String fileName, ArrayList<KeyParamPair> keyParamList, int index, ArrayList<Task> listTask){
+	private static String updateContents(String fileName, ArrayList<KeyFieldPair> keyFieldsList, int index, ArrayList<Task> listTask){
 		IndicatorMessagePair indicMsg;
 		KeywordType.List_Keywords getKey;
-		for(int i = 1; i < keyParamList.size(); i++){
-			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
+		for(int i = 1; i < keyFieldsList.size(); i++){
+			getKey = KeywordType.getKeyword(keyFieldsList.get(i).getKeyword());
 			switch(getKey){
 			case BY:
-				indicMsg = updateTaskByOrEndWhen(listTask, index, keyParamList.get(i));
+				indicMsg = updateTaskByOrEndWhen(listTask, index, keyFieldsList.get(i));
 				break;
 			case TASKDESC:
-				indicMsg = updateTaskDesc(listTask, index, keyParamList.get(i));
+				indicMsg = updateTaskDesc(listTask, index, keyFieldsList.get(i));
 				break;
 			case TASKSTART:
-				indicMsg = updateTaskStartWhen(listTask, index, keyParamList.get(i));
+				indicMsg = updateTaskStartWhen(listTask, index, keyFieldsList.get(i));
 				break;
 			case TASKEND:
-				indicMsg = updateTaskByOrEndWhen(listTask, index, keyParamList.get(i));
+				indicMsg = updateTaskByOrEndWhen(listTask, index, keyFieldsList.get(i));
+				break;
+			case COMPLETED:
+				indicMsg = updateTaskStatus(listTask, index, keyFieldsList.get(i), true);
+				break;
+			case PENDING:
+				indicMsg = updateTaskStatus(listTask, index, keyFieldsList.get(i), false);
 				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
@@ -92,14 +99,14 @@ public class UpdateHandler {
 	 * This method will update the task end date and will determine whether it can be updated as well.
 	 * @param listTask contains the list of current tasks
 	 * @param index indicate the location of the intended task to be updated
-	 * @param keyParam contains the keyword and the data it has
+	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateTaskByOrEndWhen(ArrayList<Task> listTask, int index, KeyParamPair keyParam){
-		if(keyParam.getParam() == null || keyParam.getParam().isEmpty()){
+	private static IndicatorMessagePair updateTaskByOrEndWhen(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateTime endDate = DateParser.generateDate(keyParam.getParam());
+		DateTime endDate = DateParser.generateDate(keyFields.getFields());
 		if(endDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
@@ -111,14 +118,14 @@ public class UpdateHandler {
 	 * This method will update the task description and will determine whether it can be updated as well.
 	 * @param listTask contains the list of current tasks
 	 * @param index indicate the location of the intended task to be updated
-	 * @param keyParam contains the keyword and the data it has
+	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if the parameter and message
 	 */
-	private static IndicatorMessagePair updateTaskDesc(ArrayList<Task> listTask, int index, KeyParamPair keyParam){
-		if(keyParam.getParam() == null || keyParam.getParam().isEmpty()){
+	private static IndicatorMessagePair updateTaskDesc(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_DESCRIPTION_EMPTY);
 		}
-		listTask.get(index).setTaskDescription(keyParam.getParam());
+		listTask.get(index).setTaskDescription(keyFields.getFields());
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -126,15 +133,15 @@ public class UpdateHandler {
 	 * This method will update the task start date and will determine whether it can be updated as well.
 	 * @param listTask contains the list of current tasks
 	 * @param index indicate the location of the intended task to be updated
-	 * @param keyParam contains the keyword and the data it has
+	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateTaskStartWhen(ArrayList<Task> listTask, int index, KeyParamPair keyParam){
-		if(keyParam.getParam() == null || keyParam.getParam().isEmpty()){
+	private static IndicatorMessagePair updateTaskStartWhen(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
 		
-		DateTime startDate = DateParser.generateDate(keyParam.getParam());
+		DateTime startDate = DateParser.generateDate(keyFields.getFields());
 		if(startDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}
@@ -143,6 +150,22 @@ public class UpdateHandler {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * This method update the status of the task to completed or pending.
+	 * @param listTask contains the list of current tasks
+	 * @param index indicate the location of the intended task to be updated
+	 * @param keyFields contains the keyword and the data it has
+	 * @param status the task status in boolean
+	 * @return true if success, false if there is an invalid conversion object and message
+	 */
+	private static IndicatorMessagePair updateTaskStatus(ArrayList<Task> listTask, int index, KeyFieldPair keyFields, boolean status){
+		if(keyFields.getFields() != null || !keyFields.getFields().isEmpty()){
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD);
+		}
+		
+		listTask.get(index).setTaskStatus(status);
+		return new IndicatorMessagePair(true, "");
+	}
 	
 	/**
 	 * This method check if the given string can be converted to integer

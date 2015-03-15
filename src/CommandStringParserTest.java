@@ -7,95 +7,95 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class InputStringParserTest {
+public class CommandStringParserTest {
 
-	ArrayList<KeyParamPair> keyParamTest;
+	ArrayList<KeyFieldPair> keyFieldsTest;
 	
 	@Before
 	public void setUp(){
-		keyParamTest = new ArrayList<KeyParamPair>();
+		keyFieldsTest = new ArrayList<KeyFieldPair>();
 	}
 
 	@After
 	public void tearDown(){
-		keyParamTest.clear();
+		keyFieldsTest.clear();
 	}
 
 	@Test
 	public void testProcessStringAddRegular() {
 		String command = "add Do homework by Friday";
 		String expected = "ADD";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringDeleteRegular() {
 		String command = "delete 23";
 		String expected = "DELETE";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringDisplayRegular() {
 		String command = "display 24";
 		String expected = "DISPLAY";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringClearRegular() {
 		String command = "clear";
 		String expected = "CLEAR";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringExitRegular() {
 		String command = "exit";
 		String expected = "EXIT";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringSearchRegular() {
 		String command = "search 25";
 		String expected = "SEARCH";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringSortRegular() {
 		String command = "sort";
 		String expected = "SORT";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringInvalidCommandType() {
 		String command = "try to process";
 		String expected = "INVALID";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringEmptyCommandRegular() {
 		String command = "";
 		String expected = "INVALID";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
 	@Test
 	public void testProcessStringNullCommandRegular() {
 		String command = null;
 		String expected = "INVALID";
-		assertEquals(expected, InputStringParser.processString(command, keyParamTest).name());
+		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 
 	@Test
-	public void testProcessStringAddWithReturnKeyParamPairNumberRegular() {
+	public void testProcessStringAddWithReturnKeyFieldsTestNumberRegular() {
 		String command = "add Do homework by Friday";
 		int expected = 2;
-		InputStringParser.processString(command, keyParamTest);
-		assertTrue(expected == keyParamTest.size());
+		CommandStringParser.processString(command, keyFieldsTest);
+		assertTrue(expected == keyFieldsTest.size());
 	}
 }
