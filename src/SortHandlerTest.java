@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class SortHandlerTest {
 
-	ArrayList<KeyParamPair> keyParamTest;
+	ArrayList<KeyFieldPair> keyParamTest;
 	ArrayList<Task> taskList;
 	String fileName = "taskList.txt";
 	
@@ -19,7 +19,7 @@ public class SortHandlerTest {
 		
 		DateTime startDate = DateParser.generateDate("12/3/2015");
 		DateTime endDate = DateParser.generateDate("25/1/2015");
-		keyParamTest = new ArrayList<KeyParamPair>();
+		keyParamTest = new ArrayList<KeyFieldPair>();
 		taskList = new ArrayList<Task>();
 		
 		taskList.add(new Task(1, "CE1", startDate, endDate, true, ""));
@@ -37,8 +37,8 @@ public class SortHandlerTest {
 	@Test
 	public void testSortDescription() {
 		
-		keyParamTest.add(new KeyParamPair("sort", ""));
-		keyParamTest.add(new KeyParamPair("description", ""));
+		keyParamTest.add(new KeyFieldPair("sort", ""));
+		keyParamTest.add(new KeyFieldPair("description", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: 12 March, 2015\n";
 		assertEquals(expected, SortHandler.executeSort(fileName, keyParamTest, taskList));
@@ -47,8 +47,8 @@ public class SortHandlerTest {
 	@Test
 	public void testSortDeadline() {
 		
-		keyParamTest.add(new KeyParamPair("sort", ""));
-		keyParamTest.add(new KeyParamPair("deadline", ""));
+		keyParamTest.add(new KeyFieldPair("sort", ""));
+		keyParamTest.add(new KeyFieldPair("deadline", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: 12 March, 2015\n";
 		assertEquals(expected, SortHandler.executeSort(fileName, keyParamTest, taskList));
@@ -57,8 +57,8 @@ public class SortHandlerTest {
 	@Test
 	public void testSortStartDate() {
 		
-		keyParamTest.add(new KeyParamPair("sort", ""));
-		keyParamTest.add(new KeyParamPair("startdate", ""));
+		keyParamTest.add(new KeyFieldPair("sort", ""));
+		keyParamTest.add(new KeyFieldPair("startdate", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: 12 March, 2015\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
 		assertEquals(expected, SortHandler.executeSort(fileName, keyParamTest, taskList));
@@ -67,8 +67,8 @@ public class SortHandlerTest {
 	@Test
 	public void testSortCompleted() {
 		
-		keyParamTest.add(new KeyParamPair("sort", ""));
-		keyParamTest.add(new KeyParamPair("completed", ""));
+		keyParamTest.add(new KeyFieldPair("sort", ""));
+		keyParamTest.add(new KeyFieldPair("completed", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: 12 March, 2015\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
 		assertEquals(expected, SortHandler.executeSort(fileName, keyParamTest, taskList));
@@ -77,8 +77,8 @@ public class SortHandlerTest {
 	@Test
 	public void testSortPending() {
 		
-		keyParamTest.add(new KeyParamPair("sort", ""));
-		keyParamTest.add(new KeyParamPair("pending", ""));
+		keyParamTest.add(new KeyFieldPair("sort", ""));
+		keyParamTest.add(new KeyFieldPair("pending", ""));
 		
 		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: 12 March, 2015\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
 		assertEquals(expected, SortHandler.executeSort(fileName, keyParamTest, taskList));
