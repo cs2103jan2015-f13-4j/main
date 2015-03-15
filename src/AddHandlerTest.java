@@ -13,12 +13,12 @@ public class AddHandlerTest {
 	String fileName = "testFile.txt";
 	String lastUsedIndexFileName = "testLastUnusedIndex.txt";
 
-	ArrayList<KeyParamPair> keyParamTest;
+	ArrayList<KeyFieldPair> keyFieldsTest;
 	ArrayList<Task> taskList;
 
 	@Before
 	public void setUp() {
-		keyParamTest = new ArrayList<KeyParamPair>();
+		keyFieldsTest = new ArrayList<KeyFieldPair>();
 		taskList = new ArrayList<Task>();
 		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
 		taskList.add(new Task(2, "Submit report to Ms Sarah",new DateTime(), new DateTime(), ""));
@@ -30,7 +30,7 @@ public class AddHandlerTest {
 
 	@After
 	public void tearDown() {
-		keyParamTest.clear();
+		keyFieldsTest.clear();
 		taskList.clear();
 		File textList = new File(lastUsedIndexFileName);
 		textList.delete();
@@ -38,45 +38,45 @@ public class AddHandlerTest {
 
 	@Test
 	public void testAddWithDescRegular() {
-		keyParamTest.add(new KeyParamPair("add", "submit proposal"));
-		keyParamTest.add(new KeyParamPair("by", "03-03-2015"));
+		keyFieldsTest.add(new KeyFieldPair("add", "submit proposal"));
+		keyFieldsTest.add(new KeyFieldPair("by", "03-03-2015"));
 		String expected = MessageList.MESSAGE_ADDED;
-		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyFieldsTest, taskList));
 	}
 
 	@Test 
 	public void testAddWithDescWithoutDate()	
 	{
-		keyParamTest.add(new KeyParamPair("add", "Submit Proposal"));
-		keyParamTest.add(new KeyParamPair("by",""));
+		keyFieldsTest.add(new KeyFieldPair("add", "Submit Proposal"));
+		keyFieldsTest.add(new KeyFieldPair("by",""));
 		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
-		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testAddWithDescWithWrongDateFormat()
 	{
-		keyParamTest.add(new KeyParamPair("add","Submit Report"));
-		keyParamTest.add(new KeyParamPair("by","03-March-2014"));
+		keyFieldsTest.add(new KeyFieldPair("add","Submit Report"));
+		keyFieldsTest.add(new KeyFieldPair("by","03-March-2014"));
 		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
-		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyFieldsTest, taskList));
 	}
 	@Test
 	public void testAddWithDescWithWrongDateFormatforMonth()
 	{
-		keyParamTest.add(new KeyParamPair("add","Submit Report"));
-		keyParamTest.add(new KeyParamPair("by","03-2015-08"));
+		keyFieldsTest.add(new KeyFieldPair("add","Submit Report"));
+		keyFieldsTest.add(new KeyFieldPair("by","03-2015-08"));
 		String expected = String.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
-		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testInvalidDate()
 	{
-		keyParamTest.add(new KeyParamPair("add", "Submit Assignment"));
-		keyParamTest.add(new KeyParamPair("by", "AA-12-2015"));
+		keyFieldsTest.add(new KeyFieldPair("add", "Submit Assignment"));
+		keyFieldsTest.add(new KeyFieldPair("by", "AA-12-2015"));
 		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
-		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyParamTest, taskList));
+		assertEquals(expected, AddHandler.executeAdd(fileName, lastUsedIndexFileName, keyFieldsTest, taskList));
 	}
 	
 }
