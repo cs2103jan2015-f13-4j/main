@@ -20,6 +20,10 @@ public class KeywordType {
 			return List_Keywords.FROM;
 		case "by":
 			return List_Keywords.BY;
+		case "taskid":
+			return List_Keywords.TASKID;
+		case "every":
+			return List_Keywords.EVERY;
 		case "taskdesc":
 			return List_Keywords.TASKDESC;
 		case "taskstart":
