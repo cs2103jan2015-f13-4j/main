@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class DisplayHandlerTest {
 
-	ArrayList<KeyParamPair> keyParamTest;
+	ArrayList<KeyFieldPair> keyFieldsTest;
 	ArrayList<Task> taskList;
 	String fileName = "taskList.txt";
 	
@@ -24,7 +24,7 @@ public class DisplayHandlerTest {
 		
 		DateTime startDate = DateParser.generateDate("12/3/2015");
 		DateTime endDate = DateParser.generateDate("25/1/2015");
-		keyParamTest = new ArrayList<KeyParamPair>();
+		keyFieldsTest = new ArrayList<KeyFieldPair>();
 		taskList = new ArrayList<Task>();
 		
 		taskList.add(new Task(1, "CE1", startDate, endDate, true, ""));
@@ -37,46 +37,46 @@ public class DisplayHandlerTest {
 	@After
 	public void tearDown() throws Exception {
 		
-		keyParamTest.clear();
+		keyFieldsTest.clear();
 	}
 	
 	@Test
 	public void testDisplaySchedule() {
 		
-		keyParamTest.add(new KeyParamPair("display", ""));
-		keyParamTest.add(new KeyParamPair("schedule", ""));
+		keyFieldsTest.add(new KeyFieldPair("display", ""));
+		keyFieldsTest.add(new KeyFieldPair("schedule", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: "+ today +"\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
-		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyParamTest, taskList));
+		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testDisplayTodayTasks() {
 		
-		keyParamTest.add(new KeyParamPair("display", ""));
-		keyParamTest.add(new KeyParamPair("today", ""));
+		keyFieldsTest.add(new KeyFieldPair("display", ""));
+		keyFieldsTest.add(new KeyFieldPair("today", ""));
 		
 		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: "+ today + "\n";
-		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyParamTest, taskList));
+		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyFieldsTest, taskList));
 	}
 
 	@Test
 	public void testDisplayCompletedTasks() {
 		
-		keyParamTest.add(new KeyParamPair("display", ""));
-		keyParamTest.add(new KeyParamPair("todo", ""));
+		keyFieldsTest.add(new KeyFieldPair("display", ""));
+		keyFieldsTest.add(new KeyFieldPair("todo", ""));
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
-		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyParamTest, taskList));
+		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyFieldsTest, taskList));
 	}
 	
 	@Test
 	public void testDisplayNotCompletedTasks() {
 		
-		keyParamTest.add(new KeyParamPair("display", ""));
-		keyParamTest.add(new KeyParamPair("pending", ""));
+		keyFieldsTest.add(new KeyFieldPair("display", ""));
+		keyFieldsTest.add(new KeyFieldPair("pending", ""));
 		
 		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015\nDeadline: "+ today + "\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015\nDeadline: 25 January, 2015\n";
-		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyParamTest, taskList));
+		assertEquals(expected, DisplayHandler.executeDisplay(fileName, keyFieldsTest, taskList));
 	}
 }
