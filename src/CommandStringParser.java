@@ -24,9 +24,11 @@ public class CommandStringParser {
 	private static void generateKeykeyFieldPair(ArrayList<KeyFieldPair> keyFields,
 			String[] inputCmd) {
 		String key = inputCmd[0];
+		String eachWord = new String();
 		String tempFields = new String();
 		
-		for(String eachWord : inputCmd){
+		for(int i = 1; i < inputCmd.length; i++){
+			eachWord = inputCmd[i];
 			if(KeywordType.contains(eachWord)){
 				keyFields.add(new KeyFieldPair(key, tempFields.trim()));
 				key = eachWord;
