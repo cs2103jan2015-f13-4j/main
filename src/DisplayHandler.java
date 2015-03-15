@@ -61,9 +61,9 @@ public class DisplayHandler {
 		return displayTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair displaySchedule(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displaySchedule(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -73,9 +73,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 		
-	private static IndicatorMessagePair displayTodayTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayTodayTasks(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 	
@@ -92,9 +92,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayCompletedTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayCompletedTasks(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {	
+		if(!keyFields.getFields().isEmpty()) {	
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -106,9 +106,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayNotCompletedTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayNotCompletedTasks(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
