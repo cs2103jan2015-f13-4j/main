@@ -65,9 +65,9 @@ public class SortHandler {
 		return sortTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair sortDescription(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDescription(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -78,9 +78,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortDeadline(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDeadline(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -91,9 +91,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortStartDate(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortStartDate(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -104,9 +104,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortCompleted(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortCompleted(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -117,9 +117,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortPending(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortPending(KeyFieldPair keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getFields().isEmpty()) {
+		if(!keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
