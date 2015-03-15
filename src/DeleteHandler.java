@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class DeleteHandler {
 	
-	public static String executeDelete(String fileName, ArrayList<KeyFieldPair> keyParamList, ArrayList<Task> listTask) {
+	public static String executeDelete(String fileName, ArrayList<KeyFieldPair> KeyFieldsList, ArrayList<Task> listTask) {
 
 		int i;
 		int index;
 		Task removedText;
 		
-		if(keyParamList == null || keyParamList.isEmpty()){
+		if(KeyFieldsList == null || KeyFieldsList.isEmpty()){
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
@@ -16,11 +16,11 @@ public class DeleteHandler {
 			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
 		
-		if(!(keyParamList.size() == 1) || !(checkInteger(keyParamList.get(0).getFields()))){
+		if(!(KeyFieldsList.size() == 1) || !(checkInteger(KeyFieldsList.get(0).getFields()))){
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
-		index = Integer.parseInt(keyParamList.get(0).getFields());
+		index = Integer.parseInt(KeyFieldsList.get(0).getFields());
 		
 		// will search the task id from the list and delete the task
 		for(i = 0; i < listTask.size(); i++){
