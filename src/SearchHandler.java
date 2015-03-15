@@ -8,7 +8,13 @@ import java.util.Date;
 import org.joda.time.DateTime;
 
 public class SearchHandler {
-
+	
+	/**
+	 * 
+	 * @param keyParamList
+	 * @param listTask
+	 * @return
+	 */
 	public static String executeSearch(ArrayList<KeyParamPair> keyParamList,
 			ArrayList<Task> listTask) {
 		if (keyParamList == null || keyParamList.isEmpty()) {
@@ -25,7 +31,12 @@ public class SearchHandler {
 
 		return searchTask(listTask, keyParamList.get(0).getParam());
 	}
-
+/**
+ * This method is to search task, further breakup the search by different method
+ * @param listTask
+ * @param searchCriteria
+ * @return
+ */
 	private static String searchTask(ArrayList<Task> listTask,
 			String searchCriteria) {
 
@@ -78,7 +89,12 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NO_MATCH_FOUND;
 		}
 	}
-
+/**
+ * Search Task by the task index
+ * @param index
+ * @param listTask
+ * @return
+ */
 	private static String searchTaskID(String[] index, ArrayList<Task> listTask) {
 		if (index.length != 2)
 			return "invaild argument for searching for searchID";
@@ -94,7 +110,12 @@ public class SearchHandler {
 		}
 		return MessageList.MESSAGE_NO_MATCH_FOUND;
 	}
-
+/**
+ * Search task by the task description
+ * @param listTask
+ * @param wordAbstracted
+ * @return
+ */
 	private static String searchTaskDesc(ArrayList<Task> listTask,
 			String[] wordAbstracted) {
 
@@ -116,7 +137,11 @@ public class SearchHandler {
 		return displayTaskDetails(tempList);
 
 	}
-
+/**
+ * returning converted arraylist in String
+ * @param displayTasksList
+ * @return
+ */
 	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
 		String taskDetails = "";
 		for (int i = 0; i < displayTasksList.size(); i++) {
@@ -124,7 +149,11 @@ public class SearchHandler {
 		}
 		return taskDetails;
 	}
-
+/**
+ * convert to integer
+ * @param text
+ * @return
+ */
 	private static boolean checkInteger(String text) {
 		try {
 			Integer.parseInt(text);

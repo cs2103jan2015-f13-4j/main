@@ -19,7 +19,7 @@ public class Menu {
 
 	public String commandExecution(String input) {
 		ArrayList<KeyParamPair> keyParamList = new ArrayList<KeyParamPair>();
-		CommandType.Command_Types cmd = InputStringParser.processString(input,
+		CommandType.Command_Types cmd = CommandStringParser.processString(input,
 				keyParamList);
 
 		switch (cmd) {
