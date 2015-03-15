@@ -5,8 +5,8 @@ import org.joda.time.DateTime;
 public class AddHandler {
 	
 	public static String executeAdd(String fileName, String lastUnUsedIndexFileName,
-			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
-		if (keyParamList == null || keyParamList.isEmpty()) {
+			ArrayList<KeyFieldPair> keyFieldsList, ArrayList<Task> listTask) {
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 
@@ -14,12 +14,12 @@ public class AddHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		return addContents(fileName, lastUnUsedIndexFileName,  keyParamList, listTask);
+		return addContents(fileName, lastUnUsedIndexFileName,  keyFieldsList, listTask);
 
 	}
 
 	private static String addContents(String fileName, String lastUnUsedIndexFileName, 
-			ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+			ArrayList<KeyFieldPair> keyFieldsList, ArrayList<Task> listTask) {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		KeywordType.List_Keywords getKey;
 		Task newTask = new Task();
@@ -28,14 +28,14 @@ public class AddHandler {
 		indicMsg = new IndicatorMessagePair();
 		
 		newTask.setTaskId(lastUnUsedIndex);
-		addTaskDesc(newTask, lastUnUsedIndex, keyParamList.get(0));//field is here so no need to do in switch case
+		addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList.get(0));//field is here so no need to do in switch case
 		
-		for (int i = 1; i < keyParamList.size(); i++) {
-			getKey = KeywordType.getKeyword(keyParamList.get(i).getKeyword());
+		for (int i = 1; i < keyFieldsList.size(); i++) {
+			getKey = KeywordType.getKeyword(keyFieldsList.get(i).getKeyword());
 			switch (getKey) {
 			case BY:
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
-						keyParamList.get(i));
+						keyFieldsList.get(i));
 				break;
 			//case EVERY:
 				//indicMsg = 
@@ -68,12 +68,12 @@ public class AddHandler {
 	}
 
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
-			KeyParamPair keyParam) {
-		if (keyParam.getParam() == null || keyParam.getParam().isEmpty()) {
+			KeyFieldPair keyFields) {
+		if (keyFields.getFields() == null || keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateTime endDate = DateParser.generateDate(keyParam.getParam());
+		DateTime endDate = DateParser.generateDate(keyFields.getFields());
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
@@ -83,12 +83,12 @@ public class AddHandler {
 	}
 
 	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
-			KeyParamPair keyParam) {
-		if (keyParam.getParam() == null || keyParam.getParam().isEmpty()) {
+			KeyFieldPair keyFields) {
+		if (keyFields.getFields() == null || keyFields.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		newTask.setTaskDescription(keyParam.getParam());
+		newTask.setTaskDescription(keyFields.getFields());
 		return null;
 	}
 	
