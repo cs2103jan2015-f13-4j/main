@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 
 public class DisplayHandler {
 
-	public static String executeDisplay(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+	public static String executeDisplay(String fileName, ArrayList<KeyFieldPair> keyParamList, ArrayList<Task> listTask) {
 
 		int numItemExpected = 2;
 		
@@ -25,7 +25,7 @@ public class DisplayHandler {
 		return displayContents(fileName, keyParamList, listTask);	
 	}
 	
-	private static String displayContents(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+	private static String displayContents(String fileName, ArrayList<KeyFieldPair> keyParamList, ArrayList<Task> listTask) {
 		
 		IndicatorMessagePair indicMsg;
 		KeywordType.List_Keywords getKey;
@@ -61,9 +61,9 @@ public class DisplayHandler {
 		return displayTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair displaySchedule(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displaySchedule(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -73,9 +73,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 		
-	private static IndicatorMessagePair displayTodayTasks(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayTodayTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 	
@@ -92,9 +92,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayCompletedTasks(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayCompletedTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {	
+		if(!keyParam.getFields().isEmpty()) {	
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -106,9 +106,9 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayNotCompletedTasks(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayNotCompletedTasks(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		

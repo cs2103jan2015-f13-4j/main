@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 
 public class SortHandler {
 
-	public static String executeSort(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+	public static String executeSort(String fileName, ArrayList<KeyFieldPair> keyParamList, ArrayList<Task> listTask) {
 
 		int numItemExpected = 2;
 		
@@ -26,7 +26,7 @@ public class SortHandler {
 		return sortContents(fileName, keyParamList, listTask);	
 	}
 	
-	private static String sortContents(String fileName, ArrayList<KeyParamPair> keyParamList, ArrayList<Task> listTask) {
+	private static String sortContents(String fileName, ArrayList<KeyFieldPair> keyParamList, ArrayList<Task> listTask) {
 		
 		IndicatorMessagePair indicMsg;
 		KeywordType.List_Keywords getKey;
@@ -65,9 +65,9 @@ public class SortHandler {
 		return sortTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair sortDescription(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDescription(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -78,9 +78,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortDeadline(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDeadline(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -91,9 +91,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortStartDate(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortStartDate(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -104,9 +104,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortCompleted(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortCompleted(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
@@ -117,9 +117,9 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortPending(KeyParamPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortPending(KeyFieldPair keyParam, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		if(!keyParam.getParam().isEmpty()) {
+		if(!keyParam.getFields().isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
