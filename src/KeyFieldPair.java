@@ -1,16 +1,16 @@
 
-public class KeyParamPair {
+public class KeyFieldPair {
 
 	private String keyword;
-	private String param;
+	private String fields;
 	
 	/**
 	 * @param keyword received keyword to determine which key is it
-	 * @param param received param to indicate the data next to the key
+	 * @fields fields received fields to indicate the data next to the key
 	 */
-	public KeyParamPair(String keyword, String param) {
+	public KeyFieldPair(String keyword, String fields) {
 		this.keyword = keyword;
-		this.param = param;
+		this.fields = fields;
 	}
 
 	/**
@@ -28,17 +28,17 @@ public class KeyParamPair {
 	}
 
 	/**
-	 * @return the param
+	 * @return the fields
 	 */
-	public String getParam() {
-		return param;
+	public String getFields() {
+		return fields;
 	}
 
 	/**
-	 * @param param the param to set
+	 * @param param the fields to set
 	 */
-	public void setParam(String param) {
-		this.param = param;
+	public void setFields(String fields) {
+		this.fields = fields;
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +49,7 @@ public class KeyParamPair {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
-		result = prime * result + ((param == null) ? 0 : param.hashCode());
+		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
 		return result;
 	}
 
@@ -64,16 +64,16 @@ public class KeyParamPair {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		KeyParamPair other = (KeyParamPair) obj;
+		KeyFieldPair other = (KeyFieldPair) obj;
 		if (keyword == null) {
 			if (other.keyword != null)
 				return false;
 		} else if (!keyword.equals(other.keyword))
 			return false;
-		if (param == null) {
-			if (other.param != null)
+		if (fields == null) {
+			if (other.fields != null)
 				return false;
-		} else if (!param.equals(other.param))
+		} else if (!fields.equals(other.fields))
 			return false;
 		return true;
 	}
