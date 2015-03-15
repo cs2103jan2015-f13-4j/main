@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 
-public class InputStringParser {
+public class CommandStringParser {
 	
 	
-	public static CommandType.Command_Types processString(String input, ArrayList<KeyParamPair> keyParam){
+	public static CommandType.Command_Types processString(String input, ArrayList<KeyFieldPair> keyFields){
 		if(input == null || input.equals("")){
 			return CommandType.Command_Types.INVALID;
 		}
@@ -16,29 +16,27 @@ public class InputStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		generateKeyParamPair(keyParam, inputCmd);
+		generateKeykeyFieldPair(keyFields, inputCmd);
 		
 		return command;
 	}
 
-	private static void generateKeyParamPair(ArrayList<KeyParamPair> keyParam,
+	private static void generateKeykeyFieldPair(ArrayList<KeyFieldPair> keyFields,
 			String[] inputCmd) {
 		String key = inputCmd[0];
-		String eachWord = new String();
-		String tempParam = new String();
+		String tempFields = new String();
 		
-		for(int i = 1; i < inputCmd.length; i++){
-			eachWord = inputCmd[i];
+		for(String eachWord : inputCmd){
 			if(KeywordType.contains(eachWord)){
-				keyParam.add(new KeyParamPair(key, tempParam.trim()));
+				keyFields.add(new KeyFieldPair(key, tempFields.trim()));
 				key = eachWord;
-				tempParam = "";
+				tempFields = "";
 			}
 			else{
-				tempParam += eachWord + " ";
+				tempFields += eachWord + " ";
 			}
 		}
 		
-		keyParam.add(new KeyParamPair(key, tempParam.trim()));
+		keyFields.add(new KeyFieldPair(key, tempFields.trim()));
 	}
 }
