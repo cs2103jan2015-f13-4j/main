@@ -52,7 +52,6 @@ public class SearchHandler {
 		switch (getKey) {
 		case TASKID:
 			return searchTaskID(searchKeyField, listTask);
-			break;
 		case TASKDESC:
 			return searchTaskDesc(listTask, searchKeyField);
 		case DEADLINE:
