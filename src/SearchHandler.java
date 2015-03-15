@@ -11,13 +11,13 @@ public class SearchHandler {
 	
 	/**
 	 * 
-	 * @param keyParamList
+	 * @param keyFieldsList
 	 * @param listTask
 	 * @return
 	 */
-	public static String executeSearch(ArrayList<KeyParamPair> keyParamList,
+	public static String executeSearch(ArrayList<KeyFieldPair> keyFieldsList,
 			ArrayList<Task> listTask) {
-		if (keyParamList == null || keyParamList.isEmpty()) {
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 
@@ -25,11 +25,11 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		if (keyParamList.size() != 1) {
+		if (keyFieldsList.size() != 1) {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
-		return searchTask(listTask, keyParamList.get(0).getParam());
+		return searchTask(listTask, keyFieldsList.get(0).getFields());
 	}
 /**
  * This method is to search task, further breakup the search by different method
