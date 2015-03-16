@@ -78,7 +78,7 @@ public class SearchHandler {
 		for (int i = 0; i < listTask.size(); i++) {
 			DateTime endDate = DateParser.generateDate(deadLine);
 
-			if (listTask.get(i).getTaskEndDateTime().equals(endDate))
+			if (listTask.get(i).getTaskEndDateTime().toLocalDate().equals(endDate.toLocalDate()))
 				searchDetails += listTask.get(i).toString();
 		}
 		if (!searchDetails.isEmpty()) {

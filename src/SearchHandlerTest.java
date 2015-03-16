@@ -26,6 +26,8 @@ public class SearchHandlerTest {
 
 	@After
 	public void tearDown() throws Exception {
+		
+			keyFieldsTest.clear();
 	}
 
 	@Test
