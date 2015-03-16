@@ -26,7 +26,7 @@ public class SearchHandler {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
-		return searchTask(listTask, keyFieldsList.get(0).getFields());
+		return searchTask(listTask, keyFieldsList.get(1).getFields());
 	}
 /**
  * This method is to search task, further breakup the search by different method
