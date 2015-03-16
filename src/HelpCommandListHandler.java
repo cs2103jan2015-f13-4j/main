@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 
-
+/**
+ * 
+ * @author Baoyi
+ *
+ */
 public class HelpCommandListHandler {
 
 	public static String getCommandHelp(ArrayList<KeyFieldPair> keyFieldsList) {

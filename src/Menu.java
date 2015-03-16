@@ -43,8 +43,7 @@ public class Menu {
 			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			 //return SearchHandler.executeSearch(ArrayList<KeyFieldPair> keyFieldsList,
-						//ArrayList<Task> listTask);
+			 return SearchHandler.executeSearch(keyFieldsList, listTask);
 		}
 		case SORT: {
 			 return SortHandler.executeSort(fileName, keyFieldsList, listTask);
