@@ -75,7 +75,7 @@ public class SearchHandler {
 
 		String searchDetails = "";
 
-		for (int i = 0; i <= listTask.size(); i++) {
+		for (int i = 0; i < listTask.size(); i++) {
 			DateTime endDate = DateParser.generateDate(deadLine);
 
 			if (listTask.get(i).getTaskEndDateTime().equals(endDate))
@@ -101,7 +101,7 @@ public class SearchHandler {
 			return "Please enter a integer";
 		}
 
-		for (int i = 0; i <= listTask.size(); i++) {
+		for (int i = 0; i < listTask.size(); i++) {
 			if (listTask.get(i).getTaskId() == Integer.parseInt(index)) {
 				return listTask.get(i).toString();
 			}
@@ -120,7 +120,7 @@ public class SearchHandler {
 			String wordAbstracted) {
 
 		ArrayList<Task> tempList = new ArrayList<Task>();
-		for (int i = 0; i <= listTask.size(); i++) {
+		for (int i = 0; i < listTask.size(); i++) {
 			if (listTask.get(i).getTaskDescription().contains(wordAbstracted)) {
 				tempList.add(listTask.get(i));
 			}
