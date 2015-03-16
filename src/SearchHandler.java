@@ -22,7 +22,7 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		if (keyFieldsList.size() != 1) {
+		if (keyFieldsList.size() != 2) {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
