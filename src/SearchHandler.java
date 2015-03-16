@@ -121,7 +121,7 @@ public class SearchHandler {
 
 		ArrayList<Task> tempList = new ArrayList<Task>();
 		for (int i = 0; i <= listTask.size(); i++) {
-			if (listTask.get(i).getTaskDescription().equals(wordAbstracted)) {
+			if (listTask.get(i).getTaskDescription().contains(wordAbstracted)) {
 				tempList.add(listTask.get(i));
 			}
 		}
