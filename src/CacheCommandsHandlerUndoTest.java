@@ -32,7 +32,9 @@ public class CacheCommandsHandlerUndoTest {
 	@Test
 	public void testUndoRegular() {
 		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		CacheCommandsHandler.newHistory(taskList);
 		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+		CacheCommandsHandler.newHistory(taskList);
 		String expected = MessageList.MESSAGE_UNDO_SUCCESS;
 		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList, new IndicatorMessagePair()));
 	}
