@@ -1,6 +1,10 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DeleteHandler {
+	
+	private static Logger taskLogger = TaskLogging.getInstance();
 	
 	public static String executeDelete(String fileName, ArrayList<KeyFieldPair> KeyFieldsList, ArrayList<Task> listTask) {
 
@@ -32,6 +36,8 @@ public class DeleteHandler {
 		if(i >= 0)
 		{
 			removedText = listTask.remove(i);
+			taskLogger.log(Level.INFO, "DELETED: Task ID " + index);
+			
 			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 			FileHandler.writeToFile(fileName, listTask, indicMsg);
 			
