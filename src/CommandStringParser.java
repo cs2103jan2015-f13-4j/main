@@ -26,7 +26,7 @@ public class CommandStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		generateKeykeyFieldPair(keyFieldsList, inputCmd);
+		generateKeyFieldPair(keyFieldsList, inputCmd);
 		
 		return command;
 	}
@@ -37,7 +37,7 @@ public class CommandStringParser {
 	 * @param keyFieldsList a list of key and fields
 	 * @param inputCmd the blocks of word
 	 */
-	private static void generateKeykeyFieldPair(ArrayList<KeyFieldPair> keyFieldsList,
+	private static void generateKeyFieldPair(ArrayList<KeyFieldPair> keyFieldsList,
 			String[] inputCmd) {
 		String key = inputCmd[0];
 		String eachWord = new String();
