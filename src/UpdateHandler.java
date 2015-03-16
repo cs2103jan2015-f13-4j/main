@@ -159,7 +159,7 @@ public class UpdateHandler {
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateTaskStatus(ArrayList<Task> listTask, int index, KeyFieldPair keyFields, boolean status){
-		if(keyFields.getFields() != null || !keyFields.getFields().isEmpty()){
+		if(keyFields.getFields() == null || !keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD);
 		}
 		
