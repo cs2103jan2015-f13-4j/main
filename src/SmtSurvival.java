@@ -66,6 +66,7 @@ public class SmtSurvival extends Composite {
 		
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
+		tbtmMain.setToolTipText("Click this tab to show the Main page");
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		tbtmMain.setControl(lblDisplay);
@@ -73,15 +74,19 @@ public class SmtSurvival extends Composite {
 		
 		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmSchedule.setText("Schedule");
+		tbtmSchedule.setToolTipText("Click this tab to show all the Schedules");
 		
 		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmToday.setText("Today");
+		tbtmToday.setToolTipText("Click this tab to show Today's tasks");
 		
 		tbtmCompleted = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmCompleted.setText("Completed");
+		tbtmCompleted.setToolTipText("Click this tab to show all the Completed tasks");
 		
 		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmPending.setText("Pending");
+		tbtmPending.setToolTipText("Click this tab to show all the Pending tasks");
 		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -110,6 +115,7 @@ public class SmtSurvival extends Composite {
 		lblCommand.setText("Command :");
 		
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+		cmdTxtBox.setToolTipText("Enter command to manage your tasks");
 		cmdTxtBox.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
