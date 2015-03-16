@@ -9,6 +9,8 @@ public class Task implements Comparable<Task> {
 	private DateTime taskEndDateTime;
 	private boolean taskStatus;
 	private String weeklyDay;
+	private String taskCompleted = "Completed";
+	private String taskPending = "Pending";
 
 	
 	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, String weeklyDay) {
@@ -93,7 +95,13 @@ public class Task implements Comparable<Task> {
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + DateParser.displayDateTime(taskEndDateTime);
+			fullDetails += "Deadline: " + DateParser.displayDateTime(taskEndDateTime) + "\n";
+		}
+		
+		if(taskStatus) {
+			fullDetails += "Status: " + taskCompleted;
+		} else {
+			fullDetails += "Status: " + taskPending;
 		}
 
 		return fullDetails;
