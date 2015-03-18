@@ -31,8 +31,14 @@ public class SearchHandlerTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testSearchWithRegularDesc() {
+		keyFieldsTest.add(new KeyFieldPair("search", "EE2024 report proposal"));
+		keyFieldsTest.add(new KeyFieldPair("by", "03-03-2015"));
+		//keyFieldsTest.search();
+		//keyFieldsTest.search();
+		String expected = MessageList.MESSAGE_ADDED;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, listTask));
+		
 	}
 
 }
