@@ -36,7 +36,6 @@ public class DeleteHandler {
 		if(i >= 0)
 		{
 			removedText = listTask.remove(i);
-			taskLogger.log(Level.INFO, "DELETED: Task ID " + index);
 			
 			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 			FileHandler.writeToFile(fileName, listTask, indicMsg);
@@ -45,6 +44,7 @@ public class DeleteHandler {
 				return indicMsg.getMessage();
 			}
 			
+			taskLogger.log(Level.INFO, "Task ID deleted: " + removedText.getTaskId());
 			return String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, removedText.getTaskDescription());
 		}
 			
