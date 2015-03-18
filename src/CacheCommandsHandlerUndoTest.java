@@ -26,7 +26,7 @@ public class CacheCommandsHandlerUndoTest {
 	@Test
 	public void testUndoEmpty(){
 		String expected = MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
-		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList, new IndicatorMessagePair()));
+		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList));
 	}
 	
 	@Test
@@ -36,6 +36,6 @@ public class CacheCommandsHandlerUndoTest {
 		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
 		CacheCommandsHandler.newHistory(taskList);
 		String expected = MessageList.MESSAGE_UNDO_SUCCESS;
-		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList, new IndicatorMessagePair()));
+		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList));
 	}
 }
