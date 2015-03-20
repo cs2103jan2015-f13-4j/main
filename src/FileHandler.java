@@ -36,7 +36,7 @@ public class FileHandler {
 	 * @return the filename if the argument fulfill the condition
 	 */
 	public static void checkAndLoadTaskFile(String fileName,
-			ArrayList<Task> taskList, IndicatorMessagePair msgPair) {
+			ArrayList<Task> tasksList, IndicatorMessagePair msgPair) {
 
 		// Call to check for file is empty
 		exitIfUnspecificFileName(fileName, msgPair);
@@ -53,7 +53,7 @@ public class FileHandler {
 		File filepath = new File(fileName);
 
 		if (filepath.exists() && !filepath.isDirectory()) {
-			loadToArrayList(fileName, taskList, msgPair);
+			loadToArrayList(fileName, tasksList, msgPair);
 		} else {
 			try {
 				filepath.createNewFile();
@@ -113,33 +113,40 @@ public class FileHandler {
 	 *            the filename which will be opened and load contents into
 	 */
 	private static void loadToArrayList(String fileName,
-			ArrayList<Task> taskList, IndicatorMessagePair msgPair) {
+			ArrayList<Task> tasksList, IndicatorMessagePair msgPair) {
+		FileReader reader = null;
+		BufferedReader bufferRead = null;
 		try {
-			FileReader reader = new FileReader(fileName);
-			BufferedReader bufferRead = new BufferedReader(reader);
-			String txtLine = "";
-			try {
-				while ((txtLine = bufferRead.readLine()) != null) {
-					Task taskObj = TaskParserFromTextFile
-							.generateStringFromTextFileToTask(txtLine);
-					if (taskObj == null) {
-						setIndicatorMessagePair(msgPair, false, String.format(
-								MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
-								fileName));
-						bufferRead.close();
-						return;
-					}
-					taskList.add(taskObj);
-				}
-				bufferRead.close();
-			} catch (IOException e) {
-				setIndicatorMessagePair(msgPair, false, e.toString());
-				return;
-			}
+			reader = new FileReader(fileName);
+			bufferRead = new BufferedReader(reader);
+			
 		} catch (FileNotFoundException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
 			return;
 		}
+		
+		assert(bufferRead != null);
+		
+		String txtLine = "";
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				Task taskObj = TaskParserFromTextFile
+						.generateStringFromTextFileToTask(txtLine);
+				if (taskObj == null) {
+					setIndicatorMessagePair(msgPair, false, String.format(
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
+							fileName));
+					bufferRead.close();
+					return;
+				}
+				tasksList.add(taskObj);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return;
+		}
+		
 		setIndicatorMessagePair(msgPair, true, "");
 
 	}
@@ -185,7 +192,7 @@ public class FileHandler {
 	 * @param fileName
 	 *            an filename for saving
 	 */
-	public static void writeToFile(String fileName, ArrayList<Task> taskList,
+	public static void writeToFile(String fileName, ArrayList<Task> tasksList,
 			IndicatorMessagePair msgPair) {
 		// Add the string to the file
 		try {
@@ -193,8 +200,8 @@ public class FileHandler {
 			fw.flush();
 			BufferedWriter bw = new BufferedWriter(fw);
 			String formattedString = new String();
-			for (int i = 0; i < taskList.size(); i++) {
-				formattedString = concatTaskFieldToString(taskList.get(i));
+			for (int i = 0; i < tasksList.size(); i++) {
+				formattedString = concatTaskFieldToString(tasksList.get(i));
 				if (formattedString == null) {
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
@@ -219,14 +226,14 @@ public class FileHandler {
 	 * @param fileName
 	 *            an filename for saving
 	 */
-	public static void writeToFile(String fileName, Integer lastUnUsedIdex,
+	public static void writeToFile(String fileName, Integer lastUnUsedIndex,
 			IndicatorMessagePair msgPair) {
 		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(fileName);// setup a file writer
 			fw.flush();
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(lastUnUsedIdex.toString());
+			bw.write(lastUnUsedIndex.toString());
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
@@ -355,5 +362,8 @@ public class FileHandler {
 		msgPair.setTrue(isTrue);
 		msgPair.setMessage(msg);
 	}
+
+	
+	
 
 }
