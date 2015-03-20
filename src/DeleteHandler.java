@@ -16,13 +16,14 @@ public class DeleteHandler {
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
+		if(!(KeyFieldsList.size() == 1) || !(checkInteger(KeyFieldsList.get(0).getFields()))){
+			return MessageList.MESSAGE_INVALID_DELETE;
+		}
+		
 		if(listTask == null || listTask.isEmpty()){
 			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
 		
-		if(!(KeyFieldsList.size() == 1) || !(checkInteger(KeyFieldsList.get(0).getFields()))){
-			return MessageList.MESSAGE_INVALID_DELETE;
-		}
 		
 		index = Integer.parseInt(KeyFieldsList.get(0).getFields());
 		
@@ -55,7 +56,7 @@ public class DeleteHandler {
 		try{
 			Integer.parseInt(text);
 		} catch (NumberFormatException e) {
-			return false;
+			assert false: e.toString();
 		}
 		
 		return true;
