@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
 
 public class CacheCommandsHandler {
@@ -15,7 +13,7 @@ public class CacheCommandsHandler {
 	 * @param msgPair to indicate the message type
 	 * @return message depending on situation met 
 	 */
-	public static String executeUndo(String fileName, ArrayList<Task> listTask, IndicatorMessagePair msgPair) {
+	public static String executeUndo(String fileName, ArrayList<Task> listTask) {
 
 		if (checkUndoEmpty()) {
 			return MessageList.MESSAGE_NO_PREVIOUS_COMMAND;

@@ -1,6 +1,10 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DeleteHandler {
+	
+	private static Logger taskLogger = TaskLogging.getInstance();
 	
 	public static String executeDelete(String fileName, ArrayList<KeyFieldPair> KeyFieldsList, ArrayList<Task> listTask) {
 
@@ -12,13 +16,14 @@ public class DeleteHandler {
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
+		if(!(KeyFieldsList.size() == 1) || !(checkInteger(KeyFieldsList.get(0).getFields()))){
+			return MessageList.MESSAGE_INVALID_DELETE;
+		}
+		
 		if(listTask == null || listTask.isEmpty()){
 			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
 		
-		if(!(KeyFieldsList.size() == 1) || !(checkInteger(KeyFieldsList.get(0).getFields()))){
-			return MessageList.MESSAGE_INVALID_DELETE;
-		}
 		
 		index = Integer.parseInt(KeyFieldsList.get(0).getFields());
 		
@@ -32,6 +37,7 @@ public class DeleteHandler {
 		if(i >= 0)
 		{
 			removedText = listTask.remove(i);
+			
 			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 			FileHandler.writeToFile(fileName, listTask, indicMsg);
 			
@@ -39,6 +45,7 @@ public class DeleteHandler {
 				return indicMsg.getMessage();
 			}
 			
+			taskLogger.log(Level.INFO, "Task ID deleted: " + removedText.getTaskId());
 			return String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, removedText.getTaskDescription());
 		}
 			
@@ -49,7 +56,7 @@ public class DeleteHandler {
 		try{
 			Integer.parseInt(text);
 		} catch (NumberFormatException e) {
-			return false;
+			assert false: e.toString();
 		}
 		
 		return true;
