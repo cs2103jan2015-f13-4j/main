@@ -27,7 +27,7 @@ public class SmtSurvival extends Composite {
 	private TabItem tbtmToday;
 	private TabItem tbtmCompleted;
 	private TabItem tbtmPending;
-	private TabFolder displayTaskFolder;
+	private static TabFolder displayTaskFolder;
 	private static Label lblDisplay;
 	private static Menu controller = new Menu();
 
@@ -93,11 +93,13 @@ public class SmtSurvival extends Composite {
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		
 		// add a listener to listen to the tab behavior
 		displayTaskFolder.addSelectionListener(new SelectionAdapter()
 		{
 			public void widgetSelected(SelectionEvent event){
-				tabControl(event);
+				tabControl(event, lblDisplay);
 			}
 		});
 		
@@ -136,6 +138,14 @@ public class SmtSurvival extends Composite {
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
 			output = controller.commandExecution(cmdTxtBox.getText());
+			
+			if(lblDisplay.getText().equals("display schedule")){
+				tbtmSchedule.setControl(lblDisplay);
+			}
+			else {
+				tbtmMain.setControl(lblDisplay);
+			}
+			
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
@@ -148,9 +158,7 @@ public class SmtSurvival extends Composite {
 	 * This method will toggle the respective tab
 	 * @param event
 	 */
-	private void tabControl(SelectionEvent event){
-		
-		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+	private void tabControl(SelectionEvent event, Label lblDisplay){
 		
 		if(displayTaskFolder.getSelection()[0].equals(tbtmMain)){
 			tbtmMain.setControl(lblDisplay);
