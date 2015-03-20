@@ -48,13 +48,20 @@ public class Menu {
 		case SORT: {
 			 return SortHandler.executeSort(fileName, keyFieldsList, listTask);
 		}
-		case HELP:{
+		case HELP: {
 			return HelpCommandListHandler.getCommandHelp(keyFieldsList);
 		}
 		case UPDATE: {
 			return UpdateHandler
 					.executeUpdate(fileName, keyFieldsList, listTask);
 		}
+		//case UNDO: {
+			//return CacheCommandsHandler.executeUndo(fileName, listTask);
+		//}
+		//case REDO:{
+			//return CacheCommandsHandler.executeRedo(fileName, listTask);
+			
+		//}
 		case EXIT: {
 			System.exit(0);
 			break;

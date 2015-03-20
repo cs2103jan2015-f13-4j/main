@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
 public class SearchHandler {
-
+private static Logger taskLogger = TaskLogging.getInstance();
 	/**
 	 * 
 	 * @param keyFieldsList
@@ -82,6 +84,7 @@ public class SearchHandler {
 				searchDetails += listTask.get(i).toString();
 		}
 		if (!searchDetails.isEmpty()) {
+			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
 			return MessageList.MESSAGE_NO_MATCH_FOUND;
@@ -106,6 +109,7 @@ public class SearchHandler {
 				return listTask.get(i).toString();
 			}
 		}
+		taskLogger.log(Level.INFO, "Search By Task ID");
 		return MessageList.MESSAGE_NO_MATCH_FOUND;
 	}
 
@@ -128,6 +132,7 @@ public class SearchHandler {
 		if (tempList.size() == 0) {
 			return MessageList.MESSAGE_NO_MATCH_FOUND;
 		}
+		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
 
 	}
@@ -156,7 +161,7 @@ public class SearchHandler {
 		try {
 			Integer.parseInt(text);
 		} catch (NumberFormatException e) {
-			return false;
+			assert false: e.toString();
 		}
 
 		return true;

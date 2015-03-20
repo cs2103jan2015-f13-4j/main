@@ -2,7 +2,11 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class AddHandler {
+private static Logger taskLogger = TaskLogging.getInstance();
 	
 	public static String executeAdd(String fileName, String lastUnUsedIndexFileName,
 			ArrayList<KeyFieldPair> keyFieldsList, ArrayList<Task> listTask) {
@@ -52,6 +56,7 @@ public class AddHandler {
 		lastUnUsedIndex++;
 		indicMsg = new IndicatorMessagePair();
 		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		taskLogger.log(Level.INFO, "Task Added");
 		
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
