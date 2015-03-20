@@ -1,8 +1,13 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
 
 public class UpdateHandler {
 	
+	
+	private static Logger taskLogger = TaskLogging.getInstance();
 	/**
 	 * This method handle the update execution and update the contents to the ArrayList of tasks
 	 * @param keyPFieldsList contains the list of keyword and the data it has
@@ -11,6 +16,10 @@ public class UpdateHandler {
 	 */
 	public static String executeUpdate(String fileName, ArrayList<KeyFieldPair> keyFieldsList, ArrayList<Task> listTask){
 		int firstKeyFieldsPair = 0, minTaskListSize = 0;
+		
+		//testing of assert
+		//assert (!(keyFieldsList != null || listTask == null)) : "System error";
+
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()){
 			return MessageList.MESSAGE_NULL;
@@ -89,9 +98,11 @@ public class UpdateHandler {
 		}
 		indicMsg = new IndicatorMessagePair();
 		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		
 		if(!indicMsg.isTrue()){
 			return indicMsg.getMessage();
 		}
+		taskLogger.log(Level.INFO, MessageList.MESSAGE_UPDATE_SUCCESS);
 		return MessageList.MESSAGE_UPDATE_SUCCESS;
 	}
 	
@@ -103,6 +114,9 @@ public class UpdateHandler {
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateTaskByOrEndWhen(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields == null || listTask == null){
+			assert false : "System error";
+		}
 		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
@@ -122,6 +136,10 @@ public class UpdateHandler {
 	 * @return true if success, false if the parameter and message
 	 */
 	private static IndicatorMessagePair updateTaskDesc(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields == null || listTask == null){
+			assert false : "System error";
+		}
+		
 		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_DESCRIPTION_EMPTY);
 		}
@@ -137,6 +155,10 @@ public class UpdateHandler {
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateTaskStartWhen(ArrayList<Task> listTask, int index, KeyFieldPair keyFields){
+		if(keyFields == null || listTask == null){
+			assert false : "System error";
+		}
+		
 		if(keyFields.getFields() == null || keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
@@ -159,6 +181,10 @@ public class UpdateHandler {
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateTaskStatus(ArrayList<Task> listTask, int index, KeyFieldPair keyFields, boolean status){
+		if(keyFields == null || listTask == null){
+			assert false : "System error";
+		}
+		
 		if(keyFields.getFields() == null || !keyFields.getFields().isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD);
 		}
