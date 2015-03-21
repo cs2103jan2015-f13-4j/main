@@ -1,3 +1,4 @@
+package data;
 
 /**
  * This class generate the list of task field that this system will have

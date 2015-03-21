@@ -1,4 +1,8 @@
+package data;
 import org.joda.time.DateTime;
+
+import utility.IndicatorMessagePair;
+import utility.MessageList;
 
 /**
  * This class allow the string to be converted into Task object.
@@ -11,7 +15,7 @@ public class TaskParserFromTextFile {
 	//task component separator char
 	private static final String TASK_COMPONENT_SEPARATOR = "|";
 	//task component separator char
-		private static final String TASK_COMPONENT_SEPARATOR_SPLIT = "\\|";
+	private static final String TASK_COMPONENT_SEPARATOR_SPLIT = "\\|";
 	//task field and data separator char
 	private static final String TASK_FIELD_DATA_SEPARATOR = "=";
 	//task field type at slot 0

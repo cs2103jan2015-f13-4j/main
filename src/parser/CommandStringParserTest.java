@@ -1,6 +1,9 @@
+package parser;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+
+
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,11 +12,11 @@ import org.junit.Test;
 
 public class CommandStringParserTest {
 
-	ArrayList<KeyFieldPair> keyFieldsTest;
+	HashMap<String, String> keyFieldsTest;
 	
 	@Before
 	public void setUp(){
-		keyFieldsTest = new ArrayList<KeyFieldPair>();
+		keyFieldsTest = new HashMap<String, String>();
 	}
 
 	@After

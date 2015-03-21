@@ -1,6 +1,7 @@
+package utility;
 public class RecurringWeek {
 	public enum Weekly_Day{
-		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, UNKNOWN;
+		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, UNKNOWN, TOMORROW;
 	}
 	
 	
@@ -32,6 +33,9 @@ public class RecurringWeek {
 		case "sunday": 
 		case "sun":
 			return Weekly_Day.SUNDAY;
+		case "tomorrow": 
+		case "tmr":
+			return Weekly_Day.TOMORROW;
 		default: 
 			return Weekly_Day.UNKNOWN;
 		}

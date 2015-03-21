@@ -1,95 +1,97 @@
-import static org.junit.Assert.*;
+package storage;
 
-import java.util.ArrayList;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import utility.IndicatorMessagePair;
+import utility.MessageList;
 
-public class FileHandlerTest {
-	private static ArrayList<Task> taskListTest;
+
+public class FileStorageTest {
 	IndicatorMessagePair msgPair;
+	private String testFileName = "taskListTest.txt";
+	private String testLastUnusedIndex = "lastUnUsedIndexFileNameTest.txt";
 	
 	@Before
 	public void setUp(){
-		taskListTest = new ArrayList<Task>();
 		msgPair = new IndicatorMessagePair();
 	}
 
 	@After
 	public void tearDown(){
-		taskListTest = null;
 		msgPair = null;
 	}
 
 	@Test
 	public void testLoadToArrayListValidFileName() {
-		String fileName = "taskList.txt";
-		FileHandler.checkAndLoadTaskFile(fileName, taskListTest, msgPair);
+		FileStorage.setFileNameForTasksList(testFileName);
+		FileStorage.checkAndLoadTaskFile(msgPair);
 		assertTrue(msgPair.isTrue());
 	}
 	
 	@Test
 	public void testLoadToArrayListInvalidFileName() {
-		String fileName = "taskListtxt";
-		FileHandler.checkAndLoadTaskFile(fileName, taskListTest, msgPair);
+		FileStorage.setFileNameForTasksList("taskListtxt");
+		FileStorage.checkAndLoadTaskFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLoadToArrayListEmptyFileName() {
-		String fileName = "";
-		FileHandler.checkAndLoadTaskFile(fileName, taskListTest, msgPair);
+		FileStorage.setFileNameForTasksList("");
+		FileStorage.checkAndLoadTaskFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLoadToArrayListNullFileName() {
-		String fileName = null;
-		FileHandler.checkAndLoadTaskFile(fileName, taskListTest, msgPair);
+		FileStorage.setFileNameForTasksList(null);
+		FileStorage.checkAndLoadTaskFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLastUnusedIndexValidFileName() {
-		String fileName = "lastUnused.txt";
-		FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
 		assertTrue(msgPair.isTrue());
 	}
 	
 	@Test
 	public void testLastUnusedIndexInvalidFileName() {
-		String fileName = "taskListtxt";
-		FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		FileStorage.setFileNameForLastUnusedIndex("taskListtxt");
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLastUnusedIndexEmptyFileName() {
-		String fileName = "";
-		FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		FileStorage.setFileNameForLastUnusedIndex("");
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLastUnusedIndexNullFileName() {
-		String fileName = null;
-		FileHandler.checkAndLoadLastTaskIndexFile(fileName, msgPair);
+		FileStorage.setFileNameForLastUnusedIndex(null);
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
 	
 	@Test
 	public void testLastUnusedIndexWriteToFile() {
-		String lastUnUsedIndexfileName = "testLastUnUsedIndex.txt";
+		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
 		Integer lastUnusedIndex = 1;
-		FileHandler.writeToFile(lastUnUsedIndexfileName, lastUnusedIndex,  msgPair);
+		FileStorage.writeToFile(lastUnusedIndex,  msgPair);
 		assertTrue(msgPair.isTrue());
 	}
 

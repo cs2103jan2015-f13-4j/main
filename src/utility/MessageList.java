@@ -1,3 +1,4 @@
+package utility;
 import javax.swing.JOptionPane;
 public class MessageList {
 
