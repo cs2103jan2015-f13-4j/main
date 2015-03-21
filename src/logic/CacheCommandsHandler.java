@@ -1,10 +1,14 @@
-import java.util.ArrayList;
+package logic;
+
 import java.util.Stack;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Data;
 
 public class CacheCommandsHandler {
 
-	private static Stack<ArrayList<Task>> current = new Stack<ArrayList<Task>>();
-	private static Stack<ArrayList<Task>> aheadCmds = new Stack<ArrayList<Task>>();
+	private static Stack<Data> current = new Stack<Data>();
+	private static Stack<Data> aheadCmds = new Stack<Data>();
 
 	/**
 	 * This method will do an undo operation
@@ -13,7 +17,7 @@ public class CacheCommandsHandler {
 	 * @param msgPair to indicate the message type
 	 * @return message depending on situation met 
 	 */
-	public static String executeUndo(String fileName, ArrayList<Task> listTask) {
+	public static String executeUndo(Data smtData) {
 
 		if (checkUndoEmpty()) {
 			return MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
@@ -22,7 +26,7 @@ public class CacheCommandsHandler {
 		// pop out the latest operation from current and push to aheadCmds
 		aheadCmds.push(current.pop());
 
-		return updateTaskList(fileName, listTask);
+		return updateTaskList(smtData);
 	}
 	
 	/**
@@ -33,18 +37,18 @@ public class CacheCommandsHandler {
 		return current.isEmpty();
 	}
 
-	private static String updateTaskList(String fileName, ArrayList<Task> listTask) {
+	private static String updateTaskList(Data smtData) {
 
-		listTask.clear();
-		ArrayList<Task> prevList = current.peek();
+		smtData.getListTask().clear();
+		Data prevList = current.peek();
 		
-		for(int i = 0; i < prevList.size(); i++){
-			listTask.add(prevList.get(i));
+		for(int i = 0; i < prevList.getSize(); i++){
+			smtData.addATaskToList(prevList.getATask(i));
 		}
 
 		// write to file
-		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
-		FileHandler.writeToFile(fileName, listTask, indicMsg);
+		IndicatorMessagePair indicMsg = smtData.writeTaskListToFile();
+		
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
@@ -57,8 +61,8 @@ public class CacheCommandsHandler {
 	 * This method will add a new history to current stack and clear the aheadCmds stack
 	 * @param listTask
 	 */
-	public static void newHistory(ArrayList<Task> listTask){
-		current.push(listTask);
+	public static void newHistory(Data smtData){
+		current.push(smtData);
 		aheadCmds.clear();
 	}
 }
