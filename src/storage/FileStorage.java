@@ -1,3 +1,5 @@
+package storage;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FileHandler {
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Task;
+import data.TaskParserFromTextFile;
+import data.TaskFieldList;
+
+public class FileStorage {
 
 	// file extension length including a '.'
 	private static final int FILE_EXTENSION_LENGTH = 4;
@@ -28,6 +36,9 @@ public class FileHandler {
 	// task fields list taskstatus offset
 	private static final int TASKSTATUS_OFFSET = 5;
 	
+	private static String fileName = "defaultTaskList.txt";
+	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
+	
 	/**
 	 * Check if file exists and load it to a list
 	 * 
@@ -35,35 +46,68 @@ public class FileHandler {
 	 *            receive argument which will contains the filename
 	 * @return the filename if the argument fulfill the condition
 	 */
-	public static void checkAndLoadTaskFile(String fileName,
-			ArrayList<Task> tasksList, IndicatorMessagePair msgPair) {
+	public static ArrayList<Task> checkAndLoadTaskFile(IndicatorMessagePair msgPair) {
 
 		// Call to check for file is empty
 		exitIfUnspecificFileName(fileName, msgPair);
 		if (!msgPair.isTrue()) {
-			return;
+			return null;
 		}
 
 		// Call to check for file format
 		exitIfWrongFileFormat(fileName, msgPair);
 		if (!msgPair.isTrue()) {
-			return;
+			return null;
 		}
 
 		File filepath = new File(fileName);
-
+		ArrayList<Task> tasksList = new ArrayList<Task>();
 		if (filepath.exists() && !filepath.isDirectory()) {
-			loadToArrayList(fileName, tasksList, msgPair);
+			tasksList =  loadToArrayList(msgPair);
 		} else {
 			try {
 				filepath.createNewFile();
 			} catch (IOException e) {
 				setIndicatorMessagePair(msgPair, false, e.toString());
-				return;
+				return null;
 			}
 		}
+		
+		return tasksList;
 	}
 
+	/**
+	 * setFileNameForTasksList method set the filename for task list
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForTasksList(String receivedFileName){
+		fileName = receivedFileName;
+	}
+	
+	/**
+	 * setFileNameForLastUnusedIndex method set the filename for last unused index
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForLastUnusedIndex(String receivedFileName){
+		lastUnUsedIndexFileName = receivedFileName;
+	}
+	
+	/**
+	 * get the filename for task list
+	 * @return
+	 */
+	public static String getFileNameForTasksList(){
+		return fileName;
+	}
+	
+	/**
+	 * get the filename for last unused index
+	 * @return
+	 */
+	public static String getFileNameForLastUnusedIndex(){
+		return lastUnUsedIndexFileName;
+	}
+	
 	/**
 	 * Check if file exists and return the index of last unused task list
 	 * 
@@ -71,29 +115,29 @@ public class FileHandler {
 	 *            receive argument which will contains the filename
 	 * @return an integer which indicate the last unused task id
 	 */
-	public static int checkAndLoadLastTaskIndexFile(String fileName,
+	public static int checkAndLoadLastTaskIndexFile(
 			IndicatorMessagePair msgPair) {
 
 		// Call to check for file is empty
-		exitIfUnspecificFileName(fileName, msgPair);
+		exitIfUnspecificFileName(lastUnUsedIndexFileName, msgPair);
 		if (!msgPair.isTrue()) {
 			return -1;
 		}
 
 		// Call to check for file format
-		exitIfWrongFileFormat(fileName, msgPair);
+		exitIfWrongFileFormat(lastUnUsedIndexFileName, msgPair);
 		if (!msgPair.isTrue()) {
 			return -1;
 		}
 
-		File filepath = new File(fileName);
+		File filepath = new File(lastUnUsedIndexFileName);
 
 		/*
 		 * Check if the file exists, it will load the data into the arraylist
 		 * else it will create a new file
 		 */
 		if (filepath.exists() && !filepath.isDirectory()) {
-			return loadLastIndexUnused(fileName, msgPair);
+			return loadLastIndexUnused(msgPair);
 		} else {
 			try {
 				filepath.createNewFile();
@@ -112,17 +156,16 @@ public class FileHandler {
 	 * @param fileName
 	 *            the filename which will be opened and load contents into
 	 */
-	private static void loadToArrayList(String fileName,
-			ArrayList<Task> tasksList, IndicatorMessagePair msgPair) {
+	private static ArrayList<Task> loadToArrayList(IndicatorMessagePair msgPair) {
+		ArrayList<Task> tasksList = new ArrayList<Task>();
 		FileReader reader = null;
 		BufferedReader bufferRead = null;
 		try {
 			reader = new FileReader(fileName);
 			bufferRead = new BufferedReader(reader);
-			
 		} catch (FileNotFoundException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
-			return;
+			return null;
 		}
 		
 		assert(bufferRead != null);
@@ -137,17 +180,18 @@ public class FileHandler {
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
 							fileName));
 					bufferRead.close();
-					return;
+					return null;
 				}
 				tasksList.add(taskObj);
 			}
 			bufferRead.close();
 		} catch (IOException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
-			return;
+			return null;
 		}
 		
 		setIndicatorMessagePair(msgPair, true, "");
+		return tasksList;
 
 	}
 
@@ -157,10 +201,10 @@ public class FileHandler {
 	 * @param fileName
 	 * @return last unused index number
 	 */
-	private static Integer loadLastIndexUnused(String fileName,
+	private static Integer loadLastIndexUnused(
 			IndicatorMessagePair msgPair) {
 		try {
-			FileReader reader = new FileReader(fileName);
+			FileReader reader = new FileReader(lastUnUsedIndexFileName);
 			BufferedReader bufferRead = new BufferedReader(reader);
 			String txtLine = "";
 			try {
@@ -192,7 +236,7 @@ public class FileHandler {
 	 * @param fileName
 	 *            an filename for saving
 	 */
-	public static void writeToFile(String fileName, ArrayList<Task> tasksList,
+	public static void writeToFile(ArrayList<Task> tasksList,
 			IndicatorMessagePair msgPair) {
 		// Add the string to the file
 		try {
@@ -226,11 +270,11 @@ public class FileHandler {
 	 * @param fileName
 	 *            an filename for saving
 	 */
-	public static void writeToFile(String fileName, Integer lastUnUsedIndex,
+	public static void writeToFile(Integer lastUnUsedIndex,
 			IndicatorMessagePair msgPair) {
 		// Add the string to the file
 		try {
-			FileWriter fw = new FileWriter(fileName);// setup a file writer
+			FileWriter fw = new FileWriter(lastUnUsedIndexFileName);// setup a file writer
 			fw.flush();
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(lastUnUsedIndex.toString());
@@ -324,9 +368,9 @@ public class FileHandler {
 	 * 
 	 * @param fileName
 	 */
-	private static void exitIfUnspecificFileName(String fileName,
+	private static void exitIfUnspecificFileName(String receivedFileName,
 			IndicatorMessagePair msgPair) {
-		if (fileName == null || fileName.trim().isEmpty()) {
+		if (receivedFileName == null || receivedFileName.trim().isEmpty()) {
 			setIndicatorMessagePair(msgPair, false,
 					MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED);
 			return;
@@ -341,12 +385,12 @@ public class FileHandler {
 	 * @param fileName
 	 *            the string to compare
 	 */
-	private static void exitIfWrongFileFormat(String fileName,
+	private static void exitIfWrongFileFormat(String receivedFileName,
 			IndicatorMessagePair msgPair) {
-		boolean isFileContainsADot = fileName.contains(".");
-		int fileExtLength = fileName.length() - fileName.indexOf(".");
-		String fileExt = fileName.substring(fileName.length()
-				- FILE_EXTENSION_LENGTH, fileName.length());
+		boolean isFileContainsADot = receivedFileName.contains(".");
+		int fileExtLength = receivedFileName.length() - receivedFileName.indexOf(".");
+		String fileExt = receivedFileName.substring(receivedFileName.length()
+				- FILE_EXTENSION_LENGTH, receivedFileName.length());
 
 		if (!(isFileContainsADot) || !(fileExtLength == FILE_EXTENSION_LENGTH)
 				|| !(fileExt.equals(".txt"))) {
@@ -362,8 +406,5 @@ public class FileHandler {
 		msgPair.setTrue(isTrue);
 		msgPair.setMessage(msg);
 	}
-
-	
-	
 
 }
