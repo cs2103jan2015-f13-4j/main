@@ -1,4 +1,9 @@
-import java.util.ArrayList;
+package parser;
+
+import java.util.HashMap;
+
+import utility.CommandType;
+import utility.KeywordType;
 
 /**
  * This class allows the command in a line to break into keys and fields.
@@ -14,7 +19,7 @@ public class CommandStringParser {
 	 * @param keyFieldsList a list of keys and fields and will be referenced back to the caller
 	 * @return Command Type
 	 */
-	public static CommandType.Command_Types processString(String input, ArrayList<KeyFieldPair> keyFieldsList){
+	public static CommandType.Command_Types processString(String input, HashMap<String, String> keyFieldsList){
 		if(input == null || input.equals("")){
 			return CommandType.Command_Types.INVALID;
 		}
@@ -37,7 +42,7 @@ public class CommandStringParser {
 	 * @param keyFieldsList a list of key and fields
 	 * @param inputCmd the blocks of word
 	 */
-	private static void generateKeyFieldPair(ArrayList<KeyFieldPair> keyFieldsList,
+	private static void generateKeyFieldPair(HashMap<String, String> keyFieldsList,
 			String[] inputCmd) {
 		String key = inputCmd[0];
 		String eachWord = new String();
@@ -46,7 +51,7 @@ public class CommandStringParser {
 		for(int i = 1; i < inputCmd.length; i++){
 			eachWord = inputCmd[i];
 			if(KeywordType.contains(eachWord)){
-				keyFieldsList.add(new KeyFieldPair(key, tempFields.trim()));
+				keyFieldsList.put(key.toUpperCase(), tempFields.trim());
 				key = eachWord;
 				tempFields = "";
 			}
@@ -55,6 +60,6 @@ public class CommandStringParser {
 			}
 		}
 		
-		keyFieldsList.add(new KeyFieldPair(key, tempFields.trim()));
+		keyFieldsList.put(key.toUpperCase(), tempFields.trim());
 	}
 }
