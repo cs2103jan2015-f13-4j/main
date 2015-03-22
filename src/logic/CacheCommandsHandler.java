@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.Stack;
+
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
@@ -25,7 +26,7 @@ public class CacheCommandsHandler {
 		
 		// pop out the latest operation from current and push to aheadCmds
 		aheadCmds.push(current.pop());
-
+		
 		return updateTaskList(smtData);
 	}
 	
@@ -37,6 +38,11 @@ public class CacheCommandsHandler {
 		return current.isEmpty();
 	}
 
+	/**
+	 * This method will update the task list
+	 * @param smtData is a variable of object type Data class
+	 * @return
+	 */
 	private static String updateTaskList(Data smtData) {
 
 		smtData.getListTask().clear();
@@ -45,8 +51,11 @@ public class CacheCommandsHandler {
 		for(int i = 0; i < prevList.getSize(); i++){
 			smtData.addATaskToList(prevList.getATask(i));
 		}
+		
+		// this will call updateLastUnUsedIndex to update the last unused index
+		updateLastUnUsedIndex(smtData);
 
-		// write to file
+		// write to file the updated task list to file
 		IndicatorMessagePair indicMsg = smtData.writeTaskListToFile();
 		
 
@@ -58,8 +67,28 @@ public class CacheCommandsHandler {
 	}
 	
 	/**
+	 * This method will update the latest unused index
+	 * @param smtData is a variable of object type Data class
+	 */
+	private static void updateLastUnUsedIndex(Data smtData){
+		
+		Data prevIndex = current.peek();
+		
+		for(int i=0; i < prevIndex.getSize(); i++){
+			smtData.setLastUnUsedIndex(prevIndex.getLastUnUsedIndex());
+		}
+		
+		// write to file the updated last unused index to file
+		IndicatorMessagePair indicIndex = smtData.writeLastUnUsedIndexToFile();
+		
+		if (!indicIndex .isTrue()) {
+			indicIndex.getMessage();
+		}
+	}
+	
+	/**
 	 * This method will add a new history to current stack and clear the aheadCmds stack
-	 * @param listTask
+	 * @param smtData is a variable of object type Data class
 	 */
 	public static void newHistory(Data smtData){
 		current.push(smtData);
