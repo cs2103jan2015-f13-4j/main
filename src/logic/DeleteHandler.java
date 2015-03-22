@@ -25,12 +25,6 @@ public class DeleteHandler {
 		return true;
 	}
 	
-	
-	
-	
-	//======================================================================================
-	//=====================================================================================
-	
 	public static String executeDelete(HashMap<String, String> keyFieldsList, Data smtData) {
 
 		int i;
