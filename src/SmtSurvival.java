@@ -18,6 +18,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import logic.Menu;
+
 public class SmtSurvival extends Composite {
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
@@ -27,9 +31,9 @@ public class SmtSurvival extends Composite {
 	private TabItem tbtmToday;
 	private TabItem tbtmCompleted;
 	private TabItem tbtmPending;
-	private static TabFolder displayTaskFolder;
+	private TabFolder displayTaskFolder;
 	private static Label lblDisplay;
-	private static Menu controller = new Menu();
+	private static Menu controller;
 
 	/**
 	 * Create the composite.
@@ -66,7 +70,6 @@ public class SmtSurvival extends Composite {
 		
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
-		tbtmMain.setToolTipText("Click this tab to show the Main page");
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		tbtmMain.setControl(lblDisplay);
@@ -74,32 +77,26 @@ public class SmtSurvival extends Composite {
 		
 		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmSchedule.setText("Schedule");
-		tbtmSchedule.setToolTipText("Click this tab to show all the Schedules");
 		
 		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmToday.setText("Today");
-		tbtmToday.setToolTipText("Click this tab to show Today's tasks");
 		
 		tbtmCompleted = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmCompleted.setText("Completed");
-		tbtmCompleted.setToolTipText("Click this tab to show all the Completed tasks");
 		
 		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmPending.setText("Pending");
-		tbtmPending.setToolTipText("Click this tab to show all the Pending tasks");
 		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
-		
-		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		
 		// add a listener to listen to the tab behavior
 		displayTaskFolder.addSelectionListener(new SelectionAdapter()
 		{
 			public void widgetSelected(SelectionEvent event){
-				tabControl(event, lblDisplay);
+				tabControl(event);
 			}
 		});
 		
@@ -117,7 +114,6 @@ public class SmtSurvival extends Composite {
 		lblCommand.setText("Command :");
 		
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
-		cmdTxtBox.setToolTipText("Enter command to manage your tasks");
 		cmdTxtBox.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
@@ -138,14 +134,6 @@ public class SmtSurvival extends Composite {
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		if(e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR){
 			output = controller.commandExecution(cmdTxtBox.getText());
-			
-			if(lblDisplay.getText().equals("display schedule")){
-				tbtmSchedule.setControl(lblDisplay);
-			}
-			else {
-				tbtmMain.setControl(lblDisplay);
-			}
-			
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
@@ -158,7 +146,9 @@ public class SmtSurvival extends Composite {
 	 * This method will toggle the respective tab
 	 * @param event
 	 */
-	private void tabControl(SelectionEvent event, Label lblDisplay){
+	private void tabControl(SelectionEvent event){
+		
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		
 		if(displayTaskFolder.getSelection()[0].equals(tbtmMain)){
 			tbtmMain.setControl(lblDisplay);
@@ -194,10 +184,10 @@ public class SmtSurvival extends Composite {
 	    shell.pack();
 	    
 	    // setting up the files
-	    IndicatorMessagePair msgPair = new IndicatorMessagePair();
-	    controller.retrieveTasksAndLastUsedIndex(msgPair);
+	    controller = Menu.getInstance();
+	    IndicatorMessagePair msgPair = controller.setUp();
 	    
-	    if(!msgPair.isTrue){
+	    if(!msgPair.isTrue()){
 	    	MessageList.printErrorMessageAndExit(msgPair.getMessage());
 	    }
 	    

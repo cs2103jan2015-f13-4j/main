@@ -1,41 +1,43 @@
+package logic;
+
 import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import utility.MessageList;
+import data.Data;
+import data.Task;
 
 
 public class CacheCommandsHandlerUndoTest {
 	
 	String fileName = "testfile.txt";
-	ArrayList<Task> taskList;
+	Data smtDataTest;
 
 	@Before
 	public void setUp() {
-		taskList = new ArrayList<Task>();
+		smtDataTest = new Data();
 	}
 
 	@After
 	public void tearDown() {
-		taskList.clear();
+		smtDataTest = null;
 	}
 	
 	@Test
 	public void testUndoEmpty(){
 		String expected = MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
-		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList));
+		assertEquals(expected, CacheCommandsHandler.executeUndo(smtDataTest));
 	}
 	
 	@Test
 	public void testUndoRegular() {
-		taskList.add(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
-		CacheCommandsHandler.newHistory(taskList);
-		taskList.add(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
-		CacheCommandsHandler.newHistory(taskList);
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		CacheCommandsHandler.newHistory(smtDataTest);
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+		CacheCommandsHandler.newHistory(smtDataTest);
 		String expected = MessageList.MESSAGE_UNDO_SUCCESS;
-		assertEquals(expected, CacheCommandsHandler.executeUndo(fileName, taskList));
+		assertEquals(expected, CacheCommandsHandler.executeUndo(smtDataTest));
 	}
 }
