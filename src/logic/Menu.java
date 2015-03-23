@@ -1,40 +1,44 @@
-import java.util.ArrayList;
+package logic;
+
+import java.util.HashMap;
+
+import parser.CommandStringParser;
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+//import commonUsage.KeyFieldPair;
+import data.Data;
 
 public class Menu {
-	private static ArrayList<Task> listTask;
-	private static String fileName = "tasklist.txt";
-	private static String lastUsedIndexFileName = "lastUsedIndex.txt";
+	private Data smtData;
+	private static Menu onlyMenu;
 
-	public Menu() {
-		listTask = new ArrayList<Task>();
+	private Menu() {
+		smtData = new Data();
 	}
 
-	public void retrieveTasksAndLastUsedIndex(IndicatorMessagePair msgPair) {
-		// IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		FileHandler.checkAndLoadTaskFile(fileName, listTask, msgPair);
-		if (!msgPair.isTrue) {
-			return;
+	public static Menu getInstance() {
+		if (onlyMenu == null) {
+			onlyMenu = new Menu();
 		}
+		return onlyMenu;
 	}
 
 	public String commandExecution(String input) {
-		ArrayList<KeyFieldPair> keyFieldsList = new ArrayList<KeyFieldPair>();
-		CommandType.Command_Types cmd = CommandStringParser.processString(input,
-				keyFieldsList);
+		HashMap<String, String> keyFieldsList = new HashMap<String, String>();
+		CommandType.Command_Types cmd = CommandStringParser.processString(
+				input, keyFieldsList);
 
 		switch (cmd) {
 
 		case ADD: {
-			return AddHandler.executeAdd(fileName, lastUsedIndexFileName,
-					keyFieldsList, listTask);
+			return AddHandler.executeAdd(keyFieldsList, smtData);
 		}
 		case DISPLAY: {
-			return DisplayHandler.executeDisplay(fileName, keyFieldsList,
-					listTask);
+			return DisplayHandler.executeDisplay(keyFieldsList, smtData);
 		}
 		case DELETE: {
-			return DeleteHandler
-					.executeDelete(fileName, keyFieldsList, listTask);
+			return DeleteHandler.executeDelete(keyFieldsList, smtData);
 		}
 		case CLEAR: {
 			// return ClearHandler.executeClear(fileName, input, listTask);
@@ -43,25 +47,24 @@ public class Menu {
 			return MessageList.MESSAGE_INVAILD;
 		}
 		case SEARCH: {
-			 return SearchHandler.executeSearch(keyFieldsList, listTask);
+			return SearchHandler.executeSearch(keyFieldsList, smtData);
 		}
 		case SORT: {
-			 return SortHandler.executeSort(fileName, keyFieldsList, listTask);
+			return SortHandler.executeSort(keyFieldsList, smtData);
 		}
 		case HELP: {
 			return HelpCommandListHandler.getCommandHelp(keyFieldsList);
 		}
 		case UPDATE: {
-			return UpdateHandler
-					.executeUpdate(fileName, keyFieldsList, listTask);
+			return UpdateHandler.executeUpdate(keyFieldsList, smtData);
 		}
-		//case UNDO: {
-			//return CacheCommandsHandler.executeUndo(fileName, listTask);
-		//}
-		//case REDO:{
-			//return CacheCommandsHandler.executeRedo(fileName, listTask);
-			
-		//}
+		// case UNDO: {
+		// return CacheCommandsHandler.executeUndo(fileName, listTask);
+		// }
+		// case REDO:{
+		// return CacheCommandsHandler.executeRedo(fileName, listTask);
+
+		// }
 		case EXIT: {
 			System.exit(0);
 			break;
@@ -75,4 +78,7 @@ public class Menu {
 		return MessageList.MESSAGE_MENU_NO_COMMAND;
 	}
 
+	public IndicatorMessagePair setUp() {
+		return smtData.loadEveryThingFromFile();
+	}
 }

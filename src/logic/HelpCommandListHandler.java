@@ -1,56 +1,71 @@
-import java.util.ArrayList;
+package logic;
+
+//import java.util.ArrayList;
+import java.util.HashMap;
+
+import utility.CommandType;
+import utility.MessageList;
+
+//import commonUsage.KeyFieldPair;
 
 /**
  * 
  * @author Baoyi
- *
+ * 
  */
 public class HelpCommandListHandler {
 
-	public static String getCommandHelp(ArrayList<KeyFieldPair> keyFieldsList) {
+	public static String getCommandHelp(HashMap<String, String> keyFieldsList) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
-		
-		if(keyFieldsList.size() != 1){
+
+		if (keyFieldsList.size() != 1) {
 			return MessageList.MESSAGE_INVAILD;
 		}
 
-		if (keyFieldsList.get(0).getFields().isEmpty()) {
+		if (keyFieldsList.get(CommandType.Command_Types.HELP.name()).isEmpty()) {
 			return MessageList.MESSAGE_HELP;
 		}
-		
-		CommandType.Command_Types getType = CommandType.getType(keyFieldsList.get(0).getFields().split(" "));
-		
-		switch (getType) {
 
-		case ADD: {
-			return MessageList.MESSAGE_ADD_HELP;
+		keyFieldsList.remove(CommandType.Command_Types.HELP.name());// remove
+																	// this pair
+
+		for (String key : keyFieldsList.keySet()) {
+			CommandType.Command_Types getType = CommandType.getType(key
+					.split(" "));
+
+			switch (getType) {
+
+			case ADD: {
+				return MessageList.MESSAGE_ADD_HELP;
+			}
+			case DISPLAY: {
+				return MessageList.MESSAGE_DISPLAY_HELP;
+			}
+			case DELETE: {
+				return MessageList.MESSAGE_DELETE_HELP;
+			}
+			case CLEAR: {
+				return MessageList.MESSAGE_CLEAR_HELP;
+			}
+			case SEARCH: {
+				return MessageList.MESSAGE_SEARCH_HELP;
+			}
+			case SORT: {
+				return MessageList.MESSAGE_SORT_HELP;
+			}
+			case UPDATE: {
+				return MessageList.MESSAGE_UPDATE_HELP;
+			}
+			case EXIT: {
+				return MessageList.MESSAGE_EXIT_HELP;
+			}
+			default: {
+				return MessageList.MESSAGE_INVAILD;
+			}
+			}
 		}
-		case DISPLAY: {
-			return MessageList.MESSAGE_DISPLAY_HELP;
-		}
-		case DELETE: {
-			return MessageList.MESSAGE_DELETE_HELP;
-		}
-		case CLEAR: {
-			return MessageList.MESSAGE_CLEAR_HELP;
-		}
-		case SEARCH: {
-			return MessageList.MESSAGE_SEARCH_HELP;
-		}
-		case SORT: {
-			return MessageList.MESSAGE_SORT_HELP;
-		}
-		case UPDATE: {
-			return MessageList.MESSAGE_UPDATE_HELP;
-		}
-		case EXIT: {
-			return MessageList.MESSAGE_EXIT_HELP;
-		}
-		default: {
-			return MessageList.MESSAGE_INVAILD;
-		}
-		}
+		return "";
 	}
 }
