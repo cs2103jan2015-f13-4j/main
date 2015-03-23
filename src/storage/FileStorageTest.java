@@ -34,7 +34,7 @@ public class FileStorageTest {
 	
 	@Test
 	public void testLoadToArrayListInvalidFileName() {
-		FileStorage.setFileNameForTasksList("taskListtxt");
+		FileStorage.setFileNameForTasksList("taskListstxt");
 		FileStorage.checkAndLoadTaskFile(msgPair);
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());

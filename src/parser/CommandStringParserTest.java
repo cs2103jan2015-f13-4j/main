@@ -26,7 +26,7 @@ public class CommandStringParserTest {
 
 	@Test
 	public void testProcessStringAddRegular() {
-		String command = "add Do homework by Friday";
+		String command = "add do homework by Friday";
 		String expected = "ADD";
 		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}

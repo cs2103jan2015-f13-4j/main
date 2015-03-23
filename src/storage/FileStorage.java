@@ -153,8 +153,8 @@ public class FileStorage {
 	/**
 	 * This method will load the contents from the text file to ArrayList
 	 * 
-	 * @param fileName
-	 *            the filename which will be opened and load contents into
+	 * @param msgPair
+	 *            the indicator of whether the files can be loaded into arraylist
 	 */
 	private static ArrayList<Task> loadToArrayList(IndicatorMessagePair msgPair) {
 		ArrayList<Task> tasksList = new ArrayList<Task>();

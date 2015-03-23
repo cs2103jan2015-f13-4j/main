@@ -38,7 +38,7 @@ public class CommandStringParser {
 
 	/**
 	 * This method generate the command which has broken up into words and process it.
-	 * The key and fields will be referened back to the caller
+	 * The key and fields will be referenced back to the caller
 	 * @param keyFieldsList a list of key and fields
 	 * @param inputCmd the blocks of word
 	 */

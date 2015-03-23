@@ -183,7 +183,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithEndDateInvalid(){
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "aa-22-2015");
+		keyFieldsTest.put("taskend", "abc-22-2015");
 		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End");
 		assertEquals(expected, UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}

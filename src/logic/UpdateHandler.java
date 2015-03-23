@@ -18,10 +18,7 @@ import data.Task;
 
 public class UpdateHandler {
 	
-	
 	private static Logger taskLogger = TaskLogging.getInstance();
-	
-	
 	
 	/**
 	 * This method search for a task in the ArrayList
