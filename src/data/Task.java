@@ -94,11 +94,11 @@ public class Task implements Comparable<Task> {
 		}
 		
 		if(taskStartDateTime != null) {
-			fullDetails += "Start from: " + DateParser.displayDateTime(taskStartDateTime) + "\n";
+			fullDetails += "Start from: " + DateParser.displayDate(taskStartDateTime) + "\n";
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + DateParser.displayDateTime(taskEndDateTime) + "\n";
+			fullDetails += "Deadline: " + DateParser.displayDate(taskEndDateTime) + "\n";
 		}
 		
 		if(taskStatus) {
