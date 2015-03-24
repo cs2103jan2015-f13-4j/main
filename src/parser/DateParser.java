@@ -9,10 +9,10 @@ public class DateParser {
 	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
 	private static String standardDateFormat = "d MMMM, yyyy";
 	private static String timeFormat = "hh:mm a";
-	private static DateTime convertedDateTime = new DateTime();
 	
 	public static DateTime generateDate(String dateValue) {
 		boolean validFormat = false;
+		DateTime convertedDateTime = new DateTime();
 		DateTimeFormatter dtf = new DateTimeFormatter(null, null);
 		
 		for(int i = 0; i < dateFormatList.length; i++) {
@@ -111,6 +111,7 @@ public class DateParser {
 	}
 	
 	public static DateTime dayComparison(int dayToCompare) {
+		DateTime convertedDateTime = new DateTime();
 		int dayOfWeek = convertedDateTime.getDayOfWeek();
 		int numOfDays = 7;
 		
