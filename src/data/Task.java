@@ -101,6 +101,10 @@ public class Task implements Comparable<Task> {
 			fullDetails += "Deadline: " + DateParser.displayDate(taskEndDateTime) + "\n";
 		}
 		
+		if(weeklyDay != null && !weeklyDay.isEmpty()) {
+			fullDetails += "Recurring every: " + weeklyDay + "\n";
+		}
+		
 		if(taskStatus) {
 			fullDetails += "Status: " + taskCompleted;
 		} else {
