@@ -216,9 +216,20 @@ public class Data {
 		return msgPair;
 	}
 	
+	public IndicatorMessagePair writeBlockedDateTimeListToFile(){
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		FileStorage.writeBlockedDateTimeToFile(blockedDateTimeList, msgPair);
+		return msgPair;
+	}
+	
 	public IndicatorMessagePair loadEveryThingFromFile(){
 		IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		setListTask(FileStorage.checkAndLoadTaskFile(msgPair));
+		if(!msgPair.isTrue()){
+			return msgPair;
+		}
+		
+		setBlockedDateTimeList(FileStorage.checkAndLoadBlockedDateFile(msgPair));
 		if(!msgPair.isTrue()){
 			return msgPair;
 		}
