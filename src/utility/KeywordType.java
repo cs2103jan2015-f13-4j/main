@@ -3,7 +3,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, SCHEDULE, TODAY, TODO, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
+		FROM, TO, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, SCHEDULE, TODAY, TODO, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
 	}
 	
 	/**
@@ -19,6 +19,8 @@ public class KeywordType {
 		switch(keywordTypeString.toLowerCase()){
 		case "from":
 			return List_Keywords.FROM;
+		case "to":
+			return List_Keywords.TO;
 		case "by":
 			return List_Keywords.BY;
 		case "taskid":
