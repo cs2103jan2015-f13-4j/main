@@ -37,15 +37,81 @@ public class SearchHandlerTest {
 	}
 
 	@Test
-	public void testSearchWithRegularDesc() {
-		keyFieldsTest.put("SEARCH", "EE2024 report proposal");
-		keyFieldsTest.put("BY", "03-03-2015");
-		// keyFieldsTest.search();
-		// keyFieldsTest.search();
-		String expected = MessageList.MESSAGE_ADDED;
+	public void testSearchWithRegularTaskDesc() {
+		keyFieldsTest.put("SEARCH", "TaskDesc EE2024 report proposal");
+		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
 		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
 
 	}
+	
+	@Test
+	public void testSearchWithRegularTaskId() {
+		keyFieldsTest.put("SEARCH", "TaskId 1");
+		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+	
+	@Test
+	public void testSearchWithNoMatch() {
+		keyFieldsTest.put("SEARCH","");
+		keyFieldsTest.put("TaskId", "1");
+		String expected = "\nTask ID: 1\nDescription: Prepare a proposal\nStart from: 27 March, 2015\nDeadline: 27 March, 2015\nStatus: Pending";
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+	@Test
+	public void testSearchWithDeadLine() {
+		keyFieldsTest.put("SEARCH","");
+		keyFieldsTest.put("deadline", "27-03-2015");
+		String expected = "\nTask ID: 1\nDescription: Prepare a proposal\nStart from: 27 March, 2015\nDeadline: 27 March, 2015\nStatus: Pending\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 27 March, 2015\nDeadline: 27 March, 2015\nStatus: Pending\nTask ID: 3\nDescription: Prepare OP1\nStart from: 27 March, 2015\nDeadline: 27 March, 2015\nStatus: Pending";
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+	
+	@Test
+	public void testSearchWithInvalidDeadLine(){
+		keyFieldsTest.put("SEARCH","");
+		keyFieldsTest.put("deadline", "14-03-2015");
+		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	}
+	@Test
+	public void testSearchWithWrongFormatForTaskDesc(){
+		keyFieldsTest.put("SEARCH","");
+		keyFieldsTest.put("TaskDesc", "14-03-2015");
+		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	}
+	
+	@Test
+	public void testSearchWithEmptyTask(){
+		keyFieldsTest.put("SEARCH","");
+	    keyFieldsTest.put(" ", " ");
+		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	}
+	
+	@Test
+	public void testSearchWithIncorrectCommand(){
+		keyFieldsTest.put("SEACH","");
+	    keyFieldsTest.put("TaskDesc", "Assignment1");
+		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	}
+	
+
 
 }

@@ -58,7 +58,7 @@ public class MessageList {
 	public static final String MESSAGE_DELETE_HELP = "Delete <Task #>";
 	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>";
 	public static final String MESSAGE_DISPLAY_HELP = "Display";
-	public static final String MESSAGE_SEARCH_HELP = "Search <Task #>";
+	public static final String MESSAGE_SEARCH_HELP = "1. Search TaskDesc<Task #>\n2. Search TaskId<Task #>\n3. Search Deadline <Date>";
 	public static final String MESSAGE_SORT_HELP = "Sort";
 	public static final String MESSAGE_CLEAR_HELP = "Clear";
 	public static final String MESSAGE_EXIT_HELP = "Exit";

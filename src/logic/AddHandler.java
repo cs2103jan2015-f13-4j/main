@@ -82,8 +82,11 @@ public class AddHandler {
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
 						keyFieldsList);
 				break;
-			// case EVERY:
-			// indicMsg =
+				
+			case EVERY:
+				indicMsg = addRecurringWeek(newTask, lastUnUsedIndex, keyFieldsList);
+				break;
+				
 			default:
 				return String
 						.format(MessageList.MESSAGE_INVALID_COMMAND, "Add");
@@ -133,6 +136,22 @@ public class AddHandler {
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
 		newTask.setTaskEndDateTime(endDate);
+		return new IndicatorMessagePair(true, "");
+	}
+
+	private static IndicatorMessagePair addRecurringWeek(Task newTask,
+			int index, HashMap<String, String> keyFieldsList) {
+		DateTime weeklyDate = DateParser.generateDate(keyFieldsList
+				.get(KeywordType.List_Keywords.EVERY.name()));
+
+		if (weeklyDate == null) {
+			return new IndicatorMessagePair(false,
+					String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT));
+		}
+		
+		newTask.setTaskStartDateTime(null);
+		newTask.setTaskEndDateTime(null);
+		newTask.setWeeklyDay(KeywordType.List_Keywords.EVERY.name());
 		return new IndicatorMessagePair(true, "");
 	}
 
