@@ -43,8 +43,8 @@ public class SearchHandlerTest {
 		// keyFieldsTest.search();
 		// keyFieldsTest.search();
 		String expected = MessageList.MESSAGE_ADDED;
-		assertEquals(expected,
-				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		assertEquals(expected, SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
 
 	}
 

@@ -41,7 +41,7 @@ public class Menu {
 			return DeleteHandler.executeDelete(keyFieldsList, smtData);
 		}
 		case CLEAR: {
-			// return ClearHandler.executeClear(fileName, input, listTask);
+			// return ClearHandler.executeClear(smtData);
 		}
 		case INVALID: {
 			return MessageList.MESSAGE_INVAILD;
@@ -58,9 +58,9 @@ public class Menu {
 		case UPDATE: {
 			return UpdateHandler.executeUpdate(keyFieldsList, smtData);
 		}
-		// case UNDO: {
-		// return CacheCommandsHandler.executeUndo(fileName, listTask);
-		// }
+		 case UNDO: {
+		 return CacheCommandsHandler.executeUndo(smtData);
+		 }
 		// case REDO:{
 		// return CacheCommandsHandler.executeRedo(fileName, listTask);
 
@@ -80,5 +80,9 @@ public class Menu {
 
 	public IndicatorMessagePair setUp() {
 		return smtData.loadEveryThingFromFile();
+	}
+	
+	public static String getHint(){
+		return "";
 	}
 }
