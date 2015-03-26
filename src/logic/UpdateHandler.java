@@ -19,50 +19,7 @@ import data.Task;
 public class UpdateHandler {
 	
 	private static Logger taskLogger = TaskLogging.getInstance();
-	
-	/**
-	 * This method search for a task in the ArrayList
-	 * @param taskId the task id for searching
-	 * @param listTask contains the list of current tasks
-	 * @return message
-	 */
-	private static int searchTaskIndexStored(int taskId, Data smtData){
-		for(int i = 0; i < smtData.getSize(); i++){
-			if(taskId == smtData.getATask(i).getTaskId()){
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * This method check if the given string can be converted to integer
-	 * 
-	 * @param inputStr
-	 *            the string to be converted
-	 * @return true if it is a integer, else false
-	 */
-	private static boolean isStringAnInteger(String inputStr) {
-		try {
-			Integer.parseInt(inputStr);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return true;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//===================================================================================
-	//====================================================================================
-	
-	
+
 	
 	/**
 	 * This method handle the update execution and update the contents to the ArrayList of tasks
@@ -243,4 +200,35 @@ public class UpdateHandler {
 		return new IndicatorMessagePair(true, "");
 	}
 
+	
+	/**
+	 * searchTaskIndexStored method search for a task in the ArrayList
+	 * @param taskId taskId the task id for searching
+	 * @param smtData the data contains all the information such as task list
+	 * @return
+	 */
+	private static int searchTaskIndexStored(int taskId, Data smtData){
+		for(int i = 0; i < smtData.getSize(); i++){
+			if(taskId == smtData.getATask(i).getTaskId()){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * This method check if the given string can be converted to integer
+	 * 
+	 * @param inputStr
+	 *            the string to be converted
+	 * @return true if it is a integer, else false
+	 */
+	private static boolean isStringAnInteger(String inputStr) {
+		try {
+			Integer.parseInt(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
 }
