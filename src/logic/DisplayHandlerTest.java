@@ -22,7 +22,7 @@ public class DisplayHandlerTest {
 	
 	LocalDate date = new LocalDate();
 	DateTime end = DateParser.generateDate(date.toString());
-	String today = DateParser.displayDateTime(end);
+	String today = DateParser.displayDate(end);
 	
 	@Before
 	public void setUp() throws Exception {
