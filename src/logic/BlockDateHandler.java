@@ -20,29 +20,29 @@ public class BlockDateHandler {
 
 	}
 
-	private static String CheckIfCommandEqualBlockOrUnblock(
-			HashMap<String, String> keyFieldsList, String keyCommand,
-			Data smtData) {
-		IndicatorMessagePair indicMsg;
+	//private static String CheckIfCommandEqualBlockOrUnblock(
+		//	HashMap<String, String> keyFieldsList, String keyCommand,
+			//Data smtData) {
+		//IndicatorMessagePair indicMsg;
 
-		switch (keyCommand) {
-		case CommandType.Command_Types.BLOCK.name():
-			indicMsg = blockDate(smtData, keyFieldsList.get(keyCommand));
-			break;
+		//switch (keyCommand) {
+		//case CommandType.Command_Types.BLOCK.name():
+			//indicMsg = blockDate(smtData, keyFieldsList.get(keyCommand));
+			//break;
 
-		case CommandType.Command_Types.UNBLOCK.name():
-			indicMsg = mymethodname2(smtData, keyFieldsList.get(keyCommand));
-			break;
+		//case CommandType.Command_Types.UNBLOCK.name():
+			//indicMsg = mymethodname2(smtData, keyFieldsList.get(keyCommand));
+			//break;
 
-		default:
-			return String
-					.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
-		}
+		//default:
+			//return String
+				//	.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+		//}
 
-		if (!indicMsg.isTrue()) {
-			return indicMsg.getMessage();
-		}
-	}
+		//if (!indicMsg.isTrue()) {
+			//return indicMsg.getMessage();
+		//}
+	//}
 
 	private static IndicatorMessagePair checkIfCommandKeyExist(
 			HashMap<String, String> keyFieldsList, String keyCommand) {
@@ -57,35 +57,35 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
 		return new IndicatorMessagePair(true, "");
-	}
+	//}
 
-	private static IndicatorMessagePair blockDate(
-			HashMap<String, String> keyFieldList, Data smtData) {
+	//private static IndicatorMessagePair blockDate(
+		//	HashMap<String, String> keyFieldList, Data smtData) {
 
-		if (keyFieldList == null || keyFieldList.isEmpty())
-			if (keyFieldList == null || keyFieldList.isEmpty()) {
-				return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
-			}
+		//if (keyFieldList == null || keyFieldList.isEmpty())
+			//if (keyFieldList == null || keyFieldList.isEmpty()) {
+				//return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
+			//}
 
-		if (smtData == null) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_TASK_IN_LIST);
+		//if (smtData == null) {
+			//return new IndicatorMessagePair(false,
+				//	MessageList.MESSAGE_NO_TASK_IN_LIST);
+	//	}
+
+		//if (keyFieldList.size() == 1) {
+			//return blockOneDate(
+			//		keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
+				//	smtData);
+	//	} else if (keyFieldList.size() == 3
+		//		&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
+			//			.name())) { // &&keyFieldList.containKey(KeywordType.List_Keywords.TO))){
+//			return blockRangeOfDates(keyFieldList, smtData);
+		//} else {
+			//return new IndicatorMessagePair(false,
+				//	MessageList.MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED);
 		}
 
-		if (keyFieldList.size() == 1) {
-			return blockOneDate(
-					keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
-					smtData);
-		} else if (keyFieldList.size() == 3
-				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
-						.name())) { // &&keyFieldList.containKey(KeywordType.List_Keywords.TO))){
-			return blockRangeOfDates(keyFieldList, smtData);
-		} else {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED);
-		}
-
-	}
+	//}
 
 	private static IndicatorMessagePair blockRangeOfDates(
 			String fromDate, String toDate, Data smtData) {
