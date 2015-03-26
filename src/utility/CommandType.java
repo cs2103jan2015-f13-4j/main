@@ -1,7 +1,7 @@
 package utility;
 public class CommandType {
 	public enum Command_Types {
-		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO
+		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
 	}
 
 	public static Command_Types getType(String[] commandTypeString) {
@@ -33,6 +33,10 @@ public class CommandType {
 			return Command_Types.UNDO;
 		case "redo":
 			return Command_Types.REDO;
+		case "block": 
+			return Command_Types.BLOCK;
+		case "unblock":
+			return Command_Types.UNBLOCK;
 		default: 
 			return Command_Types.INVALID;
 		}
