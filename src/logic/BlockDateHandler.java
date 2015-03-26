@@ -2,6 +2,9 @@ package logic;
 
 import java.util.HashMap;
 
+import org.joda.time.DateTime;
+
+import parser.DateParser;
 import data.Data;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
@@ -70,7 +73,9 @@ public class BlockDateHandler {
 		}
 
 		if (keyFieldList.size() == 1) {
-			return blockOneDate(keyFieldList.get(CommandType.Command_Types.BLOCK.name()), smtData);
+			return blockOneDate(
+					keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
+					smtData);
 		} else if (keyFieldList.size() == 3
 				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
 						.name())) { // &&keyFieldList.containKey(KeywordType.List_Keywords.TO))){
@@ -83,22 +88,46 @@ public class BlockDateHandler {
 	}
 
 	private static IndicatorMessagePair blockRangeOfDates(
-			HashMap<String, String> keyFieldList, Data smtData) {
-
-		return null;
-	}
-
-	private static IndicatorMessagePair blockOneDate(
-			String receivedDate, Data smtData) {
-
-		return null;
-	}
-
-	private static IndicatorMessagePair checkIfBlockDateExist(HashMap<String, String> keyFieldList, Data smtData){
-		if(keyFieldList.)
-		smtData.getBlockedDateTimeList().size()
-		smtData.getBlockedDateTimeList().get(0).equals(smtData)
-		return null;
+			String fromDate, String toDate, Data smtData) {
+		DateTime startDate = DateParser.generateDate(fromDate);
+		if (startDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+		}
 		
+		DateTime endDate = DateParser.generateDate(toDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+		}
+
+		return null;
+	}
+
+	private static IndicatorMessagePair blockOneDate(String receivedDate,
+			Data smtData) {
+		DateTime endDate = DateParser.generateDate(receivedDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+		}
+
+		if (!checkIfBlockDateExist(endDate, smtData)) {
+			smtData.addBlockedDateTime(endDate);
+		}
+		return new IndicatorMessagePair(true,
+				String.format(MessageList.MESSAGE_BLOCK_HELP)); // change msg
+	}
+
+	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
+			Data smtData) {
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(dateTimeReceived.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 }

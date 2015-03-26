@@ -81,4 +81,8 @@ public class Menu {
 	public IndicatorMessagePair setUp() {
 		return smtData.loadEveryThingFromFile();
 	}
+	
+	public static String getHint(){
+		return "";
+	}
 }
