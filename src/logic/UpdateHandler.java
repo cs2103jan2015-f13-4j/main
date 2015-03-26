@@ -24,7 +24,7 @@ public class UpdateHandler {
 	/**
 	 * This method handle the update execution and update the contents to the ArrayList of tasks
 	 * @param keyPFieldsList contains the list of keyword and the data it has
-	 * @param listTask contains the list of current tasks
+	 * @param smtData contains the whole information including the task list
 	 * @return message
 	 */
 	public static String executeUpdate(HashMap<String, String> keyFieldsList, Data smtData){
@@ -60,7 +60,7 @@ public class UpdateHandler {
 	 * This method will update the contents based on the key word
 	 * @param keyFieldsList contains the list of keyword and the data it has
 	 * @param index indicate the location of the intended task to be updated
-	 * @param listTask contains the list of current tasks
+	 * @param smtData contains the whole information including the task list
 	 * @return message
 	 */
 	private static String updateContents(HashMap<String, String> keyFieldsList, int index, Data smtData){
@@ -80,6 +80,9 @@ public class UpdateHandler {
 				break;
 			case TASKEND:
 				indicMsg = updateTaskByOrEndWhen(smtData, index, keyFieldsList.get(key));
+				break;
+			case EVERY:
+				indicMsg = updateRecurringWeek(smtData, index, keyFieldsList.get(key));
 				break;
 			case COMPLETED:
 				indicMsg = updateTaskStatus(smtData, index, keyFieldsList.get(key), true);
@@ -106,11 +109,12 @@ public class UpdateHandler {
 		return MessageList.MESSAGE_UPDATE_SUCCESS;
 	}
 	
+
 	/**
-	 * This method will update the task end date and will determine whether it can be updated as well.
-	 * @param listTask contains the list of current tasks
+	 * updateTaskByOrEndWhen method will update the task end date and will determine whether it can be updated as well.
+	 * @param smtData contains the whole information including the task list
 	 * @param index indicate the location of the intended task to be updated
-	 * @param keyFields contains the keyword and the data it has
+	 * @param keyFields contains the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateTaskByOrEndWhen(Data smtData, int index, String keyFields){
@@ -132,8 +136,29 @@ public class UpdateHandler {
 	}
 	
 	/**
+	 * updateRecurringWeek method will update the task to be happening in every week
+	 * @param smtData contains the whole information including the task list
+	 * @param index indicate the location of the intended task to be updated
+	 * @param keyFields contains the data it has
+	 * @return true if success, false if there is an invalid conversion object and message
+	 */
+	private static IndicatorMessagePair updateRecurringWeek(Data smtData, int index, String keyFields){
+		DateTime weeklyDate = DateParser.generateDate(keyFields);
+		if(weeklyDate == null){
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		}
+		
+		Task tempTask = smtData.getATask(index);
+		tempTask.setTaskStartDateTime(null);
+		tempTask.setTaskEndDateTime(null);
+		tempTask.setWeeklyDay(keyFields);
+		smtData.updateTaskList(index, tempTask);
+		return new IndicatorMessagePair(true, "");
+	}
+	
+	/**
 	 * This method will update the task description and will determine whether it can be updated as well.
-	 * @param listTask contains the list of current tasks
+	 * @param smtData contains the whole information including the task list
 	 * @param index indicate the location of the intended task to be updated
 	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if the parameter and message
@@ -154,7 +179,7 @@ public class UpdateHandler {
 	
 	/**
 	 * This method will update the task start date and will determine whether it can be updated as well.
-	 * @param listTask contains the list of current tasks
+	 * @param smtData contains the whole information including the task list
 	 * @param index indicate the location of the intended task to be updated
 	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
@@ -180,7 +205,7 @@ public class UpdateHandler {
 	
 	/**
 	 * This method update the status of the task to completed or pending.
-	 * @param listTask contains the list of current tasks
+	 * @param smtData contains the whole information including the task list
 	 * @param index indicate the location of the intended task to be updated
 	 * @param keyFields contains the keyword and the data it has
 	 * @param status the task status in boolean
