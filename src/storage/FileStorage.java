@@ -9,42 +9,80 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
+import parser.DateParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Task;
 import data.TaskParserFromTextFile;
-import data.TaskFieldList;
+import data.TaskParserWriteToTextFile;
 
 public class FileStorage {
 
 	// file extension length including a '.'
 	private static final int FILE_EXTENSION_LENGTH = 4;
-	// task component separator char
-	private static final String TASK_COMPONENT_SEPARATOR = "|";
-	// task field and data separator char
-	private static final String TASK_FIELD_DATA_SEPARATOR = "=";
-	// task fields list taskid offset
-	private static final int TASKID_OFFSET = 0;
-	// task fields list taskdesc offset
-	private static final int TASKDESC_OFFSET = 1;
-	// task fields list taskstartdatetime offset
-	private static final int TASKSTARTDATETIME_OFFSET = 2;
-	// task fields list taskenddatetime offset
-	private static final int TASKENDDATETIME_OFFSET = 3;
-	// task fields list taskweeklyday offset
-	private static final int TASKWEEKLYDAY_OFFSET = 4;
-	// task fields list taskstatus offset
-	private static final int TASKSTATUS_OFFSET = 5;
+	private static final String FILE_EXTENSION = ".txt";
+
 	
 	private static String fileName = "defaultTaskList.txt";
 	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
+	private static String blockedDateFileName = "defaultBlockedDateList.txt";
+	
+
+	/**
+	 * get the filename for task list
+	 * @return
+	 */
+	public static String getFileNameForTasksList(){
+		return fileName;
+	}
 	
 	/**
-	 * Check if file exists and load it to a list
-	 * 
-	 * @param args
-	 *            receive argument which will contains the filename
-	 * @return the filename if the argument fulfill the condition
+	 * get the filename for last unused index
+	 * @return
+	 */
+	public static String getFileNameForLastUnusedIndex(){
+		return lastUnUsedIndexFileName;
+	}
+	
+	/**
+	 * get the filename for blocked date list
+	 * @return
+	 */
+	public static String getFileNameForBlockedDatesList(){
+		return blockedDateFileName;
+	}
+	
+	/**
+	 * setFileNameForTasksList method set the filename for task list
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForTasksList(String receivedFileName){
+		fileName = receivedFileName;
+	}
+	
+	/**
+	 * setFileNameForLastUnusedIndex method set the filename for last unused index
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForLastUnusedIndex(String receivedFileName){
+		lastUnUsedIndexFileName = receivedFileName;
+	}
+
+	/**
+	 * setFileNameForBlockedDatesList method set the filename for blocked date list
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForBlockedDatesList(String receivedFileName){
+		blockedDateFileName = receivedFileName;
+	}
+	
+
+	/**
+	 * checkAndLoadTaskFile method checks if file exists and load it to a array list
+	 * @param msgPair the indicator of whether the files can be loaded
+	 * @return the list of task
 	 */
 	public static ArrayList<Task> checkAndLoadTaskFile(IndicatorMessagePair msgPair) {
 
@@ -63,7 +101,7 @@ public class FileStorage {
 		File filepath = new File(fileName);
 		ArrayList<Task> tasksList = new ArrayList<Task>();
 		if (filepath.exists() && !filepath.isDirectory()) {
-			tasksList =  loadToArrayList(msgPair);
+			tasksList =  loadTaskListToArrayList(msgPair);
 		} else {
 			try {
 				filepath.createNewFile();
@@ -75,45 +113,12 @@ public class FileStorage {
 		
 		return tasksList;
 	}
-
-	/**
-	 * setFileNameForTasksList method set the filename for task list
-	 * @param receivedFileName
-	 */
-	public static void setFileNameForTasksList(String receivedFileName){
-		fileName = receivedFileName;
-	}
+	
 	
 	/**
-	 * setFileNameForLastUnusedIndex method set the filename for last unused index
-	 * @param receivedFileName
-	 */
-	public static void setFileNameForLastUnusedIndex(String receivedFileName){
-		lastUnUsedIndexFileName = receivedFileName;
-	}
-	
-	/**
-	 * get the filename for task list
-	 * @return
-	 */
-	public static String getFileNameForTasksList(){
-		return fileName;
-	}
-	
-	/**
-	 * get the filename for last unused index
-	 * @return
-	 */
-	public static String getFileNameForLastUnusedIndex(){
-		return lastUnUsedIndexFileName;
-	}
-	
-	/**
-	 * Check if file exists and return the index of last unused task list
-	 * 
-	 * @param fileName
-	 *            receive argument which will contains the filename
-	 * @return an integer which indicate the last unused task id
+	 * checkAndLoadLastTaskIndexFile checks if file exists and return the last unused index
+	 * @param msgPair the indicator of whether the files can be loaded
+	 * @return last unused index
 	 */
 	public static int checkAndLoadLastTaskIndexFile(
 			IndicatorMessagePair msgPair) {
@@ -150,14 +155,13 @@ public class FileStorage {
 		return 1;
 	}
 
+
 	/**
-	 * This method will load the contents from the text file to ArrayList
-	 * 
-	 * @param msgPair
-	 *            the indicator of whether the files can be loaded into arraylist
+	 * loadTaskListToArrayList method will load the contents from the text file to ArrayList
+	 * @param msgPair the indicator of whether the files can be loaded into array list
+	 * @return a list of task
 	 */
-	private static ArrayList<Task> loadToArrayList(IndicatorMessagePair msgPair) {
-		ArrayList<Task> tasksList = new ArrayList<Task>();
+	private static ArrayList<Task> loadTaskListToArrayList(IndicatorMessagePair msgPair) {
 		FileReader reader = null;
 		BufferedReader bufferRead = null;
 		try {
@@ -170,6 +174,18 @@ public class FileStorage {
 		
 		assert(bufferRead != null);
 		
+		return readTaskFromFile(msgPair, bufferRead);
+
+	}
+
+	/**
+	 * readTaskFromFile method read a list of task from the file
+	 * @param msgPair to indicate success or fail
+	 * @param bufferRead the buffer reader to read the contents in the file
+	 * @return a list of task list
+	 */
+	private static ArrayList<Task> readTaskFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
+		ArrayList<Task> tasksList = new ArrayList<Task>();
 		String txtLine = "";
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
@@ -192,49 +208,63 @@ public class FileStorage {
 		
 		setIndicatorMessagePair(msgPair, true, "");
 		return tasksList;
-
 	}
 
 	/**
-	 * This method will load the last unused index number from the file
-	 * 
-	 * @param fileName
-	 * @return last unused index number
+	 * loadLastIndexUnused method will load the last unused index number from the file
+	 * @param msgPair to indicate whether it reads success or fail
+	 * @return the last unused index
 	 */
 	private static Integer loadLastIndexUnused(
 			IndicatorMessagePair msgPair) {
+		FileReader reader;
+		BufferedReader bufferRead;
 		try {
-			FileReader reader = new FileReader(lastUnUsedIndexFileName);
-			BufferedReader bufferRead = new BufferedReader(reader);
-			String txtLine = "";
-			try {
-				while ((txtLine = bufferRead.readLine()) != null) {
-					if (!isStringAnInteger(txtLine)) {
-						setIndicatorMessagePair(msgPair, false,
-								MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
-						return -1;
-					}
-					bufferRead.close();
-					return Integer.parseInt(txtLine);
-				}
-				bufferRead.close();
-			} catch (IOException e) {
-				setIndicatorMessagePair(msgPair, false, e.toString());
-				return -1;
-			}
+			reader = new FileReader(lastUnUsedIndexFileName);
+			bufferRead = new BufferedReader(reader);
+			
 		} catch (FileNotFoundException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
 			return -1;
 		}
-		setIndicatorMessagePair(msgPair, true, "");
+		
+		assert(bufferRead != null);
+		
+		return readLastUnUsedIndexFromFile(msgPair, bufferRead);
+	}
+	
+	/**
+	 * readLastUnUsedIndexFromFile method read a line from text file
+	 * @param msgPair to indicate whether it reads success or fail
+	 * @param bufferRead the buffer reader to read the contents in the file
+	 * @return the last unused index
+	 */
+	private static Integer readLastUnUsedIndexFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
+		String txtLine = "";
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				if (!isStringAnInteger(txtLine)) {
+					setIndicatorMessagePair(msgPair, false,
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
+					return -1;
+				}
+				setIndicatorMessagePair(msgPair, true, "");
+				return Integer.parseInt(txtLine);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return -1;
+		}
+		
 		return 1;
 	}
 
+
 	/**
-	 * This method write the task list to the text file
-	 * 
-	 * @param fileName
-	 *            an filename for saving
+	 * writeToFile method for this case is write the list of task to file
+	 * @param tasksList the list of tasks
+	 * @param msgPair to indicate whether it writes success or fail
 	 */
 	public static void writeToFile(ArrayList<Task> tasksList,
 			IndicatorMessagePair msgPair) {
@@ -245,7 +275,7 @@ public class FileStorage {
 			BufferedWriter bw = new BufferedWriter(fw);
 			String formattedString = new String();
 			for (int i = 0; i < tasksList.size(); i++) {
-				formattedString = concatTaskFieldToString(tasksList.get(i));
+				formattedString = TaskParserWriteToTextFile.concatTaskFieldToString(tasksList.get(i));
 				if (formattedString == null) {
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
@@ -264,11 +294,11 @@ public class FileStorage {
 		setIndicatorMessagePair(msgPair, true, "");
 	}
 
+
 	/**
-	 * This method write the last unused index to the text file
-	 * 
-	 * @param fileName
-	 *            an filename for saving
+	 * writeToFile method for last unused index
+	 * @param lastUnUsedIndex the last unused index to be saved
+	 * @param msgPair to indicate whether it writes success or fail
 	 */
 	public static void writeToFile(Integer lastUnUsedIndex,
 			IndicatorMessagePair msgPair) {
@@ -287,6 +317,125 @@ public class FileStorage {
 		setIndicatorMessagePair(msgPair, true, "");
 	}
 
+	
+	/**
+	 * checkAndLoadBlockedDateFile method checks and load the list of blocked date time to array list
+	 * @param msgPair to indicate whether it loads success or fail
+	 * @return a list of blocked date time
+	 */
+	public static ArrayList<DateTime> checkAndLoadBlockedDateFile(IndicatorMessagePair msgPair) {
+
+		// Call to check for file is empty
+		exitIfUnspecificFileName(blockedDateFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		// Call to check for file format
+		exitIfWrongFileFormat(blockedDateFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		File filepath = new File(blockedDateFileName);
+		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
+		if (filepath.exists() && !filepath.isDirectory()) {
+			blockedDatesList =  loadBlockedDatesToArrayList(msgPair);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				setIndicatorMessagePair(msgPair, false, e.toString());
+				return null;
+			}
+		}
+		
+		return blockedDatesList;
+	}
+	
+	
+	
+	/**
+	 * loadBlockedDatesToArrayList method load the list of blocked date time to arraylist
+	 * @param msgPair to indicate whether it loads success or fail
+	 * @return a list of blocked date time
+	 */
+	private static ArrayList<DateTime> loadBlockedDatesToArrayList(IndicatorMessagePair msgPair) {
+		FileReader reader = null;
+		BufferedReader bufferRead = null;
+		try {
+			reader = new FileReader(blockedDateFileName);
+			bufferRead = new BufferedReader(reader);
+		} catch (FileNotFoundException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+		
+		assert(bufferRead != null);
+		
+		return readBlockedDateListFromFile(msgPair, bufferRead);
+
+	}
+	
+	/**
+	 * readBlockedDateListFromFile method read the list of blocked dates line by line from text file
+	 * @param msgPair to indicate whether it loads success or fail
+	 * @param bufferRead the buffer reader to read the contents in the file
+	 * @return a list of blocked dates
+	 */
+	private static ArrayList<DateTime> readBlockedDateListFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
+		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
+		String txtLine = "";
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				DateTime dateTimeObj = DateParser.generateDate(txtLine);
+				if (dateTimeObj == null) {
+					setIndicatorMessagePair(msgPair, false, String.format(
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
+							blockedDateFileName));
+					bufferRead.close();
+					return null;
+				}
+				blockedDatesList.add(dateTimeObj);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+		
+		setIndicatorMessagePair(msgPair, true, "");
+		return blockedDatesList;
+	}
+	
+	/**
+	 * writeBlockedDateTimeToFile method write the list of blocked date time to file
+	 * @param blockedDatesList a list of blocked date time
+	 * @param msgPair indicator that whether it saved successfully
+	 */
+	public static void writeBlockedDateTimeToFile(ArrayList<DateTime> blockedDatesList,
+			IndicatorMessagePair msgPair) {
+		// Add the string to the file
+		try {
+			FileWriter fw = new FileWriter(blockedDateFileName);// setup a file writer
+			fw.flush();
+			BufferedWriter bw = new BufferedWriter(fw);
+			for (int i = 0; i < blockedDatesList.size(); i++) {
+				bw.write(blockedDatesList.get(i).toString());
+				bw.newLine();
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return;
+		}
+		setIndicatorMessagePair(msgPair, true, "");
+	}
+	
+	
+	
+	
 	/**
 	 * This method check if the given string can be converted to integer
 	 * 
@@ -304,63 +453,6 @@ public class FileStorage {
 		return true;
 	}
 
-	/**
-	 * This method will concatenate the heading of each task field
-	 * 
-	 * @param oneTask
-	 * @return a text line
-	 */
-	private static String concatTaskFieldToString(Task oneTask) {
-		if (oneTask == null) {
-			return null;
-		}
-		String textLine = new String();
-		TaskFieldList.List_Task_Field[] taskFields = TaskFieldList.List_Task_Field
-				.values();
-		if (oneTask.getTaskId() > 0) {
-			textLine += taskFields[TASKID_OFFSET].name();
-			textLine += TASK_FIELD_DATA_SEPARATOR;
-			textLine += String.valueOf(oneTask.getTaskId());
-			textLine += TASK_COMPONENT_SEPARATOR;
-		}
-		if (oneTask.getTaskDescription() != null
-				&& !oneTask.getTaskDescription().isEmpty()) {
-			textLine += taskFields[TASKDESC_OFFSET].name();
-			textLine += TASK_FIELD_DATA_SEPARATOR;
-			textLine += oneTask.getTaskDescription();
-			textLine += TASK_COMPONENT_SEPARATOR;
-		}
-		if (oneTask.getTaskStartDateTime() != null) {
-			textLine += taskFields[TASKSTARTDATETIME_OFFSET].name();
-			textLine += TASK_FIELD_DATA_SEPARATOR;
-			textLine += oneTask.getTaskStartDateTime().toString();
-			textLine += TASK_COMPONENT_SEPARATOR;
-		}
-		if (oneTask.getTaskEndDateTime() != null) {
-			textLine += taskFields[TASKENDDATETIME_OFFSET].name();
-			textLine += TASK_FIELD_DATA_SEPARATOR;
-			textLine += oneTask.getTaskEndDateTime().toString();
-			textLine += TASK_COMPONENT_SEPARATOR;
-		}
-
-		if (oneTask.getWeeklyDay() != null && !oneTask.getWeeklyDay().isEmpty()) {
-			textLine += taskFields[TASKWEEKLYDAY_OFFSET].name();
-			textLine += TASK_FIELD_DATA_SEPARATOR;
-			textLine += oneTask.getWeeklyDay();
-			textLine += TASK_COMPONENT_SEPARATOR;
-		}
-		
-		if (textLine.isEmpty()) {
-			return null;
-		}
-		
-		textLine += taskFields[TASKSTATUS_OFFSET].name();
-		textLine += TASK_FIELD_DATA_SEPARATOR;
-		textLine += oneTask.getTaskStatus();
-		textLine += TASK_COMPONENT_SEPARATOR;
-		
-		return textLine.substring(0, textLine.length() - 1);
-	}
 
 	/**
 	 * This method will check if the filename is specified and exit if there is
@@ -378,12 +470,12 @@ public class FileStorage {
 		setIndicatorMessagePair(msgPair, true, "");
 	}
 
+
 	/**
-	 * This method will check if the file is in correct format and exit if
+	 * exitIfWrongFileFormat method will check if the file is in correct format and exit if
 	 * incorrect
-	 * 
-	 * @param fileName
-	 *            the string to compare
+	 * @param receivedFileName the filename to be checked
+	 * @param msgPair to indicate success or fail
 	 */
 	private static void exitIfWrongFileFormat(String receivedFileName,
 			IndicatorMessagePair msgPair) {
@@ -393,7 +485,7 @@ public class FileStorage {
 				- FILE_EXTENSION_LENGTH, receivedFileName.length());
 
 		if (!(isFileContainsADot) || !(fileExtLength == FILE_EXTENSION_LENGTH)
-				|| !(fileExt.equals(".txt"))) {
+				|| !(fileExt.equals(FILE_EXTENSION))) {
 			setIndicatorMessagePair(msgPair, false,
 					MessageList.MESSAGE_FILENAME_INVALID_FORMAT);
 			return;
@@ -401,6 +493,12 @@ public class FileStorage {
 		setIndicatorMessagePair(msgPair, true, "");
 	}
 
+	/**
+	 * setIndicatorMessagePair method sets the indication of the respective operations
+	 * @param msgPair to indicate whether success or fail
+	 * @param isTrue to set true or false
+	 * @param msg the message to be written to
+	 */
 	private static void setIndicatorMessagePair(IndicatorMessagePair msgPair,
 			boolean isTrue, String msg) {
 		msgPair.setTrue(isTrue);
