@@ -79,5 +79,12 @@ public class MessageList {
 	public static final String MESSAGE_NO_MATCH_FOUND = "No Match Found";
 	public static final String MESSAGE_INVAILD_SEARCH = "This is a invaild search.";
 	public static final String MESSAGE_INVAILD_SEARCH_CRITERIA = "This is a invaild search criteria.";
+	
+	/**
+	 * These message are for BlockDate class 
+	 */
+	public static final String MESSAGE_BLOCK_DATE_NOT_AVAILABLE = "No Date to Block.";
+	public static final String MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED = "Please Enter a Right Format.";
 }
 
+	
