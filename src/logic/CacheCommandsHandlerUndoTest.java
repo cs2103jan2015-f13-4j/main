@@ -25,12 +25,14 @@ public class CacheCommandsHandlerUndoTest {
 		smtDataTest = null;
 	}
 	
+	// This is to test if the stack is empty, and it can know that the undo cannot be done
 	@Test
 	public void testUndoEmpty(){
 		String expected = MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
 		assertEquals(expected, CacheCommandsHandler.executeUndo(smtDataTest));
 	}
 	
+	// This is to test the normal undo
 	@Test
 	public void testUndoRegular() {
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
