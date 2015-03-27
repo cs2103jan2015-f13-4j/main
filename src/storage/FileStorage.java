@@ -421,7 +421,7 @@ public class FileStorage {
 			fw.flush();
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (int i = 0; i < blockedDatesList.size(); i++) {
-				bw.write(blockedDatesList.get(i).toString());
+				bw.write(blockedDatesList.get(i).toLocalDate().toString());
 				bw.newLine();
 			}
 			bw.close();
