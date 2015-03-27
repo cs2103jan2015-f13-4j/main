@@ -48,7 +48,7 @@ public class UpdateHandler {
 		
 		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList.get(CommandType.Command_Types.UPDATE.name())), smtData);
 		
-		if(index < minTaskListSize){
+		if(index < minTaskListSize || index >= smtData.getSize()){
 			return MessageList.MESSAGE_NO_SUCH_TASK;
 		}
 		keyFieldsList.remove(CommandType.Command_Types.UPDATE.name());////remove the update key pair as it has the index extracted
@@ -105,6 +105,7 @@ public class UpdateHandler {
 		if(!indicMsg.isTrue()){
 			return indicMsg.getMessage();
 		}
+		CacheCommandsHandler.newHistory(smtData);
 		taskLogger.log(Level.INFO, MessageList.MESSAGE_UPDATE_SUCCESS);
 		return MessageList.MESSAGE_UPDATE_SUCCESS;
 	}
@@ -143,9 +144,13 @@ public class UpdateHandler {
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
 	private static IndicatorMessagePair updateRecurringWeek(Data smtData, int index, String keyFields){
+		if(keyFields == null || keyFields.isEmpty()){
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		
 		DateTime weeklyDate = DateParser.generateDate(keyFields);
 		if(weeklyDate == null){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
 		}
 		
 		Task tempTask = smtData.getATask(index);
