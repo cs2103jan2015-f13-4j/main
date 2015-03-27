@@ -24,6 +24,10 @@ public class CommandStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
+		if(input.contains("=") || input.contains("|")){
+			return CommandType.Command_Types.INVALID;
+		}
+		
 		String[] inputCmd = input.trim().split(" ");
 		
 		CommandType.Command_Types command = CommandType.getType(inputCmd);
