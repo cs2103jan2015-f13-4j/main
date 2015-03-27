@@ -41,6 +41,11 @@ public class MessageList {
 	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
 	
 	/**
+	 * This message are for HintHandler class
+	 */
+	public static final String MESSAGE_HINT_INVALID = "Please type something to add a task";
+	
+	/**
 	 * This method will print out the error message before exiting the system
 	 * 
 	 * @param message
