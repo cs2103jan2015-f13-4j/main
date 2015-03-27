@@ -65,7 +65,7 @@ public class MessageList {
 	public static final String MESSAGE_SWITCHVIEW_HELP = "Switchview <tabname> <Desc>";
 	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Date>";
 	public static final String MESSAGE_UNBLOCK_HELP = "Unblock <Date>";
-	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
+	public static final String MESSAGE_INVAILD = "Please enter a vaild command. Remove characters such as '=' and '|'";
 	
 	/**
 	 * These message are for the Menu
