@@ -42,6 +42,7 @@ public class SmtSurvival extends Composite {
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, SWT.BORDER | SWT.NO_BACKGROUND);
+		setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		//setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -63,6 +64,9 @@ public class SmtSurvival extends Composite {
 		toolkit.paintBordersFor(group);
 		
 		displayTaskFolder = new TabFolder(group, SWT.NONE);
+		displayTaskFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		displayTaskFolder.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+		displayTaskFolder.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.BOLD));
 		
 		displayTaskFolder.setBounds(0, 10, 430, 371);
 		toolkit.adapt(displayTaskFolder);
@@ -71,7 +75,9 @@ public class SmtSurvival extends Composite {
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblDisplay.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.NORMAL));
+		lblDisplay.setAlignment(SWT.CENTER);
+		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
 		
@@ -109,11 +115,13 @@ public class SmtSurvival extends Composite {
 		toolkit.paintBordersFor(composite_1);
 		
 		Label lblCommand = new Label(composite_1, SWT.NONE);
+		lblCommand.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.BOLD));
 		lblCommand.setBounds(10, 10, 84, 20);
 		toolkit.adapt(lblCommand, true, true);
 		lblCommand.setText("Command :");
 		
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+		cmdTxtBox.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.NORMAL));
 		cmdTxtBox.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.addKeyListener(new KeyAdapter() {

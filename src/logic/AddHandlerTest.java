@@ -89,6 +89,15 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
+	@Test
+	public void testAddByDay()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_ADDED;
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
 }
 	
 
