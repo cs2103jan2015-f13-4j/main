@@ -4,23 +4,28 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import utility.MessageList;
+
 public class DateParser {
 	
 	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
-	private static String standardDateFormat = "d MMMM, yyyy";
-	private static String timeFormat = "hh:mm a";
+	private static String[] timeFormatList = {"ha", "h a", "h.ma", "h.m a"};
+	private static String[] dayFormatList = {"today", "tomorrow", "monday", "mon", "tuesday", "tue", "wednesday", "wed", "thursday", "thur", "friday", "fri", "saturday", "sat", "sunday", "sun"};
+	private static String standardDateFormat = "d MMMM, yyyy (E)";
+	private static String standardTimeFormat = "h.mm a";
 	
-	public static DateTime generateDate(String dateValue) {
-		boolean validFormat = false;
-		DateTime convertedDateTime = new DateTime();
-		DateTimeFormatter dtf = new DateTimeFormatter(null, null);
+	private static DateTimeFormatter dtf = new DateTimeFormatter(null, null);
+	private static DateTime convertedDate = new DateTime();
+	private static DateTime convertedTime = new DateTime();
+	
+	public static String checkDateFormat(String dateValue) {
+		String dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		
 		for(int i = 0; i < dateFormatList.length; i++) {
-			
 			try	{
 					dtf = DateTimeFormat.forPattern(dateFormatList[i]);
-					convertedDateTime = dtf.parseDateTime(dateValue); 
-					validFormat = true;
+					convertedDate = dtf.parseDateTime(dateValue);
+					dateFormat = dateFormatList[i];
 					break;
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
@@ -28,70 +33,45 @@ public class DateParser {
 			}
 		}
 		
-		switch (dateValue.toLowerCase()) {
-			case "today": {
-				return convertedDateTime;
-			} 
-			case "tomorrow": {
-				return convertedDateTime.plusDays(1);
-			} 
-			case "monday":
-			case "mon": {
-				return dayComparison(DateTimeConstants.MONDAY);
-			}
-			case "tuesday":
-			case "tue": {
-				return dayComparison(DateTimeConstants.TUESDAY);
-			}
-			case "wednesday":
-			case "wed": {
-				return dayComparison(DateTimeConstants.WEDNESDAY);
-			} 
-			case "thursday":
-			case "thur": {
-				return dayComparison(DateTimeConstants.THURSDAY);
-			} 
-			case "friday":
-			case "fri": {
-				return dayComparison(DateTimeConstants.FRIDAY);
-			} 
-			case "saturday":
-			case "sat": {
-				return dayComparison(DateTimeConstants.SATURDAY);
-			} 
-			case "sunday":
-			case "sun": {
-				return dayComparison(DateTimeConstants.SUNDAY);
-			} 
-			default: {
-				//default condition
+		for(int i = 0; i < dayFormatList.length; i++) {
+			if(dateValue.equalsIgnoreCase(dayFormatList[i])) {
+				dateFormat = dayFormatList[i];
+				break;
 			}
 		}
-		
-		if(!validFormat) {
-			return null;
-		}
-		return convertedDateTime;
+		return dateFormat;
 	}
 	
-	public static DateTime generateTime(String timeValue) {
-		boolean validFormat = false;
-		DateTimeFormatter dtf = new DateTimeFormatter(null, null);
-		DateTime time = new DateTime();
-		
-		try {
-				dtf = DateTimeFormat.forPattern(timeFormat);
-				time = dtf.parseDateTime(timeValue);
-				validFormat = true;
-		} catch (IllegalArgumentException e) {
-			//Invalid conversion, continue to loop until valid format found
+	public static DateTime generateDate(String dateValue, String dateFormat) {
+		if(dateValue.matches("[a-zA-Z]+")) {
+			convertedDate = generateDateBasedOnDay(dateValue);
+		} else {
+			dtf = DateTimeFormat.forPattern(dateFormat);
+			convertedDate = dtf.parseDateTime(dateValue);
 		}
+		return convertedDate;
+	}
+	
+	public static String checkTimeFormat(String timeValue) {
+		String timeFormat = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
 		
-		if(!validFormat) {
-			return null;
+		for(int i = 0; i < timeFormatList.length; i++) {
+			try	{
+					dtf = DateTimeFormat.forPattern(timeFormatList[i]);
+					convertedTime = dtf.parseDateTime(timeValue);
+					timeFormat = timeFormatList[i];
+					break;
+			} catch (IllegalArgumentException e) {
+				//Invalid conversion, continue to loop until valid format found
+				continue;
+			}
 		}
-		
-		return time;
+		return timeFormat;
+	}
+	
+	public static DateTime generateTime(String timeValue, String timeFormat) {
+		dtf = DateTimeFormat.forPattern(timeFormat);
+		return convertedTime = dtf.parseDateTime(timeValue);
 	}
 
 	public static String displayDate(DateTime receivedDateTime) {
@@ -106,23 +86,66 @@ public class DateParser {
 		if(receivedDateTime == null){
 			return "";
 		}
-		DateTimeFormatter dtfout = DateTimeFormat.forPattern(timeFormat);
+		DateTimeFormatter dtfout = DateTimeFormat.forPattern(standardTimeFormat);
 		return dtfout.print(receivedDateTime);
 	}
 	
-	public static DateTime dayComparison(int dayToCompare) {
-		DateTime convertedDateTime = new DateTime();
-		int dayOfWeek = convertedDateTime.getDayOfWeek();
+	public static DateTime generateDateBasedOnDay(String dateValue) {
+		
+		switch (dateValue.toLowerCase()) {
+			case "today": {
+				return convertedDate;
+			} 
+			case "tomorrow": {
+				return convertedDate.plusDays(1);
+			} 
+			case "monday":
+			case "mon": {
+				return generateDateAfterDayComparison(DateTimeConstants.MONDAY);
+			}
+			case "tuesday":
+			case "tue": {
+				return generateDateAfterDayComparison(DateTimeConstants.TUESDAY);
+			}
+			case "wednesday":
+			case "wed": {
+				return generateDateAfterDayComparison(DateTimeConstants.WEDNESDAY);
+			} 
+			case "thursday":
+			case "thur": {
+				return generateDateAfterDayComparison(DateTimeConstants.THURSDAY);
+			} 
+			case "friday":
+			case "fri": {
+				return generateDateAfterDayComparison(DateTimeConstants.FRIDAY);
+			} 
+			case "saturday":
+			case "sat": {
+				return generateDateAfterDayComparison(DateTimeConstants.SATURDAY);
+			} 
+			case "sunday":
+			case "sun": {
+				return generateDateAfterDayComparison(DateTimeConstants.SUNDAY);
+			} 
+			default: {
+				return null;
+			}
+		}
+	}
+	
+	public static DateTime generateDateAfterDayComparison(int dayToCompare) {
+		
+		int dayOfWeek = convertedDate.getDayOfWeek();
 		int numOfDays = 7;
 		
 		if(dayOfWeek == dayToCompare) {
-			return convertedDateTime;
+			return convertedDate;
 		}
 		else if(dayOfWeek > dayToCompare) {
-			return convertedDateTime.plusDays(numOfDays - dayToCompare);
+			return convertedDate.plusDays(numOfDays - dayToCompare);
 		}
 		else if(dayOfWeek < dayToCompare) {
-			return convertedDateTime.plusDays(dayToCompare - dayOfWeek);
+			return convertedDate.plusDays(dayToCompare - dayOfWeek);
 		}
 		return null;
 	}
