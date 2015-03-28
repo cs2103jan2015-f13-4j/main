@@ -3,6 +3,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,6 +25,9 @@ import logic.Menu;
 
 public class SmtSurvival extends Composite {
 
+	/**
+	 * Constant variables declared
+	 */
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private Text cmdTxtBox;
 	private TabItem tbtmMain;
@@ -35,6 +39,58 @@ public class SmtSurvival extends Composite {
 	private static Label lblDisplay;
 	private static Menu controller;
 
+	/**
+	 * This method will be first executed when program runs
+	 * @param args
+	 */
+	public static void main(String[] args){
+		
+	    Display display = new Display();
+	    Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
+	    shell.setText("Smart Management Tool");
+	    
+	    open(shell);
+	    setUpFiles();
+	    checkShellDisposed(display, shell);
+	}
+	
+	/**
+	 * This method is to open the shell for SmtSurvival
+	 * @param shell
+	 */
+	private static void open(Shell shell) {
+		
+		addListeners(shell);
+		
+		shell.open();
+	    SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
+	    Smt.pack();
+	    shell.pack();
+	}
+	
+	/** 
+	 * This method is to set up the files
+	 */
+	private static void setUpFiles() {
+	    controller = Menu.getInstance();
+	    IndicatorMessagePair msgPair = controller.setUp();
+	    
+	    if(!msgPair.isTrue()){
+	    	MessageList.printErrorMessageAndExit(msgPair.getMessage());
+	    }
+	}
+
+	/**
+	 * This method will check for shell disposed
+	 * @param display
+	 * @param shell
+	 */
+	private static void checkShellDisposed(Display display, Shell shell) {
+		while(!shell.isDisposed()){
+	        if(!display.readAndDispatch()) display.sleep();
+	    }
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -54,38 +110,14 @@ public class SmtSurvival extends Composite {
 		setLayout(new GridLayout(2, false));
 		new Label(this, SWT.NONE);
 		
-		Group group = new Group(this, SWT.NONE);
-		GridData gd_group = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2);
-		gd_group.heightHint = 358;
-		gd_group.widthHint = 424;
-		group.setLayoutData(gd_group);
-		toolkit.adapt(group);
-		toolkit.paintBordersFor(group);
+		// Created a method that create a group for the tab region for the UI
+		Group group = createGroupForTabRegion();
 		
-		displayTaskFolder = new TabFolder(group, SWT.NONE);
+		// will call this method to display the tab folder created
+		displayTabFolder(group);
 		
-		displayTaskFolder.setBounds(0, 10, 430, 371);
-		toolkit.adapt(displayTaskFolder);
-		toolkit.paintBordersFor(displayTaskFolder);
-		
-		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmMain.setText("Main");
-		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		tbtmMain.setControl(lblDisplay);
-		lblDisplay.setText("Welcome to Smart Management Tool");
-		
-		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmSchedule.setText("Schedule");
-		
-		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmToday.setText("Today");
-		
-		tbtmCompleted = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmCompleted.setText("Completed");
-		
-		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmPending.setText("Pending");
+		// will call this method to show the tab item display 
+		tabItemDisplay();
 		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -100,6 +132,83 @@ public class SmtSurvival extends Composite {
 			}
 		});
 		
+		// creating composite
+		Composite composite_1 = createComposite();
+		
+		// show command label at UI
+		showCommandLabelAtUI(composite_1);
+		
+		// setting command text box next beside the command label at UI, for user to key in
+		setCommandTextBox(composite_1);
+	}
+	
+	/**
+	 * This method creates a group at the tab region
+	 * @return
+	 */
+	private Group createGroupForTabRegion() {
+		Group group = new Group(this, SWT.NONE);
+		GridData gd_group = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2);
+		gd_group.heightHint = 358;
+		gd_group.widthHint = 424;
+		group.setLayoutData(gd_group);
+		toolkit.adapt(group);
+		toolkit.paintBordersFor(group);
+		return group;
+	}
+	
+	/**
+	 * This method display the tab folder created
+	 * @param group
+	 */
+	private void displayTabFolder(Group group) {
+		displayTaskFolder = new TabFolder(group, SWT.NONE);
+		
+		displayTaskFolder.setBounds(0, 10, 430, 371);
+		toolkit.adapt(displayTaskFolder);
+		toolkit.paintBordersFor(displayTaskFolder);
+	}
+	
+	/**
+	 * This method is to display the tab item along with the tool tip text for each tab item 
+	 */
+	private void tabItemDisplay() {
+		
+		// This is for Main Tab
+		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmMain.setText("Main");
+		tbtmMain.setToolTipText("This tab will show the all the tasks");
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		tbtmMain.setControl(lblDisplay);
+		lblDisplay.setText("Welcome to Smart Management Tool");
+		
+		// This is for Schedule Tab
+		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmSchedule.setToolTipText("This tab will show all scheduled tasks");
+		tbtmSchedule.setText("Schedule");
+		
+		// This is for Today Tab
+		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmToday.setToolTipText("This tab will show today's tasks");
+		tbtmToday.setText("Today");
+		
+		// This is for Completed Tab
+		tbtmCompleted = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmCompleted.setToolTipText("This tab will show the tasks completed");
+		tbtmCompleted.setText("Completed");
+		
+		// This is for Pending Tab
+		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmPending.setToolTipText("This tab will show all pending tasks");
+		tbtmPending.setText("Pending");
+	}
+	
+	/**
+	 * This method creates a composite for the UI
+	 * @return
+	 */
+	private Composite createComposite() {
 		Composite composite_1 = new Composite(this, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_composite_1.heightHint = 83;
@@ -107,13 +216,27 @@ public class SmtSurvival extends Composite {
 		composite_1.setLayoutData(gd_composite_1);
 		toolkit.adapt(composite_1);
 		toolkit.paintBordersFor(composite_1);
-		
+		return composite_1;
+	}
+
+	/**
+	 * This method is to create a label named "Command:" which indicate where should the user key in their commands
+	 * @param composite_1
+	 */
+	private void showCommandLabelAtUI(Composite composite_1) {
 		Label lblCommand = new Label(composite_1, SWT.NONE);
 		lblCommand.setBounds(10, 10, 84, 20);
 		toolkit.adapt(lblCommand, true, true);
 		lblCommand.setText("Command :");
-		
+	}
+	
+	/**
+	 * This method set the command text box for user to enter their commands
+	 * @param composite_1
+	 */
+	private void setCommandTextBox(Composite composite_1) {
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+		cmdTxtBox.setToolTipText("Please enter a command here");
 		cmdTxtBox.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
@@ -128,6 +251,10 @@ public class SmtSurvival extends Composite {
 		toolkit.adapt(cmdTxtBox, true, true);
 	}
 	
+	/**
+	 * This method is to pass control to the logic component's menu class to read the output from the command text box
+	 * @param e keyEvent variable
+	 */
 	private void passControl(KeyEvent e)
 	{
 		String output = new String();
@@ -170,29 +297,5 @@ public class SmtSurvival extends Composite {
 			tbtmPending.setControl(lblDisplay);
 			lblDisplay.setText(controller.commandExecution("display pending"));
 		}
-	}
-	
-	public static void main(String[] args){
-		
-	    Display display = new Display();
-	    Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
-	    shell.setText("Smart Management Tool");
-	    
-	    shell.open();
-	    SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
-	    Smt.pack();
-	    shell.pack();
-	    
-	    // setting up the files
-	    controller = Menu.getInstance();
-	    IndicatorMessagePair msgPair = controller.setUp();
-	    
-	    if(!msgPair.isTrue()){
-	    	MessageList.printErrorMessageAndExit(msgPair.getMessage());
-	    }
-	    
-	    while(!shell.isDisposed()){
-	        if(!display.readAndDispatch()) display.sleep();
-	    }
 	}
 }
