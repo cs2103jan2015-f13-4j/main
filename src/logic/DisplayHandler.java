@@ -62,13 +62,13 @@ public class DisplayHandler {
 			getKey = KeywordType.getKeyword(key);
 			
 			switch(getKey) {
-			case SCHEDULE:
+			case ALL:
 				indicMsg = displaySchedule(keyFieldsList, smtData, displayTasksList);
 				break;
 			case TODAY:
 				indicMsg = displayTodayTasks(keyFieldsList, smtData, displayTasksList);
 				break;
-			case TODO:
+			case COMPLETED:
 				indicMsg = displayCompletedTasks(keyFieldsList, smtData, displayTasksList);
 				break;
 			case PENDING:
@@ -93,7 +93,7 @@ public class DisplayHandler {
 	
 	private static IndicatorMessagePair displaySchedule(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
-		if(!keyFieldsList.get(KeywordType.List_Keywords.SCHEDULE.name()).isEmpty()) {
+		if(!keyFieldsList.get(KeywordType.List_Keywords.ALL.name()).isEmpty()) {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		for(int i = 0; i < smtData.getSize(); i++) {
@@ -109,7 +109,7 @@ public class DisplayHandler {
 		}
 	
 		LocalDate date = new LocalDate();
-		DateTime endDate = DateParser.generateDate(date.toString());
+		DateTime endDate = DateParser.generateDate(date.toString(), "yy-MM-dd");
 		
 		for(int i = 0; i < smtData.getSize(); i++) {
 			if(smtData.getATask(i).getTaskEndDateTime() != null) {
@@ -123,7 +123,7 @@ public class DisplayHandler {
 	
 	private static IndicatorMessagePair displayCompletedTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
-		if(!keyFieldsList.get(KeywordType.List_Keywords.TODO.name()).isEmpty()) {	
+		if(!keyFieldsList.get(KeywordType.List_Keywords.COMPLETED.name()).isEmpty()) {	
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
 		}
 		
