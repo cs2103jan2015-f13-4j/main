@@ -112,10 +112,10 @@ public class SmtSurvival extends Composite {
 		Group group = createGroupForTabRegion();
 		
 		// will call this method to display the tab folder created
-		displayTabFolder(group);
+		tabFolder(group);
 		
 		// will call this method to show the tab item display 
-		tabItemDisplay();
+		tabItem();
 		
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -134,7 +134,7 @@ public class SmtSurvival extends Composite {
 		Composite composite_1 = createComposite();
 		
 		// show command label at UI
-		showCommandLabelAtUI(composite_1);
+		commandLabel(composite_1);
 		
 		// setting command text box next beside the command label at UI, for user to key in
 		setCommandTextBox(composite_1);
@@ -159,7 +159,7 @@ public class SmtSurvival extends Composite {
 	 * This method display the tab folder created
 	 * @param group
 	 */
-	private void displayTabFolder(Group group) {
+	private void tabFolder(Group group) {
 		displayTaskFolder = new TabFolder(group, SWT.NONE);
 		
 		displayTaskFolder.setBounds(0, 10, 430, 371);
@@ -170,7 +170,7 @@ public class SmtSurvival extends Composite {
 	/**
 	 * This method is to display the tab item along with the tool tip text for each tab item 
 	 */
-	private void tabItemDisplay() {
+	private void tabItem() {
 		
 		// This is for Main Tab
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
@@ -221,7 +221,7 @@ public class SmtSurvival extends Composite {
 	 * This method is to create a label named "Command:" which indicate where should the user key in their commands
 	 * @param composite_1
 	 */
-	private void showCommandLabelAtUI(Composite composite_1) {
+	private void commandLabel(Composite composite_1) {
 		Label lblCommand = new Label(composite_1, SWT.NONE);
 		lblCommand.setBounds(10, 10, 84, 20);
 		toolkit.adapt(lblCommand, true, true);
@@ -295,5 +295,9 @@ public class SmtSurvival extends Composite {
 			tbtmPending.setControl(lblDisplay);
 			lblDisplay.setText(controller.commandExecution("display pending"));
 		}
+	}
+	
+	private void initTabFolder(){
+		
 	}
 }
