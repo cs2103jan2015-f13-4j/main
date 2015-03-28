@@ -60,8 +60,6 @@ public class SmtSurvival extends Composite {
 	 */
 	private static void open(Shell shell) {
 		
-		addListeners(shell);
-		
 		shell.open();
 	    SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
 	    Smt.pack();
