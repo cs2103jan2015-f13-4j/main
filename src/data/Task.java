@@ -102,7 +102,7 @@ public class Task implements Comparable<Task> {
 		}
 		
 		if(weeklyDay != null && !weeklyDay.isEmpty()) {
-			fullDetails += "Recurring every: " + weeklyDay + "\n";
+			fullDetails += "Every: " + weeklyDay + "\n";
 		}
 		
 		if(taskStatus) {
