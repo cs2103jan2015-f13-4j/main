@@ -3,7 +3,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, TO, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, SCHEDULE, TODAY, TODO, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
+		FROM, TO, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, ALL, TODAY, COMPLETED, PENDING, DESCRIPTION, STARTDATE, DEADLINE, TASKSTATUS, FIELD
 	}
 	
 	/**
@@ -33,12 +33,10 @@ public class KeywordType {
 			return List_Keywords.TASKSTART;
 		case "taskend":
 			return List_Keywords.TASKEND;
-		case "schedule":
-			return List_Keywords.SCHEDULE;
+		case "all":
+			return List_Keywords.ALL;
 		case "today":
 			return List_Keywords.TODAY;
-		case "todo":
-			return List_Keywords.TODO;
 		case "completed":
 			return List_Keywords.COMPLETED;
 		case "pending":
