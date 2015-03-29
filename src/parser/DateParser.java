@@ -92,44 +92,35 @@ public class DateParser {
 	
 	public static DateTime generateDateBasedOnDay(String dateValue) {
 		
-		switch (dateValue.toLowerCase()) {
-			case "today": {
+		switch (dateValue.toUpperCase()) {
+			case "TODAY":
 				return convertedDate;
-			} 
-			case "tomorrow": {
+			case "TOMORROW": 
+			case "TMR":
 				return convertedDate.plusDays(1);
-			} 
-			case "monday":
-			case "mon": {
+			case "MONDAY":
+			case "MON":
 				return generateDateAfterDayComparison(DateTimeConstants.MONDAY);
-			}
-			case "tuesday":
-			case "tue": {
+			case "TUESDAY":
+			case "TUE":
 				return generateDateAfterDayComparison(DateTimeConstants.TUESDAY);
-			}
-			case "wednesday":
-			case "wed": {
+			case "WEDNESDAY":
+			case "WED":
 				return generateDateAfterDayComparison(DateTimeConstants.WEDNESDAY);
-			} 
-			case "thursday":
-			case "thur": {
+			case "THURSDAY":
+			case "THU":
 				return generateDateAfterDayComparison(DateTimeConstants.THURSDAY);
-			} 
-			case "friday":
-			case "fri": {
+			case "FRIDAY":
+			case "FRI":
 				return generateDateAfterDayComparison(DateTimeConstants.FRIDAY);
-			} 
-			case "saturday":
-			case "sat": {
+			case "SATURDAY":
+			case "SAT":
 				return generateDateAfterDayComparison(DateTimeConstants.SATURDAY);
-			} 
-			case "sunday":
-			case "sun": {
+			case "SUNDAY":
+			case "SUN":
 				return generateDateAfterDayComparison(DateTimeConstants.SUNDAY);
-			} 
-			default: {
+			default:
 				return null;
-			}
 		}
 	}
 	
@@ -137,12 +128,19 @@ public class DateParser {
 		
 		int dayOfWeek = convertedDate.getDayOfWeek();
 		int numOfDays = 7;
+		int daysToAdd = 0;
+		int incrementDay = -1;
 		
 		if(dayOfWeek == dayToCompare) {
 			return convertedDate;
 		}
 		else if(dayOfWeek > dayToCompare) {
-			return convertedDate.plusDays(numOfDays - dayToCompare);
+			
+			for(int i = dayOfWeek; i <= numOfDays; i++) {
+				incrementDay++;
+				daysToAdd = dayToCompare + incrementDay;
+			}
+			return convertedDate.plusDays(daysToAdd);
 		}
 		else if(dayOfWeek < dayToCompare) {
 			return convertedDate.plusDays(dayToCompare - dayOfWeek);
