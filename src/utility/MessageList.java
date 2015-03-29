@@ -22,6 +22,7 @@ public class MessageList {
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
 	public static final String MESSAGE_INCORRECT_DATE_FORMAT ="Date Format is incorrect";
 	public static final String MESSAGE_INCORRECT_TIME_FORMAT ="Time Format is incorrect";
+	public static final String MESSAGE_DATE_IS_BEFORE_TODAY = "Date provided is before Today's date.";
 	
 	/**
 	 * These message are for update class
