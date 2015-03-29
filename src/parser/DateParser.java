@@ -20,13 +20,19 @@ public class DateParser {
 	
 	public static String checkDateFormat(String dateValue) {
 		String dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		DateTime today = new DateTime();
 		
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try	{
 					dtf = DateTimeFormat.forPattern(dateFormatList[i]);
 					convertedDate = dtf.parseDateTime(dateValue);
-					dateFormat = dateFormatList[i];
-					break;
+					if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) < 0) {
+						dateFormat = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
+						break;
+					} else if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) >= 0) {
+						dateFormat = dateFormatList[i];
+						break;
+					}
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
 				continue;
