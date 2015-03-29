@@ -46,8 +46,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplaySchedule() {
 		
-		keyFieldsTest.put("DISPLAY", "");
-		keyFieldsTest.put("ALL", "");
+		keyFieldsTest.put("DISPLAY", "ALL");
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today +"\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
@@ -56,8 +55,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayTodayTasks() {
 		
-		keyFieldsTest.put("DISPLAY", "");
-		keyFieldsTest.put("TODAY", "");
+		keyFieldsTest.put("DISPLAY", "TODAY");
 		
 		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
@@ -66,8 +64,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayCompletedTasks() {
 		
-		keyFieldsTest.put("DISPLAY", "");
-		keyFieldsTest.put("COMPLETED", "");
+		keyFieldsTest.put("DISPLAY", "COMPLETED");
 		
 		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
@@ -76,8 +73,7 @@ public class DisplayHandlerTest {
 	@Test
 	public void testDisplayNotCompletedTasks() {
 		
-		keyFieldsTest.put("DISPLAY", "");
-		keyFieldsTest.put("PENDING", "");
+		keyFieldsTest.put("DISPLAY", "PENDING");
 		
 		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
