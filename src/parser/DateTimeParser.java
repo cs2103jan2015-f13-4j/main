@@ -18,6 +18,24 @@ public class DateTimeParser {
 	private static DateTime convertedDate = new DateTime();
 	private static DateTime convertedTime = new DateTime();
 	
+	public static DateTime generateDate(String dateValue) {
+		
+		String checkDateFormatStatus = "";
+		checkDateFormatStatus = checkDateFormat(dateValue);
+		
+		if(!checkDateFormatStatus.equals(MessageList.MESSAGE_INCORRECT_DATE_FORMAT) || 
+				!checkDateFormatStatus.equals(MessageList.MESSAGE_DATE_IS_BEFORE_TODAY)) {
+			
+			if(dateValue.matches("[a-zA-Z]+")) {
+				convertedDate = generateDateBasedOnDay(dateValue);
+			} else {
+				dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
+				convertedDate = dtf.parseDateTime(dateValue);
+			}
+		}
+		return convertedDate;
+	}
+	
 	public static String checkDateFormat(String dateValue) {
 		String dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		DateTime today = new DateTime();
@@ -46,16 +64,6 @@ public class DateTimeParser {
 			}
 		}
 		return dateFormat;
-	}
-	
-	public static DateTime generateDate(String dateValue, String dateFormat) {
-		if(dateValue.matches("[a-zA-Z]+")) {
-			convertedDate = generateDateBasedOnDay(dateValue);
-		} else {
-			dtf = DateTimeFormat.forPattern(dateFormat);
-			convertedDate = dtf.parseDateTime(dateValue);
-		}
-		return convertedDate;
 	}
 	
 	public static String checkTimeFormat(String timeValue) {
