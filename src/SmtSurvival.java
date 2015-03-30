@@ -1,5 +1,3 @@
-import java.awt.event.KeyListener;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -38,8 +36,10 @@ public class SmtSurvival extends Composite {
 	private TabItem tbtmCompleted;
 	private TabItem tbtmPending;
 	private TabFolder displayTaskFolder;
+	private Composite composite_1;
 	private static Label lblDisplay;
 	private static Menu controller;
+	private Listener defaultListener;
 
 	/**
 	 * This method will be first executed when program runs
@@ -138,7 +138,7 @@ public class SmtSurvival extends Composite {
 		});
 
 		// creating composite
-		Composite composite_1 = createComposite();
+		composite_1 = createComposite();
 
 		// show command label at UI
 		commandLabel(composite_1);
@@ -221,14 +221,14 @@ public class SmtSurvival extends Composite {
 		tbtmPending.setToolTipText("This tab will show all pending tasks");
 		tbtmPending.setText("Pending");
 	}
-
+	
 	/**
 	 * This method creates a composite for the UI
 	 * 
 	 * @return
 	 */
 	private Composite createComposite() {
-		Composite composite_1 = new Composite(this, SWT.NONE);
+		composite_1 = new Composite(this, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1);
 		gd_composite_1.heightHint = 83;
@@ -294,7 +294,6 @@ public class SmtSurvival extends Composite {
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
-
 			cmdTxtBox.setText("");
 		}
 	}

@@ -11,31 +11,41 @@ public class CommandType {
 		}
 		
 		switch (commandTypeString[0].toLowerCase()) {
-		case "add": 
+		case "add":
+		case "a":
 			return Command_Types.ADD;
 		case "delete": 
+		case "del":
 			return Command_Types.DELETE;
 		case "display": 
+		case "dis":
 			return Command_Types.DISPLAY;
 		case "update": 
+		case "u":
 			return Command_Types.UPDATE;
-		case "clear": 
-			return Command_Types.CLEAR;
-		case "exit": 
+		case "exit":
+		case "e":
 			return Command_Types.EXIT;
-		case "search": 
+		case "search":
+		case "sh":
 			return Command_Types.SEARCH;
 		case "sort": 
+		case "st":
 			return Command_Types.SORT;
 		case "help":
+		case "h":
 			return Command_Types.HELP;
-		case "undo": 
+		case "undo":
+		case "ud":
 			return Command_Types.UNDO;
 		case "redo":
+		case "rd":
 			return Command_Types.REDO;
-		case "block": 
+		case "block":
+		case "b": 
 			return Command_Types.BLOCK;
 		case "unblock":
+		case "ub": 
 			return Command_Types.UNBLOCK;
 		default: 
 			return Command_Types.INVALID;
