@@ -76,7 +76,7 @@ public class FileStorageTest {
 		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
 				new DateTime(), ""));
 		FileStorage.setFileNameForBlockedDatesList(testFileName);
-		FileStorage.writeToFile(smtDataTest.getListTask(), msgPair);
+		msgPair = FileStorage.writeToFile(smtDataTest.getListTask());
 		assertTrue(msgPair.isTrue());
 	}
 	
@@ -115,7 +115,7 @@ public class FileStorageTest {
 	public void testLastUnusedIndexWriteToFile() {
 		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
 		Integer lastUnusedIndex = 1;
-		FileStorage.writeToFile(lastUnusedIndex,  msgPair);
+		msgPair = FileStorage.writeToFile(lastUnusedIndex);
 		assertTrue(msgPair.isTrue());
 	}
 
@@ -155,7 +155,7 @@ public class FileStorageTest {
 		FileStorage.setFileNameForBlockedDatesList(testBlockedDateTimeFileName);
 		ArrayList<DateTime> listBlockedDateTime = new ArrayList<DateTime>();
 		listBlockedDateTime.add(new DateTime());
-		FileStorage.writeBlockedDateTimeToFile(listBlockedDateTime, msgPair);
+		msgPair = FileStorage.writeBlockedDateTimeToFile(listBlockedDateTime);
 		assertTrue(msgPair.isTrue());
 	}
 }
