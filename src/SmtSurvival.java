@@ -1,4 +1,5 @@
 import java.awt.event.KeyListener;
+import java.util.ResourceBundle.Control;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -38,8 +39,10 @@ public class SmtSurvival extends Composite {
 	private TabItem tbtmCompleted;
 	private TabItem tbtmPending;
 	private TabFolder displayTaskFolder;
+	private Composite composite_1;
 	private static Label lblDisplay;
 	private static Menu controller;
+	private static KeyAdapter defaultListener;
 
 	/**
 	 * This method will be first executed when program runs
@@ -137,7 +140,7 @@ public class SmtSurvival extends Composite {
 		});
 
 		// creating composite
-		Composite composite_1 = createComposite();
+		composite_1 = createComposite();
 
 		// show command label at UI
 		commandLabel(composite_1);
@@ -222,7 +225,7 @@ public class SmtSurvival extends Composite {
 	 * @return
 	 */
 	private Composite createComposite() {
-		Composite composite_1 = new Composite(this, SWT.NONE);
+		composite_1 = new Composite(this, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1);
 		gd_composite_1.heightHint = 83;
