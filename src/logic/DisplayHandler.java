@@ -36,12 +36,15 @@ public class DisplayHandler {
 				indicMsg = displaySchedule(keyFieldsList, smtData, displayTasksList);
 				break;
 			case "COMPLETED":
+			case "COMP":
 				indicMsg = displayCompletedTasks(keyFieldsList, smtData, displayTasksList);
 				break;
 			case "PENDING":
+			case "PEND":
 				indicMsg = displayNotCompletedTasks(keyFieldsList, smtData, displayTasksList);
 				break;
 			case "TODAY":
+			case "TDY":
 				indicMsg = displayTodayTasks(keyFieldsList, smtData, displayTasksList);
 				break;
 			case "TOMORROW":
@@ -167,7 +170,7 @@ public class DisplayHandler {
 	
 	private static DateTime generateTodayDate() {
 		LocalDate date = new LocalDate();
-		DateTime endDate = DateTimeParser.generateDate(date.toString(), "yy-MM-dd");
+		DateTime endDate = DateTimeParser.generateDate(date.toString());
 		return endDate;
 	}
 	
