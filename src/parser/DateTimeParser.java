@@ -23,16 +23,18 @@ public class DateTimeParser {
 		String checkDateFormatStatus = "";
 		checkDateFormatStatus = checkDateFormat(dateValue);
 		
-		if(!checkDateFormatStatus.equals(MessageList.MESSAGE_INCORRECT_DATE_FORMAT) || 
-				!checkDateFormatStatus.equals(MessageList.MESSAGE_DATE_IS_BEFORE_TODAY)) {
-			
-			if(dateValue.matches("[a-zA-Z]+")) {
-				convertedDate = generateDateBasedOnDay(dateValue);
-			} else {
-				dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
-				convertedDate = dtf.parseDateTime(dateValue);
-			}
+		if(checkDateFormatStatus.equals(MessageList.MESSAGE_INCORRECT_DATE_FORMAT) || 
+				checkDateFormatStatus.equals(MessageList.MESSAGE_DATE_IS_BEFORE_TODAY)) {
+			return null;
 		}
+		
+		if(dateValue.matches("[a-zA-Z]+")) {
+			convertedDate = generateDateBasedOnDay(dateValue);
+		} else {
+			dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
+			convertedDate = dtf.parseDateTime(dateValue);
+		}
+		
 		return convertedDate;
 	}
 	
