@@ -31,9 +31,15 @@ public class AddHandler {
 		return smtData.getLastUnUsedIndex();
 	}
 	
-
+/**
+ * This method is to check if the add command input is valid and if the storage exist.
+ * @param keyFieldsList
+ * @param smtData
+ * @return
+ */
 	public static String executeAdd(HashMap<String, String> keyFieldsList,
 			Data smtData) {
+		
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
@@ -46,6 +52,12 @@ public class AddHandler {
 
 	}
 
+	/**
+	 * This method is to add in the content added by the user
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
 	private static String addContents(HashMap<String, String> keyFieldsList,
 			Data smtData) {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
@@ -88,6 +100,7 @@ public class AddHandler {
 				return indicMsg.getMessage();
 			}
 		}
+		
 		indicMsg = smtData.addATaskToList(newTask);
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
@@ -121,7 +134,10 @@ public class AddHandler {
 	 */
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
 			HashMap<String, String> keyFieldsList) {
-		if (!keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
+		
+		checkEmptyKeyFieldsList(keyFieldsList, KeywordType.List_Keywords.BY.name(), MessageList.MESSAGE_NO_DATE_GIVEN);
+		
+		/*if (!keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
@@ -130,7 +146,8 @@ public class AddHandler {
 						.isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}
+		}*/
+		
 		DateTime endDate = DateParser.generateDate(keyFieldsList
 				.get(KeywordType.List_Keywords.BY.name()));
 		if (endDate == null) {
@@ -164,10 +181,21 @@ public class AddHandler {
 		newTask.setWeeklyDay(KeywordType.List_Keywords.EVERY.name());
 		return new IndicatorMessagePair(true, "");
 	}
-
+	/**
+	 * This method is to check the add content....
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
 	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
 			HashMap<String, String> keyFieldsList) {
-		if (!keyFieldsList.containsKey(CommandType.Command_Types.ADD.name())) {
+		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList, CommandType.Command_Types.ADD.name(), String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
+		
+		if(!indicMsg.isTrue()){
+			return indicMsg;
+		}
+		/*if (!keyFieldsList.containsKey(CommandType.Command_Types.ADD.name())) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
@@ -176,10 +204,26 @@ public class AddHandler {
 						.isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}
+		}*/
+		
+		
 		newTask.setTaskDescription(keyFieldsList
 				.get(CommandType.Command_Types.ADD.name()));
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
+	}
+	
+	private static IndicatorMessagePair checkEmptyKeyFieldsList(HashMap<String, String> keyFieldsList, String keyWord, String message) {
+		if (!keyFieldsList.containsKey(keyWord)) {
+			return new IndicatorMessagePair(false,
+					message);
+		}
+		if (keyFieldsList.get(keyWord) == null
+				|| keyFieldsList.get(keyWord)
+						.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					message);
+		}
+		return new IndicatorMessagePair(true, String.format("", "Add"));
 	}
 
 }
