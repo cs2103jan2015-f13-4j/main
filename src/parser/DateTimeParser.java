@@ -34,18 +34,18 @@ public class DateTimeParser {
 			dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
 			convertedDate = dtf.parseDateTime(dateValue);
 		}
-		
 		return convertedDate;
 	}
 	
 	public static String checkDateFormat(String dateValue) {
-		String dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		String dateFormat = "";
 		DateTime today = new DateTime();
 		
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try	{
 					dtf = DateTimeFormat.forPattern(dateFormatList[i]);
 					convertedDate = dtf.parseDateTime(dateValue);
+					
 					if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) < 0) {
 						dateFormat = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
 						break;
@@ -55,6 +55,7 @@ public class DateTimeParser {
 					}
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
+				dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 				continue;
 			}
 		}
@@ -68,8 +69,21 @@ public class DateTimeParser {
 		return dateFormat;
 	}
 	
+	public static DateTime generateTime(String timeValue) {
+		
+		String checkTimeFormatStatus = "";
+		checkTimeFormatStatus = checkTimeFormat(timeValue);
+		
+		if(checkTimeFormatStatus.equals(MessageList.MESSAGE_INCORRECT_TIME_FORMAT)) {
+			return null;
+		}
+		
+		dtf = DateTimeFormat.forPattern(checkTimeFormatStatus);
+		return convertedTime = dtf.parseDateTime(timeValue);
+	}
+	
 	public static String checkTimeFormat(String timeValue) {
-		String timeFormat = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		String timeFormat = "";
 		
 		for(int i = 0; i < timeFormatList.length; i++) {
 			try	{
@@ -79,15 +93,11 @@ public class DateTimeParser {
 					break;
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
+				timeFormat = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
 				continue;
 			}
 		}
 		return timeFormat;
-	}
-	
-	public static DateTime generateTime(String timeValue, String timeFormat) {
-		dtf = DateTimeFormat.forPattern(timeFormat);
-		return convertedTime = dtf.parseDateTime(timeValue);
 	}
 
 	public static String displayDate(DateTime receivedDateTime) {
@@ -110,6 +120,7 @@ public class DateTimeParser {
 		
 		switch (dateValue.toUpperCase()) {
 			case "TODAY":
+			case "TDY":
 				return convertedDate;
 			case "TOMORROW": 
 			case "TMR":
