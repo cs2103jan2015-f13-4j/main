@@ -1,6 +1,22 @@
 package utility;
 import javax.swing.JOptionPane;
 public class MessageList {
+	
+	/**
+	 * This message are for HelpCommandList class
+	 */
+	public static final String MESSAGE_HELP = "************************************************************************************\n\n		 	          HELP LIST\n\n1) Add <Desc>\n\n 2) Delete <Task#>\n\n 3)Update\n 3i) Update <Task #> TaskDesc <description>\n3ii) Update <Task #> By <date/day>\n 3iii) Update <Task #> Completed\n3iv) Update <Task #> Pending\n3v) Update<Task #> TaskEnd<date>\n3vi) Update<Task #>TaskStart<date>\n3vii) Update<Task#> Every <Friday>\n3viii) Update<Task #> By date or weekly day\n\n 4) Delete <#>\n\n 5) Display \n 5i) Display Today \n5ii) Display Pending\n5iii) Display Schedule\n5v) Display Completed\n\n 6) Search\n 6i) Search TaskDesc<Task #>\n6ii) Search TaskId<Task #>\n6iii) Search Deadline <Date>\n\n 7) Block or Unblock\n 7i) Block <date>\n 7ii) Unblock <date>\n 7iii) Block from <date> to <date>\n 7v) Unblock from<date> to <date>\n\n************************************************************************************";
+	public static final String MESSAGE_ADD_HELP = "Add <Desc>";
+	public static final String MESSAGE_DELETE_HELP = "Delete #";
+	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>\n3. Update <Task #> Completed\n4. Update <Task #> Pending\n5. Update<Task #> TaskEnd<date>\n6. Update<Task #>TaskStart<date>\n7. Update<Task#> Every <Friday>\n8. Update<Task #> By date or weekly day";
+	public static final String MESSAGE_DISPLAY_HELP = "1. Display Today\n2.Display Pending\n3.Display Schedule\n4.Display Completed";
+	public static final String MESSAGE_SEARCH_HELP = "1. Search TaskDesc<Task #>\n2. Search TaskId<Task #>\n3. Search Deadline <Date>";
+	public static final String MESSAGE_SORT_HELP = "Sort";
+	public static final String MESSAGE_EXIT_HELP = "Exit";
+	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Date>";
+	public static final String MESSAGE_UNBLOCK_HELP = "Unblock <Date>";
+	
+	
 
 	public static final String MESSAGE_FILENAME_INVALID_UNSPECIFIED = "Filename not specified.";
 	public static final String MESSAGE_FILENAME_INVALID_FORMAT = "Filename is in wrong format.";
@@ -58,28 +74,13 @@ public class MessageList {
 		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);;
 		System.exit(0);
 	}
-	/**
-	 * This message are for HelpCommandList class
-	 */
-	public static final String MESSAGE_HELP = "**************************************************\n1) Add <Desc>\n 2) Remove <Task #>\n 3) 1. Update <Task #> TaskDes <description> 2.Update <Task #> By <date/day>\n 4) Display <Task #>\n 5) Search <Task #>\n 6)Switchview <tabname>\n 7) Block <Task #><period>\n 8) Unblock <Task #><Period>\n**************************************************";
-	public static final String MESSAGE_ADD_HELP = "Add <Desc>";
-	public static final String MESSAGE_DELETE_HELP = "Delete #";
-	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>\n3. Update <Task #> Completed\n4. Update <Task #> Pending\n5. Update<Task #> TaskEnd<date>\n6. Update<Task #>TaskStart<date>\n7. Update<Task#> Every <Friday>\n8. Update<Task #> By date or weekly day";
-	public static final String MESSAGE_DISPLAY_HELP = "1. Display Today\n2.Display Pending\n3.Display Schedule\n4.Display Completed";
-	public static final String MESSAGE_SEARCH_HELP = "1. Search TaskDesc<Task #>\n2. Search TaskId<Task #>\n3. Search Deadline <Date>";
-	public static final String MESSAGE_SORT_HELP = "Sort";
-	public static final String MESSAGE_CLEAR_HELP = "Clear";
-	public static final String MESSAGE_EXIT_HELP = "Exit";
-	public static final String MESSAGE_SWITCHVIEW_HELP = "Switchview <tabname> <Desc>";
-	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Date>";
-	public static final String MESSAGE_UNBLOCK_HELP = "Unblock <Date>";
-<<<<<<< HEAD
-	public static final String MESSAGE_UNDO_HELP = "Please enter a vaild command.";
-	public static final String MESSAGE_REDO_HELP = "Please enter a vaild command.";
+	
+
+	public static final String MESSAGE_UNDO_HELP = "undo";
+	public static final String MESSAGE_REDO_HELP = "Redo";
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
-=======
-	public static final String MESSAGE_INVAILD = "Please enter a vaild command. Remove characters such as '=' and '|'";
->>>>>>> db3910a4e423f4bcc8cd2a21179757059e7f8c20
+	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
+
 	
 	/**
 	 * These message are for the Menu

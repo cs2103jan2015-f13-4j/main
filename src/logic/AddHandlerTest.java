@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import storage.FileStorage;
-import utility.IndicatorMessagePair;
+//import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
 import data.Task;
@@ -34,7 +34,7 @@ public class AddHandlerTest {
 		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 		
 		
-		FileStorage.writeToFile(4, new IndicatorMessagePair());
+		//FileStorage.writeToFile(4, new IndicatorMessagePair());
 	}
 
 	@After
@@ -53,7 +53,7 @@ public class AddHandlerTest {
 	@Test
 	public void testAddWithDescRegular() {
 		keyFieldsTest.put("ADD", "submit proposal");
-		keyFieldsTest.put("BY", "03-03-2015");
+		keyFieldsTest.put("BY", "03-03-2016");
 		String expected = MessageList.MESSAGE_ADDED;
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -67,7 +67,7 @@ public class AddHandlerTest {
 	{
 		keyFieldsTest.put("ADD", "Submit Proposal");
 		keyFieldsTest.put("BY","");
-		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	

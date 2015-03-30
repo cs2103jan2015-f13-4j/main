@@ -3,7 +3,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, TO, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD
+		FROM, TO, BY, TASKID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, DEADLINE
 	}
 	
 	public enum List_SearchKeywords{

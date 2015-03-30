@@ -54,19 +54,21 @@ public class Menu {
 		case UPDATE: {
 			return UpdateHandler.executeUpdate(keyFieldsList, smtData);
 		}
-		 case UNDO: {
-		 return CacheCommandsHandler.executeUndo(smtData);
-		 }
+		case UNDO: {
+			return CacheCommandsHandler.executeUndo(smtData);
+		}
 		// case REDO:{
 		// return CacheCommandsHandler.executeRedo(fileName, listTask);
 
 		// }
-		 case BLOCK: {
-				return BlockDateHandler.executeBlockOrUnblock(keyFieldsList, cmd.name(), smtData);
-			}
-		 case UNBLOCK: {
-				return BlockDateHandler.executeBlockOrUnblock(keyFieldsList, cmd.name(), smtData);
-			}
+		case BLOCK: {
+			return BlockDateHandler.executeBlockOrUnblock(keyFieldsList,
+					cmd.name(), smtData);
+		}
+		case UNBLOCK: {
+			return BlockDateHandler.executeBlockOrUnblock(keyFieldsList,
+					cmd.name(), smtData);
+		}
 		case EXIT: {
 			System.exit(0);
 			break;
@@ -83,8 +85,8 @@ public class Menu {
 	public IndicatorMessagePair setUp() {
 		return smtData.loadEveryThingFromFile();
 	}
-	
-	public static String getHint(String userCmd){
+
+	public static String getHint(String userCmd) {
 		return HintHandler.executeHint(userCmd);
 	}
 }

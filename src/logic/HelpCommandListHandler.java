@@ -56,9 +56,6 @@ public class HelpCommandListHandler {
 		case DELETE: {
 			return MessageList.MESSAGE_DELETE_HELP;
 		}
-		case CLEAR: {
-			return MessageList.MESSAGE_CLEAR_HELP;
-		}
 		case SEARCH: {
 			return MessageList.MESSAGE_SEARCH_HELP;
 		}
@@ -76,6 +73,12 @@ public class HelpCommandListHandler {
 		}
 		case REDO: {
 			return MessageList.MESSAGE_REDO_HELP;
+		}
+		case BLOCK: {
+			return MessageList.MESSAGE_BLOCK_HELP;
+		}
+		case UNBLOCK: {
+			return MessageList.MESSAGE_UNBLOCK_HELP;
 		}
 		default: {
 			return MessageList.MESSAGE_INVAILD;
