@@ -61,7 +61,7 @@ public class SearchHandler {
 	private static String searchTaskID(String index, Data smtData) {
 
 		if (!checkInteger(index)) {
-			return "Please enter a integer";
+			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {

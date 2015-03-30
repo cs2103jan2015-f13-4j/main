@@ -55,9 +55,9 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_HELP = "**************************************************\n1) Add <Desc>\n 2) Remove <Task #>\n 3) 1. Update <Task #> TaskDes <description> 2.Update <Task #> By <date/day>\n 4) Display <Task #>\n 5) Search <Task #>\n 6)Switchview <tabname>\n 7) Block <Task #><period>\n 8) Unblock <Task #><Period>\n**************************************************";
 	public static final String MESSAGE_ADD_HELP = "Add <Desc>";
-	public static final String MESSAGE_DELETE_HELP = "Delete <Task #>";
-	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>";
-	public static final String MESSAGE_DISPLAY_HELP = "Display";
+	public static final String MESSAGE_DELETE_HELP = "Delete #";
+	public static final String MESSAGE_UPDATE_HELP = "1. Update <Task #> TaskDesc <description>\n2. Update <Task #> By <date/day>\n3. Update <Task #> Completed\n4. Update <Task #> Pending\n5. Update<Task #> TaskEnd<date>\n6. Update<Task #>TaskStart<date>\n7. Update<Task#> Every <Friday>\n8. Update<Task #> By date or weekly day";
+	public static final String MESSAGE_DISPLAY_HELP = "1. Display Today\n2.Display Pending\n3.Display Schedule\n4.Display Completed";
 	public static final String MESSAGE_SEARCH_HELP = "1. Search TaskDesc<Task #>\n2. Search TaskId<Task #>\n3. Search Deadline <Date>";
 	public static final String MESSAGE_SORT_HELP = "Sort";
 	public static final String MESSAGE_CLEAR_HELP = "Clear";
@@ -83,7 +83,7 @@ public class MessageList {
 	/**
 	 * These message are for BlockDate class 
 	 */
-	public static final String MESSAGE_BLOCK_DATE_NOT_AVAILABLE = "No Date to Block.";
+	public static final String MESSAGE_NO_SPECIFICATION = "Please Specify to Block or to Unblock certain date";
 	public static final String MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED = "Please Enter a Right Format.";
 }
 
