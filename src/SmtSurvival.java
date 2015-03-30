@@ -1,6 +1,3 @@
-import java.awt.event.KeyListener;
-import java.util.ResourceBundle.Control;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -42,7 +39,7 @@ public class SmtSurvival extends Composite {
 	private Composite composite_1;
 	private static Label lblDisplay;
 	private static Menu controller;
-	private static KeyAdapter defaultListener;
+	private Listener defaultListener;
 
 	/**
 	 * This method will be first executed when program runs
@@ -218,7 +215,7 @@ public class SmtSurvival extends Composite {
 		tbtmPending.setToolTipText("This tab will show all pending tasks");
 		tbtmPending.setText("Pending");
 	}
-
+	
 	/**
 	 * This method creates a composite for the UI
 	 * 
@@ -288,7 +285,6 @@ public class SmtSurvival extends Composite {
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
-
 			cmdTxtBox.setText("");
 		}
 	}
