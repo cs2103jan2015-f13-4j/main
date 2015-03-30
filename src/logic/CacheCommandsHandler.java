@@ -55,17 +55,14 @@ public class CacheCommandsHandler {
 	 */
 	private static String updateTaskList(Data smtData) {
 
-		Data prevList;
 		ArrayList<Task> newTaskList = new ArrayList<Task>();
 		smtData.getListTask().clear();
 
 		if (checkUndoEmpty()) {
 			smtData.setListTask(newTaskList);
 		} else {
-			prevList = current.peek();
-
-			for (int i = 0; i < prevList.getSize(); i++) {
-				smtData.addATaskToList(prevList.getATask(i));
+			for (int i = 0; i < current.peek().getSize(); i++) {
+				smtData.addATaskToList(current.peek().getATask(i));
 			}
 		}
 
@@ -119,7 +116,12 @@ public class CacheCommandsHandler {
 	 *            is a variable of object type Data class
 	 */
 	public static void newHistory(Data smtData) {
-		current.push(smtData);
+		Data newData = new Data();
+		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
+		newData.setLastUnUsedIndex(smtData.getLastUnUsedIndex());
+		newData.setListTask(smtData.getListTask());
+		System.out.println(newData.getSize());
+		current.push(newData);
 		aheadCmds.clear();
 	}
 }

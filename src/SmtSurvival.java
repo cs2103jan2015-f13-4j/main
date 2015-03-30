@@ -1,3 +1,5 @@
+import java.awt.event.KeyListener;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -170,10 +172,11 @@ public class SmtSurvival extends Composite {
 	private void tabFolder(Group group) {
 
 		displayTaskFolder = new TabFolder(group, SWT.NONE);
-
 		displayTaskFolder.setBounds(0, 10, 430, 371);
 		toolkit.adapt(displayTaskFolder);
 		toolkit.paintBordersFor(displayTaskFolder);
+		
+		displayTaskFolder.forceFocus();
 	}
 
 	/**
