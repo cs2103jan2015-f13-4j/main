@@ -15,8 +15,107 @@ import data.Task;
 
 
 public class SortHandler {
-
 	
+	public static String executeSort(HashMap<String, String> keyFieldsList, Data smtData) {
+		
+		checkForValidData(keyFieldsList, smtData);
+		
+		return sortContents(keyFieldsList, smtData);	
+	}
+	
+	private static String sortContents(HashMap<String, String> keyFieldsList, Data smtData) {
+		
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		ArrayList<Task> displayTasksList = new ArrayList<Task>();
+		
+		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
+		
+		switch(firstKey) {
+		case "DESCRIPTION":
+		case "DESC":
+			indicMsg = sortDescription(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "DEADLINE":
+			indicMsg = sortDeadline(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "STARTDATE":
+			indicMsg = sortStartDate(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "COMPLETED":
+			indicMsg = sortCompleted(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "PENDING":
+			indicMsg = sortPending(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		default:
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		}
+		
+		if(!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
+		if(displayTasksList.isEmpty()) {
+			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		}
+		
+		return sortTaskDetails(displayTasksList);
+	}
+	
+	private static IndicatorMessagePair sortDescription(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DESCRIPTION.name());
+		
+		cloneTaskList(listTask, displayTasksList);
+		
+		Collections.sort(displayTasksList, SortHandler.TaskDescriptionComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair sortDeadline(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DEADLINE.name());
+		
+		cloneTaskList(listTask, displayTasksList);
+		
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair sortStartDate(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTDATE.name());
+		
+		cloneTaskList(listTask, displayTasksList);
+		
+		Collections.sort(displayTasksList, SortHandler.TaskStartDateComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair sortCompleted(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
+		
+		cloneTaskList(listTask, displayTasksList);
+		
+		Collections.sort(displayTasksList, SortHandler.TaskCompletedComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair sortPending(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
+		
+		cloneTaskList(listTask, displayTasksList);
+		
+		Collections.sort(displayTasksList, SortHandler.TaskPendingComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
 	
 	private static String sortTaskDetails(ArrayList<Task> displayTasksList) {
 		String taskDetails = "";
@@ -95,18 +194,8 @@ public class SortHandler {
 		}
 	};
 	
-	
-	
-	
-	//================================================================================
-	//================================================================================
-	
-	
-	
-	
-	public static String executeSort(HashMap<String, String> keyFieldsList, Data smtData) {
-
-		int numItemExpected = 2;
+	private static String checkForValidData(HashMap<String, String> keyFieldsList, Data smtData) {
+		int numItemExpected = 1;
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
@@ -120,117 +209,13 @@ public class SortHandler {
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
 		}
 		
-		return sortContents(keyFieldsList, smtData);	
+		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}
 	
-	private static String sortContents(HashMap<String, String> keyFieldsList, Data smtData) {
-		
-		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
-		KeywordType.List_Keywords getKey;
-		ArrayList<Task> displayTasksList = new ArrayList<Task>();
-
-		keyFieldsList.remove(CommandType.Command_Types.SORT.name());//remove the sort key pair
-		if (keyFieldsList.isEmpty() || keyFieldsList.size() > 1) {
-			return "Invalid sort";
+	private static IndicatorMessagePair checkInvalidArgument(HashMap<String, String> keyFieldsList, String keyWord) {
+		if(keyFieldsList.get(keyWord) != null) {
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 		}
-		
-		for (String key : keyFieldsList.keySet()) {
-			 getKey = KeywordType.getKeyword(key);
-		
-		switch(getKey) {
-		case DESCRIPTION:
-			indicMsg = sortDescription(keyFieldsList.get(key), smtData.getListTask(), displayTasksList);
-			break;
-		case DEADLINE:
-			indicMsg = sortDeadline(keyFieldsList.get(key), smtData.getListTask(), displayTasksList);
-			break;
-		case STARTDATE:
-			indicMsg = sortStartDate(keyFieldsList.get(key), smtData.getListTask(), displayTasksList);
-			break;
-		case COMPLETED:
-			indicMsg = sortCompleted(keyFieldsList.get(key), smtData.getListTask(), displayTasksList);
-			break;
-		case PENDING:
-			indicMsg = sortPending(keyFieldsList.get(key), smtData.getListTask(), displayTasksList);
-			break;
-		default:
-			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
-		}
-		}
-		
-		if(!indicMsg.isTrue()) {
-			return indicMsg.getMessage();
-		}
-		
-		if(displayTasksList.isEmpty()) {
-			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
-		}
-		
-		return sortTaskDetails(displayTasksList);
-	}
-	
-	private static IndicatorMessagePair sortDescription(String keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
-		
-		if(!keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
-		}
-		
-		cloneTaskList(listTask, displayTasksList);
-		
-		Collections.sort(displayTasksList, SortHandler.TaskDescriptionComparator);
-		
-		return new IndicatorMessagePair(true, "Success");
-	}
-	
-	private static IndicatorMessagePair sortDeadline(String keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
-		
-		if(!keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
-		}
-		
-		cloneTaskList(listTask, displayTasksList);
-		
-		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
-		
-		return new IndicatorMessagePair(true, "Success");
-	}
-	
-	private static IndicatorMessagePair sortStartDate(String keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
-		
-		if(!keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
-		}
-		
-		cloneTaskList(listTask, displayTasksList);
-		
-		Collections.sort(displayTasksList, SortHandler.TaskStartDateComparator);
-		
-		return new IndicatorMessagePair(true, "Success");
-	}
-	
-	private static IndicatorMessagePair sortCompleted(String keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
-		
-		if(!keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
-		}
-		
-		cloneTaskList(listTask, displayTasksList);
-		
-		Collections.sort(displayTasksList, SortHandler.TaskCompletedComparator);
-		
-		return new IndicatorMessagePair(true, "Success");
-	}
-	
-	private static IndicatorMessagePair sortPending(String keyFields, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
-		
-		if(!keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_ARGUMENT);
-		}
-		
-		cloneTaskList(listTask, displayTasksList);
-		
-		Collections.sort(displayTasksList, SortHandler.TaskPendingComparator);
-		
-		return new IndicatorMessagePair(true, "Success");
+		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_VALID_ARGUMENT, "Sort"));
 	}
 }

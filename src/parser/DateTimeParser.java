@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import utility.MessageList;
 
-public class DateParser {
+public class DateTimeParser {
 	
 	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
 	private static String[] timeFormatList = {"ha", "h a", "h.ma", "h.m a"};
