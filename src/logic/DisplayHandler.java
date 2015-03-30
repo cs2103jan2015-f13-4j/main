@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
@@ -160,14 +160,14 @@ public class DisplayHandler {
 
 		checkInvalidArgument(keyFieldsList, day);
 		
-		retrieveMatchedDateTasks(smtData, displayTasksList, DateParser.generateDateAfterDayComparison(dayValue).toLocalDate());
+		retrieveMatchedDateTasks(smtData, displayTasksList, DateTimeParser.generateDateAfterDayComparison(dayValue).toLocalDate());
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
 	private static DateTime generateTodayDate() {
 		LocalDate date = new LocalDate();
-		DateTime endDate = DateParser.generateDate(date.toString(), "yy-MM-dd");
+		DateTime endDate = DateTimeParser.generateDate(date.toString(), "yy-MM-dd");
 		return endDate;
 	}
 	
