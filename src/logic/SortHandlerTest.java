@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import parser.DateParser;
+import parser.DateTimeParser;
 import storage.FileStorage;
 import data.Data;
 import data.Task;
@@ -22,8 +22,8 @@ public class SortHandlerTest {
 	public void setUp() throws Exception {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
-		DateTime startDate = DateParser.generateDate("12/3/2015", "dd/MM/yyyy");
-		DateTime endDate = DateParser.generateDate("25/1/2015", "dd/MM/yyyy");
+		DateTime startDate = DateTimeParser.generateDate("12/3/2015", "dd/MM/yyyy");
+		DateTime endDate = DateTimeParser.generateDate("25/1/2015", "dd/MM/yyyy");
 		keyFieldsTest = new HashMap<String, String>();
 		
 		smtDataTest.addATaskToList(new Task(1, "CE1", startDate, endDate, true, ""));
