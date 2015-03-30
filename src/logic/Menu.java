@@ -6,7 +6,6 @@ import parser.CommandStringParser;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
-//import commonUsage.KeyFieldPair;
 import data.Data;
 
 public class Menu {
@@ -40,9 +39,6 @@ public class Menu {
 		case DELETE: {
 			return DeleteHandler.executeDelete(keyFieldsList, smtData);
 		}
-		case CLEAR: {
-			// return ClearHandler.executeClear(smtData);
-		}
 		case INVALID: {
 			return MessageList.MESSAGE_INVAILD;
 		}
@@ -65,6 +61,12 @@ public class Menu {
 		// return CacheCommandsHandler.executeRedo(fileName, listTask);
 
 		// }
+		 case BLOCK: {
+				return BlockDateHandler.executeBlockOrUnblock(keyFieldsList, cmd.name(), smtData);
+			}
+		 case UNBLOCK: {
+				return BlockDateHandler.executeBlockOrUnblock(keyFieldsList, cmd.name(), smtData);
+			}
 		case EXIT: {
 			System.exit(0);
 			break;
@@ -82,7 +84,7 @@ public class Menu {
 		return smtData.loadEveryThingFromFile();
 	}
 	
-	public static String getHint(){
-		return "";
+	public static String getHint(String userCmd){
+		return HintHandler.executeHint(userCmd);
 	}
 }

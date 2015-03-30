@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
@@ -148,7 +148,7 @@ public class AddHandler {
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}*/
 		
-		DateTime endDate = DateParser.generateDate(keyFieldsList
+		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(KeywordType.List_Keywords.BY.name()));
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
@@ -168,7 +168,7 @@ public class AddHandler {
 	 */
 	private static IndicatorMessagePair addRecurringWeek(Task newTask,
 			int index, HashMap<String, String> keyFieldsList) {
-		DateTime weeklyDate = DateParser.generateDate(keyFieldsList
+		DateTime weeklyDate = DateTimeParser.generateDate(keyFieldsList
 				.get(KeywordType.List_Keywords.EVERY.name()));
 
 		if (weeklyDate == null) {

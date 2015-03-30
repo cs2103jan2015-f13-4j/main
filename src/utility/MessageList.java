@@ -28,9 +28,8 @@ public class MessageList {
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
-	public static final String MESSAGE_ADDED = "Task Added.";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
-
+	public static final String MESSAGE_ADDED = "Task Added.";
 	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
 	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
 	
@@ -65,6 +64,8 @@ public class MessageList {
 	public static final String MESSAGE_SWITCHVIEW_HELP = "Switchview <tabname> <Desc>";
 	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Date>";
 	public static final String MESSAGE_UNBLOCK_HELP = "Unblock <Date>";
+	public static final String MESSAGE_UNDO_HELP = "Please enter a vaild command.";
+	public static final String MESSAGE_REDO_HELP = "Please enter a vaild command.";
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
 	
 	/**
@@ -83,8 +84,11 @@ public class MessageList {
 	/**
 	 * These message are for BlockDate class 
 	 */
-	public static final String MESSAGE_NO_SPECIFICATION = "Please Specify to Block or to Unblock certain date";
-	public static final String MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED = "Please Enter a Right Format.";
+	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
+	public static final String MESSAGE_BLOCKED = "Blocked Successful";
+	public static final String MESSAGE_UNBLOCKED = "Unblocked Successful";
+	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
+	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
 }
 
 	
