@@ -24,6 +24,10 @@ public class CommandStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
+		if(input.contains("=") || input.contains("|")){
+			return CommandType.Command_Types.INVALID;
+		}
+		
 		String[] inputCmd = input.trim().split(" ");
 		
 		CommandType.Command_Types command = CommandType.getType(inputCmd);
@@ -31,7 +35,7 @@ public class CommandStringParser {
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		generateKeyFieldPair(keyFieldsList, inputCmd);
+		generateKeyFieldPair(keyFieldsList, inputCmd, command);
 		
 		return command;
 	}
@@ -43,8 +47,8 @@ public class CommandStringParser {
 	 * @param inputCmd the blocks of word
 	 */
 	private static void generateKeyFieldPair(HashMap<String, String> keyFieldsList,
-			String[] inputCmd) {
-		String key = inputCmd[0];
+			String[] inputCmd, CommandType.Command_Types command) {
+		String key = command.name();
 		String eachWord = new String();
 		String tempFields = new String();
 		

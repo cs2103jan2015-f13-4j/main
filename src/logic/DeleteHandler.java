@@ -68,6 +68,8 @@ public class DeleteHandler {
 				return indicMsg.getMessage();
 			}
 			
+			CacheCommandsHandler.newHistory(smtData);
+			
             taskLogger.log(Level.INFO, "Task ID deleted: " + removedText.getTaskId());
 			return String.format(MessageList.MESSAGE_DELETE_SUCCESS, FileStorage.getFileNameForTasksList(), removedText.getTaskDescription());
 		}

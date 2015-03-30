@@ -8,17 +8,21 @@ public class MessageList {
 	public static final String MESSAGE_ERROR_ON_WRITING_TO_FILE = "Error on saving to file.";
 	public static final String MESSAGE_INVALID_STATUS = "Invalid status for a task.";
 	
-	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command."; 
+	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command.";
+	public static final String MESSAGE_VALID_ARGUMENT = "Valid argument for %1$s command.";
 	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid Type to Integer for %1$s command";
 	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
 	public static final String MESSAGE_NULL = "Command is empty. Please enter again";
 	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
 	public static final String MESSAGE_NO_TASK_IN_DISPLAY_LIST = "There is no task in the display list.";
+	public static final String MESSAGE_LIST_IS_NOT_EMPTY = "The list is not empty.";
 	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
 	public static final String MESSAGE_INCORRECT_DATE_FORMAT ="Date Format is incorrect";
+	public static final String MESSAGE_INCORRECT_TIME_FORMAT ="Time Format is incorrect";
+	public static final String MESSAGE_DATE_IS_BEFORE_TODAY = "Date provided is before Today's date.";
 	
 	/**
 	 * These message are for update class
@@ -38,6 +42,11 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
 	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
+	
+	/**
+	 * This message are for HintHandler class
+	 */
+	public static final String MESSAGE_HINT_INVALID = "Invalid command";
 	
 	/**
 	 * This method will print out the error message before exiting the system
@@ -64,9 +73,13 @@ public class MessageList {
 	public static final String MESSAGE_SWITCHVIEW_HELP = "Switchview <tabname> <Desc>";
 	public static final String MESSAGE_BLOCK_HELP = "Block <Task #> <Date>";
 	public static final String MESSAGE_UNBLOCK_HELP = "Unblock <Date>";
+<<<<<<< HEAD
 	public static final String MESSAGE_UNDO_HELP = "Please enter a vaild command.";
 	public static final String MESSAGE_REDO_HELP = "Please enter a vaild command.";
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
+=======
+	public static final String MESSAGE_INVAILD = "Please enter a vaild command. Remove characters such as '=' and '|'";
+>>>>>>> db3910a4e423f4bcc8cd2a21179757059e7f8c20
 	
 	/**
 	 * These message are for the Menu

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class DateParserTest {
+public class DateTimeParserTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -25,7 +25,7 @@ public class DateParserTest {
 		//String expected = "3 March, 2015";
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 		DateTime expectedDateTimeObj = DateTime.parse(dateValue);
-		assertTrue(expectedDateTimeObj.equals(DateParser.generateDate(dateValue)));
+		assertTrue(expectedDateTimeObj.equals(DateTimeParser.generateDate(dateValue, "yy-MM-dd")));
      	
 		
 		//assertEquals(expected, DateParser.generateDate(dateValue));

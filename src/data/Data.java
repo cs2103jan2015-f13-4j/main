@@ -42,7 +42,10 @@ public class Data {
 	 * @param receivedListTask
 	 */
 	public void setListTask(ArrayList<Task> receivedListTask){
-		tasksList = receivedListTask;
+		tasksList.clear();
+		for(int i = 0; i < receivedListTask.size(); i++){
+			tasksList.add(receivedListTask.get(i));
+		}
 	}
 	
 	/**
@@ -137,7 +140,10 @@ public class Data {
 	 * @param receivedBlockedDateTimeList
 	 */
 	public void setBlockedDateTimeList(ArrayList<DateTime> receivedBlockedDateTimeList){
-		this.blockedDateTimeList = receivedBlockedDateTimeList;
+		blockedDateTimeList.clear();
+		for(int i = 0; i < receivedBlockedDateTimeList.size(); i++){
+			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
+		}
 	}
 	
 	/**
@@ -204,22 +210,16 @@ public class Data {
 	
 	
 	public IndicatorMessagePair writeTaskListToFile(){
-		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		FileStorage.writeToFile(tasksList, msgPair);
-		return msgPair;
+		return FileStorage.writeToFile(tasksList);
 		
 	}
 	
 	public IndicatorMessagePair writeLastUnUsedIndexToFile(){
-		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		FileStorage.writeToFile(lastUnUsedIndex, msgPair);
-		return msgPair;
+		return FileStorage.writeToFile(lastUnUsedIndex);
 	}
 	
 	public IndicatorMessagePair writeBlockedDateTimeListToFile(){
-		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		FileStorage.writeBlockedDateTimeToFile(blockedDateTimeList, msgPair);
-		return msgPair;
+		return FileStorage.writeBlockedDateTimeToFile(blockedDateTimeList);
 	}
 	
 	public IndicatorMessagePair loadEveryThingFromFile(){

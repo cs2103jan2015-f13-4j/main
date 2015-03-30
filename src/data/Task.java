@@ -1,6 +1,6 @@
 package data;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 
 import org.joda.time.DateTime;
 
@@ -94,15 +94,15 @@ public class Task implements Comparable<Task> {
 		}
 		
 		if(taskStartDateTime != null) {
-			fullDetails += "Start from: " + DateParser.displayDate(taskStartDateTime) + "\n";
+			fullDetails += "Start from: " + DateTimeParser.displayDate(taskStartDateTime) + "\n";
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + DateParser.displayDate(taskEndDateTime) + "\n";
+			fullDetails += "Deadline: " + DateTimeParser.displayDate(taskEndDateTime) + "\n";
 		}
 		
 		if(weeklyDay != null && !weeklyDay.isEmpty()) {
-			fullDetails += "Recurring every: " + weeklyDay + "\n";
+			fullDetails += "Every: " + weeklyDay + "\n";
 		}
 		
 		if(taskStatus) {

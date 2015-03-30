@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Task;
@@ -266,8 +266,8 @@ public class FileStorage {
 	 * @param tasksList the list of tasks
 	 * @param msgPair to indicate whether it writes success or fail
 	 */
-	public static void writeToFile(ArrayList<Task> tasksList,
-			IndicatorMessagePair msgPair) {
+	public static IndicatorMessagePair writeToFile(ArrayList<Task> tasksList) {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(fileName);// setup a file writer
@@ -280,7 +280,7 @@ public class FileStorage {
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
 					bw.close();
-					return;
+					return msgPair;
 				}
 				bw.write(formattedString);
 				bw.newLine();
@@ -289,9 +289,10 @@ public class FileStorage {
 			fw.close();
 		} catch (IOException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
-			return;
+			return msgPair;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
+		return msgPair;
 	}
 
 
@@ -300,8 +301,8 @@ public class FileStorage {
 	 * @param lastUnUsedIndex the last unused index to be saved
 	 * @param msgPair to indicate whether it writes success or fail
 	 */
-	public static void writeToFile(Integer lastUnUsedIndex,
-			IndicatorMessagePair msgPair) {
+	public static IndicatorMessagePair writeToFile(Integer lastUnUsedIndex) {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(lastUnUsedIndexFileName);// setup a file writer
@@ -312,9 +313,10 @@ public class FileStorage {
 			fw.close();
 		} catch (IOException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
-			return;
+			return msgPair;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
+		return msgPair;
 	}
 
 	
@@ -386,9 +388,10 @@ public class FileStorage {
 	private static ArrayList<DateTime> readBlockedDateListFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
 		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
 		String txtLine = "";
+		String dateFormat = "";
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
-				DateTime dateTimeObj = DateParser.generateDate(txtLine);
+				DateTime dateTimeObj = DateTimeParser.generateDate(txtLine);
 				if (dateTimeObj == null) {
 					setIndicatorMessagePair(msgPair, false, String.format(
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
@@ -413,24 +416,25 @@ public class FileStorage {
 	 * @param blockedDatesList a list of blocked date time
 	 * @param msgPair indicator that whether it saved successfully
 	 */
-	public static void writeBlockedDateTimeToFile(ArrayList<DateTime> blockedDatesList,
-			IndicatorMessagePair msgPair) {
+	public static IndicatorMessagePair writeBlockedDateTimeToFile(ArrayList<DateTime> blockedDatesList) {
 		// Add the string to the file
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
 		try {
 			FileWriter fw = new FileWriter(blockedDateFileName);// setup a file writer
 			fw.flush();
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (int i = 0; i < blockedDatesList.size(); i++) {
-				bw.write(blockedDatesList.get(i).toString());
+				bw.write(blockedDatesList.get(i).toLocalDate().toString());
 				bw.newLine();
 			}
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
 			setIndicatorMessagePair(msgPair, false, e.toString());
-			return;
+			return msgPair;
 		}
 		setIndicatorMessagePair(msgPair, true, "");
+		return msgPair;
 	}
 	
 	

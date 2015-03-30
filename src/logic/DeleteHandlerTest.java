@@ -36,6 +36,7 @@ public class DeleteHandlerTest {
 		taskList.clear();
 	}
 	
+	// This is to test normal deleting
 	@Test
 	public void testDeleteWithIDRegular() {
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
@@ -46,6 +47,7 @@ public class DeleteHandlerTest {
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
 	}
 	
+	// This is to test if user can delete using ID
 	@Test
 	public void testDeleteWithIDEmpty(){
 		keyFieldsTest.put("DELETE", "");
@@ -53,6 +55,7 @@ public class DeleteHandlerTest {
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
 	}
 	
+	// This is to test if the ID user has keyed in is invalid
 	@Test
 	public void testDeleteWithIDInvalid(){
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
