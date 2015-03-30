@@ -43,7 +43,7 @@ public class MessageList {
 	/**
 	 * This message are for HintHandler class
 	 */
-	public static final String MESSAGE_HINT_INVALID = "Please type something to add a task";
+	public static final String MESSAGE_HINT_INVALID = "Invalid command";
 	
 	/**
 	 * This method will print out the error message before exiting the system
