@@ -8,7 +8,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import parser.DateParser;
+import parser.DateTimeParser;
 import storage.FileStorage;
 import data.Data;
 import data.Task;
@@ -20,14 +20,14 @@ public class DisplayHandlerTest {
 	Data smtDataTest;
 	String fileName = "taskList.txt";
 	
-	String today = DateParser.displayDate(new DateTime());
+	String today = DateTimeParser.displayDate(new DateTime());
 	
 	@Before
 	public void setUp() throws Exception {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
-		DateTime startDate = DateParser.generateDate("12/3/2015", "dd/MM/yyyy");
-		DateTime endDate = DateParser.generateDate("25/1/2015", "dd/MM/yyyy");
+		DateTime startDate = DateTimeParser.generateDate("12/3/2015", "dd/MM/yyyy");
+		DateTime endDate = DateTimeParser.generateDate("25/1/2015", "dd/MM/yyyy");
 		keyFieldsTest = new HashMap<String, String>();
 
 		smtDataTest.addATaskToList(new Task(1, "CE1", startDate, endDate, true, ""));
