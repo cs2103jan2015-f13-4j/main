@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Task;
@@ -388,9 +388,10 @@ public class FileStorage {
 	private static ArrayList<DateTime> readBlockedDateListFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
 		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
 		String txtLine = "";
+		String dateFormat = "";
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
-				DateTime dateTimeObj = DateParser.generateDate(txtLine);
+				DateTime dateTimeObj = DateTimeParser.generateDate(txtLine);
 				if (dateTimeObj == null) {
 					setIndicatorMessagePair(msgPair, false, String.format(
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,

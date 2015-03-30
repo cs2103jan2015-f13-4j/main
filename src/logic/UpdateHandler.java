@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
@@ -84,10 +84,10 @@ public class UpdateHandler {
 			case EVERY:
 				indicMsg = updateRecurringWeek(smtData, index, keyFieldsList.get(key));
 				break;
-			case COMPLETED:
+			case COMPLETE:
 				indicMsg = updateTaskStatus(smtData, index, keyFieldsList.get(key), true);
 				break;
-			case PENDING:
+			case INCOMPLETE:
 				indicMsg = updateTaskStatus(smtData, index, keyFieldsList.get(key), false);
 				break;
 			default:
@@ -126,7 +126,7 @@ public class UpdateHandler {
 		if(keyFields == null || keyFields.isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		DateTime endDate = DateParser.generateDate(keyFields);
+		DateTime endDate = DateTimeParser.generateDate(keyFields);
 		if(endDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
@@ -148,7 +148,9 @@ public class UpdateHandler {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
 		
-		DateTime weeklyDate = DateParser.generateDate(keyFields);
+
+		DateTime weeklyDate = DateTimeParser.generateDate(keyFields);
+		
 		if(weeklyDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
 		}
@@ -197,8 +199,8 @@ public class UpdateHandler {
 		if(keyFields == null || keyFields.isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
-		
-		DateTime startDate = DateParser.generateDate(keyFields);
+
+		DateTime startDate = DateTimeParser.generateDate(keyFields);
 		if(startDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}

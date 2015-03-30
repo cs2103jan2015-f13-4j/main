@@ -103,7 +103,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithDescAndEndDateRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		keyFieldsTest.put("taskend", "03-03-2015");
+		keyFieldsTest.put("taskend", "03-03-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -113,7 +113,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithDescAndByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		keyFieldsTest.put("by", "03-03-2015");
+		keyFieldsTest.put("by", "03-03-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -122,7 +122,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("by", "03-03-2015");
+		keyFieldsTest.put("by", "03-03-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -131,7 +131,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithStartDateRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "02-01-2015");
+		keyFieldsTest.put("taskstart", "02-01-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -140,7 +140,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithEndDateRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "02-01-2015");
+		keyFieldsTest.put("taskend", "02-01-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -149,8 +149,8 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithStartDateAndEndDateRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "02-01-2015");
-		keyFieldsTest.put("taskend", "03-01-2015");
+		keyFieldsTest.put("taskstart", "02-01-2016");
+		keyFieldsTest.put("taskend", "03-01-2016");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
@@ -216,7 +216,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithStartDateInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "aa-22-2015");
+		keyFieldsTest.put("taskstart", "aa-22-2016");
 		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
 				"Start");
 		assertEquals(expected,
@@ -244,7 +244,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithEndDateInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "abc-22-2015");
+		keyFieldsTest.put("taskend", "abc-22-2016");
 		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
 				"End");
 		assertEquals(expected,
@@ -286,7 +286,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithStatusNull() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("completed", null);
+		keyFieldsTest.put("complete", null);
 		String expected = MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD;
 
 		assertEquals(expected,
@@ -296,7 +296,7 @@ public class UpdateHandlerTest {
 	@Test
 	public void testUpdateWithStatusInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("pending", "abc");
+		keyFieldsTest.put("incomplete", "abc");
 		String expected = String.format(MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD,
 				"Weekly");
 
