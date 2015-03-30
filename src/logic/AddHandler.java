@@ -30,6 +30,7 @@ public class AddHandler {
 	private static int loadLastUsedIndex(Data smtData) {
 		return smtData.getLastUnUsedIndex();
 	}
+	
 
 	public static String executeAdd(HashMap<String, String> keyFieldsList,
 			Data smtData) {
@@ -55,25 +56,15 @@ public class AddHandler {
 		indicMsg = new IndicatorMessagePair();
 
 		newTask.setTaskId(lastUnUsedIndex);
-		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);// field
-																		// is
-																		// here
-																		// so no
-																		// need
-																		// to do
-																		// in
-																		// switch
-																		// case
+		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);
+		// field is here so no need to do in switch case
+
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
 
-		keyFieldsList.remove(CommandType.Command_Types.ADD.name());// remove the
-																	// add key
-																	// pair as
-																	// it has
-																	// save the
-																	// task desc
+		keyFieldsList.remove(CommandType.Command_Types.ADD.name());
+		// remove the add key pair as it has already been saved to the taskDesc
 
 		for (String key : keyFieldsList.keySet()) {
 			getKey = KeywordType.getKeyword(key);
@@ -82,8 +73,12 @@ public class AddHandler {
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
 						keyFieldsList);
 				break;
-			// case EVERY:
-			// indicMsg =
+
+			case EVERY:
+				indicMsg = addRecurringWeek(newTask, lastUnUsedIndex,
+						keyFieldsList);
+				break;
+
 			default:
 				return String
 						.format(MessageList.MESSAGE_INVALID_COMMAND, "Add");
@@ -111,9 +106,19 @@ public class AddHandler {
 			return indicMsg.getMessage();
 		}
 		taskLogger.log(Level.INFO, "Task Added");
+		CacheCommandsHandler.newHistory(smtData);
 		return MessageList.MESSAGE_ADDED;
 	}
 
+	/**
+	 * This method is to check if the date is not included or the date format is
+	 * incorrect
+	 * 
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
 			HashMap<String, String> keyFieldsList) {
 		if (!keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
@@ -133,6 +138,30 @@ public class AddHandler {
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
 		newTask.setTaskEndDateTime(endDate);
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * This method is for the use of adding recurring week feature
+	 * 
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
+	private static IndicatorMessagePair addRecurringWeek(Task newTask,
+			int index, HashMap<String, String> keyFieldsList) {
+		DateTime weeklyDate = DateParser.generateDate(keyFieldsList
+				.get(KeywordType.List_Keywords.EVERY.name()));
+
+		if (weeklyDate == null) {
+			return new IndicatorMessagePair(false,
+					String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT));
+		}
+
+		newTask.setTaskStartDateTime(null);
+		newTask.setTaskEndDateTime(null);
+		newTask.setWeeklyDay(KeywordType.List_Keywords.EVERY.name());
 		return new IndicatorMessagePair(true, "");
 	}
 

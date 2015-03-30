@@ -104,6 +104,7 @@ public class SmtSurvival extends Composite {
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, SWT.BORDER | SWT.NO_BACKGROUND);
 		// setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				toolkit.dispose();
@@ -190,8 +191,13 @@ public class SmtSurvival extends Composite {
 		tbtmMain.setText("Main");
 		tbtmMain.setToolTipText("This tab will show the all the tasks");
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+
 		lblDisplay.setForeground(SWTResourceManager
 				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+	
+		lblDisplay.setAlignment(SWT.CENTER);
+		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
 
@@ -241,6 +247,7 @@ public class SmtSurvival extends Composite {
 	 */
 	private void commandLabel(Composite composite_1) {
 		Label lblCommand = new Label(composite_1, SWT.NONE);
+		lblCommand.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.BOLD));
 		lblCommand.setBounds(10, 10, 84, 20);
 		toolkit.adapt(lblCommand, true, true);
 		lblCommand.setText("Command :");
@@ -253,11 +260,13 @@ public class SmtSurvival extends Composite {
 	 */
 	private void setCommandTextBox(Composite composite_1) {
 		cmdTxtBox = new Text(composite_1, SWT.BORDER);
+
 		cmdTxtBox.setToolTipText("Please enter a command here");
 		cmdTxtBox.setForeground(SWTResourceManager
 				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 
 			@Override
