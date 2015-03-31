@@ -26,8 +26,8 @@ public class DisplayHandlerTest {
 	public void setUp() throws Exception {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
-		DateTime startDate = DateTimeParser.generateDate("12/3/2015", "dd/MM/yyyy");
-		DateTime endDate = DateTimeParser.generateDate("25/1/2015", "dd/MM/yyyy");
+		DateTime startDate = DateTimeParser.generateDate("27/8/2015");
+		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
 		keyFieldsTest = new HashMap<String, String>();
 
 		smtDataTest.addATaskToList(new Task(1, "CE1", startDate, endDate, true, ""));
@@ -48,7 +48,7 @@ public class DisplayHandlerTest {
 		
 		keyFieldsTest.put("DISPLAY", "ALL");
 		
-		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today +"\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n";
+		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 3\nDescription: V5.0\nStart from: 27 August, 2015 (Thu)\nDeadline: "+ today +"\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
 	}
 	
@@ -57,7 +57,7 @@ public class DisplayHandlerTest {
 		
 		keyFieldsTest.put("DISPLAY", "TODAY");
 		
-		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n";
+		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 27 August, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
 	}
 
@@ -66,7 +66,7 @@ public class DisplayHandlerTest {
 		
 		keyFieldsTest.put("DISPLAY", "COMPLETED");
 		
-		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Completed\n";
+		String expected = "\nTask ID: 1\nDescription: CE1\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
 	}
 	
@@ -75,7 +75,7 @@ public class DisplayHandlerTest {
 		
 		keyFieldsTest.put("DISPLAY", "PENDING");
 		
-		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 12 March, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 12 March, 2015 (Thu)\nDeadline: 25 January, 2015 (Sun)\nStatus: Pending\n";
+		String expected = "\nTask ID: 3\nDescription: V5.0\nStart from: 27 August, 2015 (Thu)\nDeadline: "+ today + "\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nStart from: 27 August, 2015 (Thu)\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
 		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
 	}
 }
