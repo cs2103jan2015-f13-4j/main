@@ -83,6 +83,18 @@ public class DisplayHandler {
 			case "SUN":
 				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.SUNDAY.name(), DateTimeConstants.SUNDAY);
 				break;
+			case "THISWEEK":
+			case "THISWK":
+				indicMsg = displayThisWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "LASTWEEK":
+			case "LASTWK":
+				indicMsg = displayLastWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "NEXTWEEK":
+			case "NEXTWK":
+				indicMsg = displayNextWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
 			}
@@ -168,10 +180,73 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	private static IndicatorMessagePair displayThisWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.THISWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
+		datesOfWeekList.add(weekStart);
+		
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair displayLastWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.LASTWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
+		weekStart = weekStart.minusDays(1).dayOfWeek().withMinimumValue();
+		datesOfWeekList.add(weekStart);
+		
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair displayNextWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.NEXTWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMaximumValue();
+		weekStart = weekStart.plusDays(1).dayOfWeek().withMinimumValue();
+		datesOfWeekList.add(weekStart);
+		
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
 	private static DateTime generateTodayDate() {
 		LocalDate date = new LocalDate();
 		DateTime endDate = DateTimeParser.generateDate(date.toString());
 		return endDate;
+	}
+	
+	private static ArrayList<DateTime> generateListOfDates(DateTime weekStart, ArrayList<DateTime> datesOfWeekList) {
+		int numOfDays = 7;
+		
+		for(int i = 1; i < numOfDays; i++) {
+			weekStart = weekStart.plusDays(1);
+			datesOfWeekList.add(weekStart);
+		}
+		return datesOfWeekList;
 	}
 	
 	private static ArrayList<Task> retrieveMatchedStatusTasks(Data smtData, ArrayList<Task> displayTasksList, boolean status) {
@@ -187,7 +262,20 @@ public class DisplayHandler {
 		for(int i = 0; i < smtData.getSize(); i++) {
 			if(smtData.getATask(i).getTaskEndDateTime() != null) {
 				if(smtData.getATask(i).getTaskEndDateTime().toLocalDate().equals(matchDate)) {
-				displayTasksList.add(smtData.getATask(i));	
+					displayTasksList.add(smtData.getATask(i));	
+				}
+			}
+		}
+		return displayTasksList;
+	}
+	
+	private static ArrayList<Task> retrieveMatchedListOfDatesTasks(Data smtData, ArrayList<Task> displayTasksList, ArrayList<DateTime> datesOfWeekList) {
+		for(int i = 0; i < smtData.getSize(); i++) {
+			if(smtData.getATask(i).getTaskEndDateTime() != null) {
+				for(int j = 0; j < datesOfWeekList.size(); j++) {
+					if(smtData.getATask(i).getTaskEndDateTime().toLocalDate().equals(datesOfWeekList.get(j).toLocalDate())) {
+						displayTasksList.add(smtData.getATask(i));	
+					}
 				}
 			}
 		}
