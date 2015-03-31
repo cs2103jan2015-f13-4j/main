@@ -42,9 +42,11 @@ public class SortHandler {
 			indicMsg = sortStartDate(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		case "COMPLETED":
+		case "COMP":
 			indicMsg = sortCompleted(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		case "PENDING":
+		case "PEND":
 			indicMsg = sortPending(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		default:

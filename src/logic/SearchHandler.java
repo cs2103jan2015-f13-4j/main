@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.joda.time.DateTime;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import utility.CommandType;
 import utility.KeywordType;
 import utility.MessageList;
@@ -37,7 +37,7 @@ public class SearchHandler {
 		String searchDetails = "";
 
 		for (int i = 0; i < smtData.getSize(); i++) {
-			DateTime endDate = DateParser.generateDate(deadLine);
+			DateTime endDate = DateTimeParser.generateDate(deadLine);
 
 			if (smtData.getATask(i).getTaskEndDateTime().toLocalDate()
 					.equals(endDate.toLocalDate()))

@@ -43,8 +43,16 @@ public class Data {
 	 */
 	public void setListTask(ArrayList<Task> receivedListTask){
 		tasksList.clear();
+		Task newTask;
 		for(int i = 0; i < receivedListTask.size(); i++){
-			tasksList.add(receivedListTask.get(i));
+			newTask = new Task();
+			newTask.setTaskId(receivedListTask.get(i).getTaskId());
+			newTask.setTaskDescription(receivedListTask.get(i).getTaskDescription());
+			newTask.setTaskStartDateTime(receivedListTask.get(i).getTaskStartDateTime());
+			newTask.setTaskEndDateTime(receivedListTask.get(i).getTaskEndDateTime());
+			newTask.setTaskStatus(receivedListTask.get(i).getTaskStatus());
+			newTask.setWeeklyDay(receivedListTask.get(i).getWeeklyDay());
+			tasksList.add(newTask);
 		}
 	}
 	

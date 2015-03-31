@@ -25,7 +25,7 @@ public class DateTimeParserTest {
 		//String expected = "3 March, 2015";
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 		DateTime expectedDateTimeObj = DateTime.parse(dateValue);
-		assertTrue(expectedDateTimeObj.equals(DateTimeParser.generateDate(dateValue, "yy-MM-dd")));
+		assertTrue(expectedDateTimeObj.equals(DateTimeParser.generateDate(dateValue)));
      	
 		
 		//assertEquals(expected, DateParser.generateDate(dateValue));

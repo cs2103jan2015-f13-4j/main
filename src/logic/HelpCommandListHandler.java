@@ -35,37 +35,54 @@ public class HelpCommandListHandler {
 			CommandType.Command_Types getType = CommandType.getType(key
 					.split(" "));
 
-			switch (getType) {
-
-			case ADD: {
-				return MessageList.MESSAGE_ADD_HELP;
-			}
-			case DISPLAY: {
-				return MessageList.MESSAGE_DISPLAY_HELP;
-			}
-			case DELETE: {
-				return MessageList.MESSAGE_DELETE_HELP;
-			}
-			case CLEAR: {
-				return MessageList.MESSAGE_CLEAR_HELP;
-			}
-			case SEARCH: {
-				return MessageList.MESSAGE_SEARCH_HELP;
-			}
-			case SORT: {
-				return MessageList.MESSAGE_SORT_HELP;
-			}
-			case UPDATE: {
-				return MessageList.MESSAGE_UPDATE_HELP;
-			}
-			case EXIT: {
-				return MessageList.MESSAGE_EXIT_HELP;
-			}
-			default: {
-				return MessageList.MESSAGE_INVAILD;
-			}
-			}
+			return getCommandType(getType);
 		}
 		return "";
+	}
+
+	/**
+	 * @param getType
+	 * @return
+	 */
+	private static String getCommandType(CommandType.Command_Types getType) {
+		switch (getType) {
+
+		case ADD: {
+			return MessageList.MESSAGE_ADD_HELP;
+		}
+		case DISPLAY: {
+			return MessageList.MESSAGE_DISPLAY_HELP;
+		}
+		case DELETE: {
+			return MessageList.MESSAGE_DELETE_HELP;
+		}
+		case SEARCH: {
+			return MessageList.MESSAGE_SEARCH_HELP;
+		}
+		case SORT: {
+			return MessageList.MESSAGE_SORT_HELP;
+		}
+		case UPDATE: {
+			return MessageList.MESSAGE_UPDATE_HELP;
+		}
+		case EXIT: {
+			return MessageList.MESSAGE_EXIT_HELP;
+		}
+		case UNDO: {
+			return MessageList.MESSAGE_UNDO_HELP;
+		}
+		case REDO: {
+			return MessageList.MESSAGE_REDO_HELP;
+		}
+		case BLOCK: {
+			return MessageList.MESSAGE_BLOCK_HELP;
+		}
+		case UNBLOCK: {
+			return MessageList.MESSAGE_UNBLOCK_HELP;
+		}
+		default: {
+			return MessageList.MESSAGE_INVAILD;
+		}
+		}
 	}
 }

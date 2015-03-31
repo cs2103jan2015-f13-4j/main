@@ -3,8 +3,9 @@ package logic;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
-import parser.DateParser;
+import parser.DateTimeParser;
 import data.Data;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
@@ -13,35 +14,35 @@ import utility.MessageList;
 
 public class BlockDateHandler {
 
-	public static IndicatorMessagePair blockDate(
+	public static String executeBlockOrUnblock(
 			HashMap<String, String> keyFieldsList, String keyCommand,
 			Data smtData) {
-		return null;
+		IndicatorMessagePair indicMsg = checkIfCommandKeyExist(keyFieldsList,
+				keyCommand);
 
-	}
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
 
-	private static String CheckIfCommandEqualBlockOrUnblock(
-			HashMap<String, String> keyFieldsList, String keyCommand,
-			Data smtData) {
-		IndicatorMessagePair indicMsg;
-
-		switch (keyCommand) {
-		case CommandType.Command_Types.BLOCK.name():
-			indicMsg = blockDate(keyFieldsList.get(keyCommand, smtData));
+		CommandType.Command_Types cmd = CommandType.getType(keyCommand
+				.split(" "));
+		switch (cmd) {
+		case BLOCK:
+			indicMsg = checkBlockDate(keyFieldsList, smtData);
 			break;
-
-		case CommandType.Command_Types.UNBLOCK.name():
-			indicMsg = unblockDate(keyFieldsList.get(keyCommand, smtData));
+		case UNBLOCK:
+			indicMsg = checkUnblockDate(keyFieldsList, smtData);
 			break;
 
 		default:
-			return String
-					.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+					"Block/Unblock");
 		}
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+		return indicMsg.getMessage();
 	}
 
 	private static IndicatorMessagePair checkIfCommandKeyExist(
@@ -49,17 +50,16 @@ public class BlockDateHandler {
 
 		if (!keyFieldsList.containsKey(keyCommand)) {
 			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_SPECIFICATION);
+					MessageList.MESSAGE_BLOCK_SPECIFICATION);
 		}
-		if (keyFieldsList.get(keyCommand) == null
-				|| keyFieldsList.get(keyCommand).isEmpty()) {
+		if (keyFieldsList.get(keyCommand) == null) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
 		return new IndicatorMessagePair(true, "");
 	}
 
-	private static IndicatorMessagePair blockDate(
+	private static IndicatorMessagePair checkBlockDate(
 			HashMap<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
@@ -78,35 +78,58 @@ public class BlockDateHandler {
 					smtData);
 		} else if (keyFieldList.size() == 3
 				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
-						.name())) { // &&keyFieldList.containKey(KeywordType.List_Keywords.TO))){
-			return blockRangeOfDates(keyFieldList, smtData);
+						.name())
+				&& keyFieldList
+						.containsKey(KeywordType.List_Keywords.TO.name())) {
+			return blockRangeOfDates(
+					keyFieldList.get(KeywordType.List_Keywords.FROM.name()),
+					keyFieldList.get(KeywordType.List_Keywords.TO.name()),
+					smtData);
 		} else {
 			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED);
+					MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD);
 		}
 
 	}
 
 	private static IndicatorMessagePair blockRangeOfDates(String fromDate,
 			String toDate, Data smtData) {
-		DateTime startDate = DateParser.generateDate(fromDate);
+		if (fromDate.isEmpty() || toDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_BLOCK_SPECIFICATION);
+		}
+
+		DateTime startDate = DateTimeParser.generateDate(fromDate);
 		if (startDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}
 
-		DateTime endDate = DateParser.generateDate(toDate);
+		DateTime endDate = DateTimeParser.generateDate(toDate);
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
 
-		return null;
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore(endDate
+				.toLocalDate()); date = date.plusDays(1)) {
+			indicMsg = blockOneDate(date.toString(), smtData);
+			if (!indicMsg.isTrue()) {
+				return indicMsg;
+			}
+		}
+		return new IndicatorMessagePair(true, MessageList.MESSAGE_BLOCKED);
 	}
 
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
 			Data smtData) {
-		DateTime endDate = DateParser.generateDate(receivedDate);
+		if (receivedDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(receivedDate);
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
@@ -116,7 +139,7 @@ public class BlockDateHandler {
 			smtData.addBlockedDateTime(endDate);
 		}
 		return new IndicatorMessagePair(true,
-				String.format(MessageList.MESSAGE_BLOCK_HELP)); // change msg
+				String.format(MessageList.MESSAGE_BLOCKED)); 
 	}
 
 	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
@@ -130,7 +153,7 @@ public class BlockDateHandler {
 		return false;
 	}
 
-	private static IndicatorMessagePair unblockDate(
+	private static IndicatorMessagePair checkUnblockDate(
 			HashMap<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
@@ -144,41 +167,59 @@ public class BlockDateHandler {
 		}
 
 		if (keyFieldList.size() == 1) {
-			return unblockDate(
-					keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
+			return unblockOneDate(
+					keyFieldList.get(CommandType.Command_Types.UNBLOCK.name()),
 					smtData);
 		} else if (keyFieldList.size() == 3
 				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
-						.name())) { // &&keyFieldList.containKey(KeywordType.List_Keywords.TO))){
-			return unblockRangeOfDates(keyFieldList, smtData);
+						.name())
+				&& keyFieldList
+						.containsKey(KeywordType.List_Keywords.TO.name())) {
+			return unblockRangeOfDates(
+					keyFieldList.get(KeywordType.List_Keywords.FROM.name()),
+					keyFieldList.get(KeywordType.List_Keywords.TO.name()),
+					smtData);
 		} else {
 			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_DATE_BLOCKED_UNBLOCKED_FAILED);
+					MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD);
 		}
 
 	}
 
-	private static IndicatorMessagePair unblockRangeOfDates(
-			HashMap<String, String> keyFieldList, Data smtData) {
+	private static IndicatorMessagePair unblockRangeOfDates(String fromDate,
+			String toDate, Data smtData) {
 
-		DateTime startDate = DateParser.generateDate(fromDate);
+		DateTime startDate = DateTimeParser.generateDate(fromDate);
 		if (startDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}
 
-		DateTime endDate = DateParser.generateDate(toDate);
+		DateTime endDate = DateTimeParser.generateDate(toDate);
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
-
-			return null;
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
 
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore(endDate
+				.toLocalDate()); date = date.plusDays(1)) {
+			indicMsg = blockOneDate(date.toString(), smtData);
+			if (!indicMsg.isTrue()) {
+				return indicMsg;
+			}
+		}
+		return new IndicatorMessagePair(true, MessageList.MESSAGE_UNBLOCKED);
+
 	}
+
 	private static IndicatorMessagePair unblockOneDate(String receivedDate,
 			Data smtData) {
-		DateTime endDate = DateParser.generateDate(receivedDate);
+		if (receivedDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		DateTime endDate = DateTimeParser.generateDate(receivedDate);
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
@@ -188,18 +229,7 @@ public class BlockDateHandler {
 			smtData.addBlockedDateTime(endDate);
 		}
 		return new IndicatorMessagePair(true,
-				String.format(MessageList.MESSAGE_BLOCK_HELP)); // change msg
-	}
-
-	private static boolean checkIfunblockDateExist(DateTime dateTimeReceived,
-			Data smtData) {
-		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
-			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
-					.equals(dateTimeReceived.toLocalDate())) {
-				return true;
-			}
-		}
-		return false;
+				String.format(MessageList.MESSAGE_UNBLOCKED));
 	}
 
 }

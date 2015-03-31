@@ -22,6 +22,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import logic.Menu;
+import org.eclipse.swt.widgets.Slider;
 
 public class SmtSurvival extends Composite {
 
@@ -40,6 +41,8 @@ public class SmtSurvival extends Composite {
 	private static Label lblDisplay;
 	private static Menu controller;
 	private Listener defaultListener;
+	private TabItem tabItem;
+	private Slider slider;
 
 	/**
 	 * This method will be first executed when program runs
@@ -200,6 +203,12 @@ public class SmtSurvival extends Composite {
 
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
+		
+		tabItem = new TabItem(displayTaskFolder, SWT.NONE);
+		tabItem.setText("New Item");
+		
+		slider = new Slider(displayTaskFolder, SWT.NONE);
+		tabItem.setControl(slider);
 
 		// This is for Schedule Tab
 		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
