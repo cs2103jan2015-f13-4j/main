@@ -44,7 +44,7 @@ public class HelpCommandListHandler {
 	 * @param getType
 	 * @return
 	 */
-	private static String getCommandType(CommandType.Command_Types getType) {
+	public static String getCommandType(CommandType.Command_Types getType) {
 		switch (getType) {
 
 		case ADD: {
