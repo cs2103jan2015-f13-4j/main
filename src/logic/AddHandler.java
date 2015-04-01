@@ -137,22 +137,11 @@ public class AddHandler {
 		
 		checkEmptyKeyFieldsList(keyFieldsList, KeywordType.List_Keywords.BY.name(), MessageList.MESSAGE_NO_DATE_GIVEN);
 		
-		/*if (!keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}
-		if (keyFieldsList.get(KeywordType.List_Keywords.BY.name()) == null
-				|| keyFieldsList.get(KeywordType.List_Keywords.BY.name())
-						.isEmpty()) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}*/
-		
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(KeywordType.List_Keywords.BY.name()));
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
 		}
 		newTask.setTaskEndDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
@@ -195,18 +184,7 @@ public class AddHandler {
 		if(!indicMsg.isTrue()){
 			return indicMsg;
 		}
-		/*if (!keyFieldsList.containsKey(CommandType.Command_Types.ADD.name())) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}
-		if (keyFieldsList.get(CommandType.Command_Types.ADD.name()) == null
-				|| keyFieldsList.get(CommandType.Command_Types.ADD.name())
-						.isEmpty()) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}*/
-		
-		
+	
 		newTask.setTaskDescription(keyFieldsList
 				.get(CommandType.Command_Types.ADD.name()));
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
