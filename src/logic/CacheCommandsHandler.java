@@ -56,14 +56,17 @@ public class CacheCommandsHandler {
 	private static String updateTaskList(Data smtData) {
 
 		ArrayList<Task> newTaskList = new ArrayList<Task>();
-		smtData.getListTask().clear();
+		//smtData.getListTask().clear();
 
 		if (checkUndoEmpty()) {
 			smtData.setListTask(newTaskList);
 		} else {
+			smtData.setListTask(current.peek().getListTask());
+			/*
 			for (int i = 0; i < current.peek().getSize(); i++) {
 				smtData.addATaskToList(current.peek().getATask(i));
 			}
+			*/
 		}
 
 		// this will call updateLastUnUsedIndex to update the last unused index
@@ -120,7 +123,6 @@ public class CacheCommandsHandler {
 		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
 		newData.setLastUnUsedIndex(smtData.getLastUnUsedIndex());
 		newData.setListTask(smtData.getListTask());
-		System.out.println(newData.getSize());
 		current.push(newData);
 		aheadCmds.clear();
 	}

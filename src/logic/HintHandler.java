@@ -1,5 +1,6 @@
 package logic;
 
+import utility.CommandType.Command_Types;
 import utility.MessageList;
 import utility.CommandType;
 import utility.CommandListHelp;
@@ -37,53 +38,13 @@ public class HintHandler {
 			return MessageList.MESSAGE_HELP;
 		}
 
-		for (CommandType.Command_Types aCmd : CommandType.Command_Types
-				.values()) {
+		for (Command_Types aCmd : CommandType.Command_Types.values()) {
 			if (aCmd.name().startsWith(userCmd.toUpperCase())) {
-				listOfHint += getCommandType(aCmd) + "\n";
+				listOfHint += CommandListHelp.getType(aCmd.name().split("")) + "\n";
 			}
 		}
 
 		return listOfHint;
-	}
-
-	/**
-	 * This method will get the command type
-	 * 
-	 * @param aCmd
-	 * @return
-	 */
-	private static String getCommandType(CommandType.Command_Types aCmd) {
-		switch (aCmd) {
-
-		case ADD: {
-			return MessageList.MESSAGE_ADD_HELP;
-		}
-		case DISPLAY: {
-			return MessageList.MESSAGE_DISPLAY_HELP;
-		}
-		case DELETE: {
-			return MessageList.MESSAGE_DELETE_HELP;
-		}
-		case CLEAR: {
-			return MessageList.MESSAGE_CLEAR_HELP;
-		}
-		case SEARCH: {
-			return MessageList.MESSAGE_SEARCH_HELP;
-		}
-		case SORT: {
-			return MessageList.MESSAGE_SORT_HELP;
-		}
-		case UPDATE: {
-			return MessageList.MESSAGE_UPDATE_HELP;
-		}
-		case EXIT: {
-			return MessageList.MESSAGE_EXIT_HELP;
-		}
-		default: {
-			return MessageList.MESSAGE_INVAILD;
-		}
-		}
 	}
 
 	/**
