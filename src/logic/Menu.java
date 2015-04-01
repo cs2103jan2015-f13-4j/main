@@ -86,7 +86,7 @@ public class Menu {
 		return smtData.loadEveryThingFromFile();
 	}
 
-	public static String getHint(String userCmd) {
+	public String getHint(String userCmd) {
 		return HintHandler.executeHint(userCmd);
 	}
 }
