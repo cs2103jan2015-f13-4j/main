@@ -3,7 +3,6 @@ package logic;
 import utility.CommandType.Command_Types;
 import utility.MessageList;
 import utility.CommandType;
-import utility.CommandListHelp;
 
 public class HintHandler {
 
@@ -14,10 +13,7 @@ public class HintHandler {
 	 * @return
 	 */
 	public static String executeHint(String userCmd) {
-
-		getMessageTyping(userCmd);
-
-		return null;
+		return getMessageTyping(userCmd);
 	}
 
 	/**
@@ -40,7 +36,7 @@ public class HintHandler {
 
 		for (Command_Types aCmd : CommandType.Command_Types.values()) {
 			if (aCmd.name().startsWith(userCmd.toUpperCase())) {
-				listOfHint += CommandListHelp.getType(aCmd.name().split("")) + "\n";
+				listOfHint += HelpCommandListHandler.getCommandType(aCmd) + "\n";
 			}
 		}
 
