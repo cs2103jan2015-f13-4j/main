@@ -305,6 +305,12 @@ public class SmtSurvival extends Composite {
 			lblDisplay.setText(output);
 			cmdTxtBox.setText("");
 		}
+		else{
+			output = controller.getHint(cmdTxtBox.getText());
+			displayTaskFolder.setSelection(tbtmMain);
+			tbtmMain.setControl(lblDisplay);
+			lblDisplay.setText(output);
+		}
 	}
 
 	/**
