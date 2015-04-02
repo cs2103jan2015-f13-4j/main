@@ -270,8 +270,10 @@ public class AddHandler {
 		}
 
 		updateBothTimes(newTask, startTime, endTime);
-
+		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
+		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
 		return new IndicatorMessagePair(true, "");
+
 	}
 
 	/**
