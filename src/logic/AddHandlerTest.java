@@ -67,7 +67,7 @@ public class AddHandlerTest {
 	{
 		keyFieldsTest.put("ADD", "Submit Proposal");
 		keyFieldsTest.put("BY","");
-		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
@@ -80,7 +80,7 @@ public class AddHandlerTest {
 	{
 		keyFieldsTest.put("ADD","Submit Report");
 		keyFieldsTest.put("BY","03-March-2014");
-		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
@@ -93,7 +93,7 @@ public class AddHandlerTest {
 	{
 		keyFieldsTest.put("ADD","Submit Report");
 		keyFieldsTest.put("BY","03-2015-08");
-		String expected = String.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
@@ -106,7 +106,7 @@ public class AddHandlerTest {
 	{
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("BY", "AA-12-2015");
-		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
