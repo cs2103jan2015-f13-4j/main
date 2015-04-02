@@ -34,8 +34,10 @@ public class HintHandler {
 			return MessageList.MESSAGE_HELP;
 		}
 
+		String[] userCmdList = userCmd.split(" ");
+	
 		for (Command_Types aCmd : CommandType.Command_Types.values()) {
-			if (aCmd.name().startsWith(userCmd.toUpperCase())) {
+			if (aCmd.name().startsWith(userCmdList[0].toUpperCase())) {
 				listOfHint += HelpCommandListHandler.getCommandType(aCmd) + "\n";
 			}
 		}
