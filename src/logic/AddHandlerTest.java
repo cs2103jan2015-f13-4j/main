@@ -123,6 +123,128 @@ public class AddHandlerTest {
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
+	/**
+	 * This is to test adding the task within a certain period of time
+	 * The output of this test is: Task added
+	 */
+	@Test
+	public void testAddByTime()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "10am");
+		keyFieldsTest.put("TO", "12pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_ADDED;
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
+	/**
+	 * This is to test adding the task within a certain period of time
+	 * The output of this test is: Task added
+	 */
+	@Test
+	public void testAddInvalidTime()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "6pm");
+		keyFieldsTest.put("TO", "5pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = "Start Time is before End Time";
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
+	/**
+	 * This is to test adding the task, with missing time
+	 * The output of this test is: Time is not entered correctly
+	 */
+	@Test
+	public void testAddTimeIsEmpty()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "");
+		keyFieldsTest.put("TO", "");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = "Time is not entered correctly";
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with missing AddTime for TO
+	 * The output of this test is: Time is not entered correctly
+	 */
+	@Test
+	public void testAddTimeWithMissingTO()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "3pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_INVALID_COMMAND;
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
+	/**
+	 * This is to test adding the task, with missing AddTime for FROM
+	 * The output of this test is: Time is not entered correctly
+	 */
+	@Test
+	public void testAddTimeWithMissingFROM()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("TO", "3pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_INVALID_COMMAND;
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
+	//This got problem (CHECK)
+	/**
+	 * This is to test adding the task, with the time in wrong time format, e.g 10pm to 10zm
+	 * The output of this test is: Time is not entered correctly
+	 */
+	@Test
+	public void testAddTimeFormat()
+	{
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "10zm");
+		keyFieldsTest.put("TO", "11pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = "Time is not entered correctly";
+		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+	
+		/**
+		 * This is to test adding the task, with the time in 10 pm format, adding a space
+		 * in between time and am or pm
+		 * The output of this test is: Task added
+		 */
+		@Test
+		public void testAddTimeInDifferentFormat()
+		{
+			keyFieldsTest.put("ADD", "Submit Assignment");
+			keyFieldsTest.put("FROM", "10 pm");
+			keyFieldsTest.put("TO", "11 pm");
+			keyFieldsTest.put("BY", "Friday");
+			String expected = MessageList.MESSAGE_ADDED;
+			assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+		}
+		
+		/**
+		 * This is to test adding the task, with the time in 10 pm format, adding a space
+		 * in between time and am or pm
+		 * The output of this test is: Task added
+		 */
+		@Test
+		public void testAddEmptyDescription()
+		{
+			keyFieldsTest.put("ADD", "");
+			keyFieldsTest.put("FROM", "10 pm");
+			keyFieldsTest.put("TO", "11 pm");
+			keyFieldsTest.put("BY", "Friday");
+			String expected = "Invalid argument for Add command.";
+			assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+		}
+	
+	
 }
 	
 
