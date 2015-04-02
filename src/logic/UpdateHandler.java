@@ -68,8 +68,9 @@ public class UpdateHandler {
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
 		
+		//first check if command contains from and to keywords and process them first
 		if(checkFromTimeToTimeBothExist(keyFieldsList)){
-			indicMsg = determineBothTimes(keyFieldsList);
+			indicMsg = processBothTimes(keyFieldsList, index, smtData);
 		}
 		
 		if(indicMsg != null && !indicMsg.isTrue()){
@@ -164,10 +165,20 @@ public class UpdateHandler {
 		if(weeklyDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
 		}
+		DateTime newStartTime = null; 
+		DateTime newEndTime = null;
 		
+		if(smtData.getATask(index).getTaskStartDateTime() != null){
+			newStartTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), smtData.getATask(index).getTaskStartDateTime().getHourOfDay(), smtData.getATask(index).getTaskStartDateTime().getMinuteOfHour());
+		}
+		
+		if(smtData.getATask(index).getTaskEndDateTime() != null){
+			newEndTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), smtData.getATask(index).getTaskEndDateTime().getHourOfDay(), smtData.getATask(index).getTaskEndDateTime().getMinuteOfHour());
+		}
+	
 		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskStartDateTime(null);
-		tempTask.setTaskEndDateTime(null);
+		tempTask.setTaskStartDateTime(newStartTime);
+		tempTask.setTaskEndDateTime(newEndTime);
 		tempTask.setWeeklyDay(keyFields);
 		smtData.updateTaskList(index, tempTask);
 		return new IndicatorMessagePair(true, "");
@@ -218,10 +229,18 @@ public class UpdateHandler {
 		Task tempTask = smtData.getATask(index);
 		
 		if(direction == KeywordType.List_Keywords.FROM){
-			tempTask.setTaskStartDateTime(updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime));
+			DateTime newStartTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
+			if(tempTask.getTaskEndDateTime() != null && !checkFromTimeToTimeBothValid(newStartTime, tempTask.getTaskEndDateTime())){
+				return new IndicatorMessagePair(false, "Start Time and End Time conflicts.");
+			}
+			tempTask.setTaskStartDateTime(newStartTime);
 		}
 		else if(direction == KeywordType.List_Keywords.TO){
-			tempTask.setTaskEndDateTime(updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime));
+			DateTime newEndTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
+			if(tempTask.getTaskStartDateTime() != null && !checkFromTimeToTimeBothValid(tempTask.getTaskStartDateTime(), newEndTime)){
+				return new IndicatorMessagePair(false, "Start Time and End Time conflicts.");
+			}
+			tempTask.setTaskEndDateTime(newEndTime);
 		}
 		
 		//tempTask.setTaskStartDateTime(startTime);
@@ -267,19 +286,57 @@ public class UpdateHandler {
 		return -1;
 	}
 	
-	private static IndicatorMessagePair determineBothTimes(HashMap<String, String> keyFieldsList){
+	/**
+	 * determineBothTimes method checks if both times are valid and proceed to update if possible
+	 * @param keyFieldsList the input command
+	 * @param index the current task location
+	 * @param smtData the data object which contains the whole data
+	 * @return IndicatorMessagePair which states whether the times can be update
+	 */
+	private static IndicatorMessagePair processBothTimes(HashMap<String, String> keyFieldsList, int index, Data smtData){
 		
 		if(!checkFromTimeToTimeBothField(keyFieldsList)){
 			return new IndicatorMessagePair(false, "Time is not entered correctly");
 		}
 		
-		if(!checkFromTimeToTimeBothValid(keyFieldsList)){
+		DateTime startTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()));
+		DateTime endTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.TO.name()));
+		if(!checkFromTimeToTimeBothValid(startTime, endTime)){
 			return new IndicatorMessagePair(false, "Start Time is before End Time");
 		}
 		
+		
+		updateBothTimes(index, smtData, startTime, endTime);
+		
+		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
+		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
 		return new IndicatorMessagePair(true, "");
 	}
+
+
+	/**
+	 * updateBothTimes method will update both times to a task
+	 * @param index the index where the existing task is
+	 * @param smtData the data object which contains all the data
+	 * @param startTime the start time to update
+	 * @param endTime the end time to update
+	 */
+	private static void updateBothTimes(int index, Data smtData,
+			DateTime startTime, DateTime endTime) {
+		DateTime newStartTime = updateTimeToExistingDateTime(smtData.getATask(index), startTime);
+		DateTime newEndTime = updateTimeToExistingDateTime(smtData.getATask(index), endTime);
+		
+		Task tempTask = smtData.getATask(index);
+		tempTask.setTaskStartDateTime(updateTimeToExistingDateTime(smtData.getATask(index), newStartTime));
+		tempTask.setTaskEndDateTime(updateTimeToExistingDateTime(smtData.getATask(index), newEndTime));
+		smtData.updateTaskList(index, tempTask);
+	}
 	
+	/**
+	 * checkFromTimeToTimeBothExist method checks if both from and to keyword exists
+	 * @param keyFieldsList the command input 
+	 * @return true if it contains, else false
+	 */
 	private static boolean checkFromTimeToTimeBothExist(HashMap<String, String> keyFieldsList){
 		if(keyFieldsList.containsKey(KeywordType.List_Keywords.FROM.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.TO.name())){
 			return true;
@@ -287,6 +344,11 @@ public class UpdateHandler {
 		return false;
 	}
 	
+	/**
+	 * checkFromTimeToTimeBothField method checks if it receives from and to time
+	 * @param keyFieldsList the command input
+	 * @return true if both fields have some info, else false
+	 */
 	private static boolean checkFromTimeToTimeBothField(HashMap<String, String> keyFieldsList){
 		if(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()) != null && keyFieldsList.get(KeywordType.List_Keywords.FROM.name()).isEmpty() && keyFieldsList.get(KeywordType.List_Keywords.TO.name()) != null && keyFieldsList.get(KeywordType.List_Keywords.TO.name()).isEmpty()){
 			return false;
@@ -294,13 +356,18 @@ public class UpdateHandler {
 		return true;
 	}
 	
-	private static boolean checkFromTimeToTimeBothValid(HashMap<String, String> keyFieldsList){
-		DateTime startTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()));
+	
+	/**
+	 * checkFromTimeToTimeBothValid method checks if the time from both sides are valid to proceed
+	 * @param startTime the start time
+	 * @param endTime the end time
+	 * @return true if possible, else false
+	 */
+	private static boolean checkFromTimeToTimeBothValid(DateTime startTime, DateTime endTime){
 		if(startTime == null){
 			return false;
 		}
 		
-		DateTime endTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.TO.name()));
 		if(endTime == null){
 			return false;
 		}
@@ -312,6 +379,12 @@ public class UpdateHandler {
 		return true;
 	}
 	
+	/**
+	 * updateTimeToExistingDateTime method updates the current task start or end time with the existing time
+	 * @param currentTask the current task
+	 * @param existingDateTime the existing time to update
+	 * @return
+	 */
 	private static DateTime updateTimeToExistingDateTime(Task currentTask, DateTime existingDateTime){
 		if(currentTask.getTaskStartDateTime() == null && currentTask.getTaskEndDateTime() == null){
 			//do nothing

@@ -48,6 +48,24 @@ public class KeywordType {
 		}
 	}
 	
+	
+	public static List_Keywords getKeywordSearchWithIndexNum(String keywordTypeString){
+		if (keywordTypeString == null) {
+			return List_Keywords.FIELD;
+		}
+
+		switch(keywordTypeString.toLowerCase()){
+		case "1":
+			return List_Keywords.TASKID;
+		case "2":
+			return List_Keywords.TASKDESC;
+		case "3":
+			return List_Keywords.DEADLINE;
+		default:
+			return List_Keywords.FIELD;
+		}
+	}
+	
 	/**
 	 * This method will check whether the given parameter has a match with the list of keyword
 	 * @param input the string to compare

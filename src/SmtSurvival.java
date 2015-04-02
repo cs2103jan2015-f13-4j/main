@@ -30,7 +30,7 @@ public class SmtSurvival extends Composite {
 	 * Constant variables declared
 	 */
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-	private Text cmdTxtBox;
+	private static Text cmdTxtBox;
 	private TabItem tbtmMain;
 	private TabItem tbtmSchedule;
 	private TabItem tbtmToday;
@@ -52,7 +52,7 @@ public class SmtSurvival extends Composite {
 		Display display = new Display();
 		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
 		shell.setText("Smart Management Tool");
-
+		
 		open(shell);
 		setUpFiles();
 		checkShellDisposed(display, shell);
@@ -267,6 +267,8 @@ public class SmtSurvival extends Composite {
 				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		cmdTxtBox.setBackground(SWTResourceManager
 				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		
+		cmdTxtBox.setFocus();
 
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 
