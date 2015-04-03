@@ -266,7 +266,7 @@ public class AddHandler {
 				.get(KeywordType.List_Keywords.TO.name()));
 		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
 			return new IndicatorMessagePair(false,
-					"Start Time is before End Time");
+					"Time Mismatch");
 		}
 
 		updateBothTimes(newTask, startTime, endTime);

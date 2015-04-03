@@ -149,7 +149,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "6pm");
 		keyFieldsTest.put("TO", "5pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Start Time is before End Time";
+		String expected = "Time Mismatch";
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
@@ -208,7 +208,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10zm");
 		keyFieldsTest.put("TO", "11pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Time is not entered correctly";
+		String expected = "Time Mismatch";
 		assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 	
@@ -241,6 +241,24 @@ public class AddHandlerTest {
 			keyFieldsTest.put("TO", "11 pm");
 			keyFieldsTest.put("BY", "Friday");
 			String expected = "Invalid argument for Add command.";
+			assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+		}
+		
+		
+		//GOT PROBLEM (NEED TO CHECK)
+		/**
+		 * This is to test adding the task, with the time in 10 pm format, adding a space
+		 * in between time and am or pm
+		 * The output of this test is: Task added
+		 */
+		@Test
+		public void testAddTimeInBetween()
+		{
+			keyFieldsTest.put("ADD", "");
+			keyFieldsTest.put("FROM", "10:30 pm");
+			keyFieldsTest.put("TO", "11 pm");
+			keyFieldsTest.put("BY", "Friday");
+			String expected = "Task added.";
 			assertEquals(expected, AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 		}
 	
