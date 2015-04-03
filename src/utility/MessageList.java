@@ -12,7 +12,7 @@ public class MessageList {
 	public static final String MESSAGE_UNBLOCK_HELP = "- Unblocked <Date>\n\n- Unblocked from <Date> to <Date>\n\n";
 	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> TaskEnd<date>\n\n- Update<Task #>TaskStart<date>\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 	public static final String MESSAGE_DISPLAY_HELP = "- Display Today\n\n- Display Pending\n\n- Display Schedule\n\n- Display Completed";
-	public static final String MESSAGE_SORT_HELP = "- Sort\n\n";
+	public static final String MESSAGE_SORT_HELP = "- Sort by Description\n\n- Sort by Deadline\n\n Sort by ID ";
 	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n\n";
 	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";	
 	public static final String MESSAGE_BLOCK_HELP = "- Blocked <Date>\n\n- Blocked from <Date> to <Date>\n\n";
@@ -72,29 +72,11 @@ public class MessageList {
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
 	
-	
-	
-	/**
-	 * This message are for CacheCommandsHandler class
-	 */
-	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
-	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
-	
+
 	/**
 	 * This message are for HintHandler class
 	 */
 	public static final String MESSAGE_HINT_INVALID = "Please key in a command";
-	
-	/**
-	 * This method will print out the error message before exiting the system
-	 * 
-	 * @param message
-	 *            the message from various methods
-	 */
-	public static void printErrorMessageAndExit(String message) {
-		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);;
-		System.exit(0);
-	}
 	
 	/**
 	 * These message are for the Menu
@@ -117,6 +99,25 @@ public class MessageList {
 	public static final String MESSAGE_UNBLOCKED = "Unblocked Successful";
 	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
 	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
+
+	
+	/**
+	 * This message are for CacheCommandsHandler class
+	 */
+	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
+	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
+	
+	
+	/**
+	 * This method will print out the error message before exiting the system
+	 * 
+	 * @param message
+	 *            the message from various methods
+	 */
+	public static void printErrorMessageAndExit(String message) {
+		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);;
+		System.exit(0);
+	}
 }
 
 	
