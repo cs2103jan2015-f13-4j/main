@@ -42,6 +42,10 @@ public class UpdateHandler {
 			assert false : "Either Update is missing or the word update is in upper case: ";
 		}
 		
+		if(keyFieldsList.get(CommandType.Command_Types.UPDATE.name()).split(" ").length > 1){
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+		}
+		
 		if(!isStringAnInteger(keyFieldsList.get(CommandType.Command_Types.UPDATE.name()))){
 			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		}
@@ -67,6 +71,10 @@ public class UpdateHandler {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
+		
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
 		
 		//first check if command contains from and to keywords and process them first
 		if(checkFromTimeToTimeBothExist(keyFieldsList)){
