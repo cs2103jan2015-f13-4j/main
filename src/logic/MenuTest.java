@@ -269,11 +269,11 @@ public class MenuTest {
 	
 	/**
 	 * This is to test update Invalid task by description
-	 * The output is : Invalid Type to Integer for Update command
+	 * The output is : Invalid argument for Update command.
 	 */
 	@Test
 	public void testUpdateInValidDescTask() {
-		expected = "Invalid Type to Integer for Update command";
+		expected = "Invalid argument for Update command.";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
