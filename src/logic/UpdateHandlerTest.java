@@ -23,15 +23,23 @@ public class UpdateHandlerTest {
 
 	@Before
 	public void setUp() {
+		int year = 2015;
+		int month = 9;
+		int day = 3;
+		int hour = 0;
+		int min = 0;
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
 		keyFieldsTest = new HashMap<String, String>();
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
-				new DateTime(), new DateTime(), ""));
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
 		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
-				new DateTime(), new DateTime(), ""));
-		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
-				new DateTime(), ""));
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(
+				year, month, day, hour, min), new DateTime(year, month, day,
+				hour + 23, min), ""));
 	}
 
 	@After
@@ -41,7 +49,7 @@ public class UpdateHandlerTest {
 		textList.delete();
 
 	}
-	
+
 	/* This is a boundary case for the ‘0’ partition */
 	@Test
 	public void testUpdateZeroTaskId() {
@@ -51,18 +59,18 @@ public class UpdateHandlerTest {
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
-	
-	/*This test case test for invalid task id*/
+
+	/* This test case test for invalid task id */
 	@Test
 	public void testUpdateInvalidTaskId() {
 		keyFieldsTest.put("UPDATE", "abc");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		String expected = String.format(
+				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	
 	@Test
 	public void testUpdateWithDescRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -99,15 +107,7 @@ public class UpdateHandlerTest {
 		}
 	}
 
-	@Test
-	public void testUpdateWithDescAndEndDateRegular() {
-		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		keyFieldsTest.put("taskend", "03-03-2016");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
-		assertEquals(expected,
-				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
-	}
+
 
 	@Test
 	public void testUpdateWithDescAndByRegular() {
@@ -129,41 +129,41 @@ public class UpdateHandlerTest {
 	}
 
 	@Test
-	public void testUpdateWithStartDateRegular() {
+	public void testUpdateWithStartTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "02-01-2016");
+		keyFieldsTest.put("from", "5pm");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
 	@Test
-	public void testUpdateWithEndDateRegular() {
+	public void testUpdateWithEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "02-01-2016");
+		keyFieldsTest.put("from", "5pm");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
 	@Test
-	public void testUpdateWithStartDateAndEndDateRegular() {
+	public void testUpdateWithStartTimeAndEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "02-01-2016");
-		keyFieldsTest.put("taskend", "03-01-2016");
+		keyFieldsTest.put("FROM", "5pm");
+		keyFieldsTest.put("TO", "6pm");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case will give error message if found null in hashmap*/
+	/* This test case will give error message if found null in hashmap */
 	@Test
 	public void testUpdateWithNullKeyFields() {
 		String expected = MessageList.MESSAGE_NULL;
 		assertEquals(expected, UpdateHandler.executeUpdate(null, smtDataTest));
 	}
 
-	/*This test case will give error message if found null for Data*/
+	/* This test case will give error message if found null for Data */
 	@Test
 	public void testUpdateWithNullTaskList() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -172,7 +172,7 @@ public class UpdateHandlerTest {
 		assertEquals(expected, UpdateHandler.executeUpdate(keyFieldsTest, null));
 	}
 
-	/*This test case will give error message if description is empty*/
+	/* This test case will give error message if description is empty */
 	@Test
 	public void testUpdateWithDescEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -182,7 +182,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case will give error is description is null*/
+	/* This test case will give error is description is null */
 	@Test
 	public void testUpdateWithDescNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -192,61 +192,59 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case will give error if start date is null*/
+	/* This test case will give error if start date is null */
 	@Test
-	public void testUpdateWithStartDateNull() {
+	public void testUpdateWithStartTimeNull() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", null);
-		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		keyFieldsTest.put("from", null);
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case will give error if start date is empty*/
+	/* This test case will give error if start date is empty */
 	@Test
-	public void testUpdateWithStartDateEmpty() {
+	public void testUpdateWithStartTimeEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "");
-		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		keyFieldsTest.put("from", "");
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case will give error if wrong date format*/
+	/* This test case will give error if wrong date format */
 	@Test
-	public void testUpdateWithStartDateInvalid() {
+	public void testUpdateWithStartTimeInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskstart", "aa-22-2016");
-		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
-				"Start");
-		assertEquals(expected,
-				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
-	}
-
-	@Test
-	public void testUpdateWithEndDateNull() {
-		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", null);
-		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		keyFieldsTest.put("from", "5ap");
+		String expected = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
 	@Test
-	public void testUpdateWithEndDateEmpty() {
+	public void testUpdateWithEndTimeNull() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "");
-		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		keyFieldsTest.put("to", null);
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
 	@Test
-	public void testUpdateWithEndDateInvalid() {
+	public void testUpdateWithEndTimeEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("taskend", "abc-22-2016");
-		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
-				"End");
+		keyFieldsTest.put("to", "");
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	@Test
+	public void testUpdateWithEndTimeInvalid() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("to", "11pa");
+		String expected = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -260,7 +258,7 @@ public class UpdateHandlerTest {
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
-	
+
 	@Test
 	public void testUpdateWithWeeklyNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -270,7 +268,7 @@ public class UpdateHandlerTest {
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
-	
+
 	@Test
 	public void testUpdateWithWeeklyInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -281,8 +279,11 @@ public class UpdateHandlerTest {
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
-	
-	/*This is to check if the value in the hashmap is null, it will trigger an error message*/
+
+	/*
+	 * This is to check if the value in the hashmap is null, it will trigger an
+	 * error message
+	 */
 	@Test
 	public void testUpdateWithStatusNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -292,19 +293,19 @@ public class UpdateHandlerTest {
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
-	
+
 	@Test
 	public void testUpdateWithStatusInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("incomplete", "abc");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD,
-				"Weekly");
+		String expected = String.format(
+				MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD, "Weekly");
 
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This is to check if the input can be converted into integer*/
+	/* This is to check if the input can be converted into integer */
 	@Test
 	public void testInvalidConvertAnInteger() {
 		keyFieldsTest.put("UPDATE", "ser@");
