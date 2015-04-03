@@ -71,6 +71,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test for regular update task description and return success message*/
 	@Test
 	public void testUpdateWithDescRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -80,6 +81,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test for regular update task description */
 	@Test
 	public void testUpdateWithDescCheckRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -94,6 +96,7 @@ public class UpdateHandlerTest {
 		}
 	}
 
+	/*This test case test update task to weekly task*/
 	@Test
 	public void testUpdateWithWeeklyCheckRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -108,7 +111,7 @@ public class UpdateHandlerTest {
 	}
 
 
-
+	/*This test case test update with description and deadline regular*/
 	@Test
 	public void testUpdateWithDescAndByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -119,6 +122,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test update with regular deadline*/
 	@Test
 	public void testUpdateWithByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -128,6 +132,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test update with start time regular*/
 	@Test
 	public void testUpdateWithStartTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -137,15 +142,17 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test update with end time regular*/
 	@Test
 	public void testUpdateWithEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
-		keyFieldsTest.put("from", "5pm");
+		keyFieldsTest.put("to", "11pm");
 		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/*This test case test start time end time regular*/
 	@Test
 	public void testUpdateWithStartTimeAndEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -192,7 +199,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/* This test case will give error if start date is null */
+	/* This test case will give error if start time is null */
 	@Test
 	public void testUpdateWithStartTimeNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -202,7 +209,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/* This test case will give error if start date is empty */
+	/* This test case will give error if start time is empty */
 	@Test
 	public void testUpdateWithStartTimeEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -212,7 +219,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/* This test case will give error if wrong date format */
+	/* This test case will give error if wrong time format */
 	@Test
 	public void testUpdateWithStartTimeInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -222,6 +229,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if end time is null */
 	@Test
 	public void testUpdateWithEndTimeNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -231,6 +239,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if end time is empty */
 	@Test
 	public void testUpdateWithEndTimeEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -240,6 +249,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if wrong time format */
 	@Test
 	public void testUpdateWithEndTimeInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -249,6 +259,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if weekly is set to empty*/
 	@Test
 	public void testUpdateWithWeeklyEmpty() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -259,6 +270,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if weekly is set to null */
 	@Test
 	public void testUpdateWithWeeklyNull() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -269,6 +281,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case is test the boundary case for weekly day */
 	@Test
 	public void testUpdateWithWeeklyInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -294,6 +307,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
+	/* This test case will give error if there is some words beside incomplete */
 	@Test
 	public void testUpdateWithStatusInvalid() {
 		keyFieldsTest.put("UPDATE", "2");
