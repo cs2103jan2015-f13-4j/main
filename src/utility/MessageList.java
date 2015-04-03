@@ -41,6 +41,7 @@ public class MessageList {
 	public static final String MESSAGE_LIST_IS_NOT_EMPTY = "The list is not empty.";
 	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
+	public static final String MESSAGE_NO_TIME_GIVEN = "No time given.";
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
 	public static final String MESSAGE_INCORRECT_DATE_FORMAT ="Date Format is incorrect";
@@ -50,7 +51,7 @@ public class MessageList {
 	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
 	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
-
+	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
 	
 	/**
 	 * These message are for UpdateHandler class
