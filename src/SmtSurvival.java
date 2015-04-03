@@ -40,7 +40,6 @@ public class SmtSurvival extends Composite {
 	private Composite composite_1;
 	private static Label lblDisplay;
 	private static Menu controller;
-	private Listener defaultListener;
 
 	/**
 	 * This method will be first executed when program runs
@@ -48,7 +47,6 @@ public class SmtSurvival extends Composite {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
 		Display display = new Display();
 		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
 		shell.setText("Smart Management Tool");
@@ -64,7 +62,6 @@ public class SmtSurvival extends Composite {
 	 * @param shell
 	 */
 	private static void open(Shell shell) {
-
 		shell.open();
 		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
 		Smt.pack();
@@ -140,7 +137,7 @@ public class SmtSurvival extends Composite {
 
 		// creating composite
 		composite_1 = createComposite();
-
+		
 		// show command label at UI
 		commandLabel(composite_1);
 
@@ -156,7 +153,7 @@ public class SmtSurvival extends Composite {
 	 */
 	private Group createGroupForTabRegion() {
 		Group group = new Group(this, SWT.NONE);
-		GridData gd_group = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1,
+		GridData gd_group = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 
 				2);
 		gd_group.heightHint = 358;
 		gd_group.widthHint = 424;
@@ -191,21 +188,20 @@ public class SmtSurvival extends Composite {
 		tbtmMain = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmMain.setText("Main");
 		tbtmMain.setToolTipText("This tab will show the all the tasks");
-		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-
-		lblDisplay.setForeground(SWTResourceManager
-				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 	
+		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		lblDisplay.setForeground(SWTResourceManager.
+				getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		lblDisplay.setAlignment(SWT.CENTER);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-
+		
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
 
 		// This is for Schedule Tab
 		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmSchedule.setToolTipText("This tab will show all scheduled tasks");
 		tbtmSchedule.setText("Schedule");
+		tbtmSchedule.setToolTipText("This tab will show all scheduled tasks");
 
 		// This is for Today Tab
 		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
