@@ -44,6 +44,10 @@ public class SearchHandler {
 	 */
 	private static String searchTask(Data smtData,
 			HashMap<String, String> searchCriteria) {
+		
+		if(!searchCriteria.containsKey(CommandType.Command_Types.SEARCH.name())){
+			return MessageList.MESSAGE_INVAILD_SEARCH;
+		}
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
@@ -80,12 +84,16 @@ public class SearchHandler {
 		}
 
 		String searchDetails = "";
+		DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
+
+		if (endDate == null) {
+			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
-			DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
-
-			if (smtData.getATask(i).getTaskEndDateTime().toLocalDate()
-					.equals(endDate.toLocalDate()))
+			if (smtData.getATask(i).getTaskEndDateTime() != null
+					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
+							.equals(endDate.toLocalDate()))
 				searchDetails += smtData.getATask(i).toString() + "\n";
 		}
 		if (!searchDetails.isEmpty()) {

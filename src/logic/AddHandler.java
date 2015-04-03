@@ -265,11 +265,19 @@ public class AddHandler {
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
 				.get(KeywordType.List_Keywords.TO.name()));
 		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
-			return new IndicatorMessagePair(false,
-					"Time Mismatch");
+			return new IndicatorMessagePair(false, "Time Mismatch");
 		}
 
-		updateBothTimes(newTask, startTime, endTime);
+		DateTime newDateStartTime = new DateTime(DateTime.now().getYear(),
+				DateTime.now().getMonthOfYear(),
+				DateTime.now().getDayOfMonth(), startTime.getHourOfDay(),
+				startTime.getMinuteOfHour());
+		DateTime newDateEndTime = new DateTime(DateTime.now().getYear(),
+				DateTime.now().getMonthOfYear(),
+				DateTime.now().getDayOfMonth(), endTime.getHourOfDay(),
+				endTime.getMinuteOfHour());
+
+		updateBothTimes(newTask, newDateStartTime, newDateEndTime);
 		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
 		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
 		return new IndicatorMessagePair(true, "");
