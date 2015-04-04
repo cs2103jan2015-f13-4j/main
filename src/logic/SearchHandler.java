@@ -16,11 +16,10 @@ import data.Task;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class SearchHandler {
 
 	private static Logger taskLogger = TaskLogging.getInstance();
-	
+
 	/**
 	 * 
 	 * @param keyFieldsList
@@ -29,9 +28,9 @@ public class SearchHandler {
 	 */
 	public static String executeSearch(HashMap<String, String> keyFieldsList,
 			Data smtData) {
-		
+
 		checkForValidData(keyFieldsList, smtData);
-		
+
 		return searchTask(smtData, keyFieldsList);
 	}
 
@@ -45,27 +44,31 @@ public class SearchHandler {
 	 */
 	private static String searchTask(Data smtData,
 			HashMap<String, String> searchCriteria) {
-		searchCriteria.remove(CommandType.Command_Types.SEARCH.name());//remove the search key pair
-		if (searchCriteria.isEmpty()) {
+		
+		if(!searchCriteria.containsKey(CommandType.Command_Types.SEARCH.name())){
+			return MessageList.MESSAGE_INVAILD_SEARCH;
+		}
+
+		String[] searchList = searchCriteria.get(
+				CommandType.Command_Types.SEARCH.name()).split(" ");
+		if (searchList.length < 2) {
 			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
 		}
 
-		for (String key : searchCriteria.keySet()) {
-			KeywordType.List_Keywords getKey = KeywordType
-					.getKeyword(key);
+		KeywordType.List_Keywords getKey = KeywordType
+				.getKeywordSearchWithIndexNum(searchList[0]);
 
-			switch (getKey) {
-			case TASKID:
-				return searchTaskID(searchCriteria.get(key), smtData);
-			case TASKDESC:
-				return searchTaskDesc(smtData, searchCriteria.get(key));
-			case DEADLINE:
-				return searchTaskDate(searchCriteria.get(key), smtData);
-			default:
-				return MessageList.MESSAGE_INVAILD_SEARCH;
-			}
+		switch (getKey) {
+		case TASKID:
+			return searchTaskID(searchList, smtData);
+		case TASKDESC:
+			return searchTaskDesc(smtData, searchList);
+		case DEADLINE:
+			return searchTaskDate(searchList, smtData);
+		default:
+			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
-		return "";
+
 	}
 
 	/**
@@ -75,23 +78,26 @@ public class SearchHandler {
 	 * @param listTask
 	 * @return
 	 */
-	private static String searchTaskDate(String deadLine,
-			Data smtData) {
-		if (deadLine == null || deadLine.isEmpty()) {
+	private static String searchTaskDate(String[] deadLine, Data smtData) {
+		if (deadLine == null || deadLine.length <= 1 || deadLine.length > 2) {
 			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
 		}
 
 		String searchDetails = "";
+		DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
+
+		if (endDate == null) {
+			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
-			DateTime endDate = DateTimeParser.generateDate(deadLine);
-
-			if (smtData.getATask(i).getTaskEndDateTime().toLocalDate()
-					.equals(endDate.toLocalDate()))
-				searchDetails += smtData.getATask(i).toString();
+			if (smtData.getATask(i).getTaskEndDateTime() != null
+					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
+							.equals(endDate.toLocalDate()))
+				searchDetails += smtData.getATask(i).toString() + "\n";
 		}
 		if (!searchDetails.isEmpty()) {
-            taskLogger.log(Level.INFO, "Search By Task Date");
+			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
 			return MessageList.MESSAGE_NO_MATCH_FOUND;
@@ -105,18 +111,18 @@ public class SearchHandler {
 	 * @param listTask
 	 * @return
 	 */
-	private static String searchTaskID(String index, Data smtData) {
+	private static String searchTaskID(String[] index, Data smtData) {
 
-		if (!checkInteger(index)) {
+		if (index.length <= 1 || index.length > 2 || !checkInteger(index[1])) {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
-			if (smtData.getATask(i).getTaskId() == Integer.parseInt(index)) {
+			if (smtData.getATask(i).getTaskId() == Integer.parseInt(index[1])) {
 				return smtData.getATask(i).toString();
 			}
 		}
-        taskLogger.log(Level.INFO, "Search By Task ID");
+		taskLogger.log(Level.INFO, "Search By Task ID");
 		return MessageList.MESSAGE_NO_MATCH_FOUND;
 	}
 
@@ -127,21 +133,34 @@ public class SearchHandler {
 	 * @param wordAbstracted
 	 * @return
 	 */
-	private static String searchTaskDesc(Data smtData,
-			String wordAbstracted) {
+	private static String searchTaskDesc(Data smtData, String[] wordList) {
+		if (wordList.length <= 1) {
+			return MessageList.MESSAGE_INVAILD_SEARCH;
+		}
 
+		String wordAbstracted = mergeStringInArray(wordList);
 		ArrayList<Task> tempList = new ArrayList<Task>();
 		for (int i = 0; i < smtData.getSize(); i++) {
-			if (smtData.getATask(i).getTaskDescription().contains(wordAbstracted)) {
+			if (smtData.getATask(i).getTaskDescription()
+					.contains(wordAbstracted)) {
 				tempList.add(smtData.getATask(i));
 			}
 		}
 		if (tempList.size() == 0) {
 			return MessageList.MESSAGE_NO_MATCH_FOUND;
 		}
-        taskLogger.log(Level.INFO, "Search By Task Description");
+		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
 
+	}
+
+	private static String mergeStringInArray(String[] wordList) {
+		String mergedString = new String();
+		for (int i = 1; i < wordList.length; i++) {
+			mergedString += wordList[i] + " ";
+		}
+
+		return mergedString.trim();
 	}
 
 	/**
@@ -173,8 +192,9 @@ public class SearchHandler {
 
 		return true;
 	}
-	
-	private static String checkForValidData(HashMap<String, String> keyFieldsList, Data smtData) {
+
+	private static String checkForValidData(
+			HashMap<String, String> keyFieldsList, Data smtData) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
@@ -183,7 +203,7 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		if (keyFieldsList.size() != 2) {
+		if (keyFieldsList.size() != 1) {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;

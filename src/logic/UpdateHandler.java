@@ -42,6 +42,10 @@ public class UpdateHandler {
 			assert false : "Either Update is missing or the word update is in upper case: ";
 		}
 		
+		if(keyFieldsList.get(CommandType.Command_Types.UPDATE.name()).split(" ").length > 1){
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+		}
+		
 		if(!isStringAnInteger(keyFieldsList.get(CommandType.Command_Types.UPDATE.name()))){
 			return String.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		}
@@ -67,6 +71,10 @@ public class UpdateHandler {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
+		
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
 		
 		//first check if command contains from and to keywords and process them first
 		if(checkFromTimeToTimeBothExist(keyFieldsList)){
@@ -141,8 +149,22 @@ public class UpdateHandler {
 		if(endDate == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
+		
+		DateTime newStartDateTime = null; 
+		DateTime newEndDateTime = null;
+		
+		if(smtData.getATask(index).getTaskStartDateTime() != null){
+			newStartDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), smtData.getATask(index).getTaskStartDateTime().getHourOfDay(), smtData.getATask(index).getTaskStartDateTime().getMinuteOfHour());
+		}
+		
+		if(smtData.getATask(index).getTaskEndDateTime() != null){
+			newEndDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), smtData.getATask(index).getTaskEndDateTime().getHourOfDay(), smtData.getATask(index).getTaskEndDateTime().getMinuteOfHour());
+		}
+		
+		
 		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskEndDateTime(endDate);
+		tempTask.setTaskStartDateTime(newStartDateTime);
+		tempTask.setTaskEndDateTime(newEndDateTime);
 		smtData.updateTaskList(index, tempTask);
 		return new IndicatorMessagePair(true, "");
 	}
@@ -218,12 +240,12 @@ public class UpdateHandler {
 		}
 		
 		if(keyFields == null || keyFields.isEmpty()){
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_TIME_GIVEN);
 		}
 
 		DateTime startOrEndTime = DateTimeParser.generateTime(keyFields);
 		if(startOrEndTime == null){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INCORRECT_TIME_FORMAT));
 		}
 		
 		Task tempTask = smtData.getATask(index);
@@ -302,9 +324,12 @@ public class UpdateHandler {
 		DateTime startTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()));
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.TO.name()));
 		if(!checkFromTimeToTimeBothValid(startTime, endTime)){
-			return new IndicatorMessagePair(false, "Start Time is before End Time");
+			return new IndicatorMessagePair(false, "Time mismatch.");
 		}
-		
+		if(smtData.getATask(index).getTaskStartDateTime() == null && smtData.getATask(index).getTaskEndDateTime() == null){
+			startTime = new DateTime(DateTime.now().getYear(), DateTime.now().getMonthOfYear(), DateTime.now().getDayOfMonth(), startTime.getHourOfDay(), startTime.getMinuteOfHour());
+			endTime = new DateTime(DateTime.now().getYear(), DateTime.now().getMonthOfYear(), DateTime.now().getDayOfMonth(), endTime.getHourOfDay(), endTime.getMinuteOfHour());
+		}
 		
 		updateBothTimes(index, smtData, startTime, endTime);
 		

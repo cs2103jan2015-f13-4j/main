@@ -388,7 +388,6 @@ public class FileStorage {
 	private static ArrayList<DateTime> readBlockedDateListFromFile(IndicatorMessagePair msgPair, BufferedReader bufferRead){
 		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
 		String txtLine = "";
-		String dateFormat = "";
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
 				DateTime dateTimeObj = DateTimeParser.generateDate(txtLine);
