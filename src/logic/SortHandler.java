@@ -2,7 +2,7 @@ package logic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
@@ -16,14 +16,14 @@ import data.Task;
 
 public class SortHandler {
 	
-	public static String executeSort(HashMap<String, String> keyFieldsList, Data smtData) {
+	public static String executeSort(Map<String, String> keyFieldsList, Data smtData) {
 		
 		checkForValidData(keyFieldsList, smtData);
 		
 		return sortContents(keyFieldsList, smtData);	
 	}
 	
-	private static String sortContents(HashMap<String, String> keyFieldsList, Data smtData) {
+	private static String sortContents(Map<String, String> keyFieldsList, Data smtData) {
 		
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
@@ -64,7 +64,7 @@ public class SortHandler {
 		return sortTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair sortDescription(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDescription(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DESCRIPTION.name());
 		
@@ -75,7 +75,7 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortDeadline(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortDeadline(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DEADLINE.name());
 		
@@ -86,7 +86,7 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortStartDate(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortStartDate(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTDATE.name());
 		
@@ -97,7 +97,7 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortCompleted(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortCompleted(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
 		
@@ -108,7 +108,7 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortPending(HashMap<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortPending(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
 		
@@ -196,7 +196,7 @@ public class SortHandler {
 		}
 	};
 	
-	private static String checkForValidData(HashMap<String, String> keyFieldsList, Data smtData) {
+	private static String checkForValidData(Map<String, String> keyFieldsList, Data smtData) {
 		int numItemExpected = 1;
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
@@ -214,7 +214,7 @@ public class SortHandler {
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}
 	
-	private static IndicatorMessagePair checkInvalidArgument(HashMap<String, String> keyFieldsList, String keyWord) {
+	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
 		if(keyFieldsList.get(keyWord) != null) {
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 		}
