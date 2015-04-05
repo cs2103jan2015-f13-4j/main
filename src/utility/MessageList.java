@@ -22,7 +22,7 @@ public class MessageList {
 	public static final String MESSAGE_ADD_HELP = "- Add <Desc>\n\n- Add <Description> from <Time> to <Time> by <Date>\n\n- Add <Description> every <Date>";
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
 	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
-	public static final String MESSAGE_UNBLOCK_HELP = "- Unblocked <Date>\n\n- Unblocked from <Date> to <Date>\n\n";
+	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
 	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 	public static final String MESSAGE_DISPLAY_HELP = "- Display all\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
 			+ "- Display Yesterday[ytd]\n\n- Display Thisweek [thiswk]\n\n"
@@ -34,7 +34,7 @@ public class MessageList {
 	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartDate\n\n- Sort Completed [comp]\n\n- Sort Pending [pend]";
 	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
 	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
-	public static final String MESSAGE_BLOCK_HELP = "- Blocked <Date>\n\n- Blocked from <Date> to <Date>\n\n";
+	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
 	public static final String MESSAGE_REDO_HELP = "- Redo\n\n";
 
 	/**

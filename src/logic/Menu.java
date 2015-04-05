@@ -85,7 +85,9 @@ public class Menu {
 	}
 
 	public IndicatorMessagePair setUp() {
-		return smtData.loadEveryThingFromFile();
+		IndicatorMessagePair indicMsg = smtData.loadEveryThingFromFile();
+		CacheCommandsHandler.newHistory(smtData);
+		return indicMsg;
 	}
 
 	public String getHint(String userCmd) {
