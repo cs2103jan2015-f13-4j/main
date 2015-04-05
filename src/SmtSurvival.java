@@ -191,8 +191,8 @@ public class SmtSurvival extends Composite {
 		tbtmMain.setToolTipText("This tab will show the all the tasks");
 	
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-		lblDisplay.setForeground(SWTResourceManager.
-				getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblDisplay.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		lblDisplay.setForeground(SWTResourceManager.getColor(0, 0, 0));
 		lblDisplay.setAlignment(SWT.CENTER);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		

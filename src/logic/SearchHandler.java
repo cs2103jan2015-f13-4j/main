@@ -63,7 +63,7 @@ public class SearchHandler {
 			return searchTaskID(searchList, smtData);
 		case TASKDESC:
 			return searchTaskDesc(smtData, searchList);
-		case DEADLINE:
+		case BY:
 			return searchTaskDate(searchList, smtData);
 		default:
 			return MessageList.MESSAGE_INVAILD_SEARCH;
