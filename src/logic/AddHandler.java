@@ -70,6 +70,9 @@ public class AddHandler {
 		int lastUnUsedIndex = loadLastUsedIndex(smtData);
 		indicMsg = new IndicatorMessagePair();
 
+		if(restrictOnlyUnqiueKeyWord(keyFieldsList)> 1){
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
 		newTask.setTaskId(lastUnUsedIndex);
 		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);
 		// field is here so no need to do in switch case
@@ -341,6 +344,21 @@ public class AddHandler {
 		}
 		return true;
 	}
+	
+	private static int restrictOnlyUnqiueKeyWord(Map<String, String> keyFieldsList){
+		int count = 0;
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			count++;
+		}
+		return count;
+	}
+	
 
 	/**
 	 * checkFromTimeToTimeBothValid method checks if the time from both sides
