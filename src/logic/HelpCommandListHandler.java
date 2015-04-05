@@ -1,7 +1,7 @@
 package logic;
 
 //import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import utility.CommandType;
 import utility.MessageList;
@@ -15,7 +15,7 @@ import utility.MessageList;
  */
 public class HelpCommandListHandler {
 
-	public static String getCommandHelp(HashMap<String, String> keyFieldsList) {
+	public static String getCommandHelp(Map<String, String> keyFieldsList) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
