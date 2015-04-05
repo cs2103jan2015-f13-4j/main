@@ -246,7 +246,7 @@ public class DisplayHandler {
 		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
 		
 		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
-			displayDataList.add(newData.getABlockedDateTime(i).toLocalDate());		
+			displayDataList.add(newData.getABlockedDateTime(i));		
 		}
 		
 		return new IndicatorMessagePair(true, "Success");
@@ -341,7 +341,7 @@ public class DisplayHandler {
 		String dataDetails = "";
 		
 		for (int i = 0; i < displayDataList.size(); i++) {
-			dataDetails += displayDataList.get(i).toString() +"\n";
+			dataDetails += displayDataList.get(i).toLocalDate().toString() +"\n";
 		}
 		return dataDetails;
 	}
