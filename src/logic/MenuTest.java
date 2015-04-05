@@ -19,8 +19,8 @@ public class MenuTest {
 	String fileNameLastUnusedIndex = "lastUnusedIndexTest.txt";
 
 	/* add sample tasks */
-	String task1 = "Add submit report by Mon";
-	String task2 = "Add attending meeting by Tue";
+	String task1 = "Add submit report by 18-06-2015";
+	String task2 = "Add attending meeting by 20-05-2015";
 	String task3 = "Add prepare a proposal by 14-05-2015";
 
 	/* add test */
@@ -29,7 +29,7 @@ public class MenuTest {
 	String addValidFromTimeToTimeTask = "Add attend meeting from 11am to 12pm by Fri";
 	String addInvalidTask = "Add submit report by when";
 	String addByandOnAtSameTask = "Add submit assignment by monday and report on tuesday";
-	
+
 	/* delete test */
 	String deleteValidTask = "Delete 1";
 	String deleteInvalidTask = "Delete a";
@@ -73,17 +73,16 @@ public class MenuTest {
 	String sortCompletedValid = "Sort Completed";
 	String sortPendingValid = "Sort Pending";
 	String sortPendingInvalid = "Sort StartDate";
-	
+
 	/* undo test */
 	String undoTaskValid = "undo";
 	String undoTaskInvalid = "und0";
-	
+
 	/* redo test */
-	
-	/* Block test*/
-	
-	/*Unblock test*/
-	
+
+	/* Block test */
+
+	/* Unblock test */
 
 	@Before
 	public void setUp() throws Exception {
@@ -105,28 +104,26 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test the adding new task
-	 * The output is : Task Added.
+	 * This is to test the adding new task The output is : Task Added.
 	 */
 	@Test
 	public void testAddNewTaskValid() {
 		expected = MessageList.MESSAGE_ADDED;
 		assertEquals(expected, controller.commandExecution(addValidTask));
 	}
-	
+
 	/**
-	 * This is to test the adding recurring task
-	 * The output is : Task Added.
+	 * This is to test the adding recurring task The output is : Task Added.
 	 */
 	@Test
 	public void testAddNewTaskWeeklyValid() {
 		expected = MessageList.MESSAGE_ADDED;
 		assertEquals(expected, controller.commandExecution(addValidWeeklyTask));
 	}
-	
+
 	/**
-	 * This is to test the adding new task for a specific time
-	 * The output is : Task Added.
+	 * This is to test the adding new task for a specific time The output is :
+	 * Task Added.
 	 */
 	@Test
 	public void testAddNewTaskFromTimeToTimeValid() {
@@ -134,30 +131,31 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(addValidFromTimeToTimeTask));
 	}
-	
+
 	/**
-	 * This is to test the adding of invalid task
-	 * The output is : Invalid argument for add command.
+	 * This is to test the adding of invalid task The output is : Invalid
+	 * argument for add command.
 	 */
 	@Test
 	public void testAddNewTaskInValid() {
 		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, controller.commandExecution(addInvalidTask));
 	}
-	
+
 	/**
-	 * This is to test the add by and on in a single task
-	 * The output is : Invalid argument for add command.
+	 * This is to test the add by and on in a single task The output is :
+	 * Invalid argument for add command.
 	 */
 	@Test
 	public void addByandOnAtSameTask() {
 		expected = "No deadline and weekly task should be happening at the same time.";
-		assertEquals(expected, controller.commandExecution(addByandOnAtSameTask));
+		assertEquals(expected,
+				controller.commandExecution(addByandOnAtSameTask));
 	}
-	
+
 	/**
-	 * This is to test delete task
-	 * The output is : deleted from defaultTaskList.txt:"Add submit report by Mon".
+	 * This is to test delete task The output is : deleted from
+	 * defaultTaskList.txt:"Add submit report by Mon".
 	 */
 	@Test
 	public void testDeleteTaskValid() {
@@ -170,8 +168,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test invalid delete task
-	 * The output is : Invalid delete arguments
+	 * This is to test invalid delete task The output is : Invalid delete
+	 * arguments
 	 */
 	@Test
 	public void testDeleteInValid() {
@@ -183,8 +181,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test delete task that do not exist
-	 * The output is : There is no file to be deleted
+	 * This is to test delete task that do not exist The output is : There is no
+	 * file to be deleted
 	 */
 	@Test
 	public void testDeleteTaskNotExist() {
@@ -193,8 +191,7 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test update task
-	 * The output is : Update successful.
+	 * This is to test update task The output is : Update successful.
 	 */
 	@Test
 	public void testUpdateValid() {
@@ -206,8 +203,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test update task to recurring
-	 * The output is : Update successful.
+	 * This is to test update task to recurring The output is : Update
+	 * successful.
 	 */
 	@Test
 	public void testUpdateWeeklyValid() {
@@ -218,10 +215,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateValidWeeklyTask));
 	}
-	
+
 	/**
-	 * This is to test update task for a specific time
-	 * The output is : Update successful.
+	 * This is to test update task for a specific time The output is : Update
+	 * successful.
 	 */
 	@Test
 	public void testUpdateFromTimeToTimeValid() {
@@ -232,10 +229,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateValidFromTimeToTimeTask));
 	}
-	
+
 	/**
-	 * This is to test update task that do not exist
-	 * The output is : MESSAGE_NO_SUCH_TASK
+	 * This is to test update task that do not exist The output is :
+	 * MESSAGE_NO_SUCH_TASK
 	 */
 
 	@Test
@@ -247,10 +244,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateInvalidNoSuchTask));
 	}
-	
+
 	/**
-	 * This is to test update Invalid time mismatch
-	 * The output is : Time mismatch.
+	 * This is to test update Invalid time mismatch The output is : Time
+	 * mismatch.
 	 */
 
 	@Test
@@ -262,10 +259,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateInvalidTimeMismatchTask));
 	}
-	
+
 	/**
-	 * This is to test update Invalid recurring task
-	 * The output is : Wrong date format for Weekly date
+	 * This is to test update Invalid recurring task The output is : Wrong date
+	 * format for Weekly date
 	 */
 	@Test
 	public void testUpdateInValidWeeklyTask() {
@@ -277,10 +274,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateInvalidWeeklyTask));
 	}
-	
+
 	/**
-	 * This is to test update Invalid task by description
-	 * The output is : Invalid argument for Update command.
+	 * This is to test update Invalid task by description The output is :
+	 * Invalid argument for Update command.
 	 */
 	@Test
 	public void testUpdateInValidDescTask() {
@@ -291,14 +288,15 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(updateInvalidDescTask));
 	}
-	
+
 	/**
-	 * This is to test search task by ID
-	 * The output is : Task ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending";
+	 * This is to test search task by ID The output is : Task ID:
+	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
+	 * Pending";
 	 */
 	@Test
 	public void testSearchTaskByIDValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending";
+		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -306,8 +304,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by Date
-	 * The output is : "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test search task by Date The output is :
+	 * "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
+	 * ;
 	 */
 	@Test
 	public void testSearchTaskByDateValid() {
@@ -317,23 +316,24 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(searchTaskByDate));
 	}
-	
+
 	/**
-	 * This is to test search task by Description
-	 * The output is : "\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n";
+	 * This is to test search task by Description The output is :
+	 * "\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n"
+	 * ;
 	 */
 	@Test
 	public void testSearchTaskDescValid() {
-		expected = "\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n";
+		expected = "\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(searchTaskByDesc));
 	}
-	
+
 	/**
-	 * This is to test search task by invalid ID
-	 * The output is : This is a invalid search.
+	 * This is to test search task by invalid ID The output is : This is a
+	 * invalid search.
 	 */
 	@Test
 	public void testSearchTaskByIDInvalid() {
@@ -344,10 +344,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByIncorrectDate));
 	}
-	
+
 	/**
-	 * This is to test search task by invalid Date
-	 * The output is : No Match Found
+	 * This is to test search task by invalid Date The output is : No Match
+	 * Found
 	 */
 	@Test
 	public void testSearchTaskByDateInvalid() {
@@ -358,10 +358,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByIncorrectID));
 	}
-	
+
 	/**
-	 * This is to test search task by invalid Description
-	 * The output is : No Match Found
+	 * This is to test search task by invalid Description The output is : No
+	 * Match Found
 	 */
 	@Test
 	public void testSearchTaskDescInvalid() {
@@ -372,10 +372,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByIncorrectID));
 	}
-	
+
 	/**
-	 * This is to test search task with negative index
-	 * The output is : This is a invalid search.
+	 * This is to test search task with negative index The output is : This is a
+	 * invalid search.
 	 */
 	@Test
 	public void testSearchTaskIDWithNegativeIndex() {
@@ -386,10 +386,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByNegativeIndex));
 	}
-	
+
 	/**
-	 * This is to test search task by description that do not exist
-	 * The output is : No Match Found
+	 * This is to test search task by description that do not exist The output
+	 * is : No Match Found
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
@@ -400,10 +400,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByNumberDesc));
 	}
-	
+
 	/**
-	 * This is to test search task by date with incorrect format
-	 * The output is : This is a invalid search.
+	 * This is to test search task by date with incorrect format The output is :
+	 * This is a invalid search.
 	 */
 	@Test
 	public void testSearchTaskByDatetIncorrectFormat() {
@@ -414,9 +414,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByDateIncorrectFormat));
 	}
+
 	/**
-	 * This is to test search task with past year
-	 * The output is : This is a invalid search.
+	 * This is to test search task with past year The output is : This is a
+	 * invalid search.
 	 */
 	@Test
 	public void testSearchTaskByDatePastYear() {
@@ -427,36 +428,39 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(searchTaskByDatePastYear));
 	}
-	
+
 	/**
-	 * This is to test display pending of task
-	 * The output is : \nTask ID: 1\nDescription: submit report\nDeadline: 18 
+	 * This is to test display pending of task The output is : \nTask ID:
+	 * 1\nDescription: submit report\nDeadline: 18
 	 */
 	@Test
 	public void testDisplayPendingValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(displayPendingValid));
 	}
-	
+
 	/**
-	 * This is to test display of schedule
-	 * The output is : \nTask ID: 1\nDescription: submit report\nDeadline: 6 April, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 7 April, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test display of schedule The output is : \nTask ID:
+	 * 1\nDescription: submit report\nDeadline: 6 April, 2015 (Mon)\nStatus:
+	 * Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 7 April,
+	 * 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a
+	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 	 */
 	@Test
 	public void testDisplayScheduleValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 6 April, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 7 April, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(displayPendingValid));
 	}
-	
+
 	/**
-	 * This is to test display Completed task
-	 * The output is : There is no task in the display list.
+	 * This is to test display Completed task The output is : There is no task
+	 * in the display list.
 	 */
 	@Test
 	public void testDisplayCompletedValid() {
@@ -464,12 +468,14 @@ public class MenuTest {
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
-		assertEquals(expected, controller.commandExecution(displayCompletedValid));
-		
+		assertEquals(expected,
+				controller.commandExecution(displayCompletedValid));
+
 	}
+
 	/**
-	 * This is to test display Today task
-	 * The output is : There is no task in the display list.
+	 * This is to test display Today task The output is : There is no task in
+	 * the display list.
 	 */
 	@Test
 	public void testDisplayTodayValid() {
@@ -479,10 +485,10 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(displayTodayValid));
 	}
-	
+
 	/**
-	 * This is to test display Invalid pending task
-	 * The output is : This is a invalid search.
+	 * This is to test display Invalid pending task The output is : This is a
+	 * invalid search.
 	 */
 	@Test
 	public void testDisplayPendingInvalid() {
@@ -490,12 +496,13 @@ public class MenuTest {
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
-		assertEquals(expected, controller.commandExecution(displayPendingInvalid));
+		assertEquals(expected,
+				controller.commandExecution(displayPendingInvalid));
 	}
-	
+
 	/**
-	 * This is to test display Invalid Schedule task
-	 * The output is : This is a invalid search.
+	 * This is to test display Invalid Schedule task The output is : This is a
+	 * invalid search.
 	 */
 	@Test
 	public void testDisplayScheduleInvalid() {
@@ -503,12 +510,13 @@ public class MenuTest {
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
-		assertEquals(expected, controller.commandExecution(displayPendingInvalid));
+		assertEquals(expected,
+				controller.commandExecution(displayPendingInvalid));
 	}
-	
+
 	/**
-	 * This is to test display Invalid Completed task
-	 * The output is : Invalid argument for Display command.
+	 * This is to test display Invalid Completed task The output is : Invalid
+	 * argument for Display command.
 	 */
 	@Test
 	public void testDisplayCompletedInvalid() {
@@ -516,13 +524,14 @@ public class MenuTest {
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
-		assertEquals(expected, controller.commandExecution(displayCompletedInvalid));
-		
+		assertEquals(expected,
+				controller.commandExecution(displayCompletedInvalid));
+
 	}
-	
+
 	/**
-	 * This is to test display Invalid Today task
-	 * The output is : Invalid argument for Display command.
+	 * This is to test display Invalid Today task The output is : Invalid
+	 * argument for Display command.
 	 */
 	@Test
 	public void testDisplayTodayInvalid() {
@@ -532,71 +541,80 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(displayTodayInvalid));
 	}
+
 	/**
-	 * This is to test sort task by description 
-	 * The output is : \nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n";
+	 * This is to test sort task by description The output is : \nTask ID:
+	 * 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus:
+	 * Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May,
+	 * 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: submit
+	 * report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n";
 	 */
-	
+
 	@Test
 	public void testSortDescValid() {
-		expected = "\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n";
+		expected = "\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortDescValid));
 	}
-	
+
 	/**
-	 * This is to test sort start date
-	 * \nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test sort start date \nTask ID: 1\nDescription: submit
+	 * report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID:
+	 * 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus:
+	 * Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May,
+	 * 2015 (Thu)\nStatus: Pending\n";
 	 */
-	
+
 	@Test
 	public void testSortStartDateValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortStartDateValid));
 	}
-	
+
 	/**
-	 * This is to test sort completed task
-	 * The output is :"\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test sort completed task The output is :
+	 * "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
+	 * ;
 	 */
 	@Test
 	public void testSortCompletedValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortCompletedValid));
 	}
-	
+
 	/**
-	 * This is to test sort pending task
-	 * The output is : "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test sort pending task The output is :
+	 * "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
+	 * ;
 	 */
 	@Test
 	public void testSortPendingValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortPendingValid));
 	}
-	//@Test
-	//public void testSortDeadlineValid() {
-		//expected = String.format(MessageList.MESSAGE_INVAILD);
-		//controller.commandExecution(task1);
-		//controller.commandExecution(task2);
-		//controller.commandExecution(task3);
-		//assertEquals(expected, controller.commandExecution(sortDeadLineValid));
-	//}
-	
+
+	@Test
+	public void testSortDeadlineValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n\nTask ID: 1\nDescription: submit report\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
+	}
+
 	/*
-	 * This is to test the valid undo
-	 * The output is :Undo operation done
+	 * This is to test the valid undo The output is :Undo operation done
 	 */
 	@Test
 	public void testUndoValid() {
@@ -606,9 +624,10 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskValid));
 	}
+
 	/*
-	 * This is to test the invalid undo
-	 * The output is : Please enter a vaild command.
+	 * This is to test the invalid undo The output is : Please enter a vaild
+	 * command.
 	 */
 	@Test
 	public void testUndoInvalid() {
@@ -618,5 +637,5 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
 	}
-	
+
 }
