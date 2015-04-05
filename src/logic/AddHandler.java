@@ -70,6 +70,9 @@ public class AddHandler {
 		int lastUnUsedIndex = loadLastUsedIndex(smtData);
 		indicMsg = new IndicatorMessagePair();
 
+		if(restrictOnlyUnqiueKeyWord(keyFieldsList)> 1){
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
 		newTask.setTaskId(lastUnUsedIndex);
 		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);
 		// field is here so no need to do in switch case
@@ -95,8 +98,9 @@ public class AddHandler {
 			getKey = KeywordType.getKeyword(key);
 			switch (getKey) {
 			case BY:
+			case ON:
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
-						keyFieldsList);
+						keyFieldsList, getKey);
 				break;
 
 			case EVERY:
@@ -146,14 +150,14 @@ public class AddHandler {
 	 * @return
 	 */
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
-			Map<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList, KeywordType.List_Keywords keyword) {
 
 		checkEmptyKeyFieldsList(keyFieldsList,
-				KeywordType.List_Keywords.BY.name(),
+				keyword.name(),
 				MessageList.MESSAGE_NO_DATE_GIVEN);
 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
-				.get(KeywordType.List_Keywords.BY.name()));
+				.get(keyword.name()));
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
@@ -340,6 +344,21 @@ public class AddHandler {
 		}
 		return true;
 	}
+	
+	private static int restrictOnlyUnqiueKeyWord(Map<String, String> keyFieldsList){
+		int count = 0;
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			count++;
+		}
+		return count;
+	}
+	
 
 	/**
 	 * checkFromTimeToTimeBothValid method checks if the time from both sides
