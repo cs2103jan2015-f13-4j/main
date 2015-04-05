@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import data.Data;
 import data.Task;
@@ -39,7 +39,7 @@ public class AddHandler {
 	 * @param smtData
 	 * @return
 	 */
-	public static String executeAdd(HashMap<String, String> keyFieldsList,
+	public static String executeAdd(Map<String, String> keyFieldsList,
 			Data smtData) {
 
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
@@ -61,7 +61,7 @@ public class AddHandler {
 	 * @param smtData
 	 * @return
 	 */
-	private static String addContents(HashMap<String, String> keyFieldsList,
+	private static String addContents(Map<String, String> keyFieldsList,
 			Data smtData) {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		KeywordType.List_Keywords getKey;
@@ -146,7 +146,7 @@ public class AddHandler {
 	 * @return
 	 */
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
-			HashMap<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList) {
 
 		checkEmptyKeyFieldsList(keyFieldsList,
 				KeywordType.List_Keywords.BY.name(),
@@ -171,7 +171,7 @@ public class AddHandler {
 	 * @return
 	 */
 	private static IndicatorMessagePair addRecurringWeek(Task newTask,
-			int index, HashMap<String, String> keyFieldsList) {
+			int index, Map<String, String> keyFieldsList) {
 		DateTime weeklyDate = DateTimeParser.generateDate(keyFieldsList
 				.get(KeywordType.List_Keywords.EVERY.name()));
 
@@ -213,7 +213,7 @@ public class AddHandler {
 	 * @return
 	 */
 	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
-			HashMap<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList) {
 		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
 				CommandType.Command_Types.ADD.name(),
 				String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
@@ -228,7 +228,7 @@ public class AddHandler {
 	}
 
 	private static IndicatorMessagePair checkEmptyKeyFieldsList(
-			HashMap<String, String> keyFieldsList, String keyWord,
+			Map<String, String> keyFieldsList, String keyWord,
 			String message) {
 		if (!keyFieldsList.containsKey(keyWord)) {
 			return new IndicatorMessagePair(false, message);
@@ -253,7 +253,7 @@ public class AddHandler {
 	 * @return IndicatorMessagePair which states whether the times can be update
 	 */
 	private static IndicatorMessagePair processBothTimes(
-			HashMap<String, String> keyFieldsList, Task newTask) {
+			Map<String, String> keyFieldsList, Task newTask) {
 
 		if (!checkFromTimeToTimeBothField(keyFieldsList)) {
 			return new IndicatorMessagePair(false,
@@ -311,7 +311,7 @@ public class AddHandler {
 	 * @return true if it contains, else false
 	 */
 	private static boolean checkFromTimeToTimeBothExist(
-			HashMap<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList) {
 		if (keyFieldsList.containsKey(KeywordType.List_Keywords.FROM.name())
 				&& keyFieldsList.containsKey(KeywordType.List_Keywords.TO
 						.name())) {
@@ -329,7 +329,7 @@ public class AddHandler {
 	 * @return true if both fields have some info, else false
 	 */
 	private static boolean checkFromTimeToTimeBothField(
-			HashMap<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList) {
 		if (keyFieldsList.get(KeywordType.List_Keywords.FROM.name()) != null
 				&& keyFieldsList.get(KeywordType.List_Keywords.FROM.name())
 						.isEmpty()

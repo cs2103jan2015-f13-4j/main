@@ -3,7 +3,8 @@ package logic;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -18,7 +19,7 @@ import data.Task;
 
 public class AddHandlerTest {
 
-	HashMap<String, String> keyFieldsTest;
+	Map<String, String> keyFieldsTest;
 	Data smtDataTest;
 	String fileName = "taskListTest.txt";
 	String lastUnUsedFileName = "lastUnUsedIndexTest.txt";
@@ -33,7 +34,7 @@ public class AddHandlerTest {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
 		FileStorage.setFileNameForLastUnusedIndex(lastUnUsedFileName);
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
 				new DateTime(year, month, day, hour, min), new DateTime(year,
 						month, day, hour + 23, min), ""));

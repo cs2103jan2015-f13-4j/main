@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -15,7 +15,7 @@ import utility.MessageList;
 public class BlockDateHandler {
 
 	public static String executeBlockOrUnblock(
-			HashMap<String, String> keyFieldsList, String keyCommand,
+			Map<String, String> keyFieldsList, String keyCommand,
 			Data smtData) {
 		IndicatorMessagePair indicMsg = checkIfCommandKeyExist(keyFieldsList,
 				keyCommand);
@@ -42,11 +42,19 @@ public class BlockDateHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+		
+		IndicatorMessagePair indicMsg_File = smtData.writeBlockedDateTimeListToFile();
+		
+		if(!indicMsg_File.isTrue()){
+			return indicMsg.getMessage();
+		}
+		CacheCommandsHandler.newHistory(smtData);
+		
 		return indicMsg.getMessage();
 	}
 
 	private static IndicatorMessagePair checkIfCommandKeyExist(
-			HashMap<String, String> keyFieldsList, String keyCommand) {
+			Map<String, String> keyFieldsList, String keyCommand) {
 
 		if (!keyFieldsList.containsKey(keyCommand)) {
 			return new IndicatorMessagePair(false,
@@ -60,7 +68,7 @@ public class BlockDateHandler {
 	}
 
 	private static IndicatorMessagePair checkBlockDate(
-			HashMap<String, String> keyFieldList, Data smtData) {
+			Map<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
 			if (keyFieldList == null || keyFieldList.isEmpty()) {
@@ -154,7 +162,7 @@ public class BlockDateHandler {
 	}
 
 	private static IndicatorMessagePair checkUnblockDate(
-			HashMap<String, String> keyFieldList, Data smtData) {
+			Map<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
 			if (keyFieldList == null || keyFieldList.isEmpty()) {
