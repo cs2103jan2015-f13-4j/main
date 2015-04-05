@@ -95,8 +95,9 @@ public class AddHandler {
 			getKey = KeywordType.getKeyword(key);
 			switch (getKey) {
 			case BY:
+			case ON:
 				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
-						keyFieldsList);
+						keyFieldsList, getKey);
 				break;
 
 			case EVERY:
@@ -146,14 +147,14 @@ public class AddHandler {
 	 * @return
 	 */
 	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
-			Map<String, String> keyFieldsList) {
+			Map<String, String> keyFieldsList, KeywordType.List_Keywords keyword) {
 
 		checkEmptyKeyFieldsList(keyFieldsList,
-				KeywordType.List_Keywords.BY.name(),
+				keyword.name(),
 				MessageList.MESSAGE_NO_DATE_GIVEN);
 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
-				.get(KeywordType.List_Keywords.BY.name()));
+				.get(keyword.name()));
 		if (endDate == null) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
