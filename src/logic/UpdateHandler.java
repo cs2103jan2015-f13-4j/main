@@ -73,7 +73,7 @@ public class UpdateHandler {
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
 		
-		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+		if(restrictOnlyUnqiueKeyWord(keyFieldsList) > 1){
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
 		
@@ -424,6 +424,20 @@ public class UpdateHandler {
 		}
 		
 		return existingDateTime;
+	}
+	
+	private static int restrictOnlyUnqiueKeyWord(Map<String, String> keyFieldsList){
+		int count = 0;
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			count++;
+		}
+		return count;
 	}
 	
 	/**
