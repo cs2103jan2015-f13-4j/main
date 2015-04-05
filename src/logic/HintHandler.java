@@ -4,6 +4,12 @@ import utility.CommandType.Command_Types;
 import utility.MessageList;
 import utility.CommandType;
 
+/**
+ * This class is doing the hint operation, which act as the command assistance to the user.
+ * @author SHUNA
+ *
+ */
+
 public class HintHandler {
 
 	/**
