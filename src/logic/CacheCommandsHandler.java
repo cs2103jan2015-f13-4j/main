@@ -57,13 +57,11 @@ public class CacheCommandsHandler {
 	 */
 	private static String updateTaskList(Data smtData) {
 
-		ArrayList<Task> newTaskList = new ArrayList<Task>();
-
-		if (isStackContainsOneItem()) {
-			smtData.setListTask(newTaskList);
-		} else {
-			smtData.setListTask(current.peek().getListTask());
+		if(current.isEmpty()){
+			return MessageList.MESSAGE_ERROR;
 		}
+			
+		smtData.setListTask(current.peek().getListTask());
 
 		// this will call updateLastUnUsedIndex to update the last unused index
 		updateLastUnUsedIndex(smtData);
