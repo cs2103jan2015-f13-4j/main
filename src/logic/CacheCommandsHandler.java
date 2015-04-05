@@ -63,9 +63,10 @@ public class CacheCommandsHandler {
 			
 		smtData.setListTask(current.peek().getListTask());
 
-		// this will call updateLastUnUsedIndex to update the last unused index
+		// this will call updateLastUnUsedIndex and updatedBlockedOutDates to update the last unused index and the dates blocked
 		updateLastUnUsedIndex(smtData);
-
+		updatedBlockedOutDates(smtData);
+		
 		// write to file the updated task list to file
 		IndicatorMessagePair indicMsg = smtData.writeTaskListToFile();
 
@@ -82,18 +83,10 @@ public class CacheCommandsHandler {
 	 */
 	private static void updateLastUnUsedIndex(Data smtData) {
 
-		int resetIndex = 1;
 		Data prevIndex;
 
-		if (isStackContainsOneItem()) {
-			smtData.setLastUnUsedIndex(resetIndex);
-		} else {
-			prevIndex = current.peek();
-
-			for (int i = 0; i < prevIndex.getSize(); i++) {
-				smtData.setLastUnUsedIndex(prevIndex.getLastUnUsedIndex());
-			}
-		}
+		prevIndex = current.peek();
+		smtData.setLastUnUsedIndex(prevIndex.getLastUnUsedIndex());
 
 		// write to file the updated last unused index to file
 		IndicatorMessagePair indicIndex = smtData.writeLastUnUsedIndexToFile();
@@ -101,6 +94,12 @@ public class CacheCommandsHandler {
 		if (!indicIndex.isTrue()) {
 			indicIndex.getMessage();
 		}
+	}
+	
+	private static void updatedBlockedOutDates(Data smtData){
+		
+		smtData.setBlockedDateTimeList(current.peek().getBlockedDateTimeList());
+		
 	}
 
 	/**
