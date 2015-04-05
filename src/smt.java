@@ -136,7 +136,6 @@ public class smt extends Composite {
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
 
-
 		lblCompleted = new Label(composite, SWT.NONE);
 		lblCompleted.setText("This page is for Completed Tasks");
 
