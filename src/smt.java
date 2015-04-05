@@ -1,8 +1,10 @@
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.custom.CTabFolder;
@@ -57,6 +59,12 @@ public class smt extends Composite {
 		super(parent, style);
 		setBackground(SWTResourceManager.getColor(173, 216, 230));
 
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				toolkit.dispose();
+			}
+		});
+		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		tabFolder.setBounds(10, 10, 435, 452);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
@@ -93,7 +101,7 @@ public class smt extends Composite {
 		composite = new Composite(scSchedule, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
-
+		
 		lblSchedule = new Label(composite, SWT.NONE);
 		lblSchedule.setText("This page is for Schedule Tasks");
 
@@ -122,12 +130,12 @@ public class smt extends Composite {
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
 		tabCompleted.setText("Completed");
 
-		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
-				| SWT.V_SCROLL);
+		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER| SWT.V_SCROLL);
 		tabCompleted.setControl(scCompleted);
 		composite = new Composite(scCompleted, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
+
 
 		lblCompleted = new Label(composite, SWT.NONE);
 		lblCompleted.setText("This page is for Completed Tasks");
@@ -164,7 +172,7 @@ public class smt extends Composite {
 		composite.setSize(435, 452);
 
 		lblBlocked = new Label(composite, SWT.NONE);
-		lblBlocked.setText("This page is for Bocked Tasks");
+		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
 		scBlocked.setExpandVertical(true);
