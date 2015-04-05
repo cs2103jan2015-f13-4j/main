@@ -1,6 +1,6 @@
 package logic;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -17,14 +17,14 @@ import data.Task;
 
 public class DisplayHandler {
 	
-	public static String executeDisplay(HashMap<String, String> keyFieldsList, Data smtData) {
+	public static String executeDisplay(Map<String, String> keyFieldsList, Data smtData) {
 		
 		checkForValidData(keyFieldsList, smtData);
 		
 		return displayContents(keyFieldsList, smtData);	
 	}
 	
-	private static String displayContents(HashMap<String, String> keyFieldsList, Data smtData) {
+	private static String displayContents(Map<String, String> keyFieldsList, Data smtData) {
 		
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
@@ -110,7 +110,7 @@ public class DisplayHandler {
 		return displayTaskDetails(displayTasksList);
 	}
 	
-	private static IndicatorMessagePair displaySchedule(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displaySchedule(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.ALL.name());
 		
@@ -120,7 +120,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayCompletedTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
 		
@@ -129,7 +129,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayNotCompletedTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayNotCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
 		
@@ -138,7 +138,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayTodayTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayTodayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TODAY.name());
 		
@@ -149,7 +149,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayTomorrowTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayTomorrowTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TOMORROW.name());
 	
@@ -160,7 +160,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayYesterdayTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayYesterdayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.YESTERDAY.name());
 	
@@ -171,7 +171,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displaySpecificDayTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList, String day, int dayValue) {
+	private static IndicatorMessagePair displaySpecificDayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList, String day, int dayValue) {
 
 		checkInvalidArgument(keyFieldsList, day);
 		
@@ -180,7 +180,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayThisWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayThisWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
@@ -197,7 +197,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayLastWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayLastWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
@@ -215,7 +215,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayNextWeekTasks(HashMap<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair displayNextWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
@@ -282,7 +282,7 @@ public class DisplayHandler {
 		return displayTasksList;
 	}
 
-	private static String checkForValidData(HashMap<String, String> keyFieldsList, Data smtData) {
+	private static String checkForValidData(Map<String, String> keyFieldsList, Data smtData) {
 		int numItemExpected = 1;
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
@@ -300,7 +300,7 @@ public class DisplayHandler {
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}
 	
-	private static IndicatorMessagePair checkInvalidArgument(HashMap<String, String> keyFieldsList, String keyWord) {
+	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
 		if(keyFieldsList.get(keyWord) != null) {
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
 		}

@@ -2,7 +2,8 @@ package logic;
 import static org.junit.Assert.*;
 
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -16,7 +17,7 @@ import data.Task;
 
 public class DisplayHandlerTest {
 
-	HashMap<String, String> keyFieldsTest;
+	Map<String, String> keyFieldsTest;
 	Data smtDataTest;
 	String fileName = "taskList.txt";
 	
@@ -28,7 +29,7 @@ public class DisplayHandlerTest {
 		FileStorage.setFileNameForTasksList(fileName);
 		DateTime startDate = DateTimeParser.generateDate("27/8/2015");
 		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>();
 
 		smtDataTest.addATaskToList(new Task(1, "CE1", startDate, endDate, true, ""));
 		smtDataTest.addATaskToList(new Task(2, "CE2", startDate, endDate, true, ""));
