@@ -11,7 +11,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -89,7 +88,7 @@ public class smt extends Composite {
 		tabSchedule.setText("Schedule");
 
 		scSchedule = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabSchedule.setControl(scSchedule);
+		//tabSchedule.setControl(scSchedule);
 		composite = new Composite(scSchedule, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
@@ -106,7 +105,7 @@ public class smt extends Composite {
 		tabToday.setText("Today");
 
 		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabToday.setControl(scToday);
+		//tabToday.setControl(scToday);
 		composite = new Composite(scToday, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
@@ -124,7 +123,7 @@ public class smt extends Composite {
 
 		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
 				| SWT.V_SCROLL);
-		tabCompleted.setControl(scCompleted);
+		//tabCompleted.setControl(scCompleted);
 		composite = new Composite(scCompleted, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
@@ -141,7 +140,7 @@ public class smt extends Composite {
 		tabPending.setText("Pending");
 
 		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabPending.setControl(scPending);
+		//tabPending.setControl(scPending);
 		composite = new Composite(scPending, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
@@ -158,7 +157,7 @@ public class smt extends Composite {
 		tabBlocked.setText("Blocked");
 
 		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabBlocked.setControl(scBlocked);
+		//tabBlocked.setControl(scBlocked);
 		composite = new Composite(scBlocked, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
@@ -212,8 +211,12 @@ public class smt extends Composite {
 	
 	private void tabControl(SelectionEvent event){
 		if(tabFolder.getSelectionIndex() == 0){
-			tabMain.setControl(lblMain);
+			tabMain.setControl(scMain);
 			lblMain.setText("");
+		}
+		
+		if(tabFolder.getSelection() == tabMain){
+			
 		}
 	}
 
@@ -230,6 +233,9 @@ public class smt extends Composite {
 
 		shell.setLocation(x, y);
 		shell.open();
+		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
+		Smt.pack();
+		shell.pack();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
