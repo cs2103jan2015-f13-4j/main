@@ -1,5 +1,6 @@
 package logic;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -28,6 +29,7 @@ public class DisplayHandler {
 		
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
+		ArrayList<Data> displayDataList = new ArrayList<Data>();
 		
 		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
 		
@@ -94,6 +96,14 @@ public class DisplayHandler {
 			case "NEXTWEEK":
 			case "NEXTWK":
 				indicMsg = displayNextWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "BLOCK":
+				indicMsg = displayBlockTasks(keyFieldsList, smtData, displayDataList);
+				return displayDataDetails(displayDataList);
+				break;
+			case "UNBLOCK":
+				indicMsg = displayUnBlockTasks(keyFieldsList, smtData, displayDataList);
+				return displayDataDetails(displayDataList);
 				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
@@ -233,6 +243,34 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	private static IndicatorMessagePair displayBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayDataList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
+		
+		Data newData = new Data();
+		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
+		
+		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
+			displayDataDetails.add(newData.getABlockedDateTime(i));		
+		}
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	private static IndicatorMessagePair displayUnBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayDataList) {
+		
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
+		
+		Data newData = new Data();
+		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
+		
+		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
+			displayDataDetails.add(newData.getABlockedDateTime(i));		
+		}
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
 	private static DateTime generateTodayDate() {
 		LocalDate date = new LocalDate();
 		DateTime endDate = DateTimeParser.generateDate(date.toString());
@@ -309,9 +347,21 @@ public class DisplayHandler {
 	
 	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
 		String taskDetails = "";
+		
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		
 		for (int i = 0; i < displayTasksList.size(); i++) {
 			taskDetails += displayTasksList.get(i).toString() +"\n";
 		}
 		return taskDetails;
+	}
+	
+	private static String displayDataDetails(ArrayList<Data> displayDataList) {
+		String dataDetails = "";
+		
+		for (int i = 0; i < displayDataList.size(); i++) {
+			dataDetails += displayDataList.get(i).toString() +"\n";
+		}
+		return dataDetails;
 	}
 }
