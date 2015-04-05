@@ -29,7 +29,7 @@ public class DisplayHandler {
 		
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
-		ArrayList<Data> displayDataList = new ArrayList<Data>();
+		ArrayList<DateTime> displayDataList = new ArrayList<DateTime>();
 		
 		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
 		
@@ -99,10 +99,6 @@ public class DisplayHandler {
 				break;
 			case "BLOCK":
 				indicMsg = displayBlockTasks(keyFieldsList, smtData, displayDataList);
-				return displayDataDetails(displayDataList);
-				break;
-			case "UNBLOCK":
-				indicMsg = displayUnBlockTasks(keyFieldsList, smtData, displayDataList);
 				return displayDataDetails(displayDataList);
 				break;
 			default:
@@ -243,7 +239,7 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair displayBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayDataList) {
+	private static IndicatorMessagePair displayBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<DateTime> displayDataList) {
 		
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
 		
@@ -251,21 +247,7 @@ public class DisplayHandler {
 		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
 		
 		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
-			displayDataDetails.add(newData.getABlockedDateTime(i));		
-		}
-		
-		return new IndicatorMessagePair(true, "Success");
-	}
-	
-	private static IndicatorMessagePair displayUnBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayDataList) {
-		
-		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
-		
-		Data newData = new Data();
-		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
-		
-		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
-			displayDataDetails.add(newData.getABlockedDateTime(i));		
+			displayDataList.add(newData.getABlockedDateTime(i));		
 		}
 		
 		return new IndicatorMessagePair(true, "Success");
@@ -356,7 +338,7 @@ public class DisplayHandler {
 		return taskDetails;
 	}
 	
-	private static String displayDataDetails(ArrayList<Data> displayDataList) {
+	private static String displayDataDetails(ArrayList<DateTime> displayDataList) {
 		String dataDetails = "";
 		
 		for (int i = 0; i < displayDataList.size(); i++) {
