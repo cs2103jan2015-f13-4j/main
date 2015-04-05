@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -15,8 +15,7 @@ import utility.MessageList;
 public class BlockDateHandler {
 
 	public static String executeBlockOrUnblock(
-			HashMap<String, String> keyFieldsList, String keyCommand,
-			Data smtData) {
+			Map<String, String> keyFieldsList, String keyCommand, Data smtData) {
 		IndicatorMessagePair indicMsg = checkIfCommandKeyExist(keyFieldsList,
 				keyCommand);
 
@@ -42,11 +41,20 @@ public class BlockDateHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+
+		IndicatorMessagePair indicMsg_File = smtData
+				.writeBlockedDateTimeListToFile();
+
+		if (!indicMsg_File.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		CacheCommandsHandler.newHistory(smtData);
+
 		return indicMsg.getMessage();
 	}
 
 	private static IndicatorMessagePair checkIfCommandKeyExist(
-			HashMap<String, String> keyFieldsList, String keyCommand) {
+			Map<String, String> keyFieldsList, String keyCommand) {
 
 		if (!keyFieldsList.containsKey(keyCommand)) {
 			return new IndicatorMessagePair(false,
@@ -60,7 +68,7 @@ public class BlockDateHandler {
 	}
 
 	private static IndicatorMessagePair checkBlockDate(
-			HashMap<String, String> keyFieldList, Data smtData) {
+			Map<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
 			if (keyFieldList == null || keyFieldList.isEmpty()) {
@@ -112,12 +120,10 @@ public class BlockDateHandler {
 		}
 
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
-		for (LocalDate date = startDate.toLocalDate(); date.isBefore(endDate
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate.plusDays(1))
 				.toLocalDate()); date = date.plusDays(1)) {
-			indicMsg = blockOneDate(date.toString(), smtData);
-			if (!indicMsg.isTrue()) {
-				return indicMsg;
-			}
+			blockOneDate(date.toString(), smtData);
+
 		}
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_BLOCKED);
 	}
@@ -135,11 +141,13 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
 
-		if (!checkIfBlockDateExist(endDate, smtData)) {
-			smtData.addBlockedDateTime(endDate);
+		if (checkIfBlockDateExist(endDate, smtData)) {
+			// change msgto date exist inside blocklist
+			return new IndicatorMessagePair(false, "This date already exist");
 		}
+		smtData.addBlockedDateTime(endDate);
 		return new IndicatorMessagePair(true,
-				String.format(MessageList.MESSAGE_BLOCKED)); 
+				String.format(MessageList.MESSAGE_BLOCKED));
 	}
 
 	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
@@ -154,7 +162,7 @@ public class BlockDateHandler {
 	}
 
 	private static IndicatorMessagePair checkUnblockDate(
-			HashMap<String, String> keyFieldList, Data smtData) {
+			Map<String, String> keyFieldList, Data smtData) {
 
 		if (keyFieldList == null || keyFieldList.isEmpty())
 			if (keyFieldList == null || keyFieldList.isEmpty()) {
@@ -202,12 +210,9 @@ public class BlockDateHandler {
 		}
 
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
-		for (LocalDate date = startDate.toLocalDate(); date.isBefore(endDate
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate.plusDays(1))
 				.toLocalDate()); date = date.plusDays(1)) {
-			indicMsg = blockOneDate(date.toString(), smtData);
-			if (!indicMsg.isTrue()) {
-				return indicMsg;
-			}
+			unblockOneDate(date.toString(), smtData);
 		}
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_UNBLOCKED);
 
@@ -226,8 +231,25 @@ public class BlockDateHandler {
 		}
 
 		if (!checkIfBlockDateExist(endDate, smtData)) {
-			smtData.addBlockedDateTime(endDate);
+			// return this date is not inside the block list
+			return new IndicatorMessagePair(false,
+					"This date is not inside the block list");
 		}
+		int i;
+
+		for (i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
+				break;
+			}
+		}
+
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		smtData.removeBlockedDateTime(i, msgPair);
+		if (!msgPair.isTrue()) {
+			return msgPair;
+		}
+
 		return new IndicatorMessagePair(true,
 				String.format(MessageList.MESSAGE_UNBLOCKED));
 	}

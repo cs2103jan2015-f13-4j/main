@@ -1,9 +1,8 @@
 package parser;
 import static org.junit.Assert.*;
 
-
-
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,11 +11,11 @@ import org.junit.Test;
 
 public class CommandStringParserTest {
 
-	HashMap<String, String> keyFieldsTest;
+	Map<String, String> keyFieldsTest;
 	
 	@Before
 	public void setUp(){
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 	}
 
 	@After

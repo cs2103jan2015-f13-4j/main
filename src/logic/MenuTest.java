@@ -28,7 +28,8 @@ public class MenuTest {
 	String addValidWeeklyTask = "Add submit report every Fri";
 	String addValidFromTimeToTimeTask = "Add attend meeting from 11am to 12pm by Fri";
 	String addInvalidTask = "Add submit report by when";
-
+	String addByandOnAtSameTask = "Add submit assignment by monday and report on tuesday";
+	
 	/* delete test */
 	String deleteValidTask = "Delete 1";
 	String deleteInvalidTask = "Delete a";
@@ -142,6 +143,16 @@ public class MenuTest {
 	public void testAddNewTaskInValid() {
 		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add");
 		assertEquals(expected, controller.commandExecution(addInvalidTask));
+	}
+	
+	/**
+	 * This is to test the add by and on in a single task
+	 * The output is : Invalid argument for add command.
+	 */
+	@Test
+	public void addByandOnAtSameTask() {
+		expected = "No deadline and weekly task should be happening at the same time.";
+		assertEquals(expected, controller.commandExecution(addByandOnAtSameTask));
 	}
 	
 	/**

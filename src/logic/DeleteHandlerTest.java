@@ -2,7 +2,7 @@ package logic;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -14,19 +14,24 @@ import utility.MessageList;
 import data.Data;
 import data.Task;
 
+/**
+ * This class is the junit testing for the delete operation
+ * @author SHUNA
+ *
+ */
 
 public class DeleteHandlerTest {
 
 	String fileName = "testfile.txt";
 	Data smtDataTest;
-	HashMap<String, String> keyFieldsTest;
+	TreeMap<String, String> keyFieldsTest;
 	ArrayList<Task> taskList;
 	
 	@Before
 	public void setUp() {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>();
 		taskList = new ArrayList<Task>();
 	}
 

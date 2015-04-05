@@ -1,7 +1,8 @@
 package logic;
 
 
-import java.util.HashMap;
+
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ public class UpdateHandler {
 	 * @param smtData contains the whole information including the task list
 	 * @return message
 	 */
-	public static String executeUpdate(HashMap<String, String> keyFieldsList, Data smtData){
+	public static String executeUpdate(Map<String, String> keyFieldsList, Data smtData){
 		int minTaskListSize = 0;
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()){
@@ -67,12 +68,12 @@ public class UpdateHandler {
 	 * @param smtData contains the whole information including the task list
 	 * @return message
 	 */
-	private static String updateContents(HashMap<String, String> keyFieldsList, int index, Data smtData){
+	private static String updateContents(Map<String, String> keyFieldsList, int index, Data smtData){
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
 		
-		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+		if(restrictOnlyUnqiueKeyWord(keyFieldsList) > 1){
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
 		
@@ -89,6 +90,7 @@ public class UpdateHandler {
 			getKey = KeywordType.getKeyword(key);
 			switch(getKey){
 			case BY:
+			case ON:
 				indicMsg = updateTaskByOrEndWhen(smtData, index, keyFieldsList.get(key));
 				break;
 			case TASKDESC:
@@ -315,7 +317,7 @@ public class UpdateHandler {
 	 * @param smtData the data object which contains the whole data
 	 * @return IndicatorMessagePair which states whether the times can be update
 	 */
-	private static IndicatorMessagePair processBothTimes(HashMap<String, String> keyFieldsList, int index, Data smtData){
+	private static IndicatorMessagePair processBothTimes(Map<String, String> keyFieldsList, int index, Data smtData){
 		
 		if(!checkFromTimeToTimeBothField(keyFieldsList)){
 			return new IndicatorMessagePair(false, "Time is not entered correctly");
@@ -362,7 +364,7 @@ public class UpdateHandler {
 	 * @param keyFieldsList the command input 
 	 * @return true if it contains, else false
 	 */
-	private static boolean checkFromTimeToTimeBothExist(HashMap<String, String> keyFieldsList){
+	private static boolean checkFromTimeToTimeBothExist(Map<String, String> keyFieldsList){
 		if(keyFieldsList.containsKey(KeywordType.List_Keywords.FROM.name()) && keyFieldsList.containsKey(KeywordType.List_Keywords.TO.name())){
 			return true;
 		}
@@ -374,7 +376,7 @@ public class UpdateHandler {
 	 * @param keyFieldsList the command input
 	 * @return true if both fields have some info, else false
 	 */
-	private static boolean checkFromTimeToTimeBothField(HashMap<String, String> keyFieldsList){
+	private static boolean checkFromTimeToTimeBothField(Map<String, String> keyFieldsList){
 		if(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()) != null && keyFieldsList.get(KeywordType.List_Keywords.FROM.name()).isEmpty() && keyFieldsList.get(KeywordType.List_Keywords.TO.name()) != null && keyFieldsList.get(KeywordType.List_Keywords.TO.name()).isEmpty()){
 			return false;
 		}
@@ -422,6 +424,20 @@ public class UpdateHandler {
 		}
 		
 		return existingDateTime;
+	}
+	
+	private static int restrictOnlyUnqiueKeyWord(Map<String, String> keyFieldsList){
+		int count = 0;
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())){
+			count++;
+		}
+		if(keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+			count++;
+		}
+		return count;
 	}
 	
 	/**

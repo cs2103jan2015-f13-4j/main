@@ -21,6 +21,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import utility.IndicatorMessagePair;
 import utility.MessageList;
+import logic.CommandEnteredHistoryHandler;
 import logic.Menu;
 import org.eclipse.swt.widgets.Slider;
 
@@ -190,8 +191,8 @@ public class SmtSurvival extends Composite {
 		tbtmMain.setToolTipText("This tab will show the all the tasks");
 	
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-		lblDisplay.setForeground(SWTResourceManager.
-				getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		lblDisplay.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		lblDisplay.setForeground(SWTResourceManager.getColor(0, 0, 0));
 		lblDisplay.setAlignment(SWT.CENTER);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		
@@ -272,6 +273,10 @@ public class SmtSurvival extends Composite {
 			public void keyReleased(KeyEvent e) {
 				passControl(e);
 			}
+			
+			public void keyPressed(KeyEvent e) {
+				loadCommandHistory(e);
+			}
 		});
 
 		cmdTxtBox.setBounds(100, 10, 319, 63);
@@ -289,6 +294,7 @@ public class SmtSurvival extends Composite {
 		String output = new String();
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 		if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
+			CommandEnteredHistoryHandler.newCommandEntered(cmdTxtBox.getText());
 			output = controller.commandExecution(cmdTxtBox.getText());
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
@@ -299,7 +305,7 @@ public class SmtSurvival extends Composite {
 			output = controller.getHint(cmdTxtBox.getText());
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
-			lblDisplay.setText(output);
+			lblDisplay.setText(output); 
 		}
 	}
 
@@ -327,6 +333,15 @@ public class SmtSurvival extends Composite {
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmPending)) {
 			tbtmPending.setControl(lblDisplay);
 			lblDisplay.setText(controller.commandExecution("display pending"));
+		}
+	}
+	
+	private void loadCommandHistory(KeyEvent e) {
+		if(e.keyCode == SWT.ARROW_UP) {
+			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+		}
+		else if(e.keyCode == SWT.ARROW_DOWN) {
+			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package parser;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import utility.CommandType;
 import utility.KeywordType;
@@ -19,7 +19,7 @@ public class CommandStringParser {
 	 * @param keyFieldsList a list of keys and fields and will be referenced back to the caller
 	 * @return Command Type
 	 */
-	public static CommandType.Command_Types processString(String input, HashMap<String, String> keyFieldsList){
+	public static CommandType.Command_Types processString(String input, Map<String, String> keyFieldsList){
 		if(input == null || input.equals("")){
 			return CommandType.Command_Types.INVALID;
 		}
@@ -46,7 +46,7 @@ public class CommandStringParser {
 	 * @param keyFieldsList a list of key and fields
 	 * @param inputCmd the blocks of word
 	 */
-	private static void generateKeyFieldPair(HashMap<String, String> keyFieldsList,
+	private static void generateKeyFieldPair(Map<String, String> keyFieldsList,
 			String[] inputCmd, CommandType.Command_Types command) {
 		String key = command.name();
 		String eachWord = new String();

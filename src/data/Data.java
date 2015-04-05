@@ -186,6 +186,14 @@ public class Data {
 		return removedTask;
 	}
 	
+	public DateTime getABlockedDateTime(int index){
+		if(index >= blockedDateTimeList.size() || index < 0){
+			return null;
+		}
+		return blockedDateTimeList.get(index);
+		
+	}
+	
 	/**
 	 * checkForValidIndex method checks for the index given is within the range of the task list
 	 * @param index an index to check

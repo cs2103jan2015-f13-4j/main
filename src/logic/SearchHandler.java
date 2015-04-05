@@ -1,7 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
@@ -26,7 +26,7 @@ public class SearchHandler {
 	 * @param listTask
 	 * @return
 	 */
-	public static String executeSearch(HashMap<String, String> keyFieldsList,
+	public static String executeSearch(Map<String, String> keyFieldsList,
 			Data smtData) {
 
 		checkForValidData(keyFieldsList, smtData);
@@ -43,7 +43,7 @@ public class SearchHandler {
 	 * @return
 	 */
 	private static String searchTask(Data smtData,
-			HashMap<String, String> searchCriteria) {
+			Map<String, String> searchCriteria) {
 		
 		if(!searchCriteria.containsKey(CommandType.Command_Types.SEARCH.name())){
 			return MessageList.MESSAGE_INVAILD_SEARCH;
@@ -63,7 +63,7 @@ public class SearchHandler {
 			return searchTaskID(searchList, smtData);
 		case TASKDESC:
 			return searchTaskDesc(smtData, searchList);
-		case DEADLINE:
+		case BY:
 			return searchTaskDate(searchList, smtData);
 		default:
 			return MessageList.MESSAGE_INVAILD_SEARCH;
@@ -194,7 +194,7 @@ public class SearchHandler {
 	}
 
 	private static String checkForValidData(
-			HashMap<String, String> keyFieldsList, Data smtData) {
+			Map<String, String> keyFieldsList, Data smtData) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}

@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import parser.CommandStringParser;
 import utility.CommandType;
@@ -24,7 +26,7 @@ public class Menu {
 	}
 
 	public String commandExecution(String input) {
-		HashMap<String, String> keyFieldsList = new HashMap<String, String>();
+		Map<String, String> keyFieldsList = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 		CommandType.Command_Types cmd = CommandStringParser.processString(
 				input, keyFieldsList);
 
@@ -83,7 +85,9 @@ public class Menu {
 	}
 
 	public IndicatorMessagePair setUp() {
-		return smtData.loadEveryThingFromFile();
+		IndicatorMessagePair indicMsg = smtData.loadEveryThingFromFile();
+		CacheCommandsHandler.newHistory(smtData);
+		return indicMsg;
 	}
 
 	public String getHint(String userCmd) {

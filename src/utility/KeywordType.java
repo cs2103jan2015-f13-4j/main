@@ -3,7 +3,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, TO, BY, ID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, DEADLINE, TASKID
+		FROM, TO, BY, ID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, TASKID, ON
 	}
 	
 	public enum List_SearchKeywords{
@@ -43,6 +43,8 @@ public class KeywordType {
 			return List_Keywords.COMPLETE;
 		case "incomplete":
 			return List_Keywords.INCOMPLETE;
+		case "on":
+			return List_Keywords.ON;
 		default:
 			return List_Keywords.FIELD;
 		}
@@ -60,7 +62,7 @@ public class KeywordType {
 		case "2":
 			return List_Keywords.TASKDESC;
 		case "3":
-			return List_Keywords.DEADLINE;
+			return List_Keywords.BY;
 		default:
 			return List_Keywords.FIELD;
 		}
