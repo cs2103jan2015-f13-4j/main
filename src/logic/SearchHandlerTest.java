@@ -2,7 +2,8 @@ package logic;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -14,7 +15,7 @@ import data.Data;
 import data.Task;
 
 public class SearchHandlerTest {
-	HashMap<String, String> keyFieldsTest;
+	Map<String, String> keyFieldsTest;
 	Data smtDataTest;
 	String fileName = "listTaskTest.txt";
 
@@ -26,7 +27,7 @@ public class SearchHandlerTest {
 		int hour = 0;
 		int min = 0;
 		smtDataTest = new Data();
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
 				new DateTime(year, month, day, hour, min), new DateTime(year,
 						month, day, hour + 23, min), ""));
