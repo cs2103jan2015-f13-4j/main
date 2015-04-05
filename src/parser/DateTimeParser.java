@@ -10,7 +10,7 @@ public class DateTimeParser {
 	
 	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
 	private static String[] timeFormatList = {"ha", "h a", "h.ma", "h.m a"};
-	private static String[] dayFormatList = {"today", "tomorrow", "monday", "mon", "tuesday", "tue", "wednesday", "wed", "thursday", "thur", "friday", "fri", "saturday", "sat", "sunday", "sun"};
+	private static String[] dayFormatList = {"today", "tomorrow", "monday", "mon", "tuesday", "tue", "wednesday", "wed", "thursday", "thu", "friday", "fri", "saturday", "sat", "sunday", "sun"};
 	private static String standardDateFormat = "d MMMM, yyyy (E)";
 	private static String standardTimeFormat = "h.mm a";
 	
@@ -20,6 +20,7 @@ public class DateTimeParser {
 	
 	public static DateTime generateDate(String dateValue) {
 		
+		convertedDate = new DateTime();
 		String checkDateFormatStatus = "";
 		checkDateFormatStatus = checkDateFormat(dateValue);
 		
