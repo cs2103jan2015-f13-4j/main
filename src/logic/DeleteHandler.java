@@ -1,8 +1,9 @@
 package logic;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
 import storage.FileStorage;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
@@ -10,6 +11,12 @@ import utility.MessageList;
 import utility.TaskLogging;
 import data.Data;
 import data.Task;
+
+/**
+ * This class is doing the delete operation
+ * @author SHUNA
+ *
+ */
 
 public class DeleteHandler {
 
@@ -25,7 +32,7 @@ public class DeleteHandler {
 		return true;
 	}
 	
-	public static String executeDelete(HashMap<String, String> keyFieldsList, Data smtData) {
+	public static String executeDelete(Map<String, String> keyFieldsList, Data smtData) {
 
 		int i;
 		int index;
