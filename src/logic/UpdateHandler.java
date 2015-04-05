@@ -90,6 +90,7 @@ public class UpdateHandler {
 			getKey = KeywordType.getKeyword(key);
 			switch(getKey){
 			case BY:
+			case ON:
 				indicMsg = updateTaskByOrEndWhen(smtData, index, keyFieldsList.get(key));
 				break;
 			case TASKDESC:
