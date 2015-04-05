@@ -39,6 +39,7 @@ public class DateTimeParser {
 	}
 	
 	public static String checkDateFormat(String dateValue) {
+		
 		String dateFormat = "";
 		DateTime today = new DateTime();
 		
@@ -72,6 +73,7 @@ public class DateTimeParser {
 	
 	public static DateTime generateTime(String timeValue) {
 		
+		convertedTime = new DateTime();
 		String checkTimeFormatStatus = "";
 		checkTimeFormatStatus = checkTimeFormat(timeValue);
 		
