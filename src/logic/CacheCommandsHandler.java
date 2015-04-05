@@ -89,17 +89,13 @@ public class CacheCommandsHandler {
 		smtData.setLastUnUsedIndex(prevIndex.getLastUnUsedIndex());
 
 		// write to file the updated last unused index to file
-		IndicatorMessagePair indicIndex = smtData.writeLastUnUsedIndexToFile();
-
-		if (!indicIndex.isTrue()) {
-			indicIndex.getMessage();
-		}
+		smtData.writeLastUnUsedIndexToFile();
 	}
 	
 	private static void updatedBlockedOutDates(Data smtData){
 		
 		smtData.setBlockedDateTimeList(current.peek().getBlockedDateTimeList());
-		
+		smtData.writeBlockedDateTimeListToFile();
 	}
 
 	/**
