@@ -100,7 +100,6 @@ public class DisplayHandler {
 			case "BLOCK":
 				indicMsg = displayBlockTasks(keyFieldsList, smtData, displayDataList);
 				return displayDataDetails(displayDataList);
-				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
 			}
