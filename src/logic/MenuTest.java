@@ -17,6 +17,7 @@ public class MenuTest {
 	String expected;
 	String fileName = "taskListTest.txt";
 	String fileNameLastUnusedIndex = "lastUnusedIndexTest.txt";
+	String fileNameBlockedDateList = "blockedDateList.txt";
 
 	/* add sample tasks */
 	String task1 = "Add submit report by 18-06-2015";
@@ -93,6 +94,7 @@ public class MenuTest {
 		controller = Menu.getInstance();
 		FileStorage.setFileNameForTasksList(fileName);
 		FileStorage.setFileNameForLastUnusedIndex(fileNameLastUnusedIndex);
+		FileStorage.setFileNameForBlockedDatesList(fileNameBlockedDateList);
 		controller.setUp();
 	}
 
@@ -102,6 +104,9 @@ public class MenuTest {
 		textList.delete();
 
 		textList = new File(fileNameLastUnusedIndex);
+		textList.delete();
+		
+		textList = new File(fileNameBlockedDateList);
 		textList.delete();
 	}
 
@@ -129,7 +134,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testAddNewTaskFromTimeToTimeValid() {
-		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: attend meeting\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: attend meeting\nStart from: 7 April, 2015 (Tue)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				controller.commandExecution(addValidFromTimeToTimeTask));
 	}
@@ -673,7 +678,7 @@ public class MenuTest {
 	
 	@Test
 	public void testBlockOndDateValid() {
-		expected = MessageList.MESSAGE_BLOCKED;
+		expected = String.format(MessageList.MESSAGE_BLOCKED, fileNameBlockedDateList) ;
 		//controller.commandExecution(task1);
 		//controller.commandExecution(task2);
 		//controller.commandExecution(task3);
