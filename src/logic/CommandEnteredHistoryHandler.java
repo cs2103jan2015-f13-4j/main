@@ -25,12 +25,12 @@ public class CommandEnteredHistoryHandler {
 
 	public static void newCommandEntered(String cmd) {
 		listPastCommandEntered.add(cmd);
-		currentIndex = listPastCommandEntered.size() - 1;
+		currentIndex = listPastCommandEntered.size();
 	}
 	
 	public static int getPrevCmd() {
 		if(currentIndex > 0) {
-			return currentIndex--;
+			return --currentIndex;
 		}
 		return currentIndex;
 	}
