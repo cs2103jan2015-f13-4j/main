@@ -275,7 +275,7 @@ public class BlockDateHandlerTest {
 	@Test
 	public void testIncorrectBlockDateKeyword() {
 		keyFieldsTest.put("VLOCK", "14-04-2015");
-		String expected = "Invalid argument for Block/Unblock command.";
+		String expected = MessageList.MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "VLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -307,7 +307,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "100-04-2015");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = "Wrong date format for Start date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -324,7 +324,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "10-04-2015");
 		keyFieldsTest.put("TO", "200-04-2015");
-		String expected = "Wrong date format for End date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -339,7 +339,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", "100-04-2015");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = "Wrong date format for Start date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -424,7 +424,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", " ");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = "Wrong date format for Start date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -440,7 +440,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "20-04-2015");
 		keyFieldsTest.put("TO", " ");
-		String expected = "Wrong date format for End date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -456,7 +456,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", " ");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = "Wrong date format for Start date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -472,7 +472,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", "20-04-2015");
 		keyFieldsTest.put("TO", " ");
-		String expected = "Wrong date format for End date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -488,7 +488,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "------====");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = "Wrong date format for Start date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -504,7 +504,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "20-04-2015");
 		keyFieldsTest.put("TO", "!@#$%^$$^*%^&$");
-		String expected = "Wrong date format for End date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -520,13 +520,44 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", "20-04-2015");
 		keyFieldsTest.put("TO", "!@#$%^&@#$%^@#$%^");
-		String expected = "Wrong date format for End date";
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
 		
 	}
+	
 	/**
-	 * This is to test the date blocked already can block again
+	 * This is to test the incorrect unblock end date The output is : Wrong date
+	 * format for End date
 	 */
+	@Test
+	public void testBlockStartDateIsLaterThanEndDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "20-05-2015");
+		keyFieldsTest.put("TO", "10-05-2015");
+		String expected = MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	}
+	
+	//GOT PROBLEM
+	/**
+	 * This is to test the blocking the blocked date again
+	 * */
+	
+	//@Test
+	//public void testBlockingTheBlockedDate() {
+		//keyFieldsTest.put("BLOCK", "");
+		//keyFieldsTest.put("FROM", "20-06-2015");
+		//keyFieldsTest.put("TO", "30-06-2015");
+		//keyFieldsTest.put("BLOCK", "25-06-2015");
+		//String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		//assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				//keyFieldsTest, "BLOCK", smtDataTest));
+		//SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+		
+	//}
 }

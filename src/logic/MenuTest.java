@@ -80,7 +80,9 @@ public class MenuTest {
 
 	/* redo test */
 
-	/* Block test */
+	/* Block Task */
+	String BlockOneDateTaskValid = "Block 18-07-2015";
+	
 
 	/* Unblock test */
 
@@ -108,16 +110,16 @@ public class MenuTest {
 	 */
 	@Test
 	public void testAddNewTaskValid() {
-		expected = MessageList.MESSAGE_ADDED;
+		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: submit report\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected, controller.commandExecution(addValidTask));
 	}
 
-	/**
+	/**\n
 	 * This is to test the adding recurring task The output is : Task Added.
 	 */
 	@Test
 	public void testAddNewTaskWeeklyValid() {
-		expected = MessageList.MESSAGE_ADDED;
+		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: submit report\nEvery: Fri\nStatus: Pending");
 		assertEquals(expected, controller.commandExecution(addValidWeeklyTask));
 	}
 
@@ -127,7 +129,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testAddNewTaskFromTimeToTimeValid() {
-		expected = MessageList.MESSAGE_ADDED;
+		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: attend meeting\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				controller.commandExecution(addValidFromTimeToTimeTask));
 	}
@@ -143,8 +145,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test the add by and on in a single task The output is :
-	 * Invalid argument for add command.
+	 * This is to test the add by and on in a single task The output is :Invalid
+	 * argument for add command.
 	 */
 	@Test
 	public void addByandOnAtSameTask() {
@@ -351,7 +353,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskByDateInvalid() {
-		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND);
+		expected = MessageList.MESSAGE_NO_MATCH_FOUND;
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -365,7 +367,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskDescInvalid() {
-		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND);
+		expected = MessageList.MESSAGE_NO_MATCH_FOUND;
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -393,7 +395,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
-		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND);
+		expected = MessageList.MESSAGE_NO_MATCH_FOUND;
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -585,10 +587,11 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test sort completed task The output is :
-	 * "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending
-	 * \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending
-	 * \n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
+	 * This is to test sort completed task The output is : "\nTask ID:
+	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
+	 * Pending \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May,
+	 * 2015 (Tue)\nStatus: Pending \n\nTask ID: 3\nDescription: prepare a
+	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
 	 */
 	@Test
 	public void testSortCompletedValid() {
@@ -602,11 +605,11 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test sort pending task The output is :
-	 * "\nTask ID: 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending
-	 * \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending
-	 * \n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
-	 * ;
+	 * This is to test sort pending task The output is : "\nTask ID:
+	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
+	 * Pending \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May,
+	 * 2015 (Tue)\nStatus: Pending \n\nTask ID: 3\nDescription: prepare a
+	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n" ;
 	 */
 	@Test
 	public void testSortPendingValid() {
@@ -619,6 +622,18 @@ public class MenuTest {
 		assertEquals(expected, controller.commandExecution(sortPendingValid));
 	}
 
+	/**
+	 * This is to test the sorting by deadline The output is Task ID: 3
+	 * Description: prepare a proposal Deadline: 14 May, 2015 (Thu) Status:
+	 * Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 20 May, 2015 (Wed)
+	 * Status: Pending
+	 * 
+	 * Task ID: 1 Description: submit report Deadline: 18 June, 2015 (Thu)
+	 * Status: Pending";
+	 */
+
 	@Test
 	public void testSortDeadlineValid() {
 		expected = "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
@@ -630,9 +645,10 @@ public class MenuTest {
 		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
 	}
 
-	/*
-	 * This is to test the valid undo The output is :Undo operation done
+	/**This is to test the valid undo 
+	 * The output is : Undo operation done
 	 */
+	
 	@Test
 	public void testUndoValid() {
 		expected = String.format(MessageList.MESSAGE_UNDO_SUCCESS);
@@ -641,11 +657,10 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskValid));
 	}
-
-	/*
-	 * This is to test the invalid undo The output is : Please enter a valid
-	 * command.
+	/**This is to test the invalid undo
+	 * The out put is : Please enter a valid command.
 	 */
+
 	@Test
 	public void testUndoInvalid() {
 		expected = String.format(MessageList.MESSAGE_INVAILD);
@@ -653,6 +668,16 @@ public class MenuTest {
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
+	}
+
+	
+	@Test
+	public void testBlockOndDateValid() {
+		expected = MessageList.MESSAGE_BLOCKED;
+		//controller.commandExecution(task1);
+		//controller.commandExecution(task2);
+		//controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
 	}
 
 }
