@@ -71,7 +71,7 @@ public class MessageList {
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
 	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
 	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
-
+	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
 	/**
 	 * These message are for UpdateHandler class
 	 */
