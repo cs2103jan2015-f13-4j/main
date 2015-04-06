@@ -3,7 +3,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,12 +17,16 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
-
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import logic.CommandEnteredHistoryHandler;
 import logic.Menu;
-import org.eclipse.swt.widgets.Slider;
+
+/**
+ * 
+ * @author SHUNA
+ *
+ */
 
 public class SmtSurvival extends Composite {
 
@@ -275,11 +278,8 @@ public class SmtSurvival extends Composite {
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 
 			@Override
-			public void keyReleased(KeyEvent e) {
-				passControl(e);
-			}
-			
 			public void keyPressed(KeyEvent e) {
+				passControl(e);
 				loadCommandHistory(e);
 			}
 		});
@@ -306,6 +306,27 @@ public class SmtSurvival extends Composite {
 			lblDisplay.setText(output);
 			cmdTxtBox.setText("");
 		}
+		else if((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
+			setTabControl(tbtmMain, lblDisplay, "");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
+			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
+			setTabControl(tbtmToday, lblDisplay, "Display Today");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
+			setTabControl(tbtmCompleted, lblDisplay, "Display Completed");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '5')) {
+			setTabControl(tbtmPending, lblDisplay, "Display Pending");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
+			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+		}
+		else if((e.stateMask & SWT.ALT) == SWT.ALT){
+			//do nothing
+		}
 		else{
 			output = controller.getHint(cmdTxtBox.getText());
 			displayTaskFolder.setSelection(tbtmMain);
@@ -324,27 +345,32 @@ public class SmtSurvival extends Composite {
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 
 		if (displayTaskFolder.getSelection()[0].equals(tbtmMain)) {
-			tbtmMain.setControl(lblDisplay);
-			lblDisplay.setText("");
+			setTabControl(tbtmMain, lblDisplay, "");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmSchedule)) {
-			tbtmSchedule.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display schedule"));
+			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmToday)) {
-			tbtmToday.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display today"));
+			setTabControl(tbtmToday, lblDisplay, "Display Today");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmCompleted)) {
-			tbtmCompleted.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display todo"));
+			setTabControl(tbtmCompleted, lblDisplay, "Display Completed");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmPending)) {
-			tbtmPending.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display pending"));
+			setTabControl(tbtmPending, lblDisplay, "Display Pending");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmBlocked)) {
-			tbtmBlocked.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display Blocked"));
-		}
+			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+		} 
 	}
 	
+	private void setTabControl(TabItem tab, Label lblReceive, String command){
+		displayTaskFolder.setSelection(tab);
+		tab.setControl(lblReceive);
+		lblReceive.setText(command);
+	}
+	
+	/**
+	 * This method will load the command history so that user can use the up down button for execution
+	 * @param e
+	 */
 	private void loadCommandHistory(KeyEvent e) {
+		
 		if(e.keyCode == SWT.ARROW_UP) {
 			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
 		}
