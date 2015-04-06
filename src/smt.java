@@ -13,7 +13,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -64,7 +63,7 @@ public class smt extends Composite {
 				toolkit.dispose();
 			}
 		});
-		
+
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		tabFolder.setBounds(10, 10, 435, 452);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
@@ -101,7 +100,7 @@ public class smt extends Composite {
 		composite = new Composite(scSchedule, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
-		
+
 		lblSchedule = new Label(composite, SWT.NONE);
 		lblSchedule.setText("This page is for Schedule Tasks");
 
@@ -130,7 +129,8 @@ public class smt extends Composite {
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
 		tabCompleted.setText("Completed");
 
-		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER| SWT.V_SCROLL);
+		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
+				| SWT.V_SCROLL);
 		tabCompleted.setControl(scCompleted);
 		composite = new Composite(scCompleted, SWT.None);
 		composite.setLayout(new FillLayout());
@@ -159,7 +159,7 @@ public class smt extends Composite {
 		scPending.setContent(composite);
 		scPending.setExpandVertical(true);
 		scPending.setMinSize(composite.computeSize(1000, 1000));
-		
+
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
 		tabBlocked.setText("Blocked");
@@ -176,13 +176,13 @@ public class smt extends Composite {
 		scBlocked.setContent(composite);
 		scBlocked.setExpandVertical(true);
 		scBlocked.setMinSize(composite.computeSize(1000, 1000));
-		
-		tabFolder.addSelectionListener(new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent event){
+
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
 				tabControl(event);
 			}
 		});
-		
+
 		composite_1 = new Composite(this, SWT.NONE);
 		composite_1.setBounds(10, 468, 435, 78);
 
@@ -210,16 +210,22 @@ public class smt extends Composite {
 		if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
 			output = controller.commandExecution(cmdTextBox.getText());
 			tabFolder.setSelection(tabMain);
-			tabMain.setControl(lblMain);
+			// tabMain.setControl(lblMain);
 			lblMain.setText(output);
 
 			cmdTextBox.setText("");
+		} else {
+			String a = cmdTextBox.getText();
+			output = controller.getHint(cmdTextBox.getText());
+			tabFolder.setSelection(tabMain);
+			// tab.setControl(lblMain);
+			lblMain.setText(output);
 		}
 	}
-	
-	private void tabControl(SelectionEvent event){
-		if(tabFolder.getSelectionIndex() == 0){
-			tabMain.setControl(lblMain);
+
+	private void tabControl(SelectionEvent event) {
+		if (tabFolder.getSelectionIndex() == 0) {
+			// tabMain.setControl(lblMain);
 			lblMain.setText("");
 		}
 	}
@@ -237,6 +243,10 @@ public class smt extends Composite {
 
 		shell.setLocation(x, y);
 		shell.open();
+		smt Smt = new smt(shell, SWT.NONE);
+		Smt.pack();
+		shell.pack();
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
