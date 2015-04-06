@@ -4,6 +4,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import javax.swing.JList;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;

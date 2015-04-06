@@ -9,7 +9,7 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_HELP = "************************************************************************************\n\n1) Add\n\n- Add <Desc>\n- Add <Description> from <Date> to <Date>"
 			+ "\n-Add<Description> every <Date>\n\n 2) Delete\n\n- Delete<Task#>\n\n "
-			+ "3)Update\n\n- Update <Task #> TaskDesc <description>\n- Update <Task #> By <date/day>\n- Update <Task #> Completed\n- Update <Task #> Pending\n- Update<Task #> TaskEnd<date>\n- Update<Task #>TaskStart<date>\n- Update<Task#> Every <Friday>\n- Update<Task #> By date or weekly day\n\n"
+			+ "3) Update\n\n- Update <Task #> TaskDesc <description>\n- Update <Task #> By <date/day>\n- Update <Task #> Completed\n- Update <Task #> Pending\n- Update<Task #> TaskEnd<date>\n- Update<Task #>TaskStart<date>\n- Update<Task#> Every <Friday>\n- Update<Task #> By date or weekly day\n\n"
 			+ "4) Delete\n\n- Delete <#>\n\n"
 			+ "5) Display \n\n- Display Today [tdy] \n- Display Tomorrow [tmr]\n- Display monday [mon]\n- Display tuesday [tue]\n- Display wednesday [wed]\n- Display thursday [thu]\n- Display friday [fri]\n- Display saturday [sat]\n- Display sunday [sun]\n- Display Pending[pend]\n- Display Schedule\n- Display Complete[comp]\n\n "
 			+ "6) Search\n\n- Search by Task ID \n Search 1 <Task #> \n Search by Task Description\n- Search 2<Task Description>\n- Search 3 <Date>\n\n "
@@ -75,13 +75,13 @@ public class MessageList {
 	/**
 	 * These message are for UpdateHandler class
 	 */
-	public static final String MESSAGE_UPDATE_SUCCESS = "Update successful.";
+	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
 	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 
 	/**
 	 * These message are for the AddHandler Class
 	 */
-	public static final String MESSAGE_ADDED = "Task Added.";
+	public static final String MESSAGE_ADDED = "New Task %1$s\nAdded";
 
 	/**
 	 * These message are for DeleteHandler Class
@@ -104,7 +104,7 @@ public class MessageList {
 	/**
 	 * These message are for SearchHandler class
 	 */
-	public static final String MESSAGE_NO_MATCH_FOUND = "No Match Found";
+	public static final String MESSAGE_NO_MATCH_FOUND = "Task %1$s\nnot found.";
 	public static final String MESSAGE_INVAILD_SEARCH = "This is a invaild search.";
 	public static final String MESSAGE_INVAILD_SEARCH_CRITERIA = "This is a invaild search criteria.";
 
@@ -112,10 +112,16 @@ public class MessageList {
 	 * These message are for BlockDate class
 	 */
 	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
-	public static final String MESSAGE_BLOCKED = "Blocked Successful";
-	public static final String MESSAGE_UNBLOCKED = "Unblocked Successful";
+	public static final String MESSAGE_BLOCKED = "\"%1$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED = "\"%1$s\"\nUnblocked Successfully";
+	public static final String MESSAGE_BLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully";
 	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
 	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
+	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
+	public static final String MESSAGE_BLOCK_DATE_DO_NOT_EXIST = "\"%1$s\" is not inside the block list";
+	public static final String MESSAGE_BLOCK_DATE_ALREADY_EXIST = "\"%1$s\" already exist";
+	
 
 	/**
 	 * This message are for CacheCommandsHandler class

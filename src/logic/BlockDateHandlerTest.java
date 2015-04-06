@@ -2,7 +2,8 @@ package logic;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -14,14 +15,14 @@ import data.Task;
 
 public class BlockDateHandlerTest {
 
-	HashMap<String, String> keyFieldsTest;
+	Map<String, String> keyFieldsTest;
 	Data smtDataTest;
 	String fileName = "listTaskTest.txt";
 
 	@Before
 	public void setUp() {
 		smtDataTest = new Data();
-		keyFieldsTest = new HashMap<String, String>();
+		keyFieldsTest = new TreeMap<String, String>();
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
 				new DateTime(), new DateTime(), ""));
 		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
@@ -64,7 +65,7 @@ public class BlockDateHandlerTest {
 	@Test
 	public void testBlockOneDate() {
 		keyFieldsTest.put("BLOCK", "14-04-2015");
-		String expected = MessageList.MESSAGE_BLOCKED;
+		String expected = String.format(MessageList.MESSAGE_BLOCKED,"14-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -77,8 +78,12 @@ public class BlockDateHandlerTest {
 
 	@Test
 	public void testUnBlockOneDate() {
+		keyFieldsTest.put("BLOCK", "14-04-2015");
+		BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest);
+		keyFieldsTest.clear();
 		keyFieldsTest.put("UNBLOCK", "14-04-2015");
-		String expected = MessageList.MESSAGE_UNBLOCKED;
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED, "14-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -95,7 +100,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "14-04-2015");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = MessageList.MESSAGE_BLOCKED;
+		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "14-04-2015", "20-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -112,7 +117,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("BLOCK", "");
 		keyFieldsTest.put("FROM", "14-04-2015");
 		keyFieldsTest.put("TO", "01-05-2015");
-		String expected = MessageList.MESSAGE_BLOCKED;
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015" ,"01-05-2015") ;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -128,7 +133,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", "14-04-2015");
 		keyFieldsTest.put("TO", "01-06-2015");
-		String expected = MessageList.MESSAGE_UNBLOCKED;
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015", "01-06-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -144,7 +149,7 @@ public class BlockDateHandlerTest {
 		keyFieldsTest.put("UNBLOCK", "");
 		keyFieldsTest.put("FROM", "14-04-2015");
 		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = MessageList.MESSAGE_UNBLOCKED;
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015","20-04-2015") ;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
