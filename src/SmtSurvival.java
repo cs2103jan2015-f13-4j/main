@@ -330,7 +330,7 @@ public class SmtSurvival extends Composite {
 			setTabControl(tbtmMain, lblDisplay, savedExistingContents);
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
-			setTabControl(tbtmAll, lblDisplay, "Display Schedule");
+			setTabControl(tbtmAll, lblDisplay, "Display All");
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
 			flagForSwitchTab = true;
@@ -343,7 +343,7 @@ public class SmtSurvival extends Composite {
 			setTabControl(tbtmPending, lblDisplay, "Display Pending");
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
-			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+			setTabControl(tbtmBlocked, lblDisplay, "Display Block");
 		}
 		else if((e.stateMask & SWT.ALT) == SWT.ALT){
 			//do nothing
@@ -373,14 +373,14 @@ public class SmtSurvival extends Composite {
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmPending)) {
 			setTabControl(tbtmPending, lblDisplay, "Display Pending");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmBlocked)) {
-			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+			setTabControl(tbtmBlocked, lblDisplay, "Display Block");
 		} 
 	}
 	
 	private void setTabControl(TabItem tab, Label lblReceive, String command){
 		displayTaskFolder.setSelection(tab);
 		tab.setControl(lblReceive);
-		lblReceive.setText(command);
+		lblReceive.setText(controller.commandExecution(command));
 	}
 	
 	/**
