@@ -278,11 +278,8 @@ public class SmtSurvival extends Composite {
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 
 			@Override
-			public void keyReleased(KeyEvent e) {
-				passControl(e);
-			}
-			
 			public void keyPressed(KeyEvent e) {
+				passControl(e);
 				loadCommandHistory(e);
 			}
 		});
@@ -309,6 +306,27 @@ public class SmtSurvival extends Composite {
 			lblDisplay.setText(output);
 			cmdTxtBox.setText("");
 		}
+		else if((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
+			setTabControl(tbtmMain, lblDisplay, "");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
+			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
+			setTabControl(tbtmToday, lblDisplay, "Display Today");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
+			setTabControl(tbtmCompleted, lblDisplay, "Display Completed");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '5')) {
+			setTabControl(tbtmPending, lblDisplay, "Display Pending");
+		}
+		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
+			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+		}
+		else if((e.stateMask & SWT.ALT) == SWT.ALT){
+			//do nothing
+		}
 		else{
 			output = controller.getHint(cmdTxtBox.getText());
 			displayTaskFolder.setSelection(tbtmMain);
@@ -327,24 +345,24 @@ public class SmtSurvival extends Composite {
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 
 		if (displayTaskFolder.getSelection()[0].equals(tbtmMain)) {
-			tbtmMain.setControl(lblDisplay);
-			lblDisplay.setText("");
+			setTabControl(tbtmMain, lblDisplay, "");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmSchedule)) {
-			tbtmSchedule.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display schedule"));
+			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmToday)) {
-			tbtmToday.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display today"));
+			setTabControl(tbtmToday, lblDisplay, "Display Today");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmCompleted)) {
-			tbtmCompleted.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display todo"));
+			setTabControl(tbtmCompleted, lblDisplay, "Display Completed");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmPending)) {
-			tbtmPending.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display pending"));
+			setTabControl(tbtmPending, lblDisplay, "Display Pending");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmBlocked)) {
-			tbtmBlocked.setControl(lblDisplay);
-			lblDisplay.setText(controller.commandExecution("display Blocked"));
-		}
+			setTabControl(tbtmBlocked, lblDisplay, "Display Blocked");
+		} 
+	}
+	
+	private void setTabControl(TabItem tab, Label lblReceive, String command){
+		displayTaskFolder.setSelection(tab);
+		tab.setControl(lblReceive);
+		lblReceive.setText(command);
 	}
 	
 	/**
@@ -352,6 +370,7 @@ public class SmtSurvival extends Composite {
 	 * @param e
 	 */
 	private void loadCommandHistory(KeyEvent e) {
+		
 		if(e.keyCode == SWT.ARROW_UP) {
 			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
 		}
