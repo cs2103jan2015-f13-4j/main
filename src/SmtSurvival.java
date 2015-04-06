@@ -36,7 +36,7 @@ public class SmtSurvival extends Composite {
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private static Text cmdTxtBox;
 	private TabItem tbtmMain;
-	private TabItem tbtmSchedule;
+	private TabItem tbtmAll;
 	private TabItem tbtmToday;
 	private TabItem tbtmCompleted;
 	private TabItem tbtmPending;
@@ -45,6 +45,8 @@ public class SmtSurvival extends Composite {
 	private static Label lblDisplay;
 	private static Menu controller;
 	private TabItem tbtmBlocked;
+	private static String savedExistingContents = new String();
+	private static boolean flagForSwitchTab = false;
 
 	/**
 	 * This method will be first executed when program runs
@@ -204,9 +206,9 @@ public class SmtSurvival extends Composite {
 		lblDisplay.setText("Welcome to Smart Management Tool");
 
 		// This is for Schedule Tab
-		tbtmSchedule = new TabItem(displayTaskFolder, SWT.NONE);
-		tbtmSchedule.setText("Schedule");
-		tbtmSchedule.setToolTipText("This tab will show all scheduled tasks");
+		tbtmAll = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmAll.setText("All");
+		tbtmAll.setToolTipText("This tab will show all scheduled tasks");
 
 		// This is for Today Tab
 		tbtmToday = new TabItem(displayTaskFolder, SWT.NONE);
@@ -283,7 +285,7 @@ public class SmtSurvival extends Composite {
 			}
 			
 			public void keyPressed(KeyEvent e) {
-				passControl(e);
+				switchTabControl(e);
 				loadCommandHistory(e);
 			}
 		});
@@ -309,14 +311,28 @@ public class SmtSurvival extends Composite {
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
 			cmdTxtBox.setText("");
+			savedExistingContents = lblDisplay.getText();
+		} else if(!flagForSwitchTab){
+			output = controller.getHint(cmdTxtBox.getText());
+			displayTaskFolder.setSelection(tbtmMain);
+			tbtmMain.setControl(lblDisplay);
+			lblDisplay.setText(output); 
+			savedExistingContents = lblDisplay.getText();
 		}
-		else if((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
-			setTabControl(tbtmMain, lblDisplay, "");
+		
+		
+	}
+	
+	private void switchTabControl(KeyEvent e){
+		flagForSwitchTab = true;
+		if((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
+			setTabControl(tbtmMain, lblDisplay, savedExistingContents);
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
-			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
+			setTabControl(tbtmAll, lblDisplay, "Display Schedule");
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
+			flagForSwitchTab = true;
 			setTabControl(tbtmToday, lblDisplay, "Display Today");
 		}
 		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
@@ -332,10 +348,7 @@ public class SmtSurvival extends Composite {
 			//do nothing
 		}
 		else{
-			output = controller.getHint(cmdTxtBox.getText());
-			displayTaskFolder.setSelection(tbtmMain);
-			tbtmMain.setControl(lblDisplay);
-			lblDisplay.setText(output); 
+			flagForSwitchTab = false;
 		}
 	}
 
@@ -349,9 +362,9 @@ public class SmtSurvival extends Composite {
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
 
 		if (displayTaskFolder.getSelection()[0].equals(tbtmMain)) {
-			setTabControl(tbtmMain, lblDisplay, "");
-		} else if (displayTaskFolder.getSelection()[0].equals(tbtmSchedule)) {
-			setTabControl(tbtmSchedule, lblDisplay, "Display Schedule");
+			setTabControl(tbtmMain, lblDisplay, savedExistingContents);
+		} else if (displayTaskFolder.getSelection()[0].equals(tbtmAll)) {
+			setTabControl(tbtmAll, lblDisplay, "Display All");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmToday)) {
 			setTabControl(tbtmToday, lblDisplay, "Display Today");
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmCompleted)) {
