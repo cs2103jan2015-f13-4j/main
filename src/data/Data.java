@@ -149,6 +149,9 @@ public class Data {
 	 */
 	public void setBlockedDateTimeList(ArrayList<DateTime> receivedBlockedDateTimeList){
 		blockedDateTimeList.clear();
+		if(receivedBlockedDateTimeList == null){
+			return;
+		}
 		for(int i = 0; i < receivedBlockedDateTimeList.size(); i++){
 			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
 		}
