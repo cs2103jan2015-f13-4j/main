@@ -127,8 +127,8 @@ public class UpdateHandler {
 			return indicMsg.getMessage();
 		}
 		CacheCommandsHandler.newHistory(smtData);
-		taskLogger.log(Level.INFO, MessageList.MESSAGE_UPDATE_SUCCESS);
-		return MessageList.MESSAGE_UPDATE_SUCCESS;
+		taskLogger.log(Level.INFO, MessageList.MESSAGE_UPDATE_SUCCESS, smtData.getATask(index));
+		return String.format(MessageList.MESSAGE_UPDATE_SUCCESS, smtData.getATask(index));
 	}
 	
 
@@ -255,14 +255,14 @@ public class UpdateHandler {
 		if(direction == KeywordType.List_Keywords.FROM){
 			DateTime newStartTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
 			if(tempTask.getTaskEndDateTime() != null && !checkFromTimeToTimeBothValid(newStartTime, tempTask.getTaskEndDateTime())){
-				return new IndicatorMessagePair(false, "Start Time and End Time conflicts.");
+				return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 			}
 			tempTask.setTaskStartDateTime(newStartTime);
 		}
 		else if(direction == KeywordType.List_Keywords.TO){
 			DateTime newEndTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
 			if(tempTask.getTaskStartDateTime() != null && !checkFromTimeToTimeBothValid(tempTask.getTaskStartDateTime(), newEndTime)){
-				return new IndicatorMessagePair(false, "Start Time and End Time conflicts.");
+				return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 			}
 			tempTask.setTaskEndDateTime(newEndTime);
 		}
@@ -320,13 +320,13 @@ public class UpdateHandler {
 	private static IndicatorMessagePair processBothTimes(Map<String, String> keyFieldsList, int index, Data smtData){
 		
 		if(!checkFromTimeToTimeBothField(keyFieldsList)){
-			return new IndicatorMessagePair(false, "Time is not entered correctly");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_INCORRECT_TIME_FORMAT);
 		}
 		
 		DateTime startTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.FROM.name()));
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList.get(KeywordType.List_Keywords.TO.name()));
 		if(!checkFromTimeToTimeBothValid(startTime, endTime)){
-			return new IndicatorMessagePair(false, "Time mismatch.");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 		}
 		if(smtData.getATask(index).getTaskStartDateTime() == null && smtData.getATask(index).getTaskEndDateTime() == null){
 			startTime = new DateTime(DateTime.now().getYear(), DateTime.now().getMonthOfYear(), DateTime.now().getDayOfMonth(), startTime.getHourOfDay(), startTime.getMinuteOfHour());
