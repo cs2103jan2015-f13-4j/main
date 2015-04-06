@@ -1,9 +1,10 @@
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import javax.swing.JList;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.custom.CTabFolder;
@@ -12,7 +13,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,6 +58,12 @@ public class smt extends Composite {
 		super(parent, style);
 		setBackground(SWTResourceManager.getColor(173, 216, 230));
 
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				toolkit.dispose();
+			}
+		});
+		
 		tabFolder = new CTabFolder(this, SWT.BORDER);
 		tabFolder.setBounds(10, 10, 435, 452);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
@@ -67,7 +73,6 @@ public class smt extends Composite {
 
 		/* Main Tab */
 		tabMain = new CTabItem(tabFolder, SWT.NONE);
-		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabMain.setText("Main");
 		tabMain.setToolTipText("Click this tab to show the Main page");
 
@@ -88,17 +93,15 @@ public class smt extends Composite {
 
 		/* Schedule Tab */
 		tabSchedule = new CTabItem(tabFolder, SWT.NONE);
-		tabSchedule.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabSchedule.setText("Schedule");
 
 		scSchedule = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabSchedule.setControl(scSchedule);
+		//tabSchedule.setControl(scSchedule);
 		composite = new Composite(scSchedule, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
-
+		
 		lblSchedule = new Label(composite, SWT.NONE);
-		lblSchedule.setFont(SWTResourceManager.getFont("Segoe UI Symbol", 10, SWT.NORMAL));
 		lblSchedule.setText("This page is for Schedule Tasks");
 
 		scSchedule.setContent(composite);
@@ -107,17 +110,15 @@ public class smt extends Composite {
 
 		/* Today Tab */
 		tabToday = new CTabItem(tabFolder, SWT.NONE);
-		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabToday.setText("Today");
 
 		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabToday.setControl(scToday);
+		//tabToday.setControl(scToday);
 		composite = new Composite(scToday, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
 
 		lblToday = new Label(composite, SWT.NONE);
-		lblToday.setFont(SWTResourceManager.getFont("Segoe UI Symbol", 10, SWT.NORMAL));
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
@@ -126,18 +127,16 @@ public class smt extends Composite {
 
 		/* Completed Tab */
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
-		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabCompleted.setText("Completed");
 
 		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
 				| SWT.V_SCROLL);
-		tabCompleted.setControl(scCompleted);
+		//tabCompleted.setControl(scCompleted);
 		composite = new Composite(scCompleted, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
 
 		lblCompleted = new Label(composite, SWT.NONE);
-		lblCompleted.setFont(SWTResourceManager.getFont("Segoe UI Symbol", 10, SWT.NORMAL));
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
@@ -146,17 +145,15 @@ public class smt extends Composite {
 
 		/* Pending Tab */
 		tabPending = new CTabItem(tabFolder, SWT.NONE);
-		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabPending.setText("Pending");
 
 		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabPending.setControl(scPending);
+		//tabPending.setControl(scPending);
 		composite = new Composite(scPending, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
 
 		lblPending = new Label(composite, SWT.NONE);
-		lblPending.setFont(SWTResourceManager.getFont("Segoe UI Symbol", 10, SWT.NORMAL));
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
@@ -165,18 +162,16 @@ public class smt extends Composite {
 		
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
-		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabBlocked.setText("Blocked");
 
 		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabBlocked.setControl(scBlocked);
+		//tabBlocked.setControl(scBlocked);
 		composite = new Composite(scBlocked, SWT.None);
 		composite.setLayout(new FillLayout());
 		composite.setSize(435, 452);
 
 		lblBlocked = new Label(composite, SWT.NONE);
-		lblBlocked.setFont(SWTResourceManager.getFont("Segoe UI Symbol", 10, SWT.NORMAL));
-		lblBlocked.setText("This page is for Bocked Tasks");
+		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
 		scBlocked.setExpandVertical(true);
@@ -224,8 +219,12 @@ public class smt extends Composite {
 	
 	private void tabControl(SelectionEvent event){
 		if(tabFolder.getSelectionIndex() == 0){
-			tabMain.setControl(lblMain);
+			tabMain.setControl(scMain);
 			lblMain.setText("");
+		}
+		
+		if(tabFolder.getSelection() == tabMain){
+			
 		}
 	}
 
@@ -242,6 +241,9 @@ public class smt extends Composite {
 
 		shell.setLocation(x, y);
 		shell.open();
+		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
+		Smt.pack();
+		shell.pack();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
