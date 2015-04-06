@@ -23,7 +23,7 @@ public class MenuTest {
 	String task1 = "Add submit report by 18-06-2015";
 	String task2 = "Add attending meeting by 20-05-2015";
 	String task3 = "Add prepare a proposal by 14-05-2015";
-
+	String task4 = "Block 18-07-2015";
 	/* add test */
 	String addValidTask = "Add submit report by Fri";
 	String addValidWeeklyTask = "Add submit report every Fri";
@@ -83,10 +83,13 @@ public class MenuTest {
 
 	/* Block Task */
 	String BlockOneDateTaskValid = "Block 18-07-2015";
+	String BlockRangeOfDateValid = "Block from 19-07-2015 to 30-07-2015";
+
 	
 
 	/* Unblock test */
-
+	String UnblockOneDateTaskValid = "Unblock 18-07-2015";
+	String UnblockRangeOfDateValid = "block from 19-07-2015 to 30-07-2015";
 	@Before
 	public void setUp() throws Exception {
 
@@ -171,6 +174,7 @@ public class MenuTest {
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
+		controller.commandExecution(task4);
 		assertEquals(expected, controller.commandExecution(deleteValidTask));
 	}
 
@@ -675,14 +679,30 @@ public class MenuTest {
 		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
 	}
 
-	
+	/*
+	 * This is testing blocking a single date
+	 * The output is : "18-07-2015 Blocked Successfully"
+	 */
 	@Test
 	public void testBlockOndDateValid() {
-		expected = String.format(MessageList.MESSAGE_BLOCKED, fileNameBlockedDateList) ;
-		//controller.commandExecution(task1);
-		//controller.commandExecution(task2);
-		//controller.commandExecution(task3);
+		expected = String.format(MessageList.MESSAGE_BLOCKED,"18-07-2015" ) ;
 		assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
 	}
+	/*
+	 * This is to test unblocking of a single date
+	 * The output is : "18-07-2015 Unblocked Successfully"
+	 */
+	@Test
+	public void testUnblockOndDateValid() {
+		expected = String.format(MessageList.MESSAGE_UNBLOCKED,"18-07-2015" ) ;
+		controller.commandExecution(task4);
+		assertEquals(expected, controller.commandExecution(UnblockOneDateTaskValid));
+	}
+	
+	//@Test
+	//public void testBlockRangeOfDateValid() {
+		//expected = "Date from ""\19-07-2015\" to "\30-07-2015\"\nBlocked Successfully";
+		//assertEquals(expected, controller.commandExecution(BlockRangeOfDateValid));
+	//}
 
 }
