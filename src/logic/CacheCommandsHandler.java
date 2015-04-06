@@ -43,7 +43,7 @@ public class CacheCommandsHandler {
 	
 	public static String executeRedo(Data smtData) {
 		
-		if(isStackContainsOneItem()) {
+		if(isStackContainsLastItem()) {
 			return MessageList.MESSAGE_ONLY_ONE_ITEM;
 		}
 		
@@ -62,6 +62,13 @@ public class CacheCommandsHandler {
 			return true;
 		}
 		
+		return false;
+	}
+	
+	private static boolean isStackContainsLastItem() {
+		if(aheadCmds.size() == 0) {
+			return true;
+		}
 		return false;
 	}
 
