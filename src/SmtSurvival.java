@@ -3,7 +3,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,12 +17,16 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
-
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import logic.CommandEnteredHistoryHandler;
 import logic.Menu;
-import org.eclipse.swt.widgets.Slider;
+
+/**
+ * 
+ * @author SHUNA
+ *
+ */
 
 public class SmtSurvival extends Composite {
 
@@ -336,6 +339,10 @@ public class SmtSurvival extends Composite {
 		}
 	}
 	
+	/**
+	 * This method will load the command history so that user can use the up down button for execution
+	 * @param e
+	 */
 	private void loadCommandHistory(KeyEvent e) {
 		if(e.keyCode == SWT.ARROW_UP) {
 			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
