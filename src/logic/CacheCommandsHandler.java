@@ -18,6 +18,8 @@ public class CacheCommandsHandler {
 
 	private static Stack<Data> current = new Stack<Data>();
 	private static Stack<Data> aheadCmds = new Stack<Data>();
+	private static String cacheCommandStatus = "";
+	private static String result = "";
 
 	/**
 	 * This method will do an undo operation
@@ -34,7 +36,20 @@ public class CacheCommandsHandler {
 
 		// pop out the latest operation from current and push to aheadCmds
 		aheadCmds.push(current.pop());
+		cacheCommandStatus = "undo";
 
+		return updateTaskList(smtData);
+	}
+	
+	public static String executeRedo(Data smtData) {
+		
+		if(isStackContainsOneItem()) {
+			return MessageList.MESSAGE_ONLY_ONE_ITEM;
+		}
+		
+		current.push(aheadCmds.pop());
+		cacheCommandStatus = "redo";
+		
 		return updateTaskList(smtData);
 	}
 
@@ -73,8 +88,13 @@ public class CacheCommandsHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
-
-		return MessageList.MESSAGE_UNDO_SUCCESS;
+		
+		if(cacheCommandStatus.equals("undo")) {
+			result = MessageList.MESSAGE_UNDO_SUCCESS;
+		} else if(cacheCommandStatus.equals("redo")) {
+			result = MessageList.MESSAGE_REDO_SUCCESS;
+		}
+		return result;
 	}
 
 	/**
