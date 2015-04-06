@@ -65,7 +65,7 @@ public class SmtSurvival extends Composite {
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, style);
-		setBackground(SWTResourceManager.getColor(70, 130, 180));
+		setBackground(SWTResourceManager.getColor(0, 0, 128));
 
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
