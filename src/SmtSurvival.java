@@ -41,6 +41,7 @@ public class SmtSurvival extends Composite {
 	private Composite composite_1;
 	private static Label lblDisplay;
 	private static Menu controller;
+	private TabItem tbtmBlocked;
 
 	/**
 	 * This method will be first executed when program runs
@@ -218,6 +219,10 @@ public class SmtSurvival extends Composite {
 		tbtmPending = new TabItem(displayTaskFolder, SWT.NONE);
 		tbtmPending.setToolTipText("This tab will show all pending tasks");
 		tbtmPending.setText("Pending");
+		
+		tbtmBlocked = new TabItem(displayTaskFolder, SWT.NONE);
+		tbtmBlocked.setToolTipText("This tab will show all Blocked tasks");
+		tbtmBlocked.setText("Blocked");
 	}
 	
 	/**
@@ -333,6 +338,9 @@ public class SmtSurvival extends Composite {
 		} else if (displayTaskFolder.getSelection()[0].equals(tbtmPending)) {
 			tbtmPending.setControl(lblDisplay);
 			lblDisplay.setText(controller.commandExecution("display pending"));
+		} else if (displayTaskFolder.getSelection()[0].equals(tbtmBlocked)) {
+			tbtmBlocked.setControl(lblDisplay);
+			lblDisplay.setText(controller.commandExecution("display Blocked"));
 		}
 	}
 	
