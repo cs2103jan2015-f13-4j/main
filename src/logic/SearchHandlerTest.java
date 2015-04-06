@@ -22,7 +22,7 @@ public class SearchHandlerTest {
 	@Before
 	public void setUp() {
 		int year = 2015;
-		int month = 4;
+		int month = 6;
 		int day = 3;
 		int hour = 0;
 		int min = 0;
@@ -94,8 +94,10 @@ public class SearchHandlerTest {
 	 */
 	@Test
 	public void testSearchWithDeadLine() {
-		keyFieldsTest.put("SEARCH", "3 03-04-2015");
-		String expected = "\nTask ID: 1\nDescription: Prepare a proposal\nStart from: 3 April, 2015 (Fri)\nDeadline: 3 April, 2015 (Fri)\nStatus: Pending\n\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 April, 2015 (Fri)\nDeadline: 3 April, 2015 (Fri)\nStatus: Pending\n\nTask ID: 3\nDescription: Prepare OP1\nStart from: 3 April, 2015 (Fri)\nDeadline: 3 April, 2015 (Fri)\nStatus: Pending\n";
+		keyFieldsTest.put("SEARCH", "3 03-06-2015");
+		String expected = "\nTask ID: 1\nDescription: Prepare a proposal\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: Prepare OP1\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending\n";
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);

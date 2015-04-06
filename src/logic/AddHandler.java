@@ -137,7 +137,7 @@ public class AddHandler {
 		}
 		taskLogger.log(Level.INFO, "Task Added");
 		CacheCommandsHandler.newHistory(smtData);
-		return MessageList.MESSAGE_ADDED;
+		return String.format(MessageList.MESSAGE_ADDED, newTask.toString());
 	}
 
 	/**

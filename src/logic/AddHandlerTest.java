@@ -65,7 +65,7 @@ public class AddHandlerTest {
 	public void testAddWithDescRegular() {
 		keyFieldsTest.put("ADD", "submit proposal");
 		keyFieldsTest.put("BY", "03-03-2016");
-		String expected = MessageList.MESSAGE_ADDED;
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: submit proposal\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -134,11 +134,10 @@ public class AddHandlerTest {
 	public void testAddByDay() {
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = MessageList.MESSAGE_ADDED;
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
-
 	/**
 	 * This is to test adding the task within a certain period of time The
 	 * output of this test is: Task added
@@ -149,7 +148,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10am");
 		keyFieldsTest.put("TO", "12pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = MessageList.MESSAGE_ADDED;
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -238,7 +237,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10 pm");
 		keyFieldsTest.put("TO", "11 pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = MessageList.MESSAGE_ADDED;
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -269,7 +268,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10.30pm");
 		keyFieldsTest.put("TO", "11pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Task Added.";
+		String expected = String.format(MessageList.MESSAGE_ADDED,"\nTask ID: 4\nDescription: submit\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
