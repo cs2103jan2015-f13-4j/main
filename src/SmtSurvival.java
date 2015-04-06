@@ -278,6 +278,10 @@ public class SmtSurvival extends Composite {
 		cmdTxtBox.addKeyListener(new KeyAdapter() {
 
 			@Override
+			public void keyReleased(KeyEvent e){
+				passControl(e);
+			}
+			
 			public void keyPressed(KeyEvent e) {
 				passControl(e);
 				loadCommandHistory(e);
