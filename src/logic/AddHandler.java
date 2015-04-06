@@ -220,7 +220,7 @@ public class AddHandler {
 			Map<String, String> keyFieldsList) {
 		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
 				CommandType.Command_Types.ADD.name(),
-				String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
+				String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "No Description"));
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg;

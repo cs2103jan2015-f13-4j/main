@@ -4,8 +4,11 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
 import javax.swing.JList;
+
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.keys.SWTKeySupport;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -18,10 +21,13 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
+
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import logic.CommandEnteredHistoryHandler;
 import logic.Menu;
+
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * 
@@ -35,7 +41,6 @@ public class SmtSurvival extends Composite {
 	 * Constant variables declared
 	 */
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-	private static Text cmdTxtBox;
 	private TabItem tbtmMain;
 	private TabItem tbtmAll;
 	private TabItem tbtmToday;
@@ -48,6 +53,8 @@ public class SmtSurvival extends Composite {
 	private TabItem tbtmBlocked;
 	private static String savedExistingContents = new String();
 	private static boolean flagForSwitchTab = false;
+	private static String saveCurrentCommand = new String();
+	private Combo combo;
 
 	/**
 	 * This method will be first executed when program runs
@@ -132,9 +139,6 @@ public class SmtSurvival extends Composite {
 		tabItem();
 
 		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
 
 		// add a listener to listen to the tab behavior
 		displayTaskFolder.addSelectionListener(new SelectionAdapter() {
@@ -142,16 +146,6 @@ public class SmtSurvival extends Composite {
 				tabControl(event);
 			}
 		});
-
-		// creating composite
-		composite_1 = createComposite();
-		
-		// show command label at UI
-		commandLabel(composite_1);
-
-		// setting command text box next beside the command label at UI, for
-		// user to key in
-		setCommandTextBox(composite_1);
 	}
 
 	/**
@@ -161,6 +155,8 @@ public class SmtSurvival extends Composite {
 	 */
 	private Group createGroupForTabRegion() {
 		Group group = new Group(this, SWT.NONE);
+		group.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
+		group.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.BOLD));
 		GridData gd_group = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 
 				2);
 		gd_group.heightHint = 358;
@@ -168,6 +164,18 @@ public class SmtSurvival extends Composite {
 		group.setLayoutData(gd_group);
 		toolkit.adapt(group);
 		toolkit.paintBordersFor(group);
+		
+		combo = new Combo(group, SWT.NONE);
+		combo.addKeyListener(new KeyAdapter() {
+			@Override	
+			public void keyPressed(KeyEvent e) {
+				switchTabControl(e);
+				loadCommandHistory(e);
+			}
+		});
+		combo.setBounds(0, 10, 450, 55);
+		toolkit.adapt(combo);
+		toolkit.paintBordersFor(combo);
 		return group;
 	}
 
@@ -179,7 +187,8 @@ public class SmtSurvival extends Composite {
 	private void tabFolder(Group group) {
 
 		displayTaskFolder = new TabFolder(group, SWT.NONE);
-		displayTaskFolder.setBounds(0, 10, 430, 371);
+		displayTaskFolder.setFont(SWTResourceManager.getFont("Segoe UI Black", 10, SWT.NORMAL));
+		displayTaskFolder.setBounds(0, 39, 430, 342);
 		toolkit.adapt(displayTaskFolder);
 		toolkit.paintBordersFor(displayTaskFolder);
 		
@@ -198,13 +207,13 @@ public class SmtSurvival extends Composite {
 		tbtmMain.setToolTipText("This tab will show the all the tasks");
 	
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
-		lblDisplay.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		lblDisplay.setForeground(SWTResourceManager.getColor(0, 0, 0));
 		lblDisplay.setAlignment(SWT.CENTER);
 		lblDisplay.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		
 		tbtmMain.setControl(lblDisplay);
 		lblDisplay.setText("Welcome to Smart Management Tool");
+		lblDisplay.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 
 		// This is for Schedule Tab
 		tbtmAll = new TabItem(displayTaskFolder, SWT.NONE);
@@ -230,70 +239,6 @@ public class SmtSurvival extends Composite {
 		tbtmBlocked.setToolTipText("This tab will show all Blocked tasks");
 		tbtmBlocked.setText("Blocked");
 	}
-	
-	/**
-	 * This method creates a composite for the UI
-	 * 
-	 * @return
-	 */
-	private Composite createComposite() {
-		composite_1 = new Composite(this, SWT.NONE);
-		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1);
-		gd_composite_1.heightHint = 83;
-		gd_composite_1.widthHint = 429;
-		composite_1.setLayoutData(gd_composite_1);
-		toolkit.adapt(composite_1);
-		toolkit.paintBordersFor(composite_1);
-		return composite_1;
-	}
-
-	/**
-	 * This method is to create a label named "Command:" which indicate where
-	 * should the user key in their commands
-	 * 
-	 * @param composite_1
-	 */
-	private void commandLabel(Composite composite_1) {
-		Label lblCommand = new Label(composite_1, SWT.NONE);
-		lblCommand.setFont(SWTResourceManager.getFont("Century Gothic", 10, SWT.BOLD));
-		lblCommand.setBounds(10, 10, 84, 20);
-		toolkit.adapt(lblCommand, true, true);
-		lblCommand.setText("Command :");
-	}
-
-	/**
-	 * This method set the command text box for user to enter their commands
-	 * 
-	 * @param composite_1
-	 */
-	private void setCommandTextBox(Composite composite_1) {
-		cmdTxtBox = new Text(composite_1, SWT.BORDER);
-
-		cmdTxtBox.setToolTipText("Please enter a command here");
-		cmdTxtBox.setForeground(SWTResourceManager
-				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		cmdTxtBox.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		
-		cmdTxtBox.setFocus();
-
-		cmdTxtBox.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyReleased(KeyEvent e){
-				passControl(e);
-			}
-			
-			public void keyPressed(KeyEvent e) {
-				switchTabControl(e);
-				loadCommandHistory(e);
-			}
-		});
-
-		cmdTxtBox.setBounds(100, 10, 319, 63);
-		toolkit.adapt(cmdTxtBox, true, true);
-	}
 
 	/**
 	 * This method is to pass control to the logic component's menu class to
@@ -303,24 +248,50 @@ public class SmtSurvival extends Composite {
 	 *            keyEvent variable
 	 */
 	private void passControl(KeyEvent e) {
+		
 		String output = new String();
 		lblDisplay = new Label(displayTaskFolder, SWT.NONE);
+		
 		if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
-			CommandEnteredHistoryHandler.newCommandEntered(cmdTxtBox.getText());
-			output = controller.commandExecution(cmdTxtBox.getText());
+			CommandEnteredHistoryHandler.newCommandEntered(combo.getText());
+			output = controller.commandExecution(combo.getText());
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
 			lblDisplay.setText(output);
-			cmdTxtBox.setText("");
+			combo.removeAll();
+			//cmdTxtBox.setText("");
 			savedExistingContents = lblDisplay.getText();
-		} else if(!flagForSwitchTab){
-			output = controller.getHint(cmdTxtBox.getText());
+		} 
+		
+		else if(!flagForSwitchTab && (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)){
+
+			output = controller.getHint(combo.getText());
 			displayTaskFolder.setSelection(tbtmMain);
 			tbtmMain.setControl(lblDisplay);
-			lblDisplay.setText(output); 
+			//lblDisplay.setText(output); 
+			
+			if(output.contains(MessageList.MESSAGE_HINT_INVALID) || output.contains(MessageList.MESSAGE_INVAILD)){
+				return;
+			}
+			
+			if(combo.getItemCount() > 0){
+				combo.remove(0, combo.getItemCount() -1);
+			}
+			String[] outputArr = output.split("\n");
+			for(String indiString: outputArr){
+				combo.add(indiString);
+			}
+			
+			if(outputArr.length > 0 && !output.isEmpty()){
+				combo.setListVisible(true);
+			}
+			else{
+				combo.setListVisible(false);
+			}
+			
 			savedExistingContents = lblDisplay.getText();
 		}
-		
+		saveCurrentCommand = combo.getText();
 		
 	}
 	
@@ -350,6 +321,7 @@ public class SmtSurvival extends Composite {
 		}
 		else{
 			flagForSwitchTab = false;
+			passControl(e);
 		}
 	}
 
@@ -389,11 +361,15 @@ public class SmtSurvival extends Composite {
 	 */
 	private void loadCommandHistory(KeyEvent e) {
 		
-		if(e.keyCode == SWT.ARROW_UP) {
-			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+		if(((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_LEFT) {
+			combo.select(-1);
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+			saveCurrentCommand = combo.getText();
 		}
-		else if(e.keyCode == SWT.ARROW_DOWN) {
-			cmdTxtBox.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
+		else if(((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_RIGHT) {
+			combo.select(-1);
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
+			saveCurrentCommand = combo.getText();
 		}
 	}
 }
