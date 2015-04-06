@@ -121,8 +121,11 @@ public class MessageList {
 	 * This message are for CacheCommandsHandler class
 	 */
 	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
+	public static final String MESSAGE_ONLY_ONE_ITEM = "Only one command entered. Could not perform redo";
 	public static final String MESSAGE_ERROR = "Unable to proceed";
 	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
+	public static final String MESSAGE_REDO_SUCCESS = "Redo operation done";
+	
 
 	/**
 	 * This method will print out the error message before exiting the system
