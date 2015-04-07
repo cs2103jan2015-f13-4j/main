@@ -25,7 +25,8 @@ public class Menu {
 	}
 
 	public String commandExecution(String input) {
-		Map<String, String> keyFieldsList = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+		Map<String, String> keyFieldsList = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
 		CommandType.Command_Types cmd = CommandStringParser.processString(
 				input, keyFieldsList);
 
@@ -58,10 +59,10 @@ public class Menu {
 		case UNDO: {
 			return CacheCommandsHandler.executeUndo(smtData);
 		}
-		// case REDO:{
-		// return CacheCommandsHandler.executeRedo(fileName, listTask);
+		case REDO: {
+			return CacheCommandsHandler.executeRedo(smtData);
 
-		// }
+		}
 		case BLOCK: {
 			return BlockDateHandler.executeBlockOrUnblock(keyFieldsList,
 					cmd.name(), smtData);
