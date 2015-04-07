@@ -123,6 +123,9 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
 	public static final String MESSAGE_BLOCK_DATE_DO_NOT_EXIST = "\"%1$s\" is not inside the block list";
 	public static final String MESSAGE_BLOCK_DATE_ALREADY_EXIST = "\"%1$s\" already exist";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_END ="Wrong date format for End date";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START ="Wrong date format for Start date";
+	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
 	
 
 	/**
