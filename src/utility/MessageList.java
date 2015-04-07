@@ -9,7 +9,7 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_HELP = "************************************************************************************\n\n1) Add\n\n- Add <Desc>\n- Add <Description> from <Date> to <Date>"
 			+ "\n-Add<Description> every <Date>\n\n 2) Delete\n\n- Delete<Task#>\n\n "
-			+ "3) Update\n\n- Update <Task #> TaskDesc <description>\n- Update <Task #> By <date/day>\n- Update <Task #> Completed\n- Update <Task #> Pending\n- Update<Task #> TaskEnd<date>\n- Update<Task #>TaskStart<date>\n- Update<Task#> Every <Friday>\n- Update<Task #> By date or weekly day\n\n"
+			+ "3) Update\n\n- Update <Task #> TaskDesc <description>\n- Update <Task #> By <date/day>\n- Update <Task #> Complete\n- Update <Task #> Incomplete\n- Update<Task #> TaskEnd<date>\n- Update<Task #>TaskStart<date>\n- Update<Task#> Every <Friday>\n- Update<Task #> By date or weekly day\n\n"
 			+ "4) Delete\n\n- Delete <#>\n\n"
 			+ "5) Display \n\n- Display Today [tdy] \n- Display Tomorrow [tmr]\n- Display monday [mon]\n- Display tuesday [tue]\n- Display wednesday [wed]\n- Display thursday [thu]\n- Display friday [fri]\n- Display saturday [sat]\n- Display sunday [sun]\n- Display Pending[pend]\n- Display Schedule\n- Display Complete[comp]\n\n "
 			+ "6) Search\n\n- Search by Task ID \n Search 1 <Task #> \n Search by Task Description\n- Search 2<Task Description>\n- Search 3 <Date>\n\n "
@@ -71,7 +71,9 @@ public class MessageList {
 	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
 	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
 	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
-
+	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
+	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list";
+	
 	/**
 	 * These message are for UpdateHandler class
 	 */
@@ -121,6 +123,9 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
 	public static final String MESSAGE_BLOCK_DATE_DO_NOT_EXIST = "\"%1$s\" is not inside the block list";
 	public static final String MESSAGE_BLOCK_DATE_ALREADY_EXIST = "\"%1$s\" already exist";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_END ="Wrong date format for End date";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START ="Wrong date format for Start date";
+	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
 	
 
 	/**

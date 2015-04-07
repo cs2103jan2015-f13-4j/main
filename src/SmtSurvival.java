@@ -65,7 +65,7 @@ public class SmtSurvival extends Composite {
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, style);
-		setBackground(SWTResourceManager.getColor(173, 216, 230));
+		setBackground(SWTResourceManager.getColor(0, 0, 128));
 
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -82,6 +82,7 @@ public class SmtSurvival extends Composite {
 
 		/* Main Tab */
 		tabMain = new CTabItem(tabFolder, SWT.NONE);
+		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabMain.setText("Main");
 		tabMain.setToolTipText("Click this tab to show the Main page");
 
@@ -102,6 +103,7 @@ public class SmtSurvival extends Composite {
 
 		/* Schedule Tab */
 		tabAll = new CTabItem(tabFolder, SWT.NONE);
+		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabAll.setText("All");
 
 		scAll = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -111,6 +113,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblAll = new Label(composite, SWT.NONE);
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblAll.setText("This page is for Schedule Tasks");
 
 		scAll.setContent(composite);
@@ -119,6 +122,7 @@ public class SmtSurvival extends Composite {
 
 		/* Today Tab */
 		tabToday = new CTabItem(tabFolder, SWT.NONE);
+		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabToday.setText("Today");
 
 		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -128,6 +132,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblToday = new Label(composite, SWT.NONE);
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
@@ -136,6 +141,7 @@ public class SmtSurvival extends Composite {
 
 		/* Completed Tab */
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
+		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabCompleted.setText("Completed");
 
 		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
@@ -146,6 +152,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblCompleted = new Label(composite, SWT.NONE);
+		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
@@ -154,6 +161,7 @@ public class SmtSurvival extends Composite {
 
 		/* Pending Tab */
 		tabPending = new CTabItem(tabFolder, SWT.NONE);
+		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabPending.setText("Pending");
 
 		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -163,6 +171,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblPending = new Label(composite, SWT.NONE);
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
@@ -171,6 +180,7 @@ public class SmtSurvival extends Composite {
 
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
+		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
 		tabBlocked.setText("Blocked");
 
 		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -180,6 +190,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblBlocked = new Label(composite, SWT.NONE);
+		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
