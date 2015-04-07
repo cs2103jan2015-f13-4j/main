@@ -117,7 +117,7 @@ public class SmtSurvival extends Composite {
 		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabAll.setText("All");
-		tabAll.setToolTipText("Select this tab to show the all tasks");
+		tabAll.setToolTipText("Select this tab to show all tasks");
 
 		scAll = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabAll.setControl(scAll);
@@ -140,6 +140,7 @@ public class SmtSurvival extends Composite {
 		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabToday.setText("Today");
+		tabToday.setToolTipText("Select this tab to show the Today's tasks");
 
 		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabToday.setControl(scToday);
@@ -162,6 +163,7 @@ public class SmtSurvival extends Composite {
 		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabCompleted.setText("Completed");
+		tabCompleted.setToolTipText("Select this tab to show the Completed tasks");
 
 		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
 				| SWT.V_SCROLL);
@@ -185,6 +187,7 @@ public class SmtSurvival extends Composite {
 		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabPending.setText("Pending");
+		tabPending.setToolTipText("Select this tab to show the Pending tasks");
 
 		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabPending.setControl(scPending);
@@ -207,6 +210,7 @@ public class SmtSurvival extends Composite {
 		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabBlocked.setText("Blocked");
+		tabBlocked.setToolTipText("Select this tab to show the Blocked tasks");
 
 		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabBlocked.setControl(scBlocked);
@@ -230,6 +234,8 @@ public class SmtSurvival extends Composite {
 		combo = new Combo(compositeBackground, SWT.NONE);
 		combo.setLocation(10, 10);
 		combo.setSize(435, 28);
+		combo.setText("Enter command here");
+		combo.setToolTipText("Enter command to manage your tasks");
 		combo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
