@@ -1,10 +1,13 @@
-package logic;
+//@A0111935L
+package unit_testing;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
+
+import logic.UpdateHandler;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -77,7 +80,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithDescRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -118,7 +121,7 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart from: 3 March, 2016 (Thu)\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -128,7 +131,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 March, 2016 (Thu)\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -138,7 +141,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithStartTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("from", "5pm");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -148,7 +151,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("to", "11pm");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -159,7 +162,7 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("FROM", "5pm");
 		keyFieldsTest.put("TO", "6pm");
-		String expected = MessageList.MESSAGE_UPDATE_SUCCESS;
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}

@@ -1,3 +1,4 @@
+//@A0111935L
 package parser;
 
 import java.util.Map;
@@ -8,7 +9,7 @@ import utility.KeywordType;
 /**
  * This class allows the command in a line to break into keys and fields.
  * It will returned a command type and also the referenced list of keyfields
- * @author A0111935L
+ * 
  *
  */
 public class CommandStringParser {
