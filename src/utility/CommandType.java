@@ -24,7 +24,6 @@ public class CommandType {
 		case "u":
 			return Command_Types.UPDATE;
 		case "exit":
-		case "e":
 			return Command_Types.EXIT;
 		case "search":
 		case "sh":
