@@ -31,6 +31,7 @@ public class SmtSurvival extends Composite {
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private Composite composite = null;
+	private Composite compositeBackground;
 	private CTabFolder tabFolder;
 	private CTabItem tabMain;
 	private CTabItem tabAll;
@@ -56,7 +57,6 @@ public class SmtSurvival extends Composite {
 	private static boolean flagForSwitchTab = false;
 	private static String saveCurrentCommand = new String();
 
-
 	/**
 	 * Create the composite.
 	 * 
@@ -65,7 +65,7 @@ public class SmtSurvival extends Composite {
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, style);
-		setBackground(SWTResourceManager.getColor(0, 0, 128));
+		setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -73,8 +73,15 @@ public class SmtSurvival extends Composite {
 			}
 		});
 
-		tabFolder = new CTabFolder(this, SWT.BORDER);
-		tabFolder.setBounds(10, 61, 435, 401);
+		// Background composite
+		compositeBackground = new Composite(this, SWT.NONE);
+		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
+				204));
+		compositeBackground.setBounds(0, 0, 463, 465);
+
+		tabFolder = new CTabFolder(compositeBackground, SWT.BORDER);
+		tabFolder.setLocation(10, 44);
+		tabFolder.setSize(435, 401);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		toolkit.adapt(tabFolder);
@@ -82,9 +89,10 @@ public class SmtSurvival extends Composite {
 
 		/* Main Tab */
 		tabMain = new CTabItem(tabFolder, SWT.NONE);
-		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabMain.setText("Main");
-		tabMain.setToolTipText("Click this tab to show the Main page");
+		tabMain.setToolTipText("Select this tab to show the Main page");
 
 		scMain = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabMain.setControl(scMain);
@@ -101,10 +109,12 @@ public class SmtSurvival extends Composite {
 		scMain.setFocus();
 		scMain.setMinSize(composite.computeSize(1000, 1000));
 
-		/* Schedule Tab */
+		/* All Tab */
 		tabAll = new CTabItem(tabFolder, SWT.NONE);
-		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabAll.setText("All");
+		tabAll.setToolTipText("Select this tab to show the all tasks");
 
 		scAll = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
 		tabAll.setControl(scAll);
@@ -113,7 +123,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblAll = new Label(composite, SWT.NONE);
-		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11,
+				SWT.NORMAL));
 		lblAll.setText("This page is for Schedule Tasks");
 
 		scAll.setContent(composite);
@@ -122,7 +133,8 @@ public class SmtSurvival extends Composite {
 
 		/* Today Tab */
 		tabToday = new CTabItem(tabFolder, SWT.NONE);
-		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabToday.setText("Today");
 
 		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -132,7 +144,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblToday = new Label(composite, SWT.NONE);
-		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11,
+				SWT.NORMAL));
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
@@ -141,7 +154,8 @@ public class SmtSurvival extends Composite {
 
 		/* Completed Tab */
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
-		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabCompleted.setText("Completed");
 
 		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
@@ -152,7 +166,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblCompleted = new Label(composite, SWT.NONE);
-		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
+		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11,
+				SWT.NORMAL));
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
@@ -161,7 +176,8 @@ public class SmtSurvival extends Composite {
 
 		/* Pending Tab */
 		tabPending = new CTabItem(tabFolder, SWT.NONE);
-		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabPending.setText("Pending");
 
 		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -171,7 +187,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblPending = new Label(composite, SWT.NONE);
-		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11,
+				SWT.NORMAL));
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
@@ -180,7 +197,8 @@ public class SmtSurvival extends Composite {
 
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
-		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.NORMAL));
+		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
 		tabBlocked.setText("Blocked");
 
 		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
@@ -190,7 +208,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblBlocked = new Label(composite, SWT.NONE);
-		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
+		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11,
+				SWT.NORMAL));
 		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
@@ -200,36 +219,50 @@ public class SmtSurvival extends Composite {
 		tabFolder.setSelection(tabMain);
 		tabMain.setControl(scMain);
 		
+				combo = new Combo(compositeBackground, SWT.NONE);
+				combo.setLocation(10, 10);
+				combo.setSize(435, 28);
+				combo.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						switchTabControl(e);
+						loadCommandHistory(e);
+
+					}
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						passControl(e);
+					}
+				});
+				toolkit.adapt(combo);
+				toolkit.paintBordersFor(combo);
+				combo.setFocus();
+
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				tabControl(event);
 			}
 		});
-		
-		combo = new Combo(this, SWT.NONE);
-		combo.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				switchTabControl(e);
-				loadCommandHistory(e);
-
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				passControl(e);
-			}
-		});
-		combo.setBounds(10, 32, 435, 23);
-		toolkit.adapt(combo);
-		toolkit.paintBordersFor(combo);
-		combo.setFocus();
 	}
 
 	private void tabControl(SelectionEvent event) {
-		if (tabFolder.getSelectionIndex() == 0) {
-			// tabMain.setControl(lblMain);
-			lblMain.setText("");
-		}
+		
+		lblMain = new Label(tabFolder, SWT.NONE);
+		
+		if(tabFolder.getSelection() == tabMain){
+			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
+		} else if(tabFolder.getSelection() == tabAll){
+			setTabControl(tabAll, lblMain, scAll, savedExistingContents);
+		} else if(tabFolder.getSelection() == tabToday){
+			setTabControl(tabToday, lblMain, scToday, savedExistingContents);
+		} else if(tabFolder.getSelection() == tabCompleted){
+			setTabControl(tabCompleted, lblMain, scCompleted, savedExistingContents);
+		} else if(tabFolder.getSelection() == tabPending){
+			setTabControl(tabPending, lblMain, scPending, savedExistingContents);
+		} else if(tabFolder.getSelection() == tabBlocked){
+			setTabControl(tabBlocked, lblMain, scBlocked, savedExistingContents);
+		} 
 	}
 
 	/**
@@ -240,117 +273,107 @@ public class SmtSurvival extends Composite {
 	 *            keyEvent variable
 	 */
 	private void passControl(KeyEvent e) {
-		
+
 		String output = new String();
 		lblMain = new Label(tabFolder, SWT.NONE);
-		
-		if ((e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) && combo.getSelectionIndex() == -1) {
+
+		if ((e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
+				&& combo.getSelectionIndex() == -1) {
 			CommandEnteredHistoryHandler.newCommandEntered(saveCurrentCommand);
 			output = controller.commandExecution(saveCurrentCommand);
 			tabFolder.setSelection(tabMain);
 			tabMain.setControl(lblMain);
 			lblMain.setText(output);
 			combo.removeAll();
-			//cmdTxtBox.setText("");
 			savedExistingContents = lblMain.getText();
-		} 
-		else if(combo.getSelectionIndex() > -1){
-			//do nth
-		}
-		else if(!flagForSwitchTab && (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)){
+		} else if (combo.getSelectionIndex() > -1) {
+			// do nth
+		} else if (!flagForSwitchTab
+				&& (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)) {
 
 			output = controller.getHint(combo.getText());
 			tabFolder.setSelection(tabMain);
-			//tabMain.setControl(scMain);
-			//lblMain.setText(output); 
-			
-			
-			
-			if(combo.getItemCount() > 0){
-				combo.remove(0, combo.getItemCount() -1);
+
+			if (combo.getItemCount() > 0) {
+				combo.remove(0, combo.getItemCount() - 1);
 			}
-			
-			if(output.contains(MessageList.MESSAGE_HINT_INVALID) || output.contains(MessageList.MESSAGE_INVAILD)){
+
+			if (output.contains(MessageList.MESSAGE_HINT_INVALID)
+					|| output.contains(MessageList.MESSAGE_INVAILD)) {
 				combo.setListVisible(false);
 				return;
 			}
-			
+
 			String[] outputArr = output.split("\n");
-			for(String indiString: outputArr){
+			for (String indiString : outputArr) {
 				combo.add(indiString);
 			}
-			
-			if(outputArr.length > 0 && !output.isEmpty()){
+
+			if (outputArr.length > 0 && !output.isEmpty()) {
 				combo.setListVisible(true);
-			}
-			else{
+			} else {
 				combo.setListVisible(false);
 			}
 			saveCurrentCommand = combo.getText();
 			savedExistingContents = lblMain.getText();
 		}
-		
-		
+
 	}
 
-	
-	private void switchTabControl(KeyEvent e){
+	private void switchTabControl(KeyEvent e) {
 		flagForSwitchTab = true;
-		if((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
+		if ((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
 			tabFolder.setSelection(tabMain);
-			//tabMain.setControl(scMain);
 			lblMain.setText(savedExistingContents);
-		}
-		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
 			setTabControl(tabAll, lblAll, scAll, "Display All");
-		}
-		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
 			flagForSwitchTab = true;
 			setTabControl(tabToday, lblToday, scToday, "Display Today");
-		}
-		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
-			setTabControl(tabCompleted, lblCompleted, scCompleted, "Display Completed");
-		}
-		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '5')) {
-			setTabControl(tabPending, lblPending, scPending,"Display Pending");
-		}
-		else if(((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
-			setTabControl(tabBlocked, lblBlocked, scBlocked,"Display Block");
-		}
-		else if((e.stateMask & SWT.ALT) == SWT.ALT){
-			//do nothing
-		}
-		else{
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
+			setTabControl(tabCompleted, lblCompleted, scCompleted,
+					"Display Completed");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '5')) {
+			setTabControl(tabPending, lblPending, scPending, "Display Pending");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
+			setTabControl(tabBlocked, lblBlocked, scBlocked, "Display Block");
+		} else if ((e.stateMask & SWT.ALT) == SWT.ALT) {
+			// do nothing
+		} else {
 			flagForSwitchTab = false;
 		}
 	}
 
-	private void setTabControl(CTabItem tab, Label lblReceive, ScrolledComposite scReceived,  String command){
+	private void setTabControl(CTabItem tab, Label lblReceive,
+			ScrolledComposite scReceived, String command) {
 		tabFolder.setSelection(tab);
 		tab.setControl(scReceived);
 		lblReceive.setText(controller.commandExecution(command));
 	}
 
-	
 	/**
-	 * This method will load the command history so that user can use the up down button for execution
+	 * This method will load the command history so that user can use the up
+	 * down button for execution
+	 * 
 	 * @param e
 	 */
 	private void loadCommandHistory(KeyEvent e) {
-		
-		if(((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_LEFT) {
+
+		if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT)
+				&& e.keyCode == SWT.ARROW_LEFT) {
 			combo.select(-1);
-			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+			combo.setText(CommandEnteredHistoryHandler
+					.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
 			saveCurrentCommand = combo.getText();
-		}
-		else if(((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_RIGHT) {
+		} else if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT)
+				&& e.keyCode == SWT.ARROW_RIGHT) {
 			combo.select(-1);
-			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
+			combo.setText(CommandEnteredHistoryHandler
+					.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
 			saveCurrentCommand = combo.getText();
 		}
 	}
 
-	
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
@@ -369,14 +392,14 @@ public class SmtSurvival extends Composite {
 		shell.pack();
 
 		setUpFiles();
-		
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
 		display.dispose();
 	}
-	
+
 	/**
 	 * This method is to set up the files
 	 */
