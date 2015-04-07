@@ -2,7 +2,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -12,20 +14,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import logic.CommandEnteredHistoryHandler;
-import logic.Menu;
-
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.KeyAdapter;
 
+import logic.CommandEnteredHistoryHandler;
+import logic.Menu;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
+import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.events.TraverseEvent;
 
 public class SmtSurvival extends Composite {
 
@@ -72,7 +73,7 @@ public class SmtSurvival extends Composite {
 				toolkit.dispose();
 			}
 		});
-		
+
 		// Background composite
 		compositeBackground = new Composite(this, SWT.NONE);
 		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
@@ -95,6 +96,7 @@ public class SmtSurvival extends Composite {
 		tabMain.setToolTipText("Select this tab to show the Main page");
 
 		scMain = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
+		scMain.setShowFocusedControl(true);
 		tabMain.setControl(scMain);
 		composite = new Composite(scMain, SWT.None);
 		composite.setLayout(new FillLayout());
@@ -105,9 +107,10 @@ public class SmtSurvival extends Composite {
 		lblMain.setText("Welcome to Smart Management Tool");
 
 		scMain.setContent(composite);
+		scMouseWheel(scMain);
 		scMain.setExpandVertical(true);
 		scMain.setFocus();
-		scMain.setMinSize(composite.computeSize(1000, 1000));
+		scMain.setMinSize(composite.computeSize(2000, 2000));
 
 		/* All Tab */
 		tabAll = new CTabItem(tabFolder, SWT.NONE);
@@ -128,8 +131,9 @@ public class SmtSurvival extends Composite {
 		lblAll.setText("This page is for Schedule Tasks");
 
 		scAll.setContent(composite);
+		scMouseWheel(scAll);
 		scAll.setExpandVertical(true);
-		scAll.setMinSize(composite.computeSize(1000, 1000));
+		scAll.setMinSize(composite.computeSize(2000, 2000));
 
 		/* Today Tab */
 		tabToday = new CTabItem(tabFolder, SWT.NONE);
@@ -149,8 +153,9 @@ public class SmtSurvival extends Composite {
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
+		scMouseWheel(scToday);
 		scToday.setExpandVertical(true);
-		scToday.setMinSize(composite.computeSize(1000, 1000));
+		scToday.setMinSize(composite.computeSize(2000, 2000));
 
 		/* Completed Tab */
 		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
@@ -171,8 +176,9 @@ public class SmtSurvival extends Composite {
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
+		scMouseWheel(scCompleted);
 		scCompleted.setExpandVertical(true);
-		scCompleted.setMinSize(composite.computeSize(1000, 1000));
+		scCompleted.setMinSize(composite.computeSize(2000, 2000));
 
 		/* Pending Tab */
 		tabPending = new CTabItem(tabFolder, SWT.NONE);
@@ -192,8 +198,9 @@ public class SmtSurvival extends Composite {
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
+		scMouseWheel(scPending);
 		scPending.setExpandVertical(true);
-		scPending.setMinSize(composite.computeSize(1000, 1000));
+		scPending.setMinSize(composite.computeSize(2000, 2000));
 
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
@@ -213,31 +220,32 @@ public class SmtSurvival extends Composite {
 		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
+		scMouseWheel(scBlocked);
 		scBlocked.setExpandVertical(true);
-		scBlocked.setMinSize(composite.computeSize(1000, 1000));
+		scBlocked.setMinSize(composite.computeSize(2000, 2000));
 
 		tabFolder.setSelection(tabMain);
 		tabMain.setControl(scMain);
-		
-				combo = new Combo(compositeBackground, SWT.NONE);
-				combo.setLocation(10, 10);
-				combo.setSize(435, 28);
-				combo.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						switchTabControl(e);
-						loadCommandHistory(e);
 
-					}
+		combo = new Combo(compositeBackground, SWT.NONE);
+		combo.setLocation(10, 10);
+		combo.setSize(435, 28);
+		combo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				switchTabControl(e);
+				loadCommandHistory(e);
 
-					@Override
-					public void keyReleased(KeyEvent e) {
-						passControl(e);
-					}
-				});
-				toolkit.adapt(combo);
-				toolkit.paintBordersFor(combo);
-				combo.setFocus();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				passControl(e);
+			}
+		});
+		toolkit.adapt(combo);
+		toolkit.paintBordersFor(combo);
+		combo.setFocus();
 
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -246,23 +254,37 @@ public class SmtSurvival extends Composite {
 		});
 	}
 
+	/**
+	 * This method is to activate the mousewheel for the scroll composite
+	 * 
+	 * @param scReceived
+	 */
+	private void scMouseWheel(final ScrolledComposite scReceived) {
+		scReceived.addListener(SWT.Activate, new Listener() {
+			public void handleEvent(Event e) {
+				scReceived.setFocus();
+			}
+		});
+	}
+
 	private void tabControl(SelectionEvent event) {
-		
+
 		lblMain = new Label(tabFolder, SWT.NONE);
-		
-		if(tabFolder.getSelection() == tabMain){
+
+		if (tabFolder.getSelection() == tabMain) {
 			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
-		} else if(tabFolder.getSelection() == tabAll){
+		} else if (tabFolder.getSelection() == tabAll) {
 			setTabControl(tabAll, lblMain, scAll, "Display All");
-		} else if(tabFolder.getSelection() == tabToday){
+		} else if (tabFolder.getSelection() == tabToday) {
 			setTabControl(tabToday, lblMain, scToday, "Display Today");
-		} else if(tabFolder.getSelection() == tabCompleted){
-			setTabControl(tabCompleted, lblMain, scCompleted, "Display Completed");
-		} else if(tabFolder.getSelection() == tabPending){
+		} else if (tabFolder.getSelection() == tabCompleted) {
+			setTabControl(tabCompleted, lblMain, scCompleted,
+					"Display Completed");
+		} else if (tabFolder.getSelection() == tabPending) {
 			setTabControl(tabPending, lblMain, scPending, "Display Pending");
-		} else if(tabFolder.getSelection() == tabBlocked){
+		} else if (tabFolder.getSelection() == tabBlocked) {
 			setTabControl(tabBlocked, lblMain, scBlocked, "Display Block");
-		} 
+		}
 	}
 
 	/**
