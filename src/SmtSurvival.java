@@ -72,7 +72,7 @@ public class SmtSurvival extends Composite {
 				toolkit.dispose();
 			}
 		});
-
+		
 		// Background composite
 		compositeBackground = new Composite(this, SWT.NONE);
 		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
@@ -253,15 +253,15 @@ public class SmtSurvival extends Composite {
 		if(tabFolder.getSelection() == tabMain){
 			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
 		} else if(tabFolder.getSelection() == tabAll){
-			setTabControl(tabAll, lblMain, scAll, savedExistingContents);
+			setTabControl(tabAll, lblMain, scAll, "Display All");
 		} else if(tabFolder.getSelection() == tabToday){
-			setTabControl(tabToday, lblMain, scToday, savedExistingContents);
+			setTabControl(tabToday, lblMain, scToday, "Display Today");
 		} else if(tabFolder.getSelection() == tabCompleted){
-			setTabControl(tabCompleted, lblMain, scCompleted, savedExistingContents);
+			setTabControl(tabCompleted, lblMain, scCompleted, "Display Completed");
 		} else if(tabFolder.getSelection() == tabPending){
-			setTabControl(tabPending, lblMain, scPending, savedExistingContents);
+			setTabControl(tabPending, lblMain, scPending, "Display Pending");
 		} else if(tabFolder.getSelection() == tabBlocked){
-			setTabControl(tabBlocked, lblMain, scBlocked, savedExistingContents);
+			setTabControl(tabBlocked, lblMain, scBlocked, "Display Block");
 		} 
 	}
 
