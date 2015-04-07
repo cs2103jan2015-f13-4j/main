@@ -73,13 +73,15 @@ public class UpdateHandler {
 		indicMsg.setTrue(true);
 		KeywordType.List_Keywords getKey;
 		
+		Task awaitingTask = smtData.getATask(index);
+		
 		if(restrictOnlyUnqiueKeyWord(keyFieldsList) > 1){
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
 		
 		//first check if command contains from and to keywords and process them first
 		if(checkFromTimeToTimeBothExist(keyFieldsList)){
-			indicMsg = processBothTimes(keyFieldsList, index, smtData);
+			indicMsg = processBothTimes(keyFieldsList, awaitingTask);
 		}
 		
 		if(indicMsg != null && !indicMsg.isTrue()){
@@ -91,25 +93,25 @@ public class UpdateHandler {
 			switch(getKey){
 			case BY:
 			case ON:
-				indicMsg = updateTaskByOrEndWhen(smtData, index, keyFieldsList.get(key));
+				indicMsg = updateTaskByOrEndWhen(smtData, awaitingTask, keyFieldsList.get(key));
 				break;
 			case TASKDESC:
-				indicMsg = updateTaskDesc(smtData, index, keyFieldsList.get(key));
+				indicMsg = updateTaskDesc(awaitingTask, keyFieldsList.get(key));
 				break;
 			case FROM:
-				indicMsg = updateTaskFromOrToTimeWhen(smtData, index, keyFieldsList.get(key), KeywordType.List_Keywords.FROM);
+				indicMsg = updateTaskFromOrToTimeWhen(awaitingTask, keyFieldsList.get(key), KeywordType.List_Keywords.FROM);
 				break;
 			case TO:
-				indicMsg = updateTaskFromOrToTimeWhen(smtData, index, keyFieldsList.get(key), KeywordType.List_Keywords.TO);
+				indicMsg = updateTaskFromOrToTimeWhen(awaitingTask, keyFieldsList.get(key), KeywordType.List_Keywords.TO);
 				break;
 			case EVERY:
-				indicMsg = updateRecurringWeek(smtData, index, keyFieldsList.get(key));
+				indicMsg = updateRecurringWeek(awaitingTask, keyFieldsList.get(key));
 				break;
 			case COMPLETE:
-				indicMsg = updateTaskStatus(smtData, index, keyFieldsList.get(key), true);
+				indicMsg = updateTaskStatus(awaitingTask, keyFieldsList.get(key), true);
 				break;
 			case INCOMPLETE:
-				indicMsg = updateTaskStatus(smtData, index, keyFieldsList.get(key), false);
+				indicMsg = updateTaskStatus(awaitingTask, keyFieldsList.get(key), false);
 				break;
 			default:
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
@@ -119,6 +121,10 @@ public class UpdateHandler {
 				return indicMsg.getMessage();
 			}
 		}
+		
+		//until here it means success
+		smtData.updateTaskList(index, awaitingTask);
+		
 		indicMsg = new IndicatorMessagePair();
 		
 		indicMsg = smtData.writeTaskListToFile();
@@ -139,8 +145,8 @@ public class UpdateHandler {
 	 * @param keyFields contains the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateTaskByOrEndWhen(Data smtData, int index, String keyFields){
-		if(smtData == null){
+	private static IndicatorMessagePair updateTaskByOrEndWhen(Data smtData, Task currentTask, String keyFields){
+		if(currentTask == null){
 			assert false : "System error";
 		}
 		
@@ -152,22 +158,25 @@ public class UpdateHandler {
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
 		
+		if(clashWithBlockDate(smtData, endDate)){
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End")); 
+		}
+		
+		
 		DateTime newStartDateTime = null; 
 		DateTime newEndDateTime = null;
 		
-		if(smtData.getATask(index).getTaskStartDateTime() != null){
-			newStartDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), smtData.getATask(index).getTaskStartDateTime().getHourOfDay(), smtData.getATask(index).getTaskStartDateTime().getMinuteOfHour());
+		if(currentTask.getTaskStartDateTime() != null){
+			newStartDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), currentTask.getTaskStartDateTime().getHourOfDay(), currentTask.getTaskStartDateTime().getMinuteOfHour());
 		}
 		
-		if(smtData.getATask(index).getTaskEndDateTime() != null){
-			newEndDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), smtData.getATask(index).getTaskEndDateTime().getHourOfDay(), smtData.getATask(index).getTaskEndDateTime().getMinuteOfHour());
+		if(currentTask.getTaskEndDateTime() != null){
+			newEndDateTime = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), endDate.getDayOfMonth(), currentTask.getTaskEndDateTime().getHourOfDay(), currentTask.getTaskEndDateTime().getMinuteOfHour());
 		}
 		
-		
-		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskStartDateTime(newStartDateTime);
-		tempTask.setTaskEndDateTime(newEndDateTime);
-		smtData.updateTaskList(index, tempTask);
+
+		currentTask.setTaskStartDateTime(newStartDateTime);
+		currentTask.setTaskEndDateTime(newEndDateTime);
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -178,7 +187,7 @@ public class UpdateHandler {
 	 * @param keyFields contains the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateRecurringWeek(Data smtData, int index, String keyFields){
+	private static IndicatorMessagePair updateRecurringWeek(Task currentTask, String keyFields){
 		if(keyFields == null || keyFields.isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
 		}
@@ -192,19 +201,17 @@ public class UpdateHandler {
 		DateTime newStartTime = null; 
 		DateTime newEndTime = null;
 		
-		if(smtData.getATask(index).getTaskStartDateTime() != null){
-			newStartTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), smtData.getATask(index).getTaskStartDateTime().getHourOfDay(), smtData.getATask(index).getTaskStartDateTime().getMinuteOfHour());
+		if(currentTask.getTaskStartDateTime() != null){
+			newStartTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), currentTask.getTaskStartDateTime().getHourOfDay(), currentTask.getTaskStartDateTime().getMinuteOfHour());
 		}
 		
-		if(smtData.getATask(index).getTaskEndDateTime() != null){
-			newEndTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), smtData.getATask(index).getTaskEndDateTime().getHourOfDay(), smtData.getATask(index).getTaskEndDateTime().getMinuteOfHour());
+		if(currentTask.getTaskEndDateTime() != null){
+			newEndTime = new DateTime(weeklyDate.getYear(), weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(), currentTask.getTaskEndDateTime().getHourOfDay(), currentTask.getTaskEndDateTime().getMinuteOfHour());
 		}
 	
-		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskStartDateTime(newStartTime);
-		tempTask.setTaskEndDateTime(newEndTime);
-		tempTask.setWeeklyDay(keyFields);
-		smtData.updateTaskList(index, tempTask);
+		currentTask.setTaskStartDateTime(newStartTime);
+		currentTask.setTaskEndDateTime(newEndTime);
+		currentTask.setWeeklyDay(keyFields);
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -215,17 +222,16 @@ public class UpdateHandler {
 	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if the parameter and message
 	 */
-	private static IndicatorMessagePair updateTaskDesc(Data smtData, int index, String keyFields){
-		if(smtData == null){
+	private static IndicatorMessagePair updateTaskDesc(Task currentTask, String keyFields){
+		if(currentTask == null){
 			assert false : "System error";
 		}
 		
 		if(keyFields == null || keyFields.isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_DESCRIPTION_EMPTY);
 		}
-		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskDescription(keyFields);
-		smtData.updateTaskList(index, tempTask);
+		
+		currentTask.setTaskDescription(keyFields);
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -236,8 +242,8 @@ public class UpdateHandler {
 	 * @param keyFields contains the keyword and the data it has
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateTaskFromOrToTimeWhen(Data smtData, int index, String keyFields, KeywordType.List_Keywords direction){
-		if(smtData == null){
+	private static IndicatorMessagePair updateTaskFromOrToTimeWhen(Task currentTask, String keyFields, KeywordType.List_Keywords direction){
+		if(currentTask == null){
 			assert false : "System error";
 		}
 		
@@ -250,25 +256,21 @@ public class UpdateHandler {
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INCORRECT_TIME_FORMAT));
 		}
 		
-		Task tempTask = smtData.getATask(index);
-		
 		if(direction == KeywordType.List_Keywords.FROM){
-			DateTime newStartTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
-			if(tempTask.getTaskEndDateTime() != null && !checkFromTimeToTimeBothValid(newStartTime, tempTask.getTaskEndDateTime())){
+			DateTime newStartTime = updateTimeToExistingDateTime(currentTask, startOrEndTime);
+			if(currentTask.getTaskEndDateTime() != null && !checkFromTimeToTimeBothValid(newStartTime, currentTask.getTaskEndDateTime())){
 				return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 			}
-			tempTask.setTaskStartDateTime(newStartTime);
+			currentTask.setTaskStartDateTime(newStartTime);
 		}
 		else if(direction == KeywordType.List_Keywords.TO){
-			DateTime newEndTime = updateTimeToExistingDateTime(smtData.getATask(index), startOrEndTime);
-			if(tempTask.getTaskStartDateTime() != null && !checkFromTimeToTimeBothValid(tempTask.getTaskStartDateTime(), newEndTime)){
+			DateTime newEndTime = updateTimeToExistingDateTime(currentTask, startOrEndTime);
+			if(currentTask.getTaskStartDateTime() != null && !checkFromTimeToTimeBothValid(currentTask.getTaskStartDateTime(), newEndTime)){
 				return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 			}
-			tempTask.setTaskEndDateTime(newEndTime);
+			currentTask.setTaskEndDateTime(newEndTime);
 		}
 		
-		//tempTask.setTaskStartDateTime(startTime);
-		smtData.updateTaskList(index, tempTask);
 		return new IndicatorMessagePair(true, "");
 	}
 	
@@ -280,17 +282,17 @@ public class UpdateHandler {
 	 * @param status the task status in boolean
 	 * @return true if success, false if there is an invalid conversion object and message
 	 */
-	private static IndicatorMessagePair updateTaskStatus(Data smtData, int index, String keyFields, boolean status){
-		if(smtData == null){
+	private static IndicatorMessagePair updateTaskStatus(Task currentTask, String keyFields, boolean status){
+		if(currentTask == null){
 			assert false : "System error";
 		}
 		
 		if(keyFields == null || !keyFields.isEmpty()){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD);
 		}
-		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskStatus(status);
-		smtData.updateTaskList(index, tempTask);
+		
+		currentTask.setTaskStatus(status);
+		//smtData.updateTaskList(index, tempTask);
 		return new IndicatorMessagePair(true, "");
 	}
 
@@ -317,7 +319,7 @@ public class UpdateHandler {
 	 * @param smtData the data object which contains the whole data
 	 * @return IndicatorMessagePair which states whether the times can be update
 	 */
-	private static IndicatorMessagePair processBothTimes(Map<String, String> keyFieldsList, int index, Data smtData){
+	private static IndicatorMessagePair processBothTimes(Map<String, String> keyFieldsList, Task currentTask){
 		
 		if(!checkFromTimeToTimeBothField(keyFieldsList)){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INCORRECT_TIME_FORMAT);
@@ -328,12 +330,12 @@ public class UpdateHandler {
 		if(!checkFromTimeToTimeBothValid(startTime, endTime)){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_TIME_WRONG_FLOW);
 		}
-		if(smtData.getATask(index).getTaskStartDateTime() == null && smtData.getATask(index).getTaskEndDateTime() == null){
+		if(currentTask.getTaskStartDateTime() == null && currentTask.getTaskEndDateTime() == null){
 			startTime = new DateTime(DateTime.now().getYear(), DateTime.now().getMonthOfYear(), DateTime.now().getDayOfMonth(), startTime.getHourOfDay(), startTime.getMinuteOfHour());
 			endTime = new DateTime(DateTime.now().getYear(), DateTime.now().getMonthOfYear(), DateTime.now().getDayOfMonth(), endTime.getHourOfDay(), endTime.getMinuteOfHour());
 		}
 		
-		updateBothTimes(index, smtData, startTime, endTime);
+		updateBothTimes(currentTask, startTime, endTime);
 		
 		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
 		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
@@ -348,15 +350,13 @@ public class UpdateHandler {
 	 * @param startTime the start time to update
 	 * @param endTime the end time to update
 	 */
-	private static void updateBothTimes(int index, Data smtData,
+	private static void updateBothTimes(Task currentTask,
 			DateTime startTime, DateTime endTime) {
-		DateTime newStartTime = updateTimeToExistingDateTime(smtData.getATask(index), startTime);
-		DateTime newEndTime = updateTimeToExistingDateTime(smtData.getATask(index), endTime);
-		
-		Task tempTask = smtData.getATask(index);
-		tempTask.setTaskStartDateTime(updateTimeToExistingDateTime(smtData.getATask(index), newStartTime));
-		tempTask.setTaskEndDateTime(updateTimeToExistingDateTime(smtData.getATask(index), newEndTime));
-		smtData.updateTaskList(index, tempTask);
+		DateTime newStartTime = updateTimeToExistingDateTime(currentTask, startTime);
+		DateTime newEndTime = updateTimeToExistingDateTime(currentTask, endTime);
+
+		currentTask.setTaskStartDateTime(updateTimeToExistingDateTime(currentTask, newStartTime));
+		currentTask.setTaskEndDateTime(updateTimeToExistingDateTime(currentTask, newEndTime));
 	}
 	
 	/**
@@ -438,6 +438,16 @@ public class UpdateHandler {
 			count++;
 		}
 		return count;
+	}
+	
+	private static boolean clashWithBlockDate(Data smtData, DateTime endDate){
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
