@@ -70,7 +70,7 @@ public class AddHandler {
 		int lastUnUsedIndex = loadLastUsedIndex(smtData);
 		indicMsg = new IndicatorMessagePair();
 
-		if(restrictOnlyUnqiueKeyWord(keyFieldsList)> 1){
+		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > 1) {
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
 		newTask.setTaskId(lastUnUsedIndex);
@@ -149,11 +149,11 @@ public class AddHandler {
 	 * @param keyFieldsList
 	 * @return
 	 */
-	private static IndicatorMessagePair addTaskByWhen(Data smtData, Task newTask, int index,
-			Map<String, String> keyFieldsList, KeywordType.List_Keywords keyword) {
+	private static IndicatorMessagePair addTaskByWhen(Data smtData,
+			Task newTask, int index, Map<String, String> keyFieldsList,
+			KeywordType.List_Keywords keyword) {
 
-		checkEmptyKeyFieldsList(keyFieldsList,
-				keyword.name(),
+		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
 				MessageList.MESSAGE_NO_DATE_GIVEN);
 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
@@ -162,15 +162,33 @@ public class AddHandler {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
 		}
-		
-		if(clashWithBlockDate(smtData, endDate)){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End"));
+
+		if (clashWithBlockDate(smtData, endDate)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End"));
 		}
-		
-		newTask.setTaskEndDateTime(endDate);
+
+		DateTime newStartDateTime = null;
+		DateTime newEndDateTime = null;
+
+		if (newTask.getTaskStartDateTime() != null) {
+			newStartDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(), newTask
+							.getTaskStartDateTime().getHourOfDay(), newTask
+							.getTaskStartDateTime().getMinuteOfHour());
+		}
+
+		if (newTask.getTaskEndDateTime() != null) {
+			newEndDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(), newTask
+							.getTaskEndDateTime().getHourOfDay(), newTask
+							.getTaskEndDateTime().getMinuteOfHour());
+		}
+		newTask.setTaskStartDateTime(newStartDateTime);
+		newTask.setTaskEndDateTime(newEndDateTime);
+		newTask.setDeadLineStatus(true);
 		return new IndicatorMessagePair(true, "");
 	}
-	
 
 	/**
 	 * This method is for the use of adding recurring week feature
@@ -211,6 +229,7 @@ public class AddHandler {
 		newTask.setTaskEndDateTime(newEndTime);
 		newTask.setWeeklyDay(keyFieldsList.get(KeywordType.List_Keywords.EVERY
 				.name()));
+		newTask.setDeadLineStatus(false);
 		return new IndicatorMessagePair(true, "");
 	}
 
@@ -225,8 +244,8 @@ public class AddHandler {
 	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
 			Map<String, String> keyFieldsList) {
 		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
-				CommandType.Command_Types.ADD.name(),
-				String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "No Description"));
+				CommandType.Command_Types.ADD.name(), String.format(
+						MessageList.MESSAGE_INVALID_ARGUMENT, "No Description"));
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg;
@@ -238,8 +257,7 @@ public class AddHandler {
 	}
 
 	private static IndicatorMessagePair checkEmptyKeyFieldsList(
-			Map<String, String> keyFieldsList, String keyWord,
-			String message) {
+			Map<String, String> keyFieldsList, String keyWord, String message) {
 		if (!keyFieldsList.containsKey(keyWord)) {
 			return new IndicatorMessagePair(false, message);
 		}
@@ -350,21 +368,21 @@ public class AddHandler {
 		}
 		return true;
 	}
-	
-	private static int restrictOnlyUnqiueKeyWord(Map<String, String> keyFieldsList){
+
+	private static int restrictOnlyUnqiueKeyWord(
+			Map<String, String> keyFieldsList) {
 		int count = 0;
-		if(keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())){
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())) {
 			count++;
 		}
-		if(keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())){
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
 			count++;
 		}
-		if(keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())){
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())) {
 			count++;
 		}
 		return count;
 	}
-	
 
 	/**
 	 * checkFromTimeToTimeBothValid method checks if the time from both sides
@@ -392,10 +410,11 @@ public class AddHandler {
 
 		return true;
 	}
-	
-	private static boolean clashWithBlockDate(Data smtData, DateTime endDate){
-		for(int i = 0; i < smtData.getBlockedDateTimeList().size(); i++){
-			if(smtData.getBlockedDateTimeList().get(i).toLocalDate().equals(endDate.toLocalDate())){
+
+	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
 				return true;
 			}
 		}
