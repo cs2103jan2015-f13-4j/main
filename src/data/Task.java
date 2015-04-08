@@ -1,3 +1,4 @@
+//@A0112978W
 package data;
 
 import parser.DateTimeParser;
@@ -15,6 +16,7 @@ public class Task implements Comparable<Task> {
 	private String weeklyDay;
 	private String taskCompleted = "Completed";
 	private String taskPending = "Pending";
+	private boolean deadlineSet;
 
 	
 	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, String weeklyDay) {
@@ -43,6 +45,7 @@ public class Task implements Comparable<Task> {
 		this.taskEndDateTime = null;
 		this.taskStatus = false;
 		this.weeklyDay = "";
+		this.deadlineSet = false;
 	}
 	public int getTaskId() {
 		return taskId;
@@ -80,6 +83,12 @@ public class Task implements Comparable<Task> {
 	public void setWeeklyDay(String weeklyDay) {
 		this.weeklyDay = weeklyDay;
 	}
+	public boolean getDeadLineStatus() {
+		return deadlineSet;
+	}
+	public void setDeadLineStatus(boolean deadlineSet) {
+		this.deadlineSet = deadlineSet;
+	}
 	
 	@Override
 	public String toString() {
@@ -95,11 +104,16 @@ public class Task implements Comparable<Task> {
 		}
 		
 		if(taskStartDateTime != null) {
-			fullDetails += "Start from: " + DateTimeParser.displayDate(taskStartDateTime) + "\n";
+			fullDetails += "Start Time: " + DateTimeParser.displayTime(taskStartDateTime) + "\n";
 		}
 		
 		if(taskEndDateTime != null) {
-			fullDetails += "Deadline: " + DateTimeParser.displayDate(taskEndDateTime) + "\n";
+			fullDetails += "End Time: " + DateTimeParser.displayTime(taskEndDateTime) + "\n";
+			if(deadlineSet) {
+				fullDetails += "Deadline: " + DateTimeParser.displayDate(taskEndDateTime) + "\n";
+			} else {
+				fullDetails += "Deadline: No specified date.\n";
+			}
 		}
 		
 		if(weeklyDay != null && !weeklyDay.isEmpty()) {
