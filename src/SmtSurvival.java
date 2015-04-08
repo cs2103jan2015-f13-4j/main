@@ -23,9 +23,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.KeyAdapter;
 
 import logic.CommandEnteredHistoryHandler;
+import logic.LockApp;
 import logic.Menu;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
+
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.events.TraverseEvent;
 
