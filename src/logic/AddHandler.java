@@ -99,7 +99,7 @@ public class AddHandler {
 			switch (getKey) {
 			case BY:
 			case ON:
-				indicMsg = addTaskByWhen(newTask, lastUnUsedIndex,
+				indicMsg = addTaskByWhen(smtData, newTask, lastUnUsedIndex,
 						keyFieldsList, getKey);
 				break;
 
@@ -149,7 +149,7 @@ public class AddHandler {
 	 * @param keyFieldsList
 	 * @return
 	 */
-	private static IndicatorMessagePair addTaskByWhen(Task newTask, int index,
+	private static IndicatorMessagePair addTaskByWhen(Data smtData, Task newTask, int index,
 			Map<String, String> keyFieldsList, KeywordType.List_Keywords keyword) {
 
 		checkEmptyKeyFieldsList(keyFieldsList,
@@ -162,9 +162,15 @@ public class AddHandler {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
 		}
+		
+		if(clashWithBlockDate(smtData, endDate)){
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End"));
+		}
+		
 		newTask.setTaskEndDateTime(endDate);
 		return new IndicatorMessagePair(true, "");
 	}
+	
 
 	/**
 	 * This method is for the use of adding recurring week feature
@@ -385,5 +391,14 @@ public class AddHandler {
 		}
 
 		return true;
+	}
+	
+	private static boolean clashWithBlockDate(Data smtData, DateTime endDate){
+		for(int i = 0; i < smtData.getBlockedDateTimeList().size(); i++){
+			if(smtData.getBlockedDateTimeList().get(i).toLocalDate().equals(endDate.toLocalDate())){
+				return true;
+			}
+		}
+		return false;
 	}
 }

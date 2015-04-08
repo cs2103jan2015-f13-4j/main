@@ -19,17 +19,17 @@ public class MessageList {
 			+ "10) Undo\n\n -Undo\n\n "
 			+ "11) Redo\n\n************************************************************************************";
 	
-	public static final String MESSAGE_ADD_HELP = "- Add <Desc>\n\n- Add <Description> from <Time> to <Time> by <Date>\n\n- Add <Description> every <Date>";
+	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>\n\n- Add <Description> every <Date>";
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
 	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
 	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
 	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
-	public static final String MESSAGE_DISPLAY_HELP = "- Display all\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
-			+ "- Display Yesterday[ytd]\n\n- Display Thisweek [thiswk]\n\n"
-			+ "- Display lastweek [lastwk]\n\n- Display nextweek [nextweek]\n\n"
-			+ "- Display monday [mon]\n\n- Display tuesday [Tue]\n\n- Display wednesday [wed]\n\n"
-			+ "- Display thursday [thu]\n\n- Display friday [fri]\n\n- Display saturday [sat]\n\n"
-			+ "- Display sunday [sun]\n\n- Display Pending [pend]\n\n- Display Schedule\n\n- Display Completed [comp]";
+	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
+			+ "- Display Yesterday [ytd]\n\n- Display Thisweek [thiswk]\n\n"
+			+ "- Display Lastweek [lastwk]\n\n- Display Nextweek [nextweek]\n\n"
+			+ "- Display Monday [mon]\n\n- Display Tuesday [tue]\n\n- Display Wednesday [wed]\n\n"
+			+ "- Display Thursday [thu]\n\n- Display Friday [fri]\n\n- Display Saturday [sat]\n\n"
+			+ "- Display Sunday [sun]\n\n- Display Pending [pend]\n\n- Display Completed [comp]";
 	
 	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartDate\n\n- Sort Completed [comp]\n\n- Sort Pending [pend]";
 	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
