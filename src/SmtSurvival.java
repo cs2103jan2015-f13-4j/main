@@ -281,16 +281,16 @@ public class SmtSurvival extends Composite {
 		if (tabFolder.getSelection() == tabMain) {
 			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
 		} else if (tabFolder.getSelection() == tabAll) {
-			setTabControl(tabAll, lblMain, scAll, "Display All");
+			setTabControl(tabAll, lblAll, scAll, "Display All");
 		} else if (tabFolder.getSelection() == tabToday) {
-			setTabControl(tabToday, lblMain, scToday, "Display Today");
+			setTabControl(tabToday, lblToday, scToday, "Display Today");
 		} else if (tabFolder.getSelection() == tabCompleted) {
-			setTabControl(tabCompleted, lblMain, scCompleted,
+			setTabControl(tabCompleted, lblCompleted, scCompleted,
 					"Display Completed");
 		} else if (tabFolder.getSelection() == tabPending) {
-			setTabControl(tabPending, lblMain, scPending, "Display Pending");
+			setTabControl(tabPending, lblPending, scPending, "Display Pending");
 		} else if (tabFolder.getSelection() == tabBlocked) {
-			setTabControl(tabBlocked, lblMain, scBlocked, "Display Block");
+			setTabControl(tabBlocked, lblBlocked, scBlocked, "Display Block");
 		}
 	}
 
