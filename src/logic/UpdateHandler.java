@@ -214,6 +214,7 @@ public class UpdateHandler {
 		currentTask.setTaskStartDateTime(newStartTime);
 		currentTask.setTaskEndDateTime(newEndTime);
 		currentTask.setWeeklyDay(keyFields);
+		currentTask.setDeadLineStatus(false);
 		return new IndicatorMessagePair(true, "");
 	}
 	
