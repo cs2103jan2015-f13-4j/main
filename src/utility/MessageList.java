@@ -45,6 +45,7 @@ public class MessageList {
 	public static final String MESSAGE_TEXTFILE_INFO_CORRUPTED = "Contents in the %1$s has been corrupted.";
 	public static final String MESSAGE_ERROR_ON_WRITING_TO_FILE = "Error on saving to file.";
 	public static final String MESSAGE_INVALID_STATUS = "Invalid status for a task.";
+	public static final String MESSAGE_INVALID_DEADLINESETSTATUS = "Invalid deadline set status for a task";
 
 	/**
 	 * These message are the Commonly Used Message
