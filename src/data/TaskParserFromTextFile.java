@@ -62,6 +62,9 @@ public class TaskParserFromTextFile {
 			case TASKSTATUS:
 				indicMsg = setTaskStatus(newTask, separateFieldData[TASK_FIELD_DATA_SLOT]);
 				break;
+			case TASKDEADLINESET:
+				indicMsg = setTaskDeadLineSet(newTask, separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
 			default:
 				return null;
 			}
@@ -122,7 +125,7 @@ public class TaskParserFromTextFile {
 		if(convertedDateTime == null){
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
 		}
-		
+
 		newTask.setTaskEndDateTime(convertedDateTime);
 		
 		return new IndicatorMessagePair(true, "");
@@ -144,6 +147,17 @@ public class TaskParserFromTextFile {
 		}
 		
 		newTask.setTaskStatus(Boolean.parseBoolean(taskStatus));
+		
+		return new IndicatorMessagePair(true, "");
+	}
+	
+	
+	private static IndicatorMessagePair setTaskDeadLineSet(Task newTask, String taskDeadLineSet){
+		if(taskDeadLineSet == null || !isStringAnBoolean(taskDeadLineSet)){
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_DEADLINESETSTATUS);
+		}
+		
+		newTask.setDeadLineStatus(Boolean.parseBoolean(taskDeadLineSet));
 		
 		return new IndicatorMessagePair(true, "");
 	}

@@ -19,6 +19,8 @@ public class TaskParserWriteToTextFile {
 	private static final int TASKWEEKLYDAY_OFFSET = 4;
 	// task fields list taskstatus offset
 	private static final int TASKSTATUS_OFFSET = 5;
+	// task fields list taskstatus offset
+	private static final int TASKDEADLINESET_OFFSET = 6;
 
 	/**
 	 * concatTaskFieldToString method will concatenate the heading of each task field
@@ -73,6 +75,11 @@ public class TaskParserWriteToTextFile {
 		textLine += taskFields[TASKSTATUS_OFFSET].name();
 		textLine += TASK_FIELD_DATA_SEPARATOR;
 		textLine += oneTask.getTaskStatus();
+		textLine += TASK_COMPONENT_SEPARATOR;
+		
+		textLine += taskFields[TASKDEADLINESET_OFFSET].name();
+		textLine += TASK_FIELD_DATA_SEPARATOR;
+		textLine += oneTask.getDeadLineStatus();
 		textLine += TASK_COMPONENT_SEPARATOR;
 
 		return textLine.substring(0, textLine.length() - 1);
