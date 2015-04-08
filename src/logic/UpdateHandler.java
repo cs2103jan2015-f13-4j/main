@@ -178,6 +178,7 @@ public class UpdateHandler {
 
 		currentTask.setTaskStartDateTime(newStartDateTime);
 		currentTask.setTaskEndDateTime(newEndDateTime);
+		currentTask.setDeadLineStatus(true);
 		return new IndicatorMessagePair(true, "");
 	}
 	

@@ -80,7 +80,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithDescRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -121,7 +121,7 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart from: 3 March, 2016 (Thu)\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -131,7 +131,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 March, 2016 (Thu)\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -141,7 +141,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithStartTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("from", "5pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -151,7 +151,7 @@ public class UpdateHandlerTest {
 	public void testUpdateWithEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("to", "11pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: No specified date.\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -162,7 +162,7 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("FROM", "5pm");
 		keyFieldsTest.put("TO", "6pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 September, 2015 (Thu)\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 6.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
