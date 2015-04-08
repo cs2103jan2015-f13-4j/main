@@ -1,3 +1,4 @@
+//@A0112502A
 package utility;
 public class CommandType {
 	public enum Command_Types {
