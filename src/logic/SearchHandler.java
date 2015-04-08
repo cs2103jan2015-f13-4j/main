@@ -44,8 +44,9 @@ public class SearchHandler {
 	 */
 	private static String searchTask(Data smtData,
 			Map<String, String> searchCriteria) {
-		
-		if(!searchCriteria.containsKey(CommandType.Command_Types.SEARCH.name())){
+
+		if (!searchCriteria
+				.containsKey(CommandType.Command_Types.SEARCH.name())) {
 			return MessageList.MESSAGE_INVAILD_SEARCH;
 		}
 
@@ -100,7 +101,8 @@ public class SearchHandler {
 			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
-			return MessageList.MESSAGE_NO_MATCH_FOUND;
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+					deadLine[1]);
 		}
 	}
 
@@ -123,7 +125,7 @@ public class SearchHandler {
 			}
 		}
 		taskLogger.log(Level.INFO, "Search By Task ID");
-		return MessageList.MESSAGE_NO_MATCH_FOUND;
+		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND, index[1]);
 	}
 
 	/**
@@ -147,7 +149,7 @@ public class SearchHandler {
 			}
 		}
 		if (tempList.size() == 0) {
-			return MessageList.MESSAGE_NO_MATCH_FOUND;
+			String.format(MessageList.MESSAGE_NO_MATCH_FOUND, wordAbstracted);
 		}
 		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
@@ -193,8 +195,8 @@ public class SearchHandler {
 		return true;
 	}
 
-	private static String checkForValidData(
-			Map<String, String> keyFieldsList, Data smtData) {
+	private static String checkForValidData(Map<String, String> keyFieldsList,
+			Data smtData) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
