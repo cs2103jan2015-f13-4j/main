@@ -103,6 +103,7 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblMain = new Label(composite, SWT.NONE);
+		lblMain.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.NORMAL));
 		lblMain.setAlignment(SWT.CENTER);
 		lblMain.setText("Welcome to Smart Management Tool");
 
