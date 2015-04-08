@@ -1,7 +1,9 @@
-package storage;
+//@A0111935L
+package unit_testing;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
@@ -11,6 +13,7 @@ import org.junit.Test;
 
 import data.Data;
 import data.Task;
+import storage.FileStorage;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
@@ -36,6 +39,8 @@ public class FileStorageTest {
 		FileStorage.setFileNameForTasksList(testFileName);
 		FileStorage.checkAndLoadTaskFile(msgPair);
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testFileName);
+		textList.delete();
 	}
 	
 	/*This test case give error if filename is invalid*/
@@ -74,9 +79,11 @@ public class FileStorageTest {
 				new DateTime(), new DateTime(), ""));
 		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
 				new DateTime(), ""));
-		FileStorage.setFileNameForBlockedDatesList(testFileName);
+		FileStorage.setFileNameForTasksList(testFileName);
 		msgPair = FileStorage.writeToFile(smtDataTest.getListTask());
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testFileName);
+		textList.delete();
 	}
 	
 	@Test
@@ -84,6 +91,8 @@ public class FileStorageTest {
 		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
 		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testLastUnusedIndex);
+		textList.delete();
 	}
 	
 	@Test
@@ -116,6 +125,8 @@ public class FileStorageTest {
 		Integer lastUnusedIndex = 1;
 		msgPair = FileStorage.writeToFile(lastUnusedIndex);
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testLastUnusedIndex);
+		textList.delete();
 	}
 
 	@Test
@@ -123,6 +134,8 @@ public class FileStorageTest {
 		FileStorage.setFileNameForBlockedDatesList(testBlockedDateTimeFileName);
 		FileStorage.checkAndLoadBlockedDateFile(msgPair);
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testBlockedDateTimeFileName);
+		textList.delete();
 	}
 	
 	@Test
@@ -156,5 +169,7 @@ public class FileStorageTest {
 		listBlockedDateTime.add(new DateTime());
 		msgPair = FileStorage.writeBlockedDateTimeToFile(listBlockedDateTime);
 		assertTrue(msgPair.isTrue());
+		File textList = new File(testBlockedDateTimeFileName);
+		textList.delete();
 	}
 }

@@ -1,7 +1,7 @@
 package utility;
 public class CommandType {
 	public enum Command_Types {
-		ADD, DELETE, DISPLAY, CLEAR, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
+		ADD, DELETE, DISPLAY, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
 	}
 
 	public static Command_Types getType(String[] commandTypeString) {

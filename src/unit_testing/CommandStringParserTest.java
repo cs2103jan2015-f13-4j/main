@@ -1,4 +1,5 @@
-package parser;
+//@A0111935L
+package unit_testing;
 import static org.junit.Assert.*;
 
 import java.util.Map;
@@ -7,6 +8,8 @@ import java.util.TreeMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import parser.CommandStringParser;
 
 
 public class CommandStringParserTest {
@@ -44,12 +47,7 @@ public class CommandStringParserTest {
 		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
 	}
 	
-	@Test
-	public void testProcessStringClearRegular() {
-		String command = "clear";
-		String expected = "CLEAR";
-		assertEquals(expected, CommandStringParser.processString(command, keyFieldsTest).name());
-	}
+
 	
 	@Test
 	public void testProcessStringExitRegular() {
