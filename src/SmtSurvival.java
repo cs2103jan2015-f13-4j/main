@@ -79,7 +79,7 @@ public class SmtSurvival extends Composite {
 		compositeBackground = new Composite(this, SWT.NONE);
 		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
 				204));
-		compositeBackground.setBounds(0, 0, 463, 465);
+		compositeBackground.setBounds(0, 0, 454, 465);
 
 		tabFolder = new CTabFolder(compositeBackground, SWT.BORDER);
 		tabFolder.setLocation(10, 44);
@@ -104,6 +104,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblMain = new Label(composite, SWT.NONE);
+		lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
+		lblMain.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
 		lblMain.setAlignment(SWT.CENTER);
 		lblMain.setText("Welcome to Smart Management Tool");
 
@@ -127,9 +129,9 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblAll = new Label(composite, SWT.NONE);
-		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11,
-				SWT.NORMAL));
-		lblAll.setText("This page is for Schedule Tasks");
+		lblAll.setForeground(SWTResourceManager.getColor(0, 128, 128));
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblAll.setText("This page is for All Tasks");
 
 		scAll.setContent(composite);
 		scMouseWheel(scAll);
@@ -150,8 +152,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblToday = new Label(composite, SWT.NONE);
-		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11,
-				SWT.NORMAL));
+		lblToday.setForeground(SWTResourceManager.getColor(128, 0, 128));
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
@@ -174,8 +176,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblCompleted = new Label(composite, SWT.NONE);
-		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11,
-				SWT.NORMAL));
+		lblCompleted.setForeground(SWTResourceManager.getColor(34, 139, 34));
+		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
@@ -197,8 +199,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblPending = new Label(composite, SWT.NONE);
-		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11,
-				SWT.NORMAL));
+		lblPending.setForeground(SWTResourceManager.getColor(255, 102, 0));
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
@@ -220,8 +222,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblBlocked = new Label(composite, SWT.NONE);
-		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11,
-				SWT.NORMAL));
+		lblBlocked.setForeground(SWTResourceManager.getColor(255, 0, 0));
+		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
 		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);
@@ -233,6 +235,7 @@ public class SmtSurvival extends Composite {
 		tabMain.setControl(scMain);
 
 		combo = new Combo(compositeBackground, SWT.NONE);
+		combo.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		combo.setLocation(10, 10);
 		combo.setSize(435, 28);
 		combo.setText("Enter command here");
@@ -313,6 +316,7 @@ public class SmtSurvival extends Composite {
 			tabFolder.setSelection(tabMain);
 			tabMain.setControl(lblMain);
 			lblMain.setText(output);
+			lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
 			combo.removeAll();
 			savedExistingContents = lblMain.getText();
 		} else if (combo.getSelectionIndex() > -1) {
@@ -406,6 +410,7 @@ public class SmtSurvival extends Composite {
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
+		shell.setText("Smart Management Tool");
 
 		Monitor primary = display.getPrimaryMonitor();
 		Rectangle bounds = primary.getBounds();
@@ -415,6 +420,7 @@ public class SmtSurvival extends Composite {
 		int y = bounds.y + (bounds.height - rect.height) / 2;
 
 		shell.setLocation(x, y);
+		LockApp.checkExistingApp();
 		shell.open();
 		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
 		Smt.pack();
