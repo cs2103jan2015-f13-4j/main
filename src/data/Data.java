@@ -53,6 +53,7 @@ public class Data {
 			newTask.setTaskEndDateTime(receivedListTask.get(i).getTaskEndDateTime());
 			newTask.setTaskStatus(receivedListTask.get(i).getTaskStatus());
 			newTask.setWeeklyDay(receivedListTask.get(i).getWeeklyDay());
+			newTask.setDeadLineStatus(receivedListTask.get(i).getDeadLineStatus());
 			tasksList.add(newTask);
 		}
 	}
