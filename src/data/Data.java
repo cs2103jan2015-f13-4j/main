@@ -6,11 +6,13 @@ import org.joda.time.DateTime;
 
 import storage.FileStorage;
 import utility.IndicatorMessagePair;
+import utility.MessageList;
 
 public class Data {
 	private ArrayList<Task> tasksList;
 	private ArrayList<DateTime> blockedDateTimeList;
 	private Integer lastUnUsedIndex;
+	private static String errorMsgForTaskId = "The Last Unused Index has been modified illegally.";
 
 	public Data(){
 		tasksList = new ArrayList<Task>();
@@ -229,6 +231,14 @@ public class Data {
 		return true;
 	}
 	
+	private boolean checkIfTaskIdExist(){
+		for(int i = 0; i < tasksList.size(); i++){
+			if(tasksList.get(i).getTaskId() == lastUnUsedIndex){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public IndicatorMessagePair writeTaskListToFile(){
 		return FileStorage.writeToFile(tasksList);
@@ -250,12 +260,20 @@ public class Data {
 			return msgPair;
 		}
 		
-		setBlockedDateTimeList(FileStorage.checkAndLoadBlockedDateFile(msgPair));
+		setLastUnUsedIndex(FileStorage.checkAndLoadLastTaskIndexFile(msgPair));
+
 		if(!msgPair.isTrue()){
 			return msgPair;
 		}
 		
-		setLastUnUsedIndex(FileStorage.checkAndLoadLastTaskIndexFile(msgPair));
+		if(checkIfTaskIdExist()){
+			msgPair.setTrue(false);
+			msgPair.setMessage(errorMsgForTaskId);
+			return msgPair;
+		}
+		
+		setBlockedDateTimeList(FileStorage.checkAndLoadBlockedDateFile(msgPair));
+		
 		
 		return msgPair;
 	}
