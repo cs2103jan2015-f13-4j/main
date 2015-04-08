@@ -36,7 +36,7 @@ public class DateTimeParser {
 			dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
 			convertedDate = dtf.parseDateTime(dateValue);
 		}
-		return convertedDate;
+		return new DateTime(convertedDate.getYear(), convertedDate.getMonthOfYear(), convertedDate.getDayOfMonth(), 23, 59);
 	}
 	
 	public static String checkDateFormat(String dateValue) {
