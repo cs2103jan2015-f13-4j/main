@@ -1,3 +1,4 @@
+//@A0112502A
 package logic;
 
 import java.util.Map;
