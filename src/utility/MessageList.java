@@ -74,6 +74,8 @@ public class MessageList {
 	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
 	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
 	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list";
+	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s Dates Taken\n";
+	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "Dates have been taken, please select other task.";
 	
 	/**
 	 * These message are for UpdateHandler class

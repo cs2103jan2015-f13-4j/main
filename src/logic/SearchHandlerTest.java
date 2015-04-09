@@ -52,7 +52,7 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithRegularTaskDesc() {
 		keyFieldsTest.put("SEARCH", "2 EE2024 report proposal");
-		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		String expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND, "EE2024 report proposal");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -81,7 +81,7 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithNoMatch() {
 		keyFieldsTest.put("SEARCH", "1 8");
-		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		String expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND, "8");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -95,9 +95,7 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithDeadLine() {
 		keyFieldsTest.put("SEARCH", "3 03-06-2015");
-		String expected = "\nTask ID: 1\nDescription: Prepare a proposal\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: Prepare OP1\nStart from: 3 June, 2015 (Wed)\nDeadline: 3 June, 2015 (Wed)\nStatus: Pending\n";
+		String expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND, "03-06-2015");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -111,7 +109,7 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithInvalidDeadLine() {
 		keyFieldsTest.put("SEARCH", "3 14-03-2016");
-		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		String expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND, "14-03-2016") ;
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -125,7 +123,7 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithWrongFormatForTaskDesc() {
 		keyFieldsTest.put("SEARCH", "2 14-03-2015");
-		String expected = MessageList.MESSAGE_NO_MATCH_FOUND;
+		String expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND, "14-03-2015");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -184,6 +182,20 @@ public class SearchHandlerTest {
 	@Test
 	public void testSearchWithIncorrectDeadLineCommand() {
 		keyFieldsTest.put("SEACH", "3, 1");
+		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+	
+	/**
+	 * This is to test the search with negative index
+	 * output is: Please enter a integer
+	 */
+	@Test
+	public void testSearchWithNegativeIndex() {
+		keyFieldsTest.put("SEACH", "3, -1");
 		String expected = MessageList.MESSAGE_INVAILD_SEARCH;
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));

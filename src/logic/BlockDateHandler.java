@@ -119,16 +119,35 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
 
-		if(!checkFromTimeToTimeBothValid(startDate, endDate)){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END, fromDate, toDate));
+		if (!checkFromTimeToTimeBothValid(startDate, endDate)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END,
+					fromDate, toDate));
 		}
-		
-		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate.plusDays(1))
-				.toLocalDate()); date = date.plusDays(1)) {
-			blockOneDate(date.toString(), smtData);
+
+		int countBlockedFailed = 0;
+		int totalBlockedDatesPending = 0;
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
+				.plusDays(1)).toLocalDate()); date = date.plusDays(1)) {
+			if (!blockOneDate(date.toString(), smtData).isTrue()) {
+				countBlockedFailed++;
+			}
+			totalBlockedDatesPending++;
 
 		}
-		return new IndicatorMessagePair(true,String.format(MessageList.MESSAGE_BLOCKED_RANGE, fromDate, toDate));
+
+		if (countBlockedFailed > 0 && (countBlockedFailed < totalBlockedDatesPending)) {
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE, fromDate, toDate));
+		}
+		if (countBlockedFailed > 0 && (countBlockedFailed == totalBlockedDatesPending)) {//totally failed
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate, toDate));
+		}
+		
+
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE, fromDate, toDate));
 	}
 
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
@@ -146,11 +165,33 @@ public class BlockDateHandler {
 
 		if (checkIfBlockDateExist(endDate, smtData)) {
 			// change msgto date exist inside blocklist
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
 		}
+
+		if (checkIfBlockDateClashedWithTask(endDate, smtData)) {
+			// return blocked date clashed with a task
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
+		}
+
 		smtData.addBlockedDateTime(endDate);
-		return new IndicatorMessagePair(true,
-				String.format(MessageList.MESSAGE_BLOCKED, receivedDate));
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_BLOCKED, receivedDate));
+	}
+
+	private static boolean checkIfBlockDateClashedWithTask(
+			DateTime dateTimeReceived, Data smtData) {
+
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (smtData.getATask(i).getTaskEndDateTime() != null
+					&& smtData.getATask(i).getDeadLineStatus()
+					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
+							.equals(dateTimeReceived.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
@@ -212,11 +253,12 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
 		}
 
-		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate.plusDays(1))
-				.toLocalDate()); date = date.plusDays(1)) {
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
+				.plusDays(1)).toLocalDate()); date = date.plusDays(1)) {
 			unblockOneDate(date.toString(), smtData);
 		}
-		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate,  toDate));
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate, toDate));
 
 	}
 
@@ -234,7 +276,8 @@ public class BlockDateHandler {
 
 		if (!checkIfBlockDateExist(endDate, smtData)) {
 			// return this date is not inside the block list
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_BLOCK_DATE_DO_NOT_EXIST, receivedDate));
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_DO_NOT_EXIST, receivedDate));
 		}
 		int i;
 
@@ -251,11 +294,10 @@ public class BlockDateHandler {
 			return msgPair;
 		}
 
-		return new IndicatorMessagePair(true,
-				String.format(MessageList.MESSAGE_UNBLOCKED, receivedDate));
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_UNBLOCKED, receivedDate));
 	}
-	
-	
+
 	private static boolean checkFromTimeToTimeBothValid(DateTime startTime,
 			DateTime endTime) {
 		if (startTime == null) {
