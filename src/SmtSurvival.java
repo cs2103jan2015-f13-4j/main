@@ -33,10 +33,13 @@ import org.eclipse.swt.events.TraverseEvent;
 
 public class SmtSurvival extends Composite {
 
+	/**
+	 * 
+	 */
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private Composite composite = null;
 	private Composite compositeBackground;
-	private CTabFolder tabFolder;
+	private CTabFolder displayTaskFolder;
 	private CTabItem tabMain;
 	private CTabItem tabAll;
 	private CTabItem tabToday;
@@ -77,165 +80,135 @@ public class SmtSurvival extends Composite {
 			}
 		});
 
-		// Background composite
-		compositeBackground = new Composite(this, SWT.NONE);
-		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
-				204));
-		compositeBackground.setBounds(0, 0, 454, 465);
+		// this is to create the background by calling the backgroundComposite method
+		backgroundComposite();
+		
+		// this is to create the tab folder by calling the tabFolder method
+		tabFolder();
 
-		tabFolder = new CTabFolder(compositeBackground, SWT.BORDER);
-		tabFolder.setLocation(10, 44);
-		tabFolder.setSize(435, 401);
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
-		toolkit.adapt(tabFolder);
-		toolkit.paintBordersFor(tabFolder);
+		// this will create the tab items by calling the corresponding method for the tab
+		createTabMain();
+		createTabAll();
+		createTabToday();
+		createTabCompleted();
+		createTabPending();
+		createTabBlocked();
 
-		/* Main Tab */
-		tabMain = new CTabItem(tabFolder, SWT.NONE);
-		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
-		tabMain.setText("Main");
-		tabMain.setToolTipText("Select this tab to show the Main page");
-
-		scMain = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		scMain.setShowFocusedControl(true);
+		displayTaskFolder.setSelection(tabMain);
 		tabMain.setControl(scMain);
-		composite = new Composite(scMain, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
 
-		lblMain = new Label(composite, SWT.NONE);
-		lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
-		lblMain.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
-		lblMain.setAlignment(SWT.CENTER);
-		lblMain.setText("Welcome to Smart Management Tool");
+		// this is to create the combo box by calling the comboBox method
+		comboBox();
+	}
 
-		scMain.setContent(composite);
-		scMouseWheel(scMain);
-		scMain.setExpandVertical(true);
-		scMain.setFocus();
-		scMain.setMinSize(composite.computeSize(2000, 2000));
-
-		/* All Tab */
-		tabAll = new CTabItem(tabFolder, SWT.NONE);
-		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
-		tabAll.setText("All");
-		tabAll.setToolTipText("Select this tab to show all tasks");
-
-		scAll = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabAll.setControl(scAll);
-		composite = new Composite(scAll, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
-
-		lblAll = new Label(composite, SWT.NONE);
-		lblAll.setForeground(SWTResourceManager.getColor(0, 128, 128));
-		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
-		lblAll.setText("This page is for All Tasks");
-
-		scAll.setContent(composite);
-		scMouseWheel(scAll);
-		scAll.setExpandVertical(true);
-		scAll.setMinSize(composite.computeSize(2000, 2000));
-
-		/* Today Tab */
-		tabToday = new CTabItem(tabFolder, SWT.NONE);
-		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
-		tabToday.setText("Today");
-		tabToday.setToolTipText("Select this tab to show the Today's tasks");
-
-		scToday = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabToday.setControl(scToday);
-		composite = new Composite(scToday, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
-
-		lblToday = new Label(composite, SWT.NONE);
-		lblToday.setForeground(SWTResourceManager.getColor(128, 0, 128));
-		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
-		lblToday.setText("This page is for Today's Tasks");
-
-		scToday.setContent(composite);
-		scMouseWheel(scToday);
-		scToday.setExpandVertical(true);
-		scToday.setMinSize(composite.computeSize(2000, 2000));
-
-		/* Completed Tab */
-		tabCompleted = new CTabItem(tabFolder, SWT.NONE);
-		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
-		tabCompleted.setText("Completed");
-		tabCompleted.setToolTipText("Select this tab to show the Completed tasks");
-
-		scCompleted = new ScrolledComposite(tabFolder, SWT.BORDER
-				| SWT.V_SCROLL);
-		tabCompleted.setControl(scCompleted);
-		composite = new Composite(scCompleted, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
-
-		lblCompleted = new Label(composite, SWT.NONE);
-		lblCompleted.setForeground(SWTResourceManager.getColor(34, 139, 34));
-		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
-		lblCompleted.setText("This page is for Completed Tasks");
-
-		scCompleted.setContent(composite);
-		scMouseWheel(scCompleted);
-		scCompleted.setExpandVertical(true);
-		scCompleted.setMinSize(composite.computeSize(2000, 2000));
-
-		/* Pending Tab */
-		tabPending = new CTabItem(tabFolder, SWT.NONE);
-		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
-		tabPending.setText("Pending");
-		tabPending.setToolTipText("Select this tab to show the Pending tasks");
-
-		scPending = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabPending.setControl(scPending);
-		composite = new Composite(scPending, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
-
-		lblPending = new Label(composite, SWT.NONE);
-		lblPending.setForeground(SWTResourceManager.getColor(255, 102, 0));
-		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
-		lblPending.setText("This page is for Pending Tasks");
-
-		scPending.setContent(composite);
-		scMouseWheel(scPending);
-		scPending.setExpandVertical(true);
-		scPending.setMinSize(composite.computeSize(2000, 2000));
-
+	private void createTabBlocked() {
 		/* Blocked Tab */
-		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
+		tabBlocked = new CTabItem(displayTaskFolder, SWT.NONE);
 		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
 				SWT.NORMAL));
 		tabBlocked.setText("Blocked");
 		tabBlocked.setToolTipText("Select this tab to show the Blocked tasks");
 
-		scBlocked = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
-		tabBlocked.setControl(scBlocked);
+		scBlocked = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
 		composite = new Composite(scBlocked, SWT.None);
-		composite.setLayout(new FillLayout());
-		composite.setSize(435, 452);
-
 		lblBlocked = new Label(composite, SWT.NONE);
+		
+		tabItem(scBlocked, tabBlocked, lblBlocked);
 		lblBlocked.setForeground(SWTResourceManager.getColor(255, 0, 0));
 		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
 		lblBlocked.setText("This page is for Blocked Tasks");
+	}
 
-		scBlocked.setContent(composite);
-		scMouseWheel(scBlocked);
-		scBlocked.setExpandVertical(true);
-		scBlocked.setMinSize(composite.computeSize(2000, 2000));
+	private void createTabPending() {
+		/* Pending Tab */
+		tabPending = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
+		tabPending.setText("Pending");
+		tabPending.setToolTipText("Select this tab to show the Pending tasks");
 
-		tabFolder.setSelection(tabMain);
-		tabMain.setControl(scMain);
+		scPending = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scPending, SWT.None);
+		lblPending = new Label(composite, SWT.NONE);
+		
+		tabItem(scPending, tabPending, lblPending);
+		lblPending.setForeground(SWTResourceManager.getColor(255, 102, 0));
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblPending.setText("This page is for Pending Tasks");
+	}
 
+	private void createTabCompleted() {
+		/* Completed Tab */
+		tabCompleted = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
+		tabCompleted.setText("Completed");
+		tabCompleted.setToolTipText("Select this tab to show the Completed tasks");
+
+		scCompleted = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scCompleted, SWT.None);
+		lblCompleted = new Label(composite, SWT.NONE);
+	}
+
+	private void createTabToday() {
+		/* Today Tab */
+		tabToday = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
+		tabToday.setText("Today");
+		tabToday.setToolTipText("Select this tab to show the Today's tasks");
+
+		scToday = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scToday, SWT.None);
+		lblToday = new Label(composite, SWT.NONE);
+		
+		tabItem(scToday, tabToday, lblToday);
+		lblToday.setForeground(SWTResourceManager.getColor(128, 0, 128));
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblToday.setText("This page is for Today's Tasks");
+	}
+
+	private void createTabAll() {
+		/* All Tab */
+		tabAll = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
+		tabAll.setText("All");
+		tabAll.setToolTipText("Select this tab to show all tasks");
+
+		scAll = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scAll, SWT.None);
+		lblAll = new Label(composite, SWT.NONE);
+		
+		tabItem(scAll, tabAll, lblAll);
+		lblAll.setForeground(SWTResourceManager.getColor(0, 128, 128));
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblAll.setText("This page is for All Tasks");
+	}
+
+	private void createTabMain() {
+		/* Main Tab */
+		tabMain = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
+				SWT.NORMAL));
+		tabMain.setText("Main");
+		tabMain.setToolTipText("Select this tab to show the Main page");
+
+		scMain = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scMain, SWT.None);
+		lblMain = new Label(composite, SWT.NONE);
+		
+		tabItem(scMain, tabMain, lblMain);
+		lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
+		lblMain.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblMain.setAlignment(SWT.CENTER);
+		lblMain.setText("Welcome to Smart Management Tool");
+	}
+
+	/**
+	 * This method is to create the combo box
+	 */
+	private void comboBox() {
 		combo = new Combo(compositeBackground, SWT.NONE);
 		combo.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		combo.setLocation(10, 10);
@@ -259,15 +232,58 @@ public class SmtSurvival extends Composite {
 		toolkit.paintBordersFor(combo);
 		combo.setFocus();
 
-		tabFolder.addSelectionListener(new SelectionAdapter() {
+		displayTaskFolder.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				tabControl(event);
 			}
 		});
 	}
+	
+	/**
+	 * This method is to create the tab item
+	 * @param scReceived
+	 * @param tabReceived
+	 * @param lblReceived
+	 */
+	public void tabItem(ScrolledComposite scReceived, CTabItem tabReceived, Label lblReceived){
+		scReceived.setShowFocusedControl(true);
+		tabReceived.setControl(scReceived);
+		composite.setLayout(new FillLayout());
+		composite.setSize(435, 452);
+		
+		scReceived.setContent(composite);
+		scMouseWheel(scReceived);
+		scReceived.setExpandVertical(true);
+		scReceived.setFocus();
+		scReceived.setMinSize(composite.computeSize(2000, 2000));
+	}
 
 	/**
-	 * This method is to activate the mousewheel for the scroll composite
+	 * This method is use to create tab folder
+	 */
+	private void tabFolder() {
+		displayTaskFolder = new CTabFolder(compositeBackground, SWT.BORDER);
+		displayTaskFolder.setLocation(10, 44);
+		displayTaskFolder.setSize(435, 401);
+		displayTaskFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		toolkit.adapt(displayTaskFolder);
+		toolkit.paintBordersFor(displayTaskFolder);
+	}
+
+	/**
+	 * This method is use to create the background using composite
+	 */
+	private void backgroundComposite() {
+		// Background composite
+		compositeBackground = new Composite(this, SWT.NONE);
+		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
+				204));
+		compositeBackground.setBounds(0, 0, 454, 465);
+	}
+
+	/**
+	 * This method is to activate the Mouse Wheel for the scroll composite
 	 * 
 	 * @param scReceived
 	 */
@@ -279,22 +295,26 @@ public class SmtSurvival extends Composite {
 		});
 	}
 
+	/**
+	 * This method is to get the selection of the corresponding tab and set the tab control by calling setTabControl method
+	 * @param event
+	 */
 	private void tabControl(SelectionEvent event) {
 
-		lblMain = new Label(tabFolder, SWT.NONE);
+		lblMain = new Label(displayTaskFolder, SWT.NONE);
 
-		if (tabFolder.getSelection() == tabMain) {
+		if (displayTaskFolder.getSelection() == tabMain) {
 			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
-		} else if (tabFolder.getSelection() == tabAll) {
+		} else if (displayTaskFolder.getSelection() == tabAll) {
 			setTabControl(tabAll, lblAll, scAll, "Display All");
-		} else if (tabFolder.getSelection() == tabToday) {
+		} else if (displayTaskFolder.getSelection() == tabToday) {
 			setTabControl(tabToday, lblToday, scToday, "Display Today");
-		} else if (tabFolder.getSelection() == tabCompleted) {
+		} else if (displayTaskFolder.getSelection() == tabCompleted) {
 			setTabControl(tabCompleted, lblCompleted, scCompleted,
 					"Display Completed");
-		} else if (tabFolder.getSelection() == tabPending) {
+		} else if (displayTaskFolder.getSelection() == tabPending) {
 			setTabControl(tabPending, lblPending, scPending, "Display Pending");
-		} else if (tabFolder.getSelection() == tabBlocked) {
+		} else if (displayTaskFolder.getSelection() == tabBlocked) {
 			setTabControl(tabBlocked, lblBlocked, scBlocked, "Display Block");
 		}
 	}
@@ -309,26 +329,20 @@ public class SmtSurvival extends Composite {
 	private void passControl(KeyEvent e) {
 
 		String output = new String();
-		lblMain = new Label(tabFolder, SWT.NONE);
 
 		if ((e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
 				&& combo.getSelectionIndex() == -1) {
 			CommandEnteredHistoryHandler.newCommandEntered(saveCurrentCommand);
-			output = controller.commandExecution(saveCurrentCommand);
-			tabFolder.setSelection(tabMain);
-			tabMain.setControl(lblMain);
-			lblMain.setText(output);
-			lblMain.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
-			lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
+			setTabControl(tabMain, lblMain, scMain, saveCurrentCommand);
 			combo.removeAll();
+			lblMain.setAlignment(SWT.LEFT);
 			savedExistingContents = lblMain.getText();
 		} else if (combo.getSelectionIndex() > -1) {
 			// do nth
-		} else if (!flagForSwitchTab
-				&& (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)) {
+		} else if (!flagForSwitchTab && (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)) {
 
 			output = controller.getHint(combo.getText());
-			tabFolder.setSelection(tabMain);
+			displayTaskFolder.setSelection(tabMain);
 
 			if (combo.getItemCount() > 0) {
 				combo.remove(0, combo.getItemCount() - 1);
@@ -356,10 +370,15 @@ public class SmtSurvival extends Composite {
 
 	}
 
+	/**
+	 * This method will help to switch the tab control using short cut key
+	 * @param e
+	 */
 	private void switchTabControl(KeyEvent e) {
 		flagForSwitchTab = true;
+		
 		if ((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
-			tabFolder.setSelection(tabMain);
+			displayTaskFolder.setSelection(tabMain);
 			lblMain.setText(savedExistingContents);
 		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
 			setTabControl(tabAll, lblAll, scAll, "Display All");
@@ -380,9 +399,16 @@ public class SmtSurvival extends Composite {
 		}
 	}
 
+	/**
+	 * This method is to set the control of the tab
+	 * @param tab
+	 * @param lblReceive receive the corresponding lbl
+	 * @param scReceived receive the corresponding sc composite
+	 * @param command
+	 */
 	private void setTabControl(CTabItem tab, Label lblReceive,
 			ScrolledComposite scReceived, String command) {
-		tabFolder.setSelection(tab);
+		displayTaskFolder.setSelection(tab);
 		tab.setControl(scReceived);
 		lblReceive.setText(controller.commandExecution(command));
 	}
@@ -395,49 +421,17 @@ public class SmtSurvival extends Composite {
 	 */
 	private void loadCommandHistory(KeyEvent e) {
 
-		if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT)
-				&& e.keyCode == SWT.ARROW_LEFT) {
+		if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_LEFT) {
 			combo.select(-1);
-			combo.setText(CommandEnteredHistoryHandler
-					.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
 			saveCurrentCommand = combo.getText();
-		} else if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT)
-				&& e.keyCode == SWT.ARROW_RIGHT) {
+		} else if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_RIGHT) {
 			combo.select(-1);
-			combo.setText(CommandEnteredHistoryHandler
-					.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
 			saveCurrentCommand = combo.getText();
 		}
 	}
-
-	public static void main(String[] args) {
-		Display display = new Display();
-		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
-		shell.setText("Smart Management Tool");
-
-		Monitor primary = display.getPrimaryMonitor();
-		Rectangle bounds = primary.getBounds();
-		Rectangle rect = shell.getBounds();
-
-		int x = bounds.x + (bounds.width - rect.width) / 2;
-		int y = bounds.y + (bounds.height - rect.height) / 2;
-
-		shell.setLocation(x, y);
-		LockApp.checkExistingApp();
-		shell.open();
-		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
-		Smt.pack();
-		shell.pack();
-
-		setUpFiles();
-
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
-	}
-
+	
 	/**
 	 * This method is to set up the files
 	 */
@@ -450,4 +444,42 @@ public class SmtSurvival extends Composite {
 		}
 	}
 
+	/**
+	 * This is the main method
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Display display = new Display();
+		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
+		shell.setText("Smart Management Tool");
+		
+		// this will prevent user from launching the program when one is running
+		LockApp.checkExistingApp();
+		
+		// this will open the shell and start up the program
+		shellOpen(shell);
+
+		// this will call to set up files by
+		setUpFiles();
+
+		// run the event loop as long as the window is open
+		while (!shell.isDisposed()) {
+			
+			// read the next OS event queue and transfer it to a SWT event
+			if (!display.readAndDispatch())
+				// if there are currently no other OS event to process
+				// sleep until the next OS event is available
+				display.sleep();
+		}
+		
+		// disposes all associated windows and their components
+		display.dispose();
+	}
+
+	private static void shellOpen(Shell shell) {
+		shell.open();
+		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
+		Smt.pack();
+		shell.pack();
+	}
 }
