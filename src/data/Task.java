@@ -28,7 +28,7 @@ public class Task implements Comparable<Task> {
 		this.weeklyDay = weeklyDay;
 	}
 	
-	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, boolean taskStatus, String weeklyDay) {
+	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, boolean taskStatus, String weeklyDay, boolean deadlineSet) {
 		super();
 		this.taskId = taskId;
 		this.taskDescription = taskDescription;
@@ -36,6 +36,7 @@ public class Task implements Comparable<Task> {
 		this.taskEndDateTime = taskEndDateTime;
 		this.taskStatus = taskStatus;
 		this.weeklyDay = weeklyDay;
+		this.deadlineSet = deadlineSet;
 	}
 	
 	public Task(){
