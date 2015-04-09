@@ -341,6 +341,8 @@ public class DisplayHandler {
 	private static String displayDataDetails(ArrayList<DateTime> displayDataList) {
 		String dataDetails = "";
 		
+		Collections.sort(displayDataList, SortHandler.TaskDateTimeDeadlineComparator);
+		
 		for (int i = 0; i < displayDataList.size(); i++) {
 			dataDetails += displayDataList.get(i).toLocalDate().toString() +"\n";
 		}
