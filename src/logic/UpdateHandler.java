@@ -1,8 +1,5 @@
 //@A0111935L
 package logic;
-
-
-
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +15,9 @@ import utility.TaskLogging;
 import data.Data;
 import data.Task;
 
+/**
+ * This class updates the task with the specific task id
+ */
 public class UpdateHandler {
 	
 	private static Logger taskLogger = TaskLogging.getInstance();
@@ -178,6 +178,7 @@ public class UpdateHandler {
 
 		currentTask.setTaskStartDateTime(newStartDateTime);
 		currentTask.setTaskEndDateTime(newEndDateTime);
+		currentTask.setWeeklyDay("");
 		currentTask.setDeadLineStatus(true);
 		return new IndicatorMessagePair(true, "");
 	}
