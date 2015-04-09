@@ -160,6 +160,19 @@ public class SortHandler {
 		}
 	};
 	
+	public static Comparator<DateTime> TaskDateTimeDeadlineComparator 
+								= new Comparator<DateTime>() {
+		
+		public int compare(DateTime date1, DateTime date2) {
+		
+		if(date1.toLocalDate() == null || date2.toLocalDate() == null) {
+			return 0;
+		}
+		
+		return date1.toLocalDate().compareTo(date2.toLocalDate());
+		}
+	};
+	
 	public static Comparator<Task> TaskStartDateComparator 
 								= new Comparator<Task>() {
 
