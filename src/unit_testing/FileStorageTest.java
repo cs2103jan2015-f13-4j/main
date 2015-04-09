@@ -17,20 +17,19 @@ import storage.FileStorage;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
-
 public class FileStorageTest {
 	IndicatorMessagePair msgPair;
 	private String testFileName = "taskListTest.txt";
 	private String testLastUnusedIndex = "lastUnUsedIndexFileNameTest.txt";
 	private String testBlockedDateTimeFileName = "blockedDateTimeFileNameTest.txt";
-	
+
 	@Before
-	public void setUp(){
+	public void setUp() {
 		msgPair = new IndicatorMessagePair();
 	}
 
 	@After
-	public void tearDown(){
+	public void tearDown() {
 		msgPair = null;
 	}
 
@@ -42,8 +41,8 @@ public class FileStorageTest {
 		File textList = new File(testFileName);
 		textList.delete();
 	}
-	
-	/*This test case give error if filename is invalid*/
+
+	/* This test case give error if filename is invalid */
 	@Test
 	public void testLoadToArrayListInvalidFileName() {
 		FileStorage.setFileNameForTasksList("taskListstxt");
@@ -51,8 +50,8 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
-	/*This test case give error if empty filename*/
+
+	/* This test case give error if empty filename */
 	@Test
 	public void testLoadToArrayListEmptyFileName() {
 		FileStorage.setFileNameForTasksList("");
@@ -60,8 +59,8 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
-	/*This test case give error if null filename*/
+
+	/* This test case give error if null filename */
 	@Test
 	public void testLoadToArrayListNullFileName() {
 		FileStorage.setFileNameForTasksList(null);
@@ -69,7 +68,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testTaskListWriteToFile() {
 		Data smtDataTest = new Data();
@@ -85,7 +84,7 @@ public class FileStorageTest {
 		File textList = new File(testFileName);
 		textList.delete();
 	}
-	
+
 	@Test
 	public void testLastUnusedIndexValidFileName() {
 		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
@@ -94,7 +93,7 @@ public class FileStorageTest {
 		File textList = new File(testLastUnusedIndex);
 		textList.delete();
 	}
-	
+
 	@Test
 	public void testLastUnusedIndexInvalidFileName() {
 		FileStorage.setFileNameForLastUnusedIndex("taskListtxt");
@@ -102,7 +101,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testLastUnusedIndexEmptyFileName() {
 		FileStorage.setFileNameForLastUnusedIndex("");
@@ -110,7 +109,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testLastUnusedIndexNullFileName() {
 		FileStorage.setFileNameForLastUnusedIndex(null);
@@ -118,7 +117,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testLastUnusedIndexWriteToFile() {
 		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
@@ -137,7 +136,7 @@ public class FileStorageTest {
 		File textList = new File(testBlockedDateTimeFileName);
 		textList.delete();
 	}
-	
+
 	@Test
 	public void testBlockedDateTimeInvalidFileName() {
 		FileStorage.setFileNameForBlockedDatesList("taskListtxt");
@@ -145,7 +144,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testBlockedDateTimeEmptyFileName() {
 		FileStorage.setFileNameForBlockedDatesList("");
@@ -153,7 +152,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testBlockedDateTimeNullFileName() {
 		FileStorage.setFileNameForBlockedDatesList(null);
@@ -161,7 +160,7 @@ public class FileStorageTest {
 		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
 		assertEquals(expected, msgPair.getMessage());
 	}
-	
+
 	@Test
 	public void testBlockedDateTimeWriteToFile() {
 		FileStorage.setFileNameForBlockedDatesList(testBlockedDateTimeFileName);

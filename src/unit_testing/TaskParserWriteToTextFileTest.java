@@ -13,11 +13,12 @@ import data.TaskParserWriteToTextFile;
 
 public class TaskParserWriteToTextFileTest {
 
-	/*This is a null object testing*/
+	/* This is a null object testing */
 	@Test
 	public void testTaskNull() {
 		String expected = null;
-		assertEquals(expected, TaskParserWriteToTextFile.concatTaskFieldToString(null));
+		assertEquals(expected,
+				TaskParserWriteToTextFile.concatTaskFieldToString(null));
 	}
 
 }

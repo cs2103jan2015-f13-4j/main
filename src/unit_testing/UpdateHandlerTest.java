@@ -34,7 +34,8 @@ public class UpdateHandlerTest {
 		int min = 0;
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
-		keyFieldsTest = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
 				new DateTime(year, month, day, hour, min), new DateTime(year,
 						month, day, hour + 23, min), false, "", true));
@@ -75,17 +76,22 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test for regular update task description and return success message*/
+	/*
+	 * This test case test for regular update task description and return
+	 * success message
+	 */
 	@Test
 	public void testUpdateWithDescRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test for regular update task description */
+	/* This test case test for regular update task description */
 	@Test
 	public void testUpdateWithDescCheckRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -100,7 +106,7 @@ public class UpdateHandlerTest {
 		}
 	}
 
-	/*This test case test update task to weekly task*/
+	/* This test case test update task to weekly task */
 	@Test
 	public void testUpdateWithWeeklyCheckRegular() {
 		keyFieldsTest.put("UPDATE", "2");
@@ -114,55 +120,64 @@ public class UpdateHandlerTest {
 		}
 	}
 
-
-	/*This test case test update with description and deadline regular*/
+	/* This test case test update with description and deadline regular */
 	@Test
 	public void testUpdateWithDescAndByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test update with regular deadline*/
+	/* This test case test update with regular deadline */
 	@Test
 	public void testUpdateWithByRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("by", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test update with start time regular*/
+	/* This test case test update with start time regular */
 	@Test
 	public void testUpdateWithStartTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("from", "5pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test update with end time regular*/
+	/* This test case test update with end time regular */
 	@Test
 	public void testUpdateWithEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("to", "11pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/*This test case test start time end time regular*/
+	/* This test case test start time end time regular */
 	@Test
 	public void testUpdateWithStartTimeAndEndTimeRegular() {
 		keyFieldsTest.put("UPDATE", "2");
 		keyFieldsTest.put("FROM", "5pm");
 		keyFieldsTest.put("TO", "6pm");
-		String expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 6.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 6.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -263,7 +278,7 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/* This test case will give error if weekly is set to empty*/
+	/* This test case will give error if weekly is set to empty */
 	@Test
 	public void testUpdateWithWeeklyEmpty() {
 		keyFieldsTest.put("UPDATE", "2");

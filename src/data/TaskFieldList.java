@@ -6,21 +6,22 @@ package data;
  */
 public class TaskFieldList {
 
-	public enum List_Task_Field{
+	public enum List_Task_Field {
 		TASKID, TASKDESC, TASKSTARTDATETIME, TASKENDDATETIME, WEEKLYDAY, TASKSTATUS, TASKDEADLINESET, INVALID
 	}
-	
+
 	/**
 	 * This method will convert a string to a particular Enum value
+	 * 
 	 * @param taskFieldString
 	 * @return List_Task_Field
 	 */
-	public static List_Task_Field getTaskField(String taskFieldString){
+	public static List_Task_Field getTaskField(String taskFieldString) {
 		if (taskFieldString == null) {
 			return List_Task_Field.INVALID;
 		}
 
-		switch(taskFieldString.toUpperCase()){
+		switch (taskFieldString.toUpperCase()) {
 		case "TASKID":
 			return List_Task_Field.TASKID;
 		case "TASKDESC":
