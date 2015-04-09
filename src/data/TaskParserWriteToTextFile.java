@@ -1,6 +1,10 @@
 //@A0111935L
 package data;
 
+/**
+ * This class is to convert each task object into a format in string and will be
+ * storing to the file which will be handled by the FileStorage class
+ */
 public class TaskParserWriteToTextFile {
 
 	// task component separator char
@@ -19,11 +23,12 @@ public class TaskParserWriteToTextFile {
 	private static final int TASKWEEKLYDAY_OFFSET = 4;
 	// task fields list taskstatus offset
 	private static final int TASKSTATUS_OFFSET = 5;
-	// task fields list taskstatus offset
+	// task fields list taskdeadlineset offset
 	private static final int TASKDEADLINESET_OFFSET = 6;
 
 	/**
-	 * concatTaskFieldToString method will concatenate the heading of each task field
+	 * concatTaskFieldToString method will concatenate the heading of each task
+	 * field
 	 * 
 	 * @param oneTask
 	 * @return a text line
@@ -76,7 +81,7 @@ public class TaskParserWriteToTextFile {
 		textLine += TASK_FIELD_DATA_SEPARATOR;
 		textLine += oneTask.getTaskStatus();
 		textLine += TASK_COMPONENT_SEPARATOR;
-		
+
 		textLine += taskFields[TASKDEADLINESET_OFFSET].name();
 		textLine += TASK_FIELD_DATA_SEPARATOR;
 		textLine += oneTask.getDeadLineStatus();
