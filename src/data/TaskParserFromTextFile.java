@@ -2,13 +2,13 @@
 package data;
 import org.joda.time.DateTime;
 
+import parser.DateTimeParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
 /**
  * This class allow the string to be converted into Task object.
  * It is from the text file loaded into the system
- * @author Tian
  *
  */
 public class TaskParserFromTextFile {
@@ -24,6 +24,11 @@ public class TaskParserFromTextFile {
 	//data in task field at slot 1
 	private static final int TASK_FIELD_DATA_SLOT = 1;
 	
+	/**
+	 * generateStringFromTextFileToTask method generates a task object from a given string format stored in the textfile
+	 * @param eachTaskString
+	 * @return
+	 */
 	public static Task generateStringFromTextFileToTask(String eachTaskString){
 		if(eachTaskString == null){
 			return null;
@@ -76,9 +81,20 @@ public class TaskParserFromTextFile {
 		if(newTask.getTaskId() < 0){
 			return null;
 		}
+		
+		if(newTask.getDeadLineStatus() && !newTask.getWeeklyDay().isEmpty()){
+			return null;
+		}
+		
 		return newTask;
 	}
 	
+	/**
+	 * setTaskId method sets the task id from the text file to the task id from the task object
+	 * @param newTask the new task which will be stored into
+	 * @param id the task id to store
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskId(Task newTask, String id){
 		if(!isStringAnInteger(id) || id == null){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_ERROR_CONVERT_TASKID);
@@ -89,6 +105,12 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * setTaskDesc method sets the task description
+	 * @param newTask to set the description into this task object
+	 * @param desc the description to be set
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskDesc(Task newTask, String desc){
 		if(desc == null){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_DESCRIPTION_EMPTY);
@@ -99,6 +121,12 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * setTaskStartDateTime method will set the task start date time into the task object
+	 * @param newTask to set the start date time into this task object
+	 * @param startDateTime the string to be set into
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskStartDateTime(Task newTask, String startDateTime){
 		if(startDateTime == null){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
@@ -107,7 +135,7 @@ public class TaskParserFromTextFile {
 		DateTime convertedDateTime = DateTime.parse(startDateTime);
 		
 		if(convertedDateTime == null){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start Time"));
 		}
 		
 		newTask.setTaskStartDateTime(convertedDateTime);
@@ -115,6 +143,12 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * setTaskEndDateTime method will set the task end date time into the task object
+	 * @param newTask to set the end date time into this task object
+	 * @param endDateTime the string to be set into
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskEndDateTime(Task newTask, String endDateTime){
 		if(endDateTime == null){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_DATE_GIVEN);
@@ -123,7 +157,7 @@ public class TaskParserFromTextFile {
 		DateTime convertedDateTime = DateTime.parse(endDateTime);
 		
 		if(convertedDateTime == null){
-			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "End time"));
 		}
 
 		newTask.setTaskEndDateTime(convertedDateTime);
@@ -131,9 +165,21 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * setWeeklyDay method sets the day of the weekly day into the task object
+	 * @param newTask to set the weekly day into this task object 
+	 * @param weeklyDay the string to be stored into
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setWeeklyDay(Task newTask, String weeklyDay){
 		if(weeklyDay == null){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_EMPTY_WEEKLY_DAY);
+		}
+		
+		DateTime weeklyDate = DateTimeParser.generateDate(weeklyDay);
+
+		if(weeklyDate == null){
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
 		}
 		
 		newTask.setWeeklyDay(weeklyDay);
@@ -141,6 +187,12 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
+	/**
+	 * setTaskStatus method set the status of the task to the task object
+	 * @param newTask to set the status into this task object 
+	 * @param taskStatus the string to be stored into
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskStatus(Task newTask, String taskStatus){
 		if(taskStatus == null || !isStringAnBoolean(taskStatus)){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_STATUS);
@@ -151,7 +203,12 @@ public class TaskParserFromTextFile {
 		return new IndicatorMessagePair(true, "");
 	}
 	
-	
+	/**
+	 * setTaskDeadLineSet method set the deadlineset status of the task to the task object
+	 * @param newTask to set the deadlineset status into this task object 
+	 * @param taskDeadLineSet the string to be stored into
+	 * @return the indicator message which true if success, else false with the message 
+	 */
 	private static IndicatorMessagePair setTaskDeadLineSet(Task newTask, String taskDeadLineSet){
 		if(taskDeadLineSet == null || !isStringAnBoolean(taskDeadLineSet)){
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_INVALID_DEADLINESETSTATUS);
@@ -181,6 +238,11 @@ public class TaskParserFromTextFile {
 		return true;
 	}
 	
+	/**
+	 * isStringAnBoolean method will checks if the string can be converted into a boolean
+	 * @param inputStr the input string
+	 * @return true if it is a boolean, else false
+	 */
 	private static boolean isStringAnBoolean(String inputStr) {
 		try {
 			Boolean.parseBoolean(inputStr);
