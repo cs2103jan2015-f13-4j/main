@@ -8,13 +8,15 @@ import java.net.ServerSocket;
 
 import utility.MessageList;
 
+/**
+ * This class allows the application to be able to use a localhost port in order to prevent the same application to run twice
+ */
 public class LockApp {
 	private static final int PORT = 9999;
 	private static ServerSocket svrSocket;
 
-	//LockApp.checkExistingApp();
 	/**
-	 * bind to a local adapter to prevent launching same application
+	 * checkExistingApp method bind to a local adapter to prevent launching same application
 	 */
 	public static void checkExistingApp() {
 		try {
