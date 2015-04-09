@@ -318,6 +318,7 @@ public class SmtSurvival extends Composite {
 			tabFolder.setSelection(tabMain);
 			tabMain.setControl(lblMain);
 			lblMain.setText(output);
+			lblMain.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
 			lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
 			combo.removeAll();
 			savedExistingContents = lblMain.getText();
