@@ -90,4 +90,21 @@ public class TaskParserFromTextFileTest {
 		assertEquals("please submit a report", testTaskObj.getTaskDescription());
 		assertEquals(3, testTaskObj.getTaskId());
 	}
+	
+	@Test
+	public void testgenerateTaskIfDeadLineIsGiven() {
+		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEADLINESET=true";
+		testTaskObj = TaskParserFromTextFile.generateStringFromTextFileToTask(taskStr);
+		assertEquals("please submit a report", testTaskObj.getTaskDescription());
+		assertEquals(3, testTaskObj.getTaskId());
+		assertTrue(testTaskObj.getDeadLineStatus());
+	}
+	
+	@Test
+	public void testgenerateTaskIfDeadLineKeyIsInvalid() {
+		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEAeINESET=true";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile.generateStringFromTextFileToTask(taskStr));
+		
+	}
 }
