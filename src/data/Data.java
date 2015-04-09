@@ -193,6 +193,11 @@ public class Data {
 		return removedTask;
 	}
 	
+	/**
+	 * getABlockedDateTime method will return a blocked date with a specific location
+	 * @param index the location of that particular date time
+	 * @return the date time object
+	 */
 	public DateTime getABlockedDateTime(int index){
 		if(index >= blockedDateTimeList.size() || index < 0){
 			return null;
@@ -231,7 +236,11 @@ public class Data {
 		return true;
 	}
 	
-	private boolean checkIfTaskIdExist(){
+	/**
+	 * checkIfTaskIdExistWithLastUnusedIndex method check if task id conflicts with the last unused index
+	 * @return true if conflicts, else false
+	 */
+	private boolean checkIfTaskIdExistWithLastUnusedIndex(){
 		for(int i = 0; i < tasksList.size(); i++){
 			if(tasksList.get(i).getTaskId() == lastUnUsedIndex){
 				return true;
@@ -240,40 +249,67 @@ public class Data {
 		return false;
 	}
 	
+	/**
+	 * writeTaskListToFile method send the task list to the file storage to writes to the text file
+	 * @return indicatormessagepair to indicate whether it has been written successfully
+	 */
 	public IndicatorMessagePair writeTaskListToFile(){
 		return FileStorage.writeToFile(tasksList);
 		
 	}
 	
+	/**
+	 * writeLastUnUsedIndexToFile method send the last unused index to the file storage to writes to the text file
+	 * @return indicatormessagepair to indicate whether it has been written successfully
+	 */
 	public IndicatorMessagePair writeLastUnUsedIndexToFile(){
 		return FileStorage.writeToFile(lastUnUsedIndex);
 	}
 	
+	
+	/**
+	 * writeBlockedDateTimeListToFile method send the blocked date list to the file storage to writes to the text file
+	 * @return indicatormessagepair to indicate whether it has been written successfully
+	 */
 	public IndicatorMessagePair writeBlockedDateTimeListToFile(){
 		return FileStorage.writeBlockedDateTimeToFile(blockedDateTimeList);
 	}
 	
+	/**
+	 * loadEveryThingFromFile method loads the data (task list, last unused index and blocked out dates list from the text file
+	 * @return indicator message pair which to indicate whether it is loaded successfully with a message
+	 */
 	public IndicatorMessagePair loadEveryThingFromFile(){
 		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		setListTask(FileStorage.checkAndLoadTaskFile(msgPair));
+		ArrayList<Task> tempTaskList = FileStorage.checkAndLoadTaskFile(msgPair);
+		
 		if(!msgPair.isTrue()){
 			return msgPair;
 		}
 		
-		setLastUnUsedIndex(FileStorage.checkAndLoadLastTaskIndexFile(msgPair));
+		setListTask(tempTaskList);
+		
+		int tempLastUnusedIndex = FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
+		
 
 		if(!msgPair.isTrue()){
 			return msgPair;
 		}
 		
-		if(checkIfTaskIdExist()){
+		setLastUnUsedIndex(tempLastUnusedIndex);
+		
+		if(checkIfTaskIdExistWithLastUnusedIndex()){
 			msgPair.setTrue(false);
 			msgPair.setMessage(errorMsgForTaskId);
 			return msgPair;
 		}
 		
-		setBlockedDateTimeList(FileStorage.checkAndLoadBlockedDateFile(msgPair));
+		ArrayList<DateTime> tempBlockedDateList = FileStorage.checkAndLoadBlockedDateFile(msgPair);
 		
+		if(!msgPair.isTrue()){
+			return msgPair;
+		}
+		setBlockedDateTimeList(tempBlockedDateList);
 		
 		return msgPair;
 	}
