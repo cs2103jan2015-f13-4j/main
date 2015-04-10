@@ -36,13 +36,13 @@ public class CacheCommandsHandlerRedoTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		smtDataTest = null;
+		smtDataTest.clearTaskList();
 	}
 	
 	// To test no command entered
 	@Test
 	public void testRedoEmpty() {
-		smtDataTest = null;
+		smtDataTest.clearTaskList();
 		
 		String expected = MessageList.MESSAGE_LAST_COMMAND;
 		assertEquals(expected, CacheCommandsHandler.executeRedo(smtDataTest));
