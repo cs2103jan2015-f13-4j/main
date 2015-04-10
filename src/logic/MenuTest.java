@@ -24,6 +24,9 @@ public class MenuTest {
 	String task2 = "Add attending meeting by 20-05-2015";
 	String task3 = "Add prepare a proposal by 14-05-2015";
 	String task4 = "Block 18-07-2015";
+	String task5 = "Block from 14-05-2015 to 20-05-2015";
+	String task6 = "Delete 1";
+	String task7 = "redo";
 	/* add test */
 	String addValidTask = "Add submit report by Fri";
 	String addValidWeeklyTask = "Add submit report every Fri";
@@ -80,16 +83,19 @@ public class MenuTest {
 	String undoTaskInvalid = "und0";
 
 	/* redo test */
+	String redoTaskValid = "redo";
+	String redoTaskInvalid = "red0";
 
 	/* Block Task */
 	String BlockOneDateTaskValid = "Block 18-07-2015";
-	String BlockRangeOfDateValid = "Block from 19-07-2015 to 30-07-2015";
+	String BlockRangeOfDateValid = "Block from 19-08-2015 to 30-08-2015";
 
 	
 
 	/* Unblock test */
 	String UnblockOneDateTaskValid = "Unblock 18-07-2015";
 	String UnblockRangeOfDateValid = "block from 19-07-2015 to 30-07-2015";
+	
 	@Before
 	public void setUp() throws Exception {
 
@@ -681,16 +687,27 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
 	}
+	
+	//@Test
+	//public void testRedoValid() {
+		//expected = String.format(MessageList.MESSAGE_UNDO_SUCCESS);
+		//controller.commandExecution(task1);
+		//controller.commandExecution(task2);
+		//controller.commandExecution(task3);
+		//controller.commandExecution(task5);
+		//controller.commandExecution(task6);
+		//assertEquals(expected, controller.commandExecution(redoTaskValid));
+	//}
 
 	/*
 	 * This is testing blocking a single date
 	 * The output is : "18-07-2015 Blocked Successfully"
 	 */
-	@Test
-	public void testBlockOndDateValid() {
-		expected = String.format(MessageList.MESSAGE_BLOCKED,"18-07-2015" ) ;
-		assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
-	}
+	//@Test
+	//public void testBlockOndDateValid() {
+		//expected = String.format(MessageList.MESSAGE_BLOCKED,"18-07-2015" ) ;
+		//assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
+	//}
 	/*
 	 * This is to test unblocking of a single date
 	 * The output is : "18-07-2015 Unblocked Successfully"
@@ -701,11 +718,27 @@ public class MenuTest {
 		controller.commandExecution(task4);
 		assertEquals(expected, controller.commandExecution(UnblockOneDateTaskValid));
 	}
+	//PROBLEM!
+	@Test
+	public void testBlockRangeOfDateValid() {
+		expected = "Date from \"19-08-2015\" to \"30-08-2015\"\nBlocked Successfully";
+		//expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "Date from \"19-07-2015\" to \"30-07-2015\"\nBlocked Successfully");
+		assertEquals(expected, controller.commandExecution(BlockRangeOfDateValid));
+	}
+	//PROBELM
+	@Test
+	public void testUnblockRangeOfDateValid() {
+		expected = "Date from \"19-08-2015\" to \"30-08-2015\"\nUnblocked Successfully";
+		//expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "Date from \"19-07-2015\" to \"30-07-2015\"\nBlocked Successfully");
+		assertEquals(expected, controller.commandExecution(UnblockRangeOfDateValid));
+	}
 	
-	//@Test
-	//public void testBlockRangeOfDateValid() {
-		//expected = "Date from ""\19-07-2015\" to "\30-07-2015\"\nBlocked Successfully";
-		//assertEquals(expected, controller.commandExecution(BlockRangeOfDateValid));
-	//}
+	@Test
+	public void testblockDateThatHaveClashes() {
+		expected = String.format(MessageList.MESSAGE_UNBLOCKED,"18-07-2015" ) ;
+		controller.commandExecution(task5);
+		assertEquals(expected, controller.commandExecution(UnblockOneDateTaskValid));
+	}
+
 
 }
