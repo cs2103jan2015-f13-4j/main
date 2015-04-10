@@ -120,7 +120,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testAddNewTaskValid() {
-		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: submit report\nStatus: Pending");
+		expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected, controller.commandExecution(addValidTask));
 	}
 
@@ -208,7 +208,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testUpdateValid() {
-		expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 1\nDescription: submit a report\nStatus: Pending");
+		expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 1\nDescription: submit a report\nEnd Time: 11.59 PM\nDeadline: 13 April, 2015 (Mon)\nStatus: Pending");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -221,7 +221,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testUpdateWeeklyValid() {
-		expected ="\nTask ID: 2\nDescription: attending meeting\nEvery: monday\nStatus: Pending\nUpdated";
+		expected =String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: No specified date.\nEvery: monday\nStatus: Pending");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -235,7 +235,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testUpdateFromTimeToTimeValid() {
-		expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 3\nDescription: prepare a proposal\nStart Time: 10.00 AM\nEnd Time: 1.00 PM\nDeadline: 9 April, 2015 (Thu)\nStatus: Pending");
+		expected = String.format(MessageList.MESSAGE_UPDATE_SUCCESS, "\nTask ID: 3\nDescription: prepare a proposal\nStart Time: 10.00 AM\nEnd Time: 1.00 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -309,7 +309,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskByIDValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending";
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -323,7 +323,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskByDateValid() {
-		expected = "Task 14-05-2015\nnot found.";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -337,7 +337,7 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSearchTaskDescValid() {
-		expected = "\nTask ID: 2\nDescription: attending meeting\nStatus: Pending\n";
+		expected = "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -448,9 +448,9 @@ public class MenuTest {
 	 */
 	@Test
 	public void testDisplayPendingValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -466,9 +466,10 @@ public class MenuTest {
 	 */
 	@Test
 	public void testDisplayScheduleValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\n"
+				+ "End Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -569,9 +570,9 @@ public class MenuTest {
 
 	@Test
 	public void testSortDescValid() {
-		expected = "\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending"
-				+ "\n\nTask ID: 1\nDescription: submit report\nStatus: Pending\n";
+		expected = "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -588,9 +589,9 @@ public class MenuTest {
 
 	@Test
 	public void testSortStartDateValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -606,9 +607,9 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSortCompletedValid() {
-		expected = "\nTask ID: 1\nDescription: submit report"
-				+ "\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)"
+				+ "\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -624,9 +625,9 @@ public class MenuTest {
 	 */
 	@Test
 	public void testSortPendingValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -647,9 +648,9 @@ public class MenuTest {
 
 	@Test
 	public void testSortDeadlineValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nStatus: Pending\n";
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);

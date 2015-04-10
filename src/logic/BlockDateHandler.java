@@ -142,7 +142,7 @@ public class BlockDateHandler {
 		}
 		if (countBlockedFailed > 0 && (countBlockedFailed == totalBlockedDatesPending)) {//totally failed
 			return new IndicatorMessagePair(true, String.format(
-					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate, toDate));
+					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate, toDate, countBlockedFailed));
 		}
 		
 
