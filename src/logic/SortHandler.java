@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
@@ -11,11 +13,13 @@ import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
 import utility.MessageList;
+import utility.TaskLogging;
 import data.Data;
 import data.Task;
 
-
 public class SortHandler {
+	
+	private static Logger taskLogger = TaskLogging.getInstance();
 	
 	public static String executeSort(Map<String, String> keyFieldsList, Data smtData) {
 		
@@ -39,8 +43,8 @@ public class SortHandler {
 		case "DEADLINE":
 			indicMsg = sortDeadline(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
-		case "STARTDATE":
-			indicMsg = sortStartDate(keyFieldsList, smtData.getListTask(), displayTasksList);
+		case "STARTTIME":
+			indicMsg = sortStartTime(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		case "COMPLETED":
 		case "COMP":
@@ -51,6 +55,7 @@ public class SortHandler {
 			indicMsg = sortPending(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		default:
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
 		}
 		
@@ -59,9 +64,10 @@ public class SortHandler {
 		}
 		
 		if(displayTasksList.isEmpty()) {
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST);
 			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
 		}
-		
+		taskLogger.log(Level.INFO, "Executed Sort " +firstKey);
 		return sortTaskDetails(displayTasksList);
 	}
 	
@@ -87,13 +93,14 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortStartDate(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortStartTime(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTDATE.name());
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTTIME.name());
 		
 		cloneTaskList(listTask, displayTasksList);
 		
-		Collections.sort(displayTasksList, SortHandler.TaskStartDateComparator);
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		Collections.sort(displayTasksList, SortHandler.TaskStartTimeComparator);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
@@ -173,7 +180,7 @@ public class SortHandler {
 		}
 	};
 	
-	public static Comparator<Task> TaskStartDateComparator 
+	public static Comparator<Task> TaskStartTimeComparator 
 								= new Comparator<Task>() {
 
 		public int compare(Task task1, Task task2) {
@@ -214,14 +221,17 @@ public class SortHandler {
 		int numItemExpected = 1;
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NULL);
 			return MessageList.MESSAGE_NULL;
 		}
 		
 		if(smtData == null || smtData.getListTask().isEmpty()) {
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NO_TASK_IN_LIST);
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 		
 		if(keyFieldsList.size() != numItemExpected) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
 		}
 		
@@ -230,6 +240,7 @@ public class SortHandler {
 	
 	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
 		if(keyFieldsList.get(keyWord) != null) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
 		}
 		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_VALID_ARGUMENT, "Sort"));

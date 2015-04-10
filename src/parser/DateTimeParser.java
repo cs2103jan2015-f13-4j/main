@@ -178,4 +178,9 @@ public class DateTimeParser {
 		}
 		return null;
 	}
+	
+	public static String getDateFormatError(String dateValue) {
+		String errorMessage = "";
+		return errorMessage = checkDateFormat(dateValue);
+	}
 }
