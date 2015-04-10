@@ -1,10 +1,4 @@
 //@A0112502A
-
-/**
- * This class is doing the delete operation
- *
- */
-
 package logic;
 
 import java.util.Map;
@@ -18,6 +12,11 @@ import utility.MessageList;
 import utility.TaskLogging;
 import data.Data;
 import data.Task;
+
+/**
+ * This class is doing the delete operation
+ *
+ */
 
 public class DeleteHandler {
 
@@ -52,13 +51,22 @@ public class DeleteHandler {
 		// Local declaration
 		int i;
 		int index;
-		Task removedText;
 		
-		if(keyFieldsList == null || keyFieldsList.isEmpty()){
+		// check if keyFieldsList is null or empty
+		if(keyFieldsList == null){
+			assert false : "The mapped object is null";
+		}
+		
+		if(keyFieldsList.isEmpty()){
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
-		if(smtData == null || smtData.getListTask().isEmpty()){
+		// check if smtData is null or empty
+		if(smtData == null){
+			assert false : "Data is null";
+		}
+		
+		if(smtData.getListTask().isEmpty()){
 			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
 		
@@ -66,7 +74,7 @@ public class DeleteHandler {
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
-		// converting command type into integer
+		// converting command type from string into integer
 		index = Integer.parseInt(keyFieldsList.get(CommandType.Command_Types.DELETE.name()));
 		
 		// will search the task id from the list and delete the task
@@ -76,11 +84,24 @@ public class DeleteHandler {
 			}
 		}
 		
-		// check if user input's task id to be delete is more than or equal to 0, and check if it is lesser than the list task size
-		if(i >= 0 && i < smtData.getListTask().size())
+		// will execute the checkTaskIDSize
+		return checkTaskIDSize(smtData, i);
+	}
+
+	/**
+	 * This method is to check if user input's task id to be delete is more than or equal to 0, 
+	 * and check if it is lesser than the list task size
+	 * @param smtData contains the whole information including the task list
+	 * @param taskId number assigned to each task 
+	 * @return delete success message if taskId is lesser than 0 and list task size
+	 */
+	private static String checkTaskIDSize(Data smtData, int taskId) {
+		Task removedText;
+		
+		if(taskId >= 0 && taskId < smtData.getListTask().size())
 		{
 			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
-			removedText = smtData.removeATaskFromList(i, indicMsg);
+			removedText = smtData.removeATaskFromList(taskId, indicMsg);
 			
 			if(!indicMsg.isTrue()){
 				return indicMsg.getMessage();
