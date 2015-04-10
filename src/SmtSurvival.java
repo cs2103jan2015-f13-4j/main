@@ -1,4 +1,4 @@
-//@A0112501E and A0112502A
+//@A0112502A
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
@@ -14,7 +13,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,13 +26,15 @@ import logic.Menu;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.events.TraverseEvent;
+/**
+ * This class is for the UI 
+ *
+ */
 
 public class SmtSurvival extends Composite {
 
 	/**
-	 * 
+	 * Declare the constant variables
 	 */
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private Composite composite = null;
@@ -65,10 +65,9 @@ public class SmtSurvival extends Composite {
 	private static String saveCurrentCommand = new String();
 
 	/**
-	 * Create the composite.
-	 * 
-	 * @param parent
-	 * @param style
+	 * Create the composite
+	 * @param parent of the composite created
+	 * @param style value describing its behavior and appearance
 	 */
 	public SmtSurvival(Composite parent, int style) {
 		super(parent, style);
@@ -101,11 +100,13 @@ public class SmtSurvival extends Composite {
 		comboBox();
 	}
 
+	/**
+	 * This method is to create the tab "blocked"
+	 */
 	private void createTabBlocked() {
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabBlocked.setText("Blocked");
 		tabBlocked.setToolTipText("Select this tab to show the Blocked tasks");
 
@@ -119,11 +120,13 @@ public class SmtSurvival extends Composite {
 		lblBlocked.setText("This page is for Blocked Tasks");
 	}
 
+	/**
+	 * This method is to create the tab "pending"
+	 */
 	private void createTabPending() {
 		/* Pending Tab */
 		tabPending = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabPending.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabPending.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabPending.setText("Pending");
 		tabPending.setToolTipText("Select this tab to show the Pending tasks");
 
@@ -137,11 +140,13 @@ public class SmtSurvival extends Composite {
 		lblPending.setText("This page is for Pending Tasks");
 	}
 
+	/**
+	 * This method is to create the tab "completed"
+	 */
 	private void createTabCompleted() {
 		/* Completed Tab */
 		tabCompleted = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabCompleted.setText("Completed");
 		tabCompleted.setToolTipText("Select this tab to show the Completed tasks");
 
@@ -150,11 +155,13 @@ public class SmtSurvival extends Composite {
 		lblCompleted = new Label(composite, SWT.NONE);
 	}
 
+	/**
+	 * This method is to create the tab "today"
+	 */
 	private void createTabToday() {
 		/* Today Tab */
 		tabToday = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabToday.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabToday.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabToday.setText("Today");
 		tabToday.setToolTipText("Select this tab to show the Today's tasks");
 
@@ -168,11 +175,13 @@ public class SmtSurvival extends Composite {
 		lblToday.setText("This page is for Today's Tasks");
 	}
 
+	/**
+	 * This method is to create the tab "all"
+	 */
 	private void createTabAll() {
 		/* All Tab */
 		tabAll = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabAll.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabAll.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabAll.setText("All");
 		tabAll.setToolTipText("Select this tab to show all tasks");
 
@@ -186,11 +195,13 @@ public class SmtSurvival extends Composite {
 		lblAll.setText("This page is for All Tasks");
 	}
 
+	/**
+	 * This method is to create the tab "main"
+	 */
 	private void createTabMain() {
 		/* Main Tab */
 		tabMain = new CTabItem(displayTaskFolder, SWT.NONE);
-		tabMain.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabMain.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		tabMain.setText("Main");
 		tabMain.setToolTipText("Select this tab to show the Main page");
 
@@ -215,6 +226,7 @@ public class SmtSurvival extends Composite {
 		combo.setSize(435, 28);
 		combo.setText("Enter command here");
 		combo.setToolTipText("Enter command to manage your tasks");
+		
 		combo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -228,6 +240,7 @@ public class SmtSurvival extends Composite {
 				passControl(e);
 			}
 		});
+		
 		toolkit.adapt(combo);
 		toolkit.paintBordersFor(combo);
 		combo.setFocus();
@@ -241,9 +254,9 @@ public class SmtSurvival extends Composite {
 	
 	/**
 	 * This method is to create the tab item
-	 * @param scReceived
-	 * @param tabReceived
-	 * @param lblReceived
+	 * @param scReceived received the corresponding scrolled composite
+	 * @param tabReceived received the corresponding tab item
+	 * @param lblReceived received the corresponding label
 	 */
 	public void tabItem(ScrolledComposite scReceived, CTabItem tabReceived, Label lblReceived){
 		scReceived.setShowFocusedControl(true);
@@ -263,6 +276,7 @@ public class SmtSurvival extends Composite {
 	 */
 	private void tabFolder() {
 		displayTaskFolder = new CTabFolder(compositeBackground, SWT.BORDER);
+		displayTaskFolder.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
 		displayTaskFolder.setLocation(10, 44);
 		displayTaskFolder.setSize(435, 401);
 		displayTaskFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
@@ -284,8 +298,7 @@ public class SmtSurvival extends Composite {
 
 	/**
 	 * This method is to activate the Mouse Wheel for the scroll composite
-	 * 
-	 * @param scReceived
+	 * @param scReceived received the corresponding scrolled composite
 	 */
 	private void scMouseWheel(final ScrolledComposite scReceived) {
 		scReceived.addListener(SWT.Activate, new Listener() {
@@ -297,7 +310,7 @@ public class SmtSurvival extends Composite {
 
 	/**
 	 * This method is to get the selection of the corresponding tab and set the tab control by calling setTabControl method
-	 * @param event
+	 * @param event of the selection event
 	 */
 	private void tabControl(SelectionEvent event) {
 
@@ -322,9 +335,7 @@ public class SmtSurvival extends Composite {
 	/**
 	 * This method is to pass control to the logic component's menu class to
 	 * read the output from the command text box
-	 * 
-	 * @param e
-	 *            keyEvent variable
+	 * @param e represent the keyboard event
 	 */
 	private void passControl(KeyEvent e) {
 
@@ -372,7 +383,7 @@ public class SmtSurvival extends Composite {
 
 	/**
 	 * This method will help to switch the tab control using short cut key
-	 * @param e
+	 * @param e represent the keyboard event
 	 */
 	private void switchTabControl(KeyEvent e) {
 		flagForSwitchTab = true;
@@ -401,23 +412,22 @@ public class SmtSurvival extends Composite {
 
 	/**
 	 * This method is to set the control of the tab
-	 * @param tab
-	 * @param lblReceive receive the corresponding lbl
-	 * @param scReceived receive the corresponding sc composite
-	 * @param command
+	 * @param tabReceived receive the corresponding tab item
+	 * @param lblReceive receive the corresponding label
+	 * @param scReceived receive the corresponding scroll composite
+	 * @param command is the command that user have typed in
 	 */
-	private void setTabControl(CTabItem tab, Label lblReceive,
+	private void setTabControl(CTabItem tabReceived, Label lblReceived,
 			ScrolledComposite scReceived, String command) {
-		displayTaskFolder.setSelection(tab);
-		tab.setControl(scReceived);
-		lblReceive.setText(controller.commandExecution(command));
+		displayTaskFolder.setSelection(tabReceived);
+		tabReceived.setControl(scReceived);
+		lblReceived.setText(controller.commandExecution(command));
 	}
 
 	/**
 	 * This method will load the command history so that user can use the up
 	 * down button for execution
-	 * 
-	 * @param e
+	 * @param e represent the keyboard event
 	 */
 	private void loadCommandHistory(KeyEvent e) {
 
@@ -446,7 +456,7 @@ public class SmtSurvival extends Composite {
 
 	/**
 	 * This is the main method
-	 * @param args
+	 * @param args is an array of String objects
 	 */
 	public static void main(String[] args) {
 		Display display = new Display();
@@ -471,6 +481,9 @@ public class SmtSurvival extends Composite {
 				// sleep until the next OS event is available
 				display.sleep();
 		}
+		
+		// this will release the program
+		//LockApp.unLockApp();
 		
 		// disposes all associated windows and their components
 		display.dispose();
