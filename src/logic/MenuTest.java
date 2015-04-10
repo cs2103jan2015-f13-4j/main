@@ -1,3 +1,4 @@
+//@A0112501E
 package logic;
 
 import static org.junit.Assert.*;
@@ -703,11 +704,11 @@ public class MenuTest {
 	 * This is testing blocking a single date
 	 * The output is : "18-07-2015 Blocked Successfully"
 	 */
-	//@Test
-	//public void testBlockOndDateValid() {
-		//expected = String.format(MessageList.MESSAGE_BLOCKED,"18-07-2015" ) ;
-		//assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
-	//}
+	@Test
+	public void testBlockOndDateValid() {
+		expected = String.format(MessageList.MESSAGE_BLOCKED,"18-07-2015" ) ;
+		assertEquals(expected, controller.commandExecution(BlockOneDateTaskValid));
+	}
 	/*
 	 * This is to test unblocking of a single date
 	 * The output is : "18-07-2015 Unblocked Successfully"
@@ -721,8 +722,8 @@ public class MenuTest {
 	//PROBLEM!
 	@Test
 	public void testBlockRangeOfDateValid() {
-		expected = "Date from \"19-08-2015\" to \"30-08-2015\"\nBlocked Successfully";
-		//expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "Date from \"19-07-2015\" to \"30-07-2015\"\nBlocked Successfully");
+		//expected = "Date from \"19-08-2015\" to \"30-08-2015\"\nBlocked Successfully";
+		expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "19-07-2015", "30-07-2015");
 		assertEquals(expected, controller.commandExecution(BlockRangeOfDateValid));
 	}
 	//PROBELM

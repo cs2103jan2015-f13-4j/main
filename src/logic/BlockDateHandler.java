@@ -1,8 +1,10 @@
+//@A0112501E
 package logic;
 
 import java.util.Map;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 import parser.DateTimeParser;
@@ -70,14 +72,16 @@ public class BlockDateHandler {
 	private static IndicatorMessagePair checkBlockDate(
 			Map<String, String> keyFieldList, Data smtData) {
 
-		if (keyFieldList == null || keyFieldList.isEmpty())
-			if (keyFieldList == null || keyFieldList.isEmpty()) {
-				return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
-			}
+		if (keyFieldList == null) {
+			assert false : "The mapped object is null";
+		}
 
 		if (smtData == null) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_TASK_IN_LIST);
+			assert false : "The data object is null";
+		}
+
+		if (keyFieldList.isEmpty()) {
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
 		}
 
 		if (keyFieldList.size() == 1) {
@@ -97,7 +101,6 @@ public class BlockDateHandler {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD);
 		}
-
 	}
 
 	private static IndicatorMessagePair blockRangeOfDates(String fromDate,
@@ -125,6 +128,38 @@ public class BlockDateHandler {
 					fromDate, toDate));
 		}
 
+		// change the message
+		DateTime twoYearsLater = DateTime.now().plusYears(2);
+		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false,
+					String.format(
+							MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
+							fromDate));
+		}
+
+		int numberOfDatesFromThisRange = Days.daysBetween(
+				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + 1;
+		if (numberOfDatesFromThisRange > 31) {
+			// change the message that the range has exceed 31 days
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
+					toDate));
+		}
+
+		// will execute checkBlockedFailed to check for blocked range
+		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
+	}
+
+	/**
+	 * @param fromDate
+	 * @param toDate
+	 * @param smtData
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	private static IndicatorMessagePair checkBlockedFailed(String fromDate,
+			String toDate, Data smtData, DateTime startDate, DateTime endDate) {
 		int countBlockedFailed = 0;
 		int totalBlockedDatesPending = 0;
 		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
@@ -136,18 +171,21 @@ public class BlockDateHandler {
 
 		}
 
-		if (countBlockedFailed > 0 && (countBlockedFailed < totalBlockedDatesPending)) {
+		if (countBlockedFailed > 0
+				&& (countBlockedFailed < totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
-					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE, fromDate, toDate));
+					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
+					fromDate, toDate));
 		}
-		if (countBlockedFailed > 0 && (countBlockedFailed == totalBlockedDatesPending)) {//totally failed
+		if (countBlockedFailed > 0
+				&& (countBlockedFailed == totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
-					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate, toDate, countBlockedFailed));
+					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,
+					toDate, countBlockedFailed));
 		}
-		
 
 		return new IndicatorMessagePair(true, String.format(
-				MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE, fromDate, toDate));
+				MessageList.MESSAGE_BLOCKED_RANGE, fromDate, toDate));
 	}
 
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
@@ -163,8 +201,16 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
 		}
 
+		// change the message
+		DateTime twoYearsLater = DateTime.now().plusYears(2);
+		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false,
+					String.format(
+							MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
+							receivedDate));
+		}
+
 		if (checkIfBlockDateExist(endDate, smtData)) {
-			// change msgto date exist inside blocklist
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
 		}
@@ -314,5 +360,4 @@ public class BlockDateHandler {
 
 		return true;
 	}
-
 }
