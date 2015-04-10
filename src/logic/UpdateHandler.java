@@ -22,7 +22,13 @@ import data.Task;
 public class UpdateHandler {
 
 	private static Logger taskLogger = TaskLogging.getInstance();
-
+	private static final int EXPECTED_UPDATE_KEY_VALUE_LENGTH = 1;
+	private static final int KEYWORDS_MUST_NOT_APPEARED_COUNT = 1;
+	private static final String EMPTY_STRING = "";
+	private static final String END_WORD = "End";
+	private static final String WEEKLY_WORD = "Weekly";
+	private static final String UPDATE_WORD = "Update";
+	
 	/**
 	 * This method handle the update execution and update the contents to the
 	 * ArrayList of tasks
@@ -37,28 +43,36 @@ public class UpdateHandler {
 			Data smtData) {
 		int minTaskListSize = 0;
 
-		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
+		if (smtData == null) {
+			assert false : "Data object is null";
+		}
+
+		if (keyFieldsList == null) {
+			assert false : "Map object is null";
+		}
+
+		if (keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 
-		if (smtData == null || smtData.getListTask().isEmpty()) {
+		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
+			assert false : "Update should be present before coming to this method";
+		}
+		
+		if (smtData.getListTask().isEmpty()) {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
-		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
-			assert false : "Either Update is missing or the word update is in upper case: ";
-		}
-
 		if (keyFieldsList.get(CommandType.Command_Types.UPDATE.name()).split(
-				" ").length > 1) {
+				" ").length > EXPECTED_UPDATE_KEY_VALUE_LENGTH) {
 			return String
-					.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+					.format(MessageList.MESSAGE_INVALID_ARGUMENT, UPDATE_WORD);
 		}
 
 		if (!isStringAnInteger(keyFieldsList
 				.get(CommandType.Command_Types.UPDATE.name()))) {
 			return String.format(
-					MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+					MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, UPDATE_WORD);
 		}
 
 		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList
@@ -69,11 +83,13 @@ public class UpdateHandler {
 		}
 		// remove the update key pair as it has the index extracted
 		keyFieldsList.remove(CommandType.Command_Types.UPDATE.name());
-		return updateContents(keyFieldsList, index, smtData);
+
+		return checkAndUpdateContents(keyFieldsList, index, smtData);
 	}
 
 	/**
-	 * This method will update the contents based on the key word
+	 * checkAndUpdateContents method will update the contents based on the key
+	 * word
 	 * 
 	 * @param keyFieldsList
 	 *            contains the list of keyword and the data it has
@@ -83,15 +99,14 @@ public class UpdateHandler {
 	 *            contains the whole information including the task list
 	 * @return message
 	 */
-	private static String updateContents(Map<String, String> keyFieldsList,
-			int index, Data smtData) {
+	private static String checkAndUpdateContents(
+			Map<String, String> keyFieldsList, int index, Data smtData) {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		indicMsg.setTrue(true);
-		KeywordType.List_Keywords getKey;
 
 		Task awaitingTask = smtData.getATask(index);
 
-		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > 1) {
+		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > KEYWORDS_MUST_NOT_APPEARED_COUNT) {
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
 
@@ -105,6 +120,30 @@ public class UpdateHandler {
 			return indicMsg.getMessage();
 		}
 
+		return updateEachFieldsAndSave(keyFieldsList, index, smtData, indicMsg,
+				awaitingTask);
+	}
+
+	/**
+	 * updateEachFieldsAndSave method updates individual fields and update the
+	 * awaiting task object to the Data object
+	 * 
+	 * @param keyFieldsList
+	 *            contains the list of keyword and the data it has
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param indicMsg
+	 *            the indicator message pair
+	 * @param awaitingTask
+	 *            the temporary task which is updated task
+	 * @return the return message
+	 */
+	private static String updateEachFieldsAndSave(
+			Map<String, String> keyFieldsList, int index, Data smtData,
+			IndicatorMessagePair indicMsg, Task awaitingTask) {
+		KeywordType.List_Keywords getKey;
 		for (String key : keyFieldsList.keySet()) {
 			getKey = KeywordType.getKeyword(key);
 			switch (getKey) {
@@ -149,16 +188,21 @@ public class UpdateHandler {
 		// until here it means success
 		smtData.updateTaskList(index, awaitingTask);
 
-		indicMsg = new IndicatorMessagePair();
-
 		indicMsg = smtData.writeTaskListToFile();
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+
+		// save the current history
 		CacheCommandsHandler.newHistory(smtData);
-		taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_UPDATE_SUCCESS,
-				smtData.getATask(index)));
+
+		// logging
+		taskLogger.log(
+				Level.INFO,
+				String.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						smtData.getATask(index)));
+
 		return String.format(MessageList.MESSAGE_UPDATE_SUCCESS,
 				smtData.getATask(index));
 	}
@@ -179,26 +223,27 @@ public class UpdateHandler {
 	private static IndicatorMessagePair updateTaskByOrEndWhen(Data smtData,
 			Task currentTask, String keyFields) {
 		if (currentTask == null) {
-			assert false : "System error";
-		}
-
-		if (keyFields == null || keyFields.isEmpty()) {
-			return new IndicatorMessagePair(false,
-					MessageList.MESSAGE_NO_DATE_GIVEN);
-		}
-		DateTime endDate = DateTimeParser.generateDate(keyFields);
-		if (endDate == null) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
-		}
-
-		if (clashWithBlockDate(smtData, endDate)) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End"));
+			assert false : "Task object is null";
 		}
 
 		DateTime newStartDateTime = null;
 		DateTime newEndDateTime = null;
+
+		if (keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(keyFields);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, END_WORD));
+		}
+
+		if (clashWithBlockDate(smtData, endDate)) {
+			return new IndicatorMessagePair(false, 
+					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE);
+		}
 
 		if (currentTask.getTaskStartDateTime() != null) {
 			newStartDateTime = new DateTime(endDate.getYear(),
@@ -214,11 +259,15 @@ public class UpdateHandler {
 					currentTask.getTaskEndDateTime().getMinuteOfHour());
 		}
 
+		if (newEndDateTime == null) {
+			newEndDateTime = endDate;
+		}
+
 		currentTask.setTaskStartDateTime(newStartDateTime);
 		currentTask.setTaskEndDateTime(newEndDateTime);
-		currentTask.setWeeklyDay("");
+		currentTask.setWeeklyDay(EMPTY_STRING);
 		currentTask.setDeadLineStatus(true);
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -236,6 +285,10 @@ public class UpdateHandler {
 	 */
 	private static IndicatorMessagePair updateRecurringWeek(Task currentTask,
 			String keyFields) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
 		if (keyFields == null || keyFields.isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
@@ -245,7 +298,7 @@ public class UpdateHandler {
 
 		if (weeklyDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, WEEKLY_WORD));
 		}
 		DateTime newStartTime = null;
 		DateTime newEndTime = null;
@@ -268,7 +321,7 @@ public class UpdateHandler {
 		currentTask.setTaskEndDateTime(newEndTime);
 		currentTask.setWeeklyDay(keyFields);
 		currentTask.setDeadLineStatus(false);
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -286,7 +339,7 @@ public class UpdateHandler {
 	private static IndicatorMessagePair updateTaskDesc(Task currentTask,
 			String keyFields) {
 		if (currentTask == null) {
-			assert false : "System error";
+			assert false : "Task object is null";
 		}
 
 		if (keyFields == null || keyFields.isEmpty()) {
@@ -295,7 +348,7 @@ public class UpdateHandler {
 		}
 
 		currentTask.setTaskDescription(keyFields);
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -315,7 +368,7 @@ public class UpdateHandler {
 			Task currentTask, String keyFields,
 			KeywordType.List_Keywords direction) {
 		if (currentTask == null) {
-			assert false : "System error";
+			assert false : "Task object is null";
 		}
 
 		if (keyFields == null || keyFields.isEmpty()) {
@@ -351,7 +404,7 @@ public class UpdateHandler {
 			currentTask.setTaskEndDateTime(newEndTime);
 		}
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -371,7 +424,7 @@ public class UpdateHandler {
 	private static IndicatorMessagePair updateTaskStatus(Task currentTask,
 			String keyFields, boolean status) {
 		if (currentTask == null) {
-			assert false : "System error";
+			assert false : "Task object is null";
 		}
 
 		if (keyFields == null || !keyFields.isEmpty()) {
@@ -380,8 +433,7 @@ public class UpdateHandler {
 		}
 
 		currentTask.setTaskStatus(status);
-		// smtData.updateTaskList(index, tempTask);
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -426,10 +478,12 @@ public class UpdateHandler {
 				.get(KeywordType.List_Keywords.FROM.name()));
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
 				.get(KeywordType.List_Keywords.TO.name()));
+
 		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_TIME_WRONG_FLOW);
 		}
+
 		if (currentTask.getTaskStartDateTime() == null
 				&& currentTask.getTaskEndDateTime() == null) {
 			startTime = new DateTime(DateTime.now().getYear(), DateTime.now()
@@ -444,7 +498,7 @@ public class UpdateHandler {
 
 		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
 		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -569,6 +623,14 @@ public class UpdateHandler {
 		return existingDateTime;
 	}
 
+	/**
+	 * restrictOnlyUnqiueKeyWord method checks if the 'ON', 'BY', 'EVERY' exist
+	 * and count them
+	 * 
+	 * @param keyFieldsList
+	 *            the keyfieldList object
+	 * @return count
+	 */
 	private static int restrictOnlyUnqiueKeyWord(
 			Map<String, String> keyFieldsList) {
 		int count = 0;
@@ -584,6 +646,16 @@ public class UpdateHandler {
 		return count;
 	}
 
+	/**
+	 * clashWithBlockDate checks if the list of blocked date clashes with the
+	 * date currently want to update
+	 * 
+	 * @param smtData
+	 *            Data object which contains the data of the overall
+	 * @param endDate
+	 *            the received date
+	 * @return true if clashed, else false
+	 */
 	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
 		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
 			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()

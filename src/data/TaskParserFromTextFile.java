@@ -24,6 +24,11 @@ public class TaskParserFromTextFile {
 	private static final int TASK_FIELD_SLOT = 0;
 	// data in task field at slot 1
 	private static final int TASK_FIELD_DATA_SLOT = 1;
+	private static final String EMPTY_STRING = "";
+	private static final String END_WORD = "End";
+	private static final String START_WORD = "Start";
+	private static final String WEEKLY_WORD = "Weekly";
+	private static final int TASK_ID_BELOW = 0;
 
 	/**
 	 * generateStringFromTextFileToTask method generates a task object from a
@@ -41,6 +46,18 @@ public class TaskParserFromTextFile {
 			return null;
 		}
 
+		return processTaskString(eachTaskString);
+	}
+
+	/**
+	 * processTaskString method process the Task format in text file to Task
+	 * object
+	 * 
+	 * @param eachTaskString
+	 *            the Task format in string
+	 * @return Task object or null
+	 */
+	private static Task processTaskString(String eachTaskString) {
 		String[] taskComponent = eachTaskString
 				.split(TASK_COMPONENT_SEPARATOR_SPLIT);
 		Task newTask = new Task();
@@ -91,7 +108,7 @@ public class TaskParserFromTextFile {
 				return null;
 			}
 		}
-		if (newTask.getTaskId() < 0) {
+		if (newTask.getTaskId() < TASK_ID_BELOW) {
 			return null;
 		}
 
@@ -121,7 +138,7 @@ public class TaskParserFromTextFile {
 
 		newTask.setTaskId(Integer.parseInt(id));
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -142,7 +159,7 @@ public class TaskParserFromTextFile {
 
 		newTask.setTaskDescription(desc);
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -167,12 +184,12 @@ public class TaskParserFromTextFile {
 
 		if (convertedDateTime == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start Time"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, START_WORD));
 		}
 
 		newTask.setTaskStartDateTime(convertedDateTime);
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -197,12 +214,12 @@ public class TaskParserFromTextFile {
 
 		if (convertedDateTime == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End time"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, END_WORD));
 		}
 
 		newTask.setTaskEndDateTime(convertedDateTime);
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -226,12 +243,12 @@ public class TaskParserFromTextFile {
 
 		if (weeklyDate == null) {
 			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Weekly"));
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, WEEKLY_WORD));
 		}
 
 		newTask.setWeeklyDay(weeklyDay);
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -253,7 +270,7 @@ public class TaskParserFromTextFile {
 
 		newTask.setTaskStatus(Boolean.parseBoolean(taskStatus));
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**
@@ -276,7 +293,7 @@ public class TaskParserFromTextFile {
 
 		newTask.setDeadLineStatus(Boolean.parseBoolean(taskDeadLineSet));
 
-		return new IndicatorMessagePair(true, "");
+		return new IndicatorMessagePair(true, EMPTY_STRING);
 	}
 
 	/**

@@ -12,6 +12,10 @@ import utility.KeywordType;
  */
 public class CommandStringParser {
 	
+	private static final String RESTRICT_EQUAL_SIGN = "=";
+	private static final String RESTRICT_VERTICAL_BAR = "|";
+	private static final String A_SPACE = " ";
+	private static final String EMPTY_STRING = "";
 	/**
 	 * This processString will process the commands entered by the user
 	 * @param input command in string
@@ -19,15 +23,19 @@ public class CommandStringParser {
 	 * @return Command Type
 	 */
 	public static CommandType.Command_Types processString(String input, Map<String, String> keyFieldsList){
-		if(input == null || input.equals("")){
+		if(keyFieldsList == null){
+			assert false : "Map object is null";
+		}
+		
+		if(input == null || input.equals(EMPTY_STRING)){
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		if(input.contains("=") || input.contains("|")){
+		if(input.contains(RESTRICT_EQUAL_SIGN) || input.contains(RESTRICT_VERTICAL_BAR)){
 			return CommandType.Command_Types.INVALID;
 		}
 		
-		String[] inputCmd = input.trim().split(" ");
+		String[] inputCmd = input.trim().split(A_SPACE);
 		
 		CommandType.Command_Types command = CommandType.getType(inputCmd);
 		if(command == CommandType.Command_Types.INVALID){
@@ -59,7 +67,7 @@ public class CommandStringParser {
 				tempFields = "";
 			}
 			else{
-				tempFields += eachWord + " ";
+				tempFields += eachWord + A_SPACE;
 			}
 		}
 		

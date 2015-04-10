@@ -25,6 +25,7 @@ public class TaskParserWriteToTextFile {
 	private static final int TASKSTATUS_OFFSET = 5;
 	// task fields list taskdeadlineset offset
 	private static final int TASKDEADLINESET_OFFSET = 6;
+	private static final int SUBSTRING_OFFSET = 1;
 
 	/**
 	 * concatTaskFieldToString method will concatenate the heading of each task
@@ -87,6 +88,6 @@ public class TaskParserWriteToTextFile {
 		textLine += oneTask.getDeadLineStatus();
 		textLine += TASK_COMPONENT_SEPARATOR;
 
-		return textLine.substring(0, textLine.length() - 1);
+		return textLine.substring(0, textLine.length() - SUBSTRING_OFFSET);
 	}
 }
