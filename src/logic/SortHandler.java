@@ -39,8 +39,8 @@ public class SortHandler {
 		case "DEADLINE":
 			indicMsg = sortDeadline(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
-		case "STARTDATE":
-			indicMsg = sortStartDate(keyFieldsList, smtData.getListTask(), displayTasksList);
+		case "STARTTIME":
+			indicMsg = sortStartTime(keyFieldsList, smtData.getListTask(), displayTasksList);
 			break;
 		case "COMPLETED":
 		case "COMP":
@@ -87,13 +87,14 @@ public class SortHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
-	private static IndicatorMessagePair sortStartDate(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+	private static IndicatorMessagePair sortStartTime(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
 		
-		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTDATE.name());
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTTIME.name());
 		
 		cloneTaskList(listTask, displayTasksList);
 		
-		Collections.sort(displayTasksList, SortHandler.TaskStartDateComparator);
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		Collections.sort(displayTasksList, SortHandler.TaskStartTimeComparator);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
@@ -173,7 +174,7 @@ public class SortHandler {
 		}
 	};
 	
-	public static Comparator<Task> TaskStartDateComparator 
+	public static Comparator<Task> TaskStartTimeComparator 
 								= new Comparator<Task>() {
 
 		public int compare(Task task1, Task task2) {
