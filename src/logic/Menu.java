@@ -1,3 +1,4 @@
+//@A0112501E
 package logic;
 
 import java.util.Map;
@@ -72,6 +73,7 @@ public class Menu {
 					cmd.name(), smtData);
 		}
 		case EXIT: {
+			lockApp.unLockApp();
 			System.exit(0);
 			break;
 		}

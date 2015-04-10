@@ -1,3 +1,4 @@
+//@A0112501E
 package logic;
 
 import java.util.ArrayList;
@@ -94,7 +95,8 @@ public class SearchHandler {
 		for (int i = 0; i < smtData.getSize(); i++) {
 			if (smtData.getATask(i).getTaskEndDateTime() != null
 					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
-							.equals(endDate.toLocalDate()) && smtData.getATask(i).getDeadLineStatus())
+							.equals(endDate.toLocalDate())
+					&& smtData.getATask(i).getDeadLineStatus())
 				searchDetails += smtData.getATask(i).toString() + "\n";
 		}
 		if (!searchDetails.isEmpty()) {
@@ -149,7 +151,8 @@ public class SearchHandler {
 			}
 		}
 		if (tempList.size() == 0) {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND, wordAbstracted);
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+					wordAbstracted);
 		}
 		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
@@ -197,12 +200,15 @@ public class SearchHandler {
 
 	private static String checkForValidData(Map<String, String> keyFieldsList,
 			Data smtData) {
-		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
-			return MessageList.MESSAGE_NULL;
+		if (keyFieldsList == null) {
+			assert false : "The data object is null";
 		}
 
 		if (smtData == null) {
-			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+			assert false : "The mapped object is null";
+		}
+		if (keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
 		}
 
 		if (keyFieldsList.size() != 1) {

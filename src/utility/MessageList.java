@@ -15,7 +15,7 @@ public class MessageList {
 			+ "6) Search\n\n- Search by Task ID \n Search 1 <Task #> \n Search by Task Description\n- Search 2<Task Description>\n- Search 3 <Date>\n\n "
 			+ "7) Block\n\n- Block <date>\n-Block from <Date> to <Date>\n\n "
 			+ "8) Unblock\n\n- Unblock <date>\n- Unblock from <date> to <Date>\n\n "
-			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort StartDate\n\n Sort Pending "
+			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
 			+ "10) Undo\n\n -Undo\n\n "
 			+ "11) Redo\n\n************************************************************************************";
 	
@@ -73,10 +73,8 @@ public class MessageList {
 	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
 	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
 	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
-	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list";
-	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s is ocuppied\n";
-	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "\"%s\", \"%s\""
-			+ "\n%s days are occupied, please select other dates.";
+	
+	
 	
 	/**
 	 * These message are for UpdateHandler class
@@ -105,7 +103,7 @@ public class MessageList {
 	 * These message are for the Menu
 	 */
 	public static final String MESSAGE_MENU_NO_COMMAND = "There is no command.";
-	public static final String MESSAGE_MENU_COMMAND_UNRECOGNISED = "Command Unrecognised!";
+	public static final String MESSAGE_MENU_COMMAND_UNRECOGNISED = "Command Unrecognised, prevent using \"=\",\"|\"";
 
 	/**
 	 * These message are for SearchHandler class
@@ -120,8 +118,8 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
 	public static final String MESSAGE_BLOCKED = "\"%1$s\"\nBlocked Successfully";
 	public static final String MESSAGE_UNBLOCKED = "\"%1$s\"\nUnblocked Successfully";
-	public static final String MESSAGE_BLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully";
-	public static final String MESSAGE_UNBLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully";
+	public static final String MESSAGE_BLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully\n%s days blocked.";//check
+	public static final String MESSAGE_UNBLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nUnblocked Successfully\n%s days unblocked.";//check
 	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
 	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
 	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
@@ -130,8 +128,15 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_END ="Wrong date format for End date";
 	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START ="Wrong date format for Start date";
 	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
-	
-
+	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list";
+	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s is ocuppied\n";
+	public static final String MESSAGE_UNBLOCKED_DATE_NOT_EXIST = "%1$s is not inside the block list";
+	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "\"%s\", \"%s\""
+			+ "\n%s days are occupied, please select other dates.";
+	public static final String MESSAGE_UNBLOCKED_DATE_NOT_BLOCKED = "\"%s\", \"%s\""
+			+ "\n%s dates has never been block.";
+	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
+	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days."; 
 	/**
 	 * This message are for CacheCommandsHandler class
 	 */

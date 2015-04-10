@@ -84,6 +84,7 @@ public class SmtSurvival extends Composite {
 		compositeBackground.setBounds(0, 0, 454, 465);
 
 		tabFolder = new CTabFolder(compositeBackground, SWT.BORDER);
+		tabFolder.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		tabFolder.setLocation(10, 44);
 		tabFolder.setSize(435, 401);
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
@@ -106,8 +107,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblMain = new Label(composite, SWT.NONE);
-		lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
-		lblMain.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
+		lblMain.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		lblMain.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblMain.setAlignment(SWT.CENTER);
 		lblMain.setText("Welcome to Smart Management Tool");
 
@@ -131,8 +132,8 @@ public class SmtSurvival extends Composite {
 		composite.setSize(435, 452);
 
 		lblAll = new Label(composite, SWT.NONE);
-		lblAll.setForeground(SWTResourceManager.getColor(0, 128, 128));
-		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblAll.setForeground(SWTResourceManager.getColor(153, 0, 51));
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblAll.setText("This page is for All Tasks");
 
 		scAll.setContent(composite);
@@ -155,7 +156,7 @@ public class SmtSurvival extends Composite {
 
 		lblToday = new Label(composite, SWT.NONE);
 		lblToday.setForeground(SWTResourceManager.getColor(128, 0, 128));
-		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblToday.setText("This page is for Today's Tasks");
 
 		scToday.setContent(composite);
@@ -179,7 +180,7 @@ public class SmtSurvival extends Composite {
 
 		lblCompleted = new Label(composite, SWT.NONE);
 		lblCompleted.setForeground(SWTResourceManager.getColor(34, 139, 34));
-		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblCompleted.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblCompleted.setText("This page is for Completed Tasks");
 
 		scCompleted.setContent(composite);
@@ -202,7 +203,7 @@ public class SmtSurvival extends Composite {
 
 		lblPending = new Label(composite, SWT.NONE);
 		lblPending.setForeground(SWTResourceManager.getColor(255, 102, 0));
-		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblPending.setText("This page is for Pending Tasks");
 
 		scPending.setContent(composite);
@@ -212,8 +213,7 @@ public class SmtSurvival extends Composite {
 
 		/* Blocked Tab */
 		tabBlocked = new CTabItem(tabFolder, SWT.NONE);
-		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9,
-				SWT.NORMAL));
+		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI Black", 9, SWT.BOLD));
 		tabBlocked.setText("Blocked");
 		tabBlocked.setToolTipText("Select this tab to show the Blocked tasks");
 
@@ -225,7 +225,7 @@ public class SmtSurvival extends Composite {
 
 		lblBlocked = new Label(composite, SWT.NONE);
 		lblBlocked.setForeground(SWTResourceManager.getColor(255, 0, 0));
-		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 12, SWT.NORMAL));
 		lblBlocked.setText("This page is for Blocked Tasks");
 
 		scBlocked.setContent(composite);

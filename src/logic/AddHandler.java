@@ -1,3 +1,4 @@
+//@A0112501E 
 package logic;
 
 import java.util.Map;
@@ -19,6 +20,9 @@ import utility.TaskLogging;
 
 public class AddHandler {
 
+	/**
+	 * Declaration for Logger
+	 */
 	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
@@ -42,16 +46,19 @@ public class AddHandler {
 	public static String executeAdd(Map<String, String> keyFieldsList,
 			Data smtData) {
 
-		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
-			return MessageList.MESSAGE_NULL;
+		if (keyFieldsList == null) {
+			assert false : "The mapped object is null";
 		}
 
 		if (smtData == null) {
-			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+			assert false : "The data object is null";
+		}
+
+		if (keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
 		}
 
 		return addContents(keyFieldsList, smtData);
-
 	}
 
 	/**
@@ -98,19 +105,22 @@ public class AddHandler {
 			getKey = KeywordType.getKeyword(key);
 			switch (getKey) {
 			case BY:
-			case ON:
+			case ON: {
 				indicMsg = addTaskByWhen(smtData, newTask, lastUnUsedIndex,
 						keyFieldsList, getKey);
 				break;
+			}
 
-			case EVERY:
+			case EVERY: {
 				indicMsg = addRecurringWeek(newTask, lastUnUsedIndex,
 						keyFieldsList);
 				break;
 
-			default:
+			}
+			default: {
 				return String
 						.format(MessageList.MESSAGE_INVALID_COMMAND, "Add");
+			}
 			}
 
 			if (!indicMsg.isTrue()) {
@@ -135,6 +145,9 @@ public class AddHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
+		
+		
+		//To log add operation
 		taskLogger.log(Level.INFO, "Task Added");
 		CacheCommandsHandler.newHistory(smtData);
 		return String.format(MessageList.MESSAGE_ADDED, newTask.toString());
@@ -149,18 +162,21 @@ public class AddHandler {
 	 * @param keyFieldsList
 	 * @return
 	 */
+	
 	private static IndicatorMessagePair addTaskByWhen(Data smtData,
 			Task newTask, int index, Map<String, String> keyFieldsList,
 			KeywordType.List_Keywords keyword) {
 
+		String errorMessage = "";
 		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
 				MessageList.MESSAGE_NO_DATE_GIVEN);
 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(keyword.name()));
 		if (endDate == null) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INVALID_ARGUMENT, "Add"));
+				errorMessage = DateTimeParser.getDateFormatError(keyFieldsList
+						.get(keyword.name()));
+			return new IndicatorMessagePair(false, errorMessage);
 		}
 
 		if (clashWithBlockDate(smtData, endDate)) {
@@ -184,11 +200,11 @@ public class AddHandler {
 							.getTaskEndDateTime().getHourOfDay(), newTask
 							.getTaskEndDateTime().getMinuteOfHour());
 		}
-		
-		if(newEndDateTime == null){
+
+		if (newEndDateTime == null) {
 			newEndDateTime = endDate;
 		}
-		
+
 		newTask.setTaskStartDateTime(newStartDateTime);
 		newTask.setTaskEndDateTime(newEndDateTime);
 		newTask.setDeadLineStatus(true);
