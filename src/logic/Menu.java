@@ -73,7 +73,7 @@ public class Menu {
 					cmd.name(), smtData);
 		}
 		case EXIT: {
-			lockApp.unLockApp();
+			LockApp.unLockApp();
 			System.exit(0);
 			break;
 		}
