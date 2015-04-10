@@ -24,6 +24,7 @@ public class TaskParserFromTextFileTest {
 		testTaskObj = null;
 	}
 
+	/*This is null object testing*/
 	@Test
 	public void testgenerateTaskWithNull() {
 		String taskStr = null;
@@ -32,6 +33,7 @@ public class TaskParserFromTextFileTest {
 				.generateStringFromTextFileToTask(taskStr));
 	}
 
+	/*This is to check if the string only contains task id 2 and will expect null*/
 	@Test
 	public void testgenerateInvalidWithOnlyTaskWithTaskId() {
 		String taskStr = "Taskid=2";
@@ -40,6 +42,7 @@ public class TaskParserFromTextFileTest {
 				.generateStringFromTextFileToTask(taskStr));
 	}
 
+	/*success test*/
 	@Test
 	public void testgenerateTaskWithTaskIdAndDesc() {
 		String taskStr = "Taskid=2|TASKDESC=dadd adad dada";
@@ -49,6 +52,7 @@ public class TaskParserFromTextFileTest {
 		assertEquals(2, testTaskObj.getTaskId());
 	}
 
+	/*success test with start date time*/
 	@Test
 	public void testgenerateTaskWithTaskIdAndDescStartDateTime() {
 		String taskStr = "Taskid=2|TASKDESC=dadd adad dada|TASKSTARTDATETIME=2015-03-03T00:00:00.000+08:00";
@@ -59,6 +63,7 @@ public class TaskParserFromTextFileTest {
 				.getTaskStartDateTime().toString());
 	}
 
+	/*success with description, start date and end date*/
 	@Test
 	public void testgenerateTaskWithTaskIdAndDescStartDateTimeEndDateTime() {
 		String taskStr = "Taskid=2|TASKDESC=dadd adad dada|TASKSTARTDATETIME=2015-03-03T00:00:00.000+08:00|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00";
@@ -71,6 +76,7 @@ public class TaskParserFromTextFileTest {
 				.getTaskEndDateTime().toString());
 	}
 
+	/*This is boundary case with task id is non integer*/
 	@Test
 	public void testgenerateTaskInvalidTaskIdWithTaskDesc() {
 		String taskStr = "Taskid=a|TASKDESC=please submit";
@@ -79,6 +85,7 @@ public class TaskParserFromTextFileTest {
 				.generateStringFromTextFileToTask(taskStr));
 	}
 
+	/*This is boundary case with task description is empty*/
 	@Test
 	public void testgenerateTaskInvalidTaskDesc() {
 		String taskStr = "Taskid=2|TASKDESC=";
@@ -87,6 +94,7 @@ public class TaskParserFromTextFileTest {
 				.generateStringFromTextFileToTask(taskStr));
 	}
 
+	/*This is boundary case with no task id*/
 	@Test
 	public void testgenerateTaskInvalidIfNoTaskId() {
 		String taskStr = "TASKDESC=please submit a report|TASKSTARTDATE=3-3-2015";
@@ -95,6 +103,7 @@ public class TaskParserFromTextFileTest {
 				.generateStringFromTextFileToTask(taskStr));
 	}
 
+	/*This is a success test case*/
 	@Test
 	public void testgenerateTaskIfTaskIdIsBehind() {
 		String taskStr = "TASKDESC=please submit a report|TASKID=3";
@@ -104,6 +113,7 @@ public class TaskParserFromTextFileTest {
 		assertEquals(3, testTaskObj.getTaskId());
 	}
 
+	/*This is a success test case*/
 	@Test
 	public void testgenerateTaskIfDeadLineIsGiven() {
 		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEADLINESET=true";
@@ -114,6 +124,7 @@ public class TaskParserFromTextFileTest {
 		assertTrue(testTaskObj.getDeadLineStatus());
 	}
 
+	/*This is a success test case*/
 	@Test
 	public void testgenerateTaskIfDeadLineKeyIsInvalid() {
 		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEAeINESET=true";

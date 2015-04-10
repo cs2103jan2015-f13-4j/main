@@ -52,7 +52,6 @@ public class UpdateHandlerTest {
 		keyFieldsTest.clear();
 		File textList = new File(fileName);
 		textList.delete();
-
 	}
 
 	/* This is a boundary case for the ‘0’ partition */
