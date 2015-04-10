@@ -1,17 +1,13 @@
 //@A0112502A
 package logic;
 
-import java.util.ArrayList;
 import java.util.Stack;
-
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
-import data.Task;
 
 /**
- * This class is doing the Undo and Redo operation
- * @author SHUNA
+ * This class is doing the undo and re-do operation
  *
  */
 
@@ -30,7 +26,12 @@ public class CacheCommandsHandler {
 	 * @return message depending on situation met
 	 */
 	public static String executeUndo(Data smtData) {
-
+		
+		// check if smtData is null or empty
+		if(smtData == null){
+			assert false : "Data is null";
+		}
+		
 		if (isStackContainsOneItem()) {
 			return MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
 		}
@@ -53,6 +54,13 @@ public class CacheCommandsHandler {
 		
 		return updateTaskList(smtData);
 	}
+	
+	private static boolean isStackContainsLastItem() {
+		if(aheadCmds.size() == 0) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * This method will check whether stack contains one item
@@ -66,20 +74,12 @@ public class CacheCommandsHandler {
 		return false;
 	}
 	
-	private static boolean isStackContainsLastItem() {
-		if(aheadCmds.size() == 0) {
-			return true;
-		}
-		return false;
-	}
-
 	/**
 	 * This method will update the task list
-	 * @param smtData is a variable of object type Data class
-	 * @return
+	 * @param smtData contains the whole information including the task list
+	 * @return result to indicate undo and re-do successfully
 	 */
 	private static String updateTaskList(Data smtData) {
-
 		if(current.isEmpty()){
 			return MessageList.MESSAGE_ERROR;
 		}
@@ -102,15 +102,15 @@ public class CacheCommandsHandler {
 		} else if(cacheCommandStatus.equals("redo")) {
 			result = MessageList.MESSAGE_REDO_SUCCESS;
 		}
+		
 		return result;
 	}
 
 	/**
 	 * This method will update the latest unused index
-	 * @param smtData is a variable of object type Data class
+	 * @param smtData contains the whole information including the task list
 	 */
 	private static void updateLastUnUsedIndex(Data smtData) {
-
 		Data prevIndex;
 
 		prevIndex = current.peek();
@@ -120,22 +120,35 @@ public class CacheCommandsHandler {
 		smtData.writeLastUnUsedIndexToFile();
 	}
 	
+	/**
+	 * This method will update the blocked out dates
+	 * @param smtData contains the whole information including the task list
+	 */
 	private static void updatedBlockedOutDates(Data smtData){
-		
 		smtData.setBlockedDateTimeList(current.peek().getBlockedDateTimeList());
 		smtData.writeBlockedDateTimeListToFile();
 	}
 
 	/**
 	 * This method will add a new history to current stack and clear the aheadCmds stack
-	 * @param smtData is a variable of object type Data class
+	 * @param smtData contains the whole information including the task list
 	 */
 	public static void newHistory(Data smtData) {
+		Data newData = createData(smtData);
+		current.push(newData);
+		aheadCmds.clear();
+	}
+
+	/**
+	 * This method will create a new data for set the blocked date, last unused index and list task
+	 * @param smtData contains the whole information including the task list
+	 * @return newData created
+	 */
+	private static Data createData(Data smtData) {
 		Data newData = new Data();
 		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
 		newData.setLastUnUsedIndex(smtData.getLastUnUsedIndex());
 		newData.setListTask(smtData.getListTask());
-		current.push(newData);
-		aheadCmds.clear();
+		return newData;
 	}
 }

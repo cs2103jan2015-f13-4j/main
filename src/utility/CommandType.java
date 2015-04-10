@@ -1,13 +1,25 @@
 //@A0112502A
 package utility;
+
+/**
+ * This class is use to indicate the command types
+ *
+ */
+
 public class CommandType {
 	public enum Command_Types {
 		ADD, DELETE, DISPLAY, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
 	}
 
+	/**
+	 * This method will check the commands input by the user and go to the necessary case
+	 * @param commandTypeString is the command type that user has input 
+	 * @return the corresponding command type with the commandTypeString received
+	 */
 	public static Command_Types getType(String[] commandTypeString) {
 
 		if (commandTypeString == null) {
+			assert false : "Invalid command types entered";
 			return Command_Types.INVALID;
 		}
 		
@@ -22,7 +34,7 @@ public class CommandType {
 		case "dis":
 			return Command_Types.DISPLAY;
 		case "update": 
-		case "u":
+		case "up":
 			return Command_Types.UPDATE;
 		case "exit":
 			return Command_Types.EXIT;
@@ -33,7 +45,6 @@ public class CommandType {
 		case "st":
 			return Command_Types.SORT;
 		case "help":
-		case "h":
 			return Command_Types.HELP;
 		case "undo":
 		case "ud":
@@ -51,5 +62,4 @@ public class CommandType {
 			return Command_Types.INVALID;
 		}
 	}
-
 }
