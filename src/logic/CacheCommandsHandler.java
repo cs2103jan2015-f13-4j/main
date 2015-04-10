@@ -1,19 +1,16 @@
 //@A0112502A
+
+/**
+ * This class is doing the undo and re-do operation
+ *
+ */
+
 package logic;
 
-import java.util.ArrayList;
 import java.util.Stack;
-
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
-import data.Task;
-
-/**
- * This class is doing the Undo and Redo operation
- * @author SHUNA
- *
- */
 
 public class CacheCommandsHandler {
 
@@ -53,6 +50,13 @@ public class CacheCommandsHandler {
 		
 		return updateTaskList(smtData);
 	}
+	
+	private static boolean isStackContainsLastItem() {
+		if(aheadCmds.size() == 0) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * This method will check whether stack contains one item
@@ -66,12 +70,6 @@ public class CacheCommandsHandler {
 		return false;
 	}
 	
-	private static boolean isStackContainsLastItem() {
-		if(aheadCmds.size() == 0) {
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * This method will update the task list
@@ -102,6 +100,7 @@ public class CacheCommandsHandler {
 		} else if(cacheCommandStatus.equals("redo")) {
 			result = MessageList.MESSAGE_REDO_SUCCESS;
 		}
+		
 		return result;
 	}
 
@@ -120,6 +119,10 @@ public class CacheCommandsHandler {
 		smtData.writeLastUnUsedIndexToFile();
 	}
 	
+	/**
+	 * This method will update the blocked out dates
+	 * @param smtData  is a variable of object type Data class
+	 */
 	private static void updatedBlockedOutDates(Data smtData){
 		
 		smtData.setBlockedDateTimeList(current.peek().getBlockedDateTimeList());
