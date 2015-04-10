@@ -184,6 +184,11 @@ public class AddHandler {
 							.getTaskEndDateTime().getHourOfDay(), newTask
 							.getTaskEndDateTime().getMinuteOfHour());
 		}
+		
+		if(newEndDateTime == null){
+			newEndDateTime = endDate;
+		}
+		
 		newTask.setTaskStartDateTime(newStartDateTime);
 		newTask.setTaskEndDateTime(newEndDateTime);
 		newTask.setDeadLineStatus(true);

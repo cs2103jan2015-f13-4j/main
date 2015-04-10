@@ -65,7 +65,7 @@ public class AddHandlerTest {
 	public void testAddWithDescRegular() {
 		keyFieldsTest.put("ADD", "submit proposal");
 		keyFieldsTest.put("BY", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: submit proposal\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: submit proposal\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -134,7 +134,7 @@ public class AddHandlerTest {
 	public void testAddByDay() {
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -148,7 +148,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10am");
 		keyFieldsTest.put("TO", "12pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 AM\nEnd Time: 12.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -237,7 +237,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10 pm");
 		keyFieldsTest.put("TO", "11 pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 PM\nEnd Time: 11.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -252,7 +252,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10 pm");
 		keyFieldsTest.put("TO", "11 pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Invalid argument for Add command.";
+		String expected = "Invalid argument for No Description command.";
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -268,7 +268,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10.30pm");
 		keyFieldsTest.put("TO", "11pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED,"\nTask ID: 4\nDescription: submit\nStart from: 6 April, 2015 (Mon)\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String.format(MessageList.MESSAGE_ADDED,"\nTask ID: 4\nDescription: submit\nStart Time: 10.30 PM\nEnd Time: 11.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
