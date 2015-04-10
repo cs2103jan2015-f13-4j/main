@@ -49,7 +49,7 @@ public class DisplayHandlerTest {
 		smtDataTest.clearTaskList();
 	}
 	
-	// To test empty task list
+	// To test displaying empty task list
 	@Test
 	public void testDisplayEmpty() {
 		
