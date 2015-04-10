@@ -25,7 +25,6 @@ public class UpdateHandler {
 	private static final int EXPECTED_UPDATE_KEY_VALUE_LENGTH = 1;
 	private static final int KEYWORDS_MUST_NOT_APPEARED_COUNT = 1;
 	private static final String EMPTY_STRING = "";
-	private static final String END_WORD = "End";
 	private static final String WEEKLY_WORD = "Weekly";
 	private static final String UPDATE_WORD = "Update";
 	
@@ -235,9 +234,10 @@ public class UpdateHandler {
 		}
 
 		DateTime endDate = DateTimeParser.generateDate(keyFields);
+		String errorMessage = "";
 		if (endDate == null) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_WRONG_DATE_FORMAT, END_WORD));
+			errorMessage = DateTimeParser.getDateFormatError(keyFields);
+			return new IndicatorMessagePair(false, errorMessage);
 		}
 
 		if (clashWithBlockDate(smtData, endDate)) {
