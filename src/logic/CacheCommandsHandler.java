@@ -46,7 +46,7 @@ public class CacheCommandsHandler {
 	public static String executeRedo(Data smtData) {
 		
 		if(isStackContainsLastItem()) {
-			return MessageList.MESSAGE_ONLY_ONE_ITEM;
+			return MessageList.MESSAGE_LAST_COMMAND;
 		}
 		
 		current.push(aheadCmds.pop());
