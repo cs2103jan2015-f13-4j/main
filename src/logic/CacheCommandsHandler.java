@@ -26,6 +26,12 @@ public class CacheCommandsHandler {
 	 * @return message depending on situation met
 	 */
 	public static String executeUndo(Data smtData) {
+		
+		// check if smtData is null or empty
+		if(smtData == null){
+			assert false : "Data is null";
+		}
+		
 		if (isStackContainsOneItem()) {
 			return MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
 		}
