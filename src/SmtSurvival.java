@@ -483,7 +483,7 @@ public class SmtSurvival extends Composite {
 		}
 		
 		// this will release the program
-		//LockApp.unLockApp();
+		LockApp.unLockApp();
 		
 		// disposes all associated windows and their components
 		display.dispose();
