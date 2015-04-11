@@ -1,4 +1,4 @@
-//@A0112502A
+//@author A0112502A
 package utility;
 
 /**

@@ -4,7 +4,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, TO, BY, ID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, TASKID, ON
+		FROM, TO, BY, EVERY, TASKDESC, COMPLETE, INCOMPLETE, FIELD, TASKID, ON
 	}
 	
 	public enum List_SearchKeywords{
@@ -34,12 +34,6 @@ public class KeywordType {
 			return List_Keywords.EVERY;
 		case "taskdesc":
 			return List_Keywords.TASKDESC;
-		case "taskstart":
-			return List_Keywords.TASKSTART;
-		case "taskend":
-			return List_Keywords.TASKEND;
-		case "taskstatus":
-			return List_Keywords.TASKSTATUS;
 		case "complete":
 			return List_Keywords.COMPLETE;
 		case "incomplete":

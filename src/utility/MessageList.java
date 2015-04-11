@@ -122,9 +122,8 @@ public class MessageList {
 	/**
 	 * These message are for DeleteHandler Class
 	 */
-	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
-	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
+	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
 
 	/**
 	 * This message are for HintHandler class
