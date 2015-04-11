@@ -1,9 +1,11 @@
 //@A0112501E
-package logic;
+package unit_testing;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
+
+import logic.Menu;
 
 import org.junit.After;
 import org.junit.Before;

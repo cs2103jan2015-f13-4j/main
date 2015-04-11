@@ -1,10 +1,12 @@
 //@A0112501E
-package logic;
+package unit_testing;
 
 import static org.junit.Assert.*;
 
 import java.util.Map;
 import java.util.TreeMap;
+
+import logic.SearchHandler;
 
 import org.joda.time.DateTime;
 import org.junit.After;
