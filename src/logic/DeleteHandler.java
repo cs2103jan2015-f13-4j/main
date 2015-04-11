@@ -119,7 +119,8 @@ public class DeleteHandler {
 			// to log delete operation
             taskLogger.log(Level.INFO, "Task ID deleted: " + removedText.getTaskId());
 			
-            return String.format(MessageList.MESSAGE_DELETE_SUCCESS, FileStorage.getFileNameForTasksList(), removedText.getTaskDescription());
+            return String.format(removedText.toString() + "\nDeleted");
+            //return String.format(MessageList.MESSAGE_DELETE_SUCCESS, FileStorage.getFileNameForTasksList(), removedText.getTaskDescription());
 		}
 			
 		return MessageList.MESSAGE_NO_FILE_DELETED;
