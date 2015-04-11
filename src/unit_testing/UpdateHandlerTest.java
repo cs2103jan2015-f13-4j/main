@@ -1,7 +1,9 @@
-//@A0111935L
+//@author A0111935L
 package unit_testing;
 
-import static org.junit.Assert.*;
+
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Map;

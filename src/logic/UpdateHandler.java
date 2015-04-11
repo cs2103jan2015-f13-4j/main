@@ -1,4 +1,4 @@
-//@A0111935L
+//@author A0111935L
 package logic;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ public class UpdateHandler {
 	private static final String EMPTY_STRING = "";
 	private static final String WEEKLY_WORD = "Weekly";
 	private static final String UPDATE_WORD = "Update";
-	
+
 	/**
 	 * This method handle the update execution and update the contents to the
 	 * ArrayList of tasks
@@ -49,29 +49,32 @@ public class UpdateHandler {
 		if (keyFieldsList == null) {
 			assert false : "Map object is null";
 		}
-
-		if (keyFieldsList.isEmpty()) {
+		
+		//for unit testing to throw in null object
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 
 		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
 			assert false : "Update should be present before coming to this method";
+			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
 		}
-		
-		if (smtData.getListTask().isEmpty()) {
+
+		if (smtData == null || smtData.getListTask().isEmpty()) {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 
 		if (keyFieldsList.get(CommandType.Command_Types.UPDATE.name()).split(
 				" ").length > EXPECTED_UPDATE_KEY_VALUE_LENGTH) {
-			return String
-					.format(MessageList.MESSAGE_INVALID_ARGUMENT, UPDATE_WORD);
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+					UPDATE_WORD);
 		}
 
 		if (!isStringAnInteger(keyFieldsList
 				.get(CommandType.Command_Types.UPDATE.name()))) {
-			return String.format(
-					MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, UPDATE_WORD);
+			return String
+					.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER,
+							UPDATE_WORD);
 		}
 
 		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList
@@ -241,7 +244,7 @@ public class UpdateHandler {
 		}
 
 		if (clashWithBlockDate(smtData, endDate)) {
-			return new IndicatorMessagePair(false, 
+			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE);
 		}
 
