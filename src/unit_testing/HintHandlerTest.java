@@ -1,11 +1,7 @@
-//@A0112502A
+//@author A0112502A
 package unit_testing;
 
 import static org.junit.Assert.*;
-
-import java.io.File;
-import java.util.ArrayList;
-
 import logic.HintHandler;
 
 import org.junit.After;
@@ -13,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import utility.MessageList;
-import data.Data;
-import data.Task;
 
 public class HintHandlerTest {
 	
@@ -26,204 +20,214 @@ public class HintHandlerTest {
 	public void tearDown() {
 	}
 	
-	/**************************************************** Testing workable command ****************************************************/
+	/**************************************************** Testing valid command ****************************************************/
 	
-	/*============================= This is to test normal hint with word add regular =============================*/
+	// This is to test normal hint with word add valid
 	@Test
-	public void testHintWithWordAddRegular1(){
+	public void testHintWithWordAddValid1(){
 		String input = "a";
 		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordAddRegular2() {
+	public void testHintWithWordAddValid2() {
 		String input = "ad";
 		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordAddRegular3() {
+	public void testHintWithWordAddValid3() {
 		String input = "add";
 		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word delete regular =============================*/
+	// This is to test normal hint with word delete valid
 	@Test
-	public void testHintWithWordDeleteRegular1(){
+	public void testHintWithWordDeleteValid1(){
 		String input = "de";
 		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordDeleteRegular2(){
+	public void testHintWithWordDeleteValid2(){
 		String input = "del";
 		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordDeleteRegular5(){
+	public void testHintWithWordDeleteValid3(){
 		String input = "delete";
 		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word display regular =============================*/
+	// This is to test normal hint with word display valid
 	@Test
-	public void testHintWithWordDisplayRegular1(){
+	public void testHintWithWordDisplayValid1(){
 		String input = "di";
 		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordDisplayRegular2(){
+	public void testHintWithWordDisplayValid2(){
 		String input = "dis";
 		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordDisplayRegular6(){
+	public void testHintWithWordDisplayValid3(){
 		String input = "display";
 		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word update regular =============================*/
+	// This is to test normal hint with word update valid
 	@Test
-	public void testHintWithWordUpdateRegular1(){
+	public void testHintWithWordUpdateValid1(){
 		String input = "up";
 		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordUpdateRegular2(){
+	public void testHintWithWordUpdateValid2(){
 		String input = "upd";
 		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordUpdateRegular5(){
+	public void testHintWithWordUpdateValid3(){
 		String input = "update";
 		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word search regular =============================*/
+	// This is to test normal hint with word search valid
 	@Test
-	public void testHintWithWordSearchRegular1(){
+	public void testHintWithWordSearchValid1(){
 		String input = "se";
 		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordSearchRegular2(){
+	public void testHintWithWordSearchValid2(){
 		String input = "sea";
 		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordSearchRegular3(){
+	public void testHintWithWordSearchValid3(){
 		String input = "search";
 		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word sort regular =============================*/
+	// This is to test normal hint with word sort valid
 	@Test
-	public void testHintWithWordSortRegular1(){
+	public void testHintWithWordSortValid1(){
 		String input = "so";
 		String expected = MessageList.MESSAGE_SORT_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordSortRegular2(){
+	public void testHintWithWordSortValid2(){
 		String input = "sort";
 		String expected = MessageList.MESSAGE_SORT_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word undo regular =============================*/
+	// This is to test normal hint with word undo valid
 	@Test
-	public void testHintWithWordUndoRegular1(){
+	public void testHintWithWordUndoValid1(){
 		String input = "und";
 		String expected = MessageList.MESSAGE_UNDO_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 
 	@Test
-	public void testHintWithWordUndoRegular2(){
+	public void testHintWithWordUndoValid2(){
 		String input = "undo";
 		String expected = MessageList.MESSAGE_UNDO_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word redo regular =============================*/
+	// This is to test normal hint with word redo valid
 	@Test
-	public void testHintWithWordRedoRegular1(){
+	public void testHintWithWordRedoValid1(){
 		String input = "re";
 		String expected = MessageList.MESSAGE_REDO_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordRedoRegular2(){
+	public void testHintWithWordRedoValid2(){
 		String input = "redo";
 		String expected = MessageList.MESSAGE_REDO_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word block regular =============================*/
+	//This is to test normal hint with word block valid
 	@Test
-	public void testHintWithWordBlockRegular1(){
+	public void testHintWithWordBlockValid1(){
 		String input = "b";
 		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordBlockRegular2(){
+	public void testHintWithWordBlockValid2(){
 		String input = "blo";
 		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordBlockRegular3(){
+	public void testHintWithWordBlockValid3(){
 		String input = "block";
 		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
-	/*============================= This is to test normal hint with word unblock regular =============================*/
+	//This is to test normal hint with word unblock valid
 	@Test
-	public void testHintWithWordUnblockRegular1(){
+	public void testHintWithWordUnblockValid1(){
 		String input = "unb";
 		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordUnblockRegular2(){
+	public void testHintWithWordUnblockValid2(){
 		String input = "unbl";
 		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 	
 	@Test
-	public void testHintWithWordUnblockRegular3(){
+	public void testHintWithWordUnblockValid3(){
 		String input = "unblock";
 		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	/**************************************************** Testing invalid command ****************************************************/
+
+	// This is to test empty command entered
+	@Test
+	public void testHintWithEmptyCommand(){
+		String input = "";
+		String expected = MessageList.MESSAGE_HINT_INVALID;
 		assertEquals(expected, HintHandler.executeHint(input));
 	}
 }
