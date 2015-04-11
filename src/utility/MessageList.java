@@ -69,8 +69,8 @@ public class MessageList {
 	public static final String MESSAGE_DATE_IS_BEFORE_TODAY = "Date provided is before Today's date.";
 	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
 	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
-	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
-	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
+	public static final String MESSAGE_INVALID = "Please enter a valid command.";
+	public static final String MESSAGE_INVALID_FOR_SYMBOL = "Please enter a valid command. Remove characters such as '=' and '|'";
 	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
 	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
 	
@@ -109,8 +109,8 @@ public class MessageList {
 	 * These message are for SearchHandler class
 	 */
 	public static final String MESSAGE_NO_MATCH_FOUND = "Task %1$s\nnot found.";
-	public static final String MESSAGE_INVAILD_SEARCH = "This is a invaild search.";
-	public static final String MESSAGE_INVAILD_SEARCH_CRITERIA = "This is a invaild search criteria.";
+	public static final String MESSAGE_INVALID_SEARCH = "This is a invalid search.";
+	public static final String MESSAGE_INVALID_SEARCH_CRITERIA = "This is a invalid search criteria.";
 
 	/**
 	 * These message are for BlockDate class
@@ -118,8 +118,8 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
 	public static final String MESSAGE_BLOCKED = "\"%1$s\"\nBlocked Successfully";
 	public static final String MESSAGE_UNBLOCKED = "\"%1$s\"\nUnblocked Successfully";
-	public static final String MESSAGE_BLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully\n%s days blocked.";//check
-	public static final String MESSAGE_UNBLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nUnblocked Successfully\n%s days unblocked.";//check
+	public static final String MESSAGE_BLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nUnblocked Successfully";
 	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
 	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
 	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
