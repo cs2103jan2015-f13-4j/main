@@ -1,4 +1,4 @@
-//@A0112502A
+//@author A0112502A
 package unit_testing;
 import static org.junit.Assert.*;
 
@@ -19,7 +19,6 @@ import data.Task;
 
 /**
  * This class is the junit testing for the delete operation
- * @author SHUNA
  *
  */
 
@@ -36,6 +35,10 @@ public class DeleteHandlerTest {
 		FileStorage.setFileNameForTasksList(fileName);
 		keyFieldsTest = new TreeMap<String, String>();
 		taskList = new ArrayList<Task>();
+		
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 	}
 
 	@After
@@ -44,33 +47,47 @@ public class DeleteHandlerTest {
 		taskList.clear();
 	}
 	
-	// This is to test normal deleting
+	// This is to test normal deletion
 	@Test
 	public void testDeleteWithIDRegular() {
-		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
-		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
-		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
+//		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+//		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+//		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 		keyFieldsTest.put("DELETE", "2");
 		String expected = String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, "Submit report to Ms Sarah");
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
 	}
 	
-	// This is to test if user can delete using ID
+	// This is to test if user can delete with an empty input
 	@Test
 	public void testDeleteWithIDEmpty(){
+		smtDataTest.clearTaskList();
 		keyFieldsTest.put("DELETE", "");
 		String expected = MessageList.MESSAGE_NO_FILE_DELETED;
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
 	}
 	
-	// This is to test if the ID user has keyed in is invalid
+	// This is to test if the ID that user has keyed in is invalid
 	@Test
 	public void testDeleteWithIDInvalid(){
-		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
-		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
-		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
-		keyFieldsTest.put("DELETE", "1. Prepare a proposal");
+		keyFieldsTest.put("DELETE", "4abc");
 		String expected = MessageList.MESSAGE_INVALID_DELETE;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	//This is to test if user can delete with multiple ID
+	@Test
+	public void testDeleteWithMultipleID(){
+		keyFieldsTest.put("DELETE", "1 2");
+		String expected = MessageList.MESSAGE_INVALID_DELETE;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	// This is to test if the ID entered by user is out of bound
+	@Test
+	public void testDeleteOutOfBound() {
+		keyFieldsTest.put("DELETE", "4");
+		String expected = MessageList.MESSAGE_NO_FILE_DELETED;
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
 	}
 }
