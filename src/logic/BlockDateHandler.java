@@ -131,10 +131,12 @@ public class BlockDateHandler {
 		// change the message
 		DateTime twoYearsLater = DateTime.now().plusYears(2);
 		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
-			return new IndicatorMessagePair(false,
-					String.format(
-							MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
-							fromDate));
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
+		}
+		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
 		}
 
 		int numberOfDatesFromThisRange = Days.daysBetween(

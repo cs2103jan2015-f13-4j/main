@@ -7,23 +7,50 @@ public class MessageList {
 	/**
 	 * These message are for HelpCommandList class
 	 */
-	public static final String MESSAGE_HELP = "************************************************************************************\n\n1) Add\n\n- Add <Desc>\n- Add <Description> from <Date> to <Date>"
+	public static final String MESSAGE_HELP = "************************************************************************************"
+			+ "\n\n1) Add\n\n- Add <Desc>\n- Add <Description> from <Date> to <Date>"
 			+ "\n-Add<Description> every <Date>\n\n 2) Delete\n\n- Delete<Task#>\n\n "
-			+ "3) Update\n\n- Update <Task #> TaskDesc <description>\n- Update <Task #> By <date/day>\n- Update <Task #> Complete\n- Update <Task #> Incomplete\n- Update<Task #> TaskEnd<date>\n- Update<Task #>TaskStart<date>\n- Update<Task#> Every <Friday>\n- Update<Task #> By date or weekly day\n\n"
+			+ "3) Update\n\n- Update <Task #> TaskDesc <description>"
+			+ "\n- Update <Task #> By <date/day>"
+			+ "\n- Update <Task #> Complete"
+			+ "\n- Update <Task #> Incomplete"
+			+ "\n- Update<Task #> TaskEnd<date>"
+			+ "\n- Update<Task #>TaskStart<date>"
+			+ "\n- Update<Task#> Every <Friday>"
+			+ "\n- Update<Task #> By date or weekly day\n\n"
 			+ "4) Delete\n\n- Delete <#>\n\n"
-			+ "5) Display \n\n- Display Today [tdy] \n- Display Tomorrow [tmr]\n- Display monday [mon]\n- Display tuesday [tue]\n- Display wednesday [wed]\n- Display thursday [thu]\n- Display friday [fri]\n- Display saturday [sat]\n- Display sunday [sun]\n- Display Pending[pend]\n- Display Schedule\n- Display Complete[comp]\n\n "
-			+ "6) Search\n\n- Search by Task ID \n Search 1 <Task #> \n Search by Task Description\n- Search 2<Task Description>\n- Search 3 <Date>\n\n "
+			+ "5) Display \n\n- Display Today [tdy] "
+			+ "\n- Display Tomorrow [tmr]"
+			+ "\n- Display monday [mon]"
+			+ "\n- Display tuesday [tue]"
+			+ "\n- Display wednesday [wed]"
+			+ "\n- Display thursday [thu]"
+			+ "\n- Display friday [fri]"
+			+ "\n- Display saturday [sat]"
+			+ "\n- Display sunday [sun]"
+			+ "\n- Display Pending[pend]"
+			+ "\n- Display Schedule"
+			+ "\n- Display Complete[comp]\n\n "
+			+ "6) Search\n\n- Search by Task ID "
+			+ "\n Search 1 <Task #> "
+			+ "\n Search by Task Description"
+			+ "\n- Search 2<Task Description>"
+			+ "\n- Search 3 <Date>\n\n "
 			+ "7) Block\n\n- Block <date>\n-Block from <Date> to <Date>\n\n "
 			+ "8) Unblock\n\n- Unblock <date>\n- Unblock from <date> to <Date>\n\n "
 			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
 			+ "10) Undo\n\n -Undo\n\n "
 			+ "11) Redo\n\n************************************************************************************";
 	
-	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>\n\n- Add <Description> every <Date>";
+	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>"
+			+ "\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>"
+			+ "\n\n- Add <Description> every <Date>";
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
 	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
 	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
-	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
+	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>"
+			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
+			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
 			+ "- Display Yesterday [ytd]\n\n- Display Thisweek [thiswk]\n\n"
 			+ "- Display Lastweek [lastwk]\n\n- Display Nextweek [nextweek]\n\n"
@@ -31,8 +58,10 @@ public class MessageList {
 			+ "- Display Thursday [thu]\n\n- Display Friday [fri]\n\n- Display Saturday [sat]\n\n"
 			+ "- Display Sunday [sun]\n\n- Display Pending [pend]\n\n- Display Completed [comp]";
 	
-	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartDate\n\n- Sort Completed [comp]\n\n- Sort Pending [pend]";
-	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort Completed [comp]"
+			+ "\n\n- Sort Pending [pend]";
+	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
+			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
 	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
 	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
 	public static final String MESSAGE_REDO_HELP = "- Redo\n\n";
@@ -64,14 +93,14 @@ public class MessageList {
 	public static final String MESSAGE_NO_TIME_GIVEN = "No time given.";
 	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
-	public static final String MESSAGE_INCORRECT_DATE_FORMAT = "Date Format is incorrect";
-	public static final String MESSAGE_INCORRECT_TIME_FORMAT = "Time Format is incorrect";
+	public static final String MESSAGE_INCORRECT_DATE_FORMAT = "Date format is incorrect";
+	public static final String MESSAGE_INCORRECT_TIME_FORMAT = "Time format is incorrect";
 	public static final String MESSAGE_DATE_IS_BEFORE_TODAY = "Date provided is before Today's date.";
 	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
 	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
-	public static final String MESSAGE_INVAILD = "Please enter a vaild command.";
-	public static final String MESSAGE_INVAILD_FOR_SYMBOL = "Please enter a vaild command. Remove characters such as '=' and '|'";
-	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "No deadline and weekly task should be happening at the same time.";
+	public static final String MESSAGE_INVALID = "Please enter a valid command.";
+	public static final String MESSAGE_INVALID_FOR_SYMBOL = "Please enter a valid command. Remove characters such as '=' and '|'";
+	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "Only one date can be added for a single task.";
 	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
 	
 	
@@ -86,7 +115,10 @@ public class MessageList {
 	 * These message are for the AddHandler Class
 	 */
 	public static final String MESSAGE_ADDED = "New Task %1$s\nAdded";
-
+	public static final String MESSAGE_ADD_NO_DESCRIPTION = "Invalid argument for %1$s command.\nPlease specify what to add"; 
+	public static final String MESSAGE_TIME_MISMATCHED = "End Time is supposed to be later than the Start Time";
+	public static final String MESSAGE_TIME_SLOT_EMPTY = "Please specify the Start time and the End Time.";
+	
 	/**
 	 * These message are for DeleteHandler Class
 	 */
@@ -108,9 +140,12 @@ public class MessageList {
 	/**
 	 * These message are for SearchHandler class
 	 */
-	public static final String MESSAGE_NO_MATCH_FOUND = "Task %1$s\nnot found.";
-	public static final String MESSAGE_INVAILD_SEARCH = "This is a invaild search.";
-	public static final String MESSAGE_INVAILD_SEARCH_CRITERIA = "This is a invaild search criteria.";
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_DESC = "Description %1$s\nnot found.";
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_DATE = "Date %1$s\nnot found.";
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_ID = "ID %s\nnot found.";
+	public static final String MESSAGE_INVALID_SEARCH = "Search format is invalid, please look at our hint or"
+			+ "\nenter help keyword for assistance";
+	public static final String MESSAGE_INVALID_SEARCH_CRITERIA = "Invalid argument for search command\nPlease specify what to search.";
 
 	/**
 	 * These message are for BlockDate class
@@ -118,8 +153,8 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
 	public static final String MESSAGE_BLOCKED = "\"%1$s\"\nBlocked Successfully";
 	public static final String MESSAGE_UNBLOCKED = "\"%1$s\"\nUnblocked Successfully";
-	public static final String MESSAGE_BLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nBlocked Successfully\n%s days blocked.";//check
-	public static final String MESSAGE_UNBLOCKED_RANGE = "Date from \"%1$s\" to \"%2$s\"\nUnblocked Successfully\n%s days unblocked.";//check
+	public static final String MESSAGE_BLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nUnblocked Successfully";
 	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
 	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
 	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
@@ -137,6 +172,7 @@ public class MessageList {
 			+ "\n%s dates has never been block.";
 	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
 	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days."; 
+	
 	/**
 	 * This message are for CacheCommandsHandler class
 	 */

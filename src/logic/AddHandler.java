@@ -266,7 +266,7 @@ public class AddHandler {
 			Map<String, String> keyFieldsList) {
 		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
 				CommandType.Command_Types.ADD.name(), String.format(
-						MessageList.MESSAGE_INVALID_ARGUMENT, "No Description"));
+						MessageList.MESSAGE_ADD_NO_DESCRIPTION,"add"));
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg;
@@ -305,8 +305,7 @@ public class AddHandler {
 			Map<String, String> keyFieldsList, Task newTask) {
 
 		if (!checkFromTimeToTimeBothField(keyFieldsList)) {
-			return new IndicatorMessagePair(false,
-					"Time is not entered correctly");
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_TIME_SLOT_EMPTY));
 		}
 
 		DateTime startTime = DateTimeParser.generateTime(keyFieldsList
@@ -314,7 +313,7 @@ public class AddHandler {
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
 				.get(KeywordType.List_Keywords.TO.name()));
 		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
-			return new IndicatorMessagePair(false, "Time Mismatch");
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_TIME_MISMATCHED,startTime, endTime));
 		}
 
 		DateTime newDateStartTime = new DateTime(DateTime.now().getYear(),

@@ -48,13 +48,13 @@ public class SearchHandler {
 
 		if (!searchCriteria
 				.containsKey(CommandType.Command_Types.SEARCH.name())) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
 		if (searchList.length < 2) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		KeywordType.List_Keywords getKey = KeywordType
@@ -68,7 +68,7 @@ public class SearchHandler {
 		case BY:
 			return searchTaskDate(searchList, smtData);
 		default:
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 	}
@@ -82,14 +82,14 @@ public class SearchHandler {
 	 */
 	private static String searchTaskDate(String[] deadLine, Data smtData) {
 		if (deadLine == null || deadLine.length <= 1 || deadLine.length > 2) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		String searchDetails = "";
 		DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
 
 		if (endDate == null) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
@@ -103,7 +103,7 @@ public class SearchHandler {
 			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE,
 					deadLine[1]);
 		}
 	}
@@ -118,7 +118,7 @@ public class SearchHandler {
 	private static String searchTaskID(String[] index, Data smtData) {
 
 		if (index.length <= 1 || index.length > 2 || !checkInteger(index[1])) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
@@ -127,7 +127,7 @@ public class SearchHandler {
 			}
 		}
 		taskLogger.log(Level.INFO, "Search By Task ID");
-		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND, index[1]);
+		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class SearchHandler {
 	 */
 	private static String searchTaskDesc(Data smtData, String[] wordList) {
 		if (wordList.length <= 1) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		String wordAbstracted = mergeStringInArray(wordList);
@@ -151,7 +151,7 @@ public class SearchHandler {
 			}
 		}
 		if (tempList.size() == 0) {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
 		taskLogger.log(Level.INFO, "Search By Task Description");
@@ -212,7 +212,7 @@ public class SearchHandler {
 		}
 
 		if (keyFieldsList.size() != 1) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}

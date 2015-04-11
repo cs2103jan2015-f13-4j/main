@@ -43,7 +43,7 @@ public class Menu {
 			return DeleteHandler.executeDelete(keyFieldsList, smtData);
 		}
 		case INVALID: {
-			return MessageList.MESSAGE_INVAILD;
+			return MessageList.MESSAGE_INVALID;
 		}
 		case SEARCH: {
 			return SearchHandler.executeSearch(keyFieldsList, smtData);

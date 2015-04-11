@@ -383,7 +383,7 @@ public class SmtSurvival extends Composite {
 			}
 
 			if (output.contains(MessageList.MESSAGE_HINT_INVALID)
-					|| output.contains(MessageList.MESSAGE_INVAILD)) {
+					|| output.contains(MessageList.MESSAGE_INVALID)) {
 				combo.setListVisible(false);
 				return;
 			}
