@@ -50,9 +50,6 @@ public class DeleteHandlerTest {
 	// This is to test normal deletion
 	@Test
 	public void testDeleteWithIDRegular() {
-//		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
-//		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
-//		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(), new DateTime(), ""));
 		keyFieldsTest.put("DELETE", "2");
 		String expected = String.format(MessageList.MESSAGE_DELETE_SUCCESS, fileName, "Submit report to Ms Sarah");
 		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
