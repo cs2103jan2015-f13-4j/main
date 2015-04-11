@@ -19,6 +19,9 @@ import java.util.logging.Logger;
 
 public class SearchHandler {
 
+	private static final int KEYWORD = 1;
+	
+	//Declaration for Logger
 	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
@@ -126,8 +129,11 @@ public class SearchHandler {
 				return smtData.getATask(i).toString();
 			}
 		}
+		
+		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task ID");
-		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
+		return String
+				.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
 	}
 
 	/**
@@ -159,6 +165,12 @@ public class SearchHandler {
 
 	}
 
+	//CHECK CORRECT NOT THE COMMENT
+	/**
+	 * concatinate the string together
+	 * @param wordList
+	 * @return
+	 */
 	private static String mergeStringInArray(String[] wordList) {
 		String mergedString = new String();
 		for (int i = 1; i < wordList.length; i++) {
@@ -169,7 +181,7 @@ public class SearchHandler {
 	}
 
 	/**
-	 * returning converted arraylist in String
+	 * returning converted array list in String
 	 * 
 	 * @param displayTasksList
 	 * @return
@@ -198,6 +210,13 @@ public class SearchHandler {
 		return true;
 	}
 
+	/**
+	 * This is to check if the search is valid
+	 * 
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
 	private static String checkForValidData(Map<String, String> keyFieldsList,
 			Data smtData) {
 		if (keyFieldsList == null) {
@@ -211,7 +230,7 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NULL;
 		}
 
-		if (keyFieldsList.size() != 1) {
+		if (keyFieldsList.size() != KEYWORD) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;

@@ -163,7 +163,8 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_END ="Wrong date format for End date";
 	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START ="Wrong date format for Start date";
 	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
-	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list";
+	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list, "
+			+ "\nthe date you trying to block is already occupied";
 	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s is ocuppied\n";
 	public static final String MESSAGE_UNBLOCKED_DATE_NOT_EXIST = "%1$s is not inside the block list";
 	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "\"%s\", \"%s\""
