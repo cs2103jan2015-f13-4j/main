@@ -1,0 +1,3310 @@
+//@author: a0111935l
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\data\Data.java
+	 */
+
+package data;
+
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+
+import storage.FileStorage;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+
+public class Data {
+	private ArrayList<Task> tasksList;
+	private ArrayList<DateTime> blockedDateTimeList;
+	private Integer lastUnUsedIndex;
+	private static String errorMsgForTaskId = "The Last Unused Index has been modified illegally.";
+
+	public Data() {
+		tasksList = new ArrayList<Task>();
+		blockedDateTimeList = new ArrayList<DateTime>();
+		lastUnUsedIndex = 1;
+	}
+
+	/**
+	 * getListTask method will return the list of tasks
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getListTask() {
+		return tasksList;
+	}
+
+	/**
+	 * getSize method returns the size of the list
+	 * 
+	 * @return
+	 */
+	public int getSize() {
+		return tasksList.size();
+	}
+
+	public void clearTaskList() {
+		tasksList.clear();
+	}
+
+	/**
+	 * setListTask method overwrite the list of tasks
+	 * 
+	 * @param receivedListTask
+	 */
+	public void setListTask(ArrayList<Task> receivedListTask) {
+		tasksList.clear();
+		Task newTask;
+		for (int i = 0; i < receivedListTask.size(); i++) {
+			newTask = new Task();
+			newTask.setTaskId(receivedListTask.get(i).getTaskId());
+			newTask.setTaskDescription(receivedListTask.get(i)
+					.getTaskDescription());
+			newTask.setTaskStartDateTime(receivedListTask.get(i)
+					.getTaskStartDateTime());
+			newTask.setTaskEndDateTime(receivedListTask.get(i)
+					.getTaskEndDateTime());
+			newTask.setTaskStatus(receivedListTask.get(i).getTaskStatus());
+			newTask.setWeeklyDay(receivedListTask.get(i).getWeeklyDay());
+			newTask.setDeadLineStatus(receivedListTask.get(i)
+					.getDeadLineStatus());
+			tasksList.add(newTask);
+		}
+	}
+
+	/**
+	 * getLastUnUsedIndex method return the last unused index
+	 * 
+	 * @return last unused index
+	 */
+	public Integer getLastUnUsedIndex() {
+		return lastUnUsedIndex;
+	}
+
+	/**
+	 * setLastUnUsedIndex method sets the last unused index
+	 * 
+	 * @param receivedLastUnusedIndex
+	 *            the received unused index
+	 */
+	public void setLastUnUsedIndex(Integer receivedLastUnusedIndex) {
+		lastUnUsedIndex = receivedLastUnusedIndex;
+	}
+
+	/**
+	 * getATask will return a task from the list
+	 * 
+	 * @param index
+	 *            which is the position inside the list
+	 * @return a task object
+	 */
+	public Task getATask(int index) {
+		if (index >= tasksList.size() || index < 0) {
+			return null;
+		}
+		return tasksList.get(index);
+	}
+
+	/**
+	 * addATaskToList method add a new Task to the List
+	 * 
+	 * @param newTask
+	 *            a new task object
+	 * @return an indicator whether the task object were added successfully
+	 */
+	public IndicatorMessagePair addATaskToList(Task newTask) {
+		if (newTask == null) {
+			return new IndicatorMessagePair(false, "No Task added");
+		}
+
+		tasksList.add(newTask);
+		lastUnUsedIndex++;
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * removeATaskFromList method removes a task from the list and return the
+	 * removed Task back
+	 * 
+	 * @param index
+	 *            the index where the intended task is
+	 * @param msgPair
+	 *            an indicator whether the task object were removed successfully
+	 * @return a Task
+	 */
+	public Task removeATaskFromList(int index, IndicatorMessagePair msgPair) {
+		if (!checkTasksListForValidIndex(index, msgPair)) {
+			msgPair.setTrue(false);
+			msgPair.setMessage("Invalid task");
+			return null;
+		}
+
+		Task removedTask = tasksList.remove(index);
+		msgPair.setTrue(true);
+		return removedTask;
+	}
+
+	/**
+	 * updateTaskList method will update the task in the list
+	 * 
+	 * @param index
+	 *            the index where the intended task is
+	 * @param updatedTask
+	 *            the updated Task which is to put into the list
+	 * @return an indicator whether the task list were updated successfully
+	 */
+	public IndicatorMessagePair updateTaskList(int index, Task updatedTask) {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		if (!checkTasksListForValidIndex(index, msgPair)) {
+			return msgPair;
+		}
+
+		tasksList.set(index, updatedTask);
+		msgPair.setTrue(true);
+		msgPair.setMessage("Update Success");
+		return msgPair;
+	}
+
+	/**
+	 * getBlockedDateTimeList method will return the list of blocked date time
+	 * 
+	 * @return ArrayList<DateTime>
+	 */
+	public ArrayList<DateTime> getBlockedDateTimeList() {
+		return this.blockedDateTimeList;
+	}
+
+	/**
+	 * setBlockedDateTimeList method overwrite the list of blocked dates
+	 * 
+	 * @param receivedBlockedDateTimeList
+	 */
+	public void setBlockedDateTimeList(
+			ArrayList<DateTime> receivedBlockedDateTimeList) {
+		blockedDateTimeList.clear();
+		if (receivedBlockedDateTimeList == null) {
+			return;
+		}
+		for (int i = 0; i < receivedBlockedDateTimeList.size(); i++) {
+			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
+		}
+	}
+
+	/**
+	 * addBlockedDateTime method add a new blocked date time
+	 * 
+	 * @param receivedBlockedDateTime
+	 *            the new date time to add
+	 * @return an indication whether the date time is added successfully
+	 */
+	public IndicatorMessagePair addBlockedDateTime(
+			DateTime receivedBlockedDateTime) {
+		if (receivedBlockedDateTime == null) {
+			return new IndicatorMessagePair(false, "No blocked date added");
+		}
+
+		blockedDateTimeList.add(receivedBlockedDateTime);
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * removeBlockedDateTime remove a blocked date based on the index
+	 * 
+	 * @param index
+	 *            an index to indicate where is the blocked date
+	 * @param msgPair
+	 *            an indicator whether the date time were removed successfully
+	 * @return the removed date time
+	 */
+	public DateTime removeBlockedDateTime(int index,
+			IndicatorMessagePair msgPair) {
+		if (!checkBlockedDateTimeListForValidIndex(index, msgPair)) {
+			msgPair.setTrue(false);
+			msgPair.setMessage("Invalid blocked date");
+			return null;
+		}
+
+		DateTime removedTask = blockedDateTimeList.remove(index);
+		msgPair.setTrue(true);
+		return removedTask;
+	}
+
+	/**
+	 * getABlockedDateTime method will return a blocked date with a specific
+	 * location
+	 * 
+	 * @param index
+	 *            the location of that particular date time
+	 * @return the date time object
+	 */
+	public DateTime getABlockedDateTime(int index) {
+		if (index >= blockedDateTimeList.size() || index < 0) {
+			return null;
+		}
+		return blockedDateTimeList.get(index);
+
+	}
+
+	/**
+	 * checkForValidIndex method checks for the index given is within the range
+	 * of the task list
+	 * 
+	 * @param index
+	 *            an index to check
+	 * @param msgPair
+	 *            an indicator whether the index is valid
+	 * @return a true if valid, else false
+	 */
+	private boolean checkTasksListForValidIndex(int index,
+			IndicatorMessagePair msgPair) {
+		if (index < 0 || index > tasksList.size()) {
+			msgPair.setTrue(false);
+			msgPair.setMessage("Index Out of Range.");
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * checkBlockedDateTimeListForValidIndex method checks for the index given
+	 * is within the range of the blocked date time list
+	 * 
+	 * @param index
+	 *            an index to check
+	 * @param msgPair
+	 *            an indicator whether the index is valid
+	 * @return a true if valid, else false
+	 */
+	private boolean checkBlockedDateTimeListForValidIndex(int index,
+			IndicatorMessagePair msgPair) {
+		if (index < 0 || index > blockedDateTimeList.size()) {
+			msgPair.setTrue(false);
+			msgPair.setMessage("Index Out of Range.");
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * checkIfTaskIdExistWithLastUnusedIndex method check if task id conflicts
+	 * with the last unused index
+	 * 
+	 * @return true if conflicts, else false
+	 */
+	private boolean checkIfTaskIdExistWithLastUnusedIndex() {
+		for (int i = 0; i < tasksList.size(); i++) {
+			if (tasksList.get(i).getTaskId() == lastUnUsedIndex) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * writeTaskListToFile method send the task list to the file storage to
+	 * writes to the text file
+	 * 
+	 * @return indicatormessagepair to indicate whether it has been written
+	 *         successfully
+	 */
+	public IndicatorMessagePair writeTaskListToFile() {
+		return FileStorage.writeToFile(tasksList);
+
+	}
+
+	/**
+	 * writeLastUnUsedIndexToFile method send the last unused index to the file
+	 * storage to writes to the text file
+	 * 
+	 * @return indicatormessagepair to indicate whether it has been written
+	 *         successfully
+	 */
+	public IndicatorMessagePair writeLastUnUsedIndexToFile() {
+		return FileStorage.writeToFile(lastUnUsedIndex);
+	}
+
+	/**
+	 * writeBlockedDateTimeListToFile method send the blocked date list to the
+	 * file storage to writes to the text file
+	 * 
+	 * @return indicatormessagepair to indicate whether it has been written
+	 *         successfully
+	 */
+	public IndicatorMessagePair writeBlockedDateTimeListToFile() {
+		return FileStorage.writeBlockedDateTimeToFile(blockedDateTimeList);
+	}
+
+	/**
+	 * loadEveryThingFromFile method loads the data (task list, last unused
+	 * index and blocked out dates list from the text file
+	 * 
+	 * @return indicator message pair which to indicate whether it is loaded
+	 *         successfully with a message
+	 */
+	public IndicatorMessagePair loadEveryThingFromFile() {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		ArrayList<Task> tempTaskList = FileStorage
+				.checkAndLoadTaskFile(msgPair);
+
+		if (!msgPair.isTrue()) {
+			return msgPair;
+		}
+
+		setListTask(tempTaskList);
+
+		int tempLastUnusedIndex = FileStorage
+				.checkAndLoadLastTaskIndexFile(msgPair);
+
+		if (!msgPair.isTrue()) {
+			return msgPair;
+		}
+
+		setLastUnUsedIndex(tempLastUnusedIndex);
+
+		if (checkIfTaskIdExistWithLastUnusedIndex()) {
+			msgPair.setTrue(false);
+			msgPair.setMessage(errorMsgForTaskId);
+			return msgPair;
+		}
+
+		ArrayList<DateTime> tempBlockedDateList = FileStorage
+				.checkAndLoadBlockedDateFile(msgPair);
+
+		if (!msgPair.isTrue()) {
+			return msgPair;
+		}
+
+		setBlockedDateTimeList(tempBlockedDateList);
+
+		return msgPair;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\data\Data.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\data\TaskFieldList.java
+	 */
+
+package data;
+
+/**
+ * This class generate the list of task field that this system will have
+ */
+public class TaskFieldList {
+
+	public enum List_Task_Field {
+		TASKID, TASKDESC, TASKSTARTDATETIME, TASKENDDATETIME, WEEKLYDAY, TASKSTATUS, TASKDEADLINESET, INVALID
+	}
+
+	/**
+	 * This method will convert a string to a particular Enum value
+	 * 
+	 * @param taskFieldString
+	 * @return List_Task_Field
+	 */
+	public static List_Task_Field getTaskField(String taskFieldString) {
+		if (taskFieldString == null) {
+			return List_Task_Field.INVALID;
+		}
+
+		switch (taskFieldString.toUpperCase()) {
+		case "TASKID":
+			return List_Task_Field.TASKID;
+		case "TASKDESC":
+			return List_Task_Field.TASKDESC;
+		case "TASKSTARTDATETIME":
+			return List_Task_Field.TASKSTARTDATETIME;
+		case "TASKENDDATETIME":
+			return List_Task_Field.TASKENDDATETIME;
+		case "WEEKLYDAY":
+			return List_Task_Field.WEEKLYDAY;
+		case "TASKSTATUS":
+			return List_Task_Field.TASKSTATUS;
+		case "TASKDEADLINESET":
+			return List_Task_Field.TASKDEADLINESET;
+		default:
+			return List_Task_Field.INVALID;
+		}
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\data\TaskFieldList.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\data\TaskParserFromTextFile.java
+	 */
+
+package data;
+
+import org.joda.time.DateTime;
+
+import parser.DateTimeParser;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+
+/**
+ * This class allow the string to be converted into Task object. It is from the
+ * text file loaded into the system
+ * 
+ */
+public class TaskParserFromTextFile {
+
+	// task component separator char
+	private static final String TASK_COMPONENT_SEPARATOR = "|";
+	// task component separator char
+	private static final String TASK_COMPONENT_SEPARATOR_SPLIT = "\\|";
+	// task field and data separator char
+	private static final String TASK_FIELD_DATA_SEPARATOR = "=";
+	// task field type at slot 0
+	private static final int TASK_FIELD_SLOT = 0;
+	// data in task field at slot 1
+	private static final int TASK_FIELD_DATA_SLOT = 1;
+	private static final String EMPTY_STRING = "";
+	private static final String END_WORD = "End";
+	private static final String START_WORD = "Start";
+	private static final String WEEKLY_WORD = "Weekly";
+	private static final int TASK_ID_BELOW = 0;
+
+	/**
+	 * generateStringFromTextFileToTask method generates a task object from a
+	 * given string format stored in the textfile
+	 * 
+	 * @param eachTaskString
+	 * @return
+	 */
+	public static Task generateStringFromTextFileToTask(String eachTaskString) {
+		if (eachTaskString == null) {
+			return null;
+		}
+
+		if (!eachTaskString.contains(TASK_COMPONENT_SEPARATOR)) {
+			return null;
+		}
+
+		return processTaskString(eachTaskString);
+	}
+
+	/**
+	 * processTaskString method process the Task format in text file to Task
+	 * object
+	 * 
+	 * @param eachTaskString
+	 *            the Task format in string
+	 * @return Task object or null
+	 */
+	private static Task processTaskString(String eachTaskString) {
+		String[] taskComponent = eachTaskString
+				.split(TASK_COMPONENT_SEPARATOR_SPLIT);
+		Task newTask = new Task();
+
+		for (int i = 0; i < taskComponent.length; i++) {
+			String[] separateFieldData = taskComponent[i]
+					.split(TASK_FIELD_DATA_SEPARATOR);
+			if (separateFieldData.length != 2) {
+				return null;
+			}
+			IndicatorMessagePair indicMsg;
+			TaskFieldList.List_Task_Field fieldType = TaskFieldList
+					.getTaskField(separateFieldData[TASK_FIELD_SLOT]);
+			switch (fieldType) {
+			case TASKID:
+				indicMsg = setTaskId(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case TASKDESC:
+				indicMsg = setTaskDesc(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case TASKSTARTDATETIME:
+				indicMsg = setTaskStartDateTime(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case TASKENDDATETIME:
+				indicMsg = setTaskEndDateTime(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case WEEKLYDAY:
+				indicMsg = setWeeklyDay(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case TASKSTATUS:
+				indicMsg = setTaskStatus(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			case TASKDEADLINESET:
+				indicMsg = setTaskDeadLineSet(newTask,
+						separateFieldData[TASK_FIELD_DATA_SLOT]);
+				break;
+			default:
+				return null;
+			}
+
+			if (!indicMsg.isTrue()) {
+				return null;
+			}
+		}
+		if (newTask.getTaskId() < TASK_ID_BELOW) {
+			return null;
+		}
+
+		if (newTask.getDeadLineStatus() && !newTask.getWeeklyDay().isEmpty()) {
+			return null;
+		}
+
+		return newTask;
+	}
+
+	/**
+	 * setTaskId method sets the task id from the text file to the task id from
+	 * the task object
+	 * 
+	 * @param newTask
+	 *            the new task which will be stored into
+	 * @param id
+	 *            the task id to store
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskId(Task newTask, String id) {
+		if (!isStringAnInteger(id) || id == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_ERROR_CONVERT_TASKID);
+		}
+
+		newTask.setTaskId(Integer.parseInt(id));
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setTaskDesc method sets the task description
+	 * 
+	 * @param newTask
+	 *            to set the description into this task object
+	 * @param desc
+	 *            the description to be set
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskDesc(Task newTask, String desc) {
+		if (desc == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_DESCRIPTION_EMPTY);
+		}
+
+		newTask.setTaskDescription(desc);
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setTaskStartDateTime method will set the task start date time into the
+	 * task object
+	 * 
+	 * @param newTask
+	 *            to set the start date time into this task object
+	 * @param startDateTime
+	 *            the string to be set into
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskStartDateTime(Task newTask,
+			String startDateTime) {
+		if (startDateTime == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime convertedDateTime = DateTime.parse(startDateTime);
+
+		if (convertedDateTime == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, START_WORD));
+		}
+
+		newTask.setTaskStartDateTime(convertedDateTime);
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setTaskEndDateTime method will set the task end date time into the task
+	 * object
+	 * 
+	 * @param newTask
+	 *            to set the end date time into this task object
+	 * @param endDateTime
+	 *            the string to be set into
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskEndDateTime(Task newTask,
+			String endDateTime) {
+		if (endDateTime == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime convertedDateTime = DateTime.parse(endDateTime);
+
+		if (convertedDateTime == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, END_WORD));
+		}
+
+		newTask.setTaskEndDateTime(convertedDateTime);
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setWeeklyDay method sets the day of the weekly day into the task object
+	 * 
+	 * @param newTask
+	 *            to set the weekly day into this task object
+	 * @param weeklyDay
+	 *            the string to be stored into
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setWeeklyDay(Task newTask,
+			String weeklyDay) {
+		if (weeklyDay == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_EMPTY_WEEKLY_DAY);
+		}
+
+		DateTime weeklyDate = DateTimeParser.generateDate(weeklyDay);
+
+		if (weeklyDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, WEEKLY_WORD));
+		}
+
+		newTask.setWeeklyDay(weeklyDay);
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setTaskStatus method set the status of the task to the task object
+	 * 
+	 * @param newTask
+	 *            to set the status into this task object
+	 * @param taskStatus
+	 *            the string to be stored into
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskStatus(Task newTask,
+			String taskStatus) {
+		if (taskStatus == null || !isStringAnBoolean(taskStatus)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_INVALID_STATUS);
+		}
+
+		newTask.setTaskStatus(Boolean.parseBoolean(taskStatus));
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * setTaskDeadLineSet method set the deadlineset status of the task to the
+	 * task object
+	 * 
+	 * @param newTask
+	 *            to set the deadlineset status into this task object
+	 * @param taskDeadLineSet
+	 *            the string to be stored into
+	 * @return the indicator message which true if success, else false with the
+	 *         message
+	 */
+	private static IndicatorMessagePair setTaskDeadLineSet(Task newTask,
+			String taskDeadLineSet) {
+		if (taskDeadLineSet == null || !isStringAnBoolean(taskDeadLineSet)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_INVALID_DEADLINESETSTATUS);
+		}
+
+		newTask.setDeadLineStatus(Boolean.parseBoolean(taskDeadLineSet));
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * This method check if the given string can be converted to integer
+	 * 
+	 * @param inputStr
+	 *            the string to be converted
+	 * @return true if can be converted, else false
+	 */
+	private static boolean isStringAnInteger(String inputStr) {
+		try {
+			Integer.parseInt(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * isStringAnBoolean method will checks if the string can be converted into
+	 * a boolean
+	 * 
+	 * @param inputStr
+	 *            the input string
+	 * @return true if it is a boolean, else false
+	 */
+	private static boolean isStringAnBoolean(String inputStr) {
+		try {
+			Boolean.parseBoolean(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\data\TaskParserFromTextFile.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\data\TaskParserWriteToTextFile.java
+	 */
+
+package data;
+
+/**
+ * This class is to convert each task object into a format in string and will be
+ * storing to the file which will be handled by the FileStorage class
+ */
+public class TaskParserWriteToTextFile {
+
+	// task component separator char
+	private static final String TASK_COMPONENT_SEPARATOR = "|";
+	// task field and data separator char
+	private static final String TASK_FIELD_DATA_SEPARATOR = "=";
+	// task fields list taskid offset
+	private static final int TASKID_OFFSET = 0;
+	// task fields list taskdesc offset
+	private static final int TASKDESC_OFFSET = 1;
+	// task fields list taskstartdatetime offset
+	private static final int TASKSTARTDATETIME_OFFSET = 2;
+	// task fields list taskenddatetime offset
+	private static final int TASKENDDATETIME_OFFSET = 3;
+	// task fields list taskweeklyday offset
+	private static final int TASKWEEKLYDAY_OFFSET = 4;
+	// task fields list taskstatus offset
+	private static final int TASKSTATUS_OFFSET = 5;
+	// task fields list taskdeadlineset offset
+	private static final int TASKDEADLINESET_OFFSET = 6;
+	private static final int SUBSTRING_OFFSET = 1;
+
+	/**
+	 * concatTaskFieldToString method will concatenate the heading of each task
+	 * field
+	 * 
+	 * @param oneTask
+	 * @return a text line
+	 */
+	public static String concatTaskFieldToString(Task oneTask) {
+		if (oneTask == null) {
+			return null;
+		}
+		String textLine = new String();
+		TaskFieldList.List_Task_Field[] taskFields = TaskFieldList.List_Task_Field
+				.values();
+		if (oneTask.getTaskId() > 0) {
+			textLine += taskFields[TASKID_OFFSET].name();
+			textLine += TASK_FIELD_DATA_SEPARATOR;
+			textLine += String.valueOf(oneTask.getTaskId());
+			textLine += TASK_COMPONENT_SEPARATOR;
+		}
+		if (oneTask.getTaskDescription() != null
+				&& !oneTask.getTaskDescription().isEmpty()) {
+			textLine += taskFields[TASKDESC_OFFSET].name();
+			textLine += TASK_FIELD_DATA_SEPARATOR;
+			textLine += oneTask.getTaskDescription();
+			textLine += TASK_COMPONENT_SEPARATOR;
+		}
+		if (oneTask.getTaskStartDateTime() != null) {
+			textLine += taskFields[TASKSTARTDATETIME_OFFSET].name();
+			textLine += TASK_FIELD_DATA_SEPARATOR;
+			textLine += oneTask.getTaskStartDateTime().toString();
+			textLine += TASK_COMPONENT_SEPARATOR;
+		}
+		if (oneTask.getTaskEndDateTime() != null) {
+			textLine += taskFields[TASKENDDATETIME_OFFSET].name();
+			textLine += TASK_FIELD_DATA_SEPARATOR;
+			textLine += oneTask.getTaskEndDateTime().toString();
+			textLine += TASK_COMPONENT_SEPARATOR;
+		}
+
+		if (oneTask.getWeeklyDay() != null && !oneTask.getWeeklyDay().isEmpty()) {
+			textLine += taskFields[TASKWEEKLYDAY_OFFSET].name();
+			textLine += TASK_FIELD_DATA_SEPARATOR;
+			textLine += oneTask.getWeeklyDay();
+			textLine += TASK_COMPONENT_SEPARATOR;
+		}
+
+		if (textLine.isEmpty()) {
+			return null;
+		}
+
+		textLine += taskFields[TASKSTATUS_OFFSET].name();
+		textLine += TASK_FIELD_DATA_SEPARATOR;
+		textLine += oneTask.getTaskStatus();
+		textLine += TASK_COMPONENT_SEPARATOR;
+
+		textLine += taskFields[TASKDEADLINESET_OFFSET].name();
+		textLine += TASK_FIELD_DATA_SEPARATOR;
+		textLine += oneTask.getDeadLineStatus();
+		textLine += TASK_COMPONENT_SEPARATOR;
+
+		return textLine.substring(0, textLine.length() - SUBSTRING_OFFSET);
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\data\TaskParserWriteToTextFile.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\UpdateHandler.java
+	 */
+
+package logic;
+
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+
+import parser.DateTimeParser;
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.KeywordType;
+import utility.MessageList;
+import utility.TaskLogging;
+import data.Data;
+import data.Task;
+
+/**
+ * This class updates the task with the specific task id
+ */
+public class UpdateHandler {
+
+	private static Logger taskLogger = TaskLogging.getInstance();
+	private static final int EXPECTED_UPDATE_KEY_VALUE_LENGTH = 1;
+	private static final int KEYWORDS_MUST_NOT_APPEARED_COUNT = 1;
+	private static final String EMPTY_STRING = "";
+	private static final String WEEKLY_WORD = "Weekly";
+	private static final String UPDATE_WORD = "Update";
+
+	/**
+	 * This method handle the update execution and update the contents to the
+	 * ArrayList of tasks
+	 * 
+	 * @param keyPFieldsList
+	 *            contains the list of keyword and the data it has
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @return message
+	 */
+	public static String executeUpdate(Map<String, String> keyFieldsList,
+			Data smtData) {
+		int minTaskListSize = 0;
+
+		if (smtData == null) {
+			assert false : "Data object is null";
+		}
+
+		if (keyFieldsList == null) {
+			assert false : "Map object is null";
+		}
+		
+		//for unit testing to throw in null object
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
+		}
+
+		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
+			assert false : "Update should be present before coming to this method";
+			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
+		}
+
+		if (smtData == null || smtData.getListTask().isEmpty()) {
+			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+		}
+
+		if (keyFieldsList.get(CommandType.Command_Types.UPDATE.name()).split(
+				" ").length > EXPECTED_UPDATE_KEY_VALUE_LENGTH) {
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+					UPDATE_WORD);
+		}
+
+		if (!isStringAnInteger(keyFieldsList
+				.get(CommandType.Command_Types.UPDATE.name()))) {
+			return String
+					.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER,
+							UPDATE_WORD);
+		}
+
+		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList
+				.get(CommandType.Command_Types.UPDATE.name())), smtData);
+
+		if (index < minTaskListSize || index >= smtData.getSize()) {
+			return MessageList.MESSAGE_NO_SUCH_TASK;
+		}
+		// remove the update key pair as it has the index extracted
+		keyFieldsList.remove(CommandType.Command_Types.UPDATE.name());
+
+		return checkAndUpdateContents(keyFieldsList, index, smtData);
+	}
+
+	/**
+	 * checkAndUpdateContents method will update the contents based on the key
+	 * word
+	 * 
+	 * @param keyFieldsList
+	 *            contains the list of keyword and the data it has
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @return message
+	 */
+	private static String checkAndUpdateContents(
+			Map<String, String> keyFieldsList, int index, Data smtData) {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		indicMsg.setTrue(true);
+
+		Task awaitingTask = smtData.getATask(index);
+
+		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > KEYWORDS_MUST_NOT_APPEARED_COUNT) {
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
+
+		// first check if command contains from and to keywords and process them
+		// first
+		if (checkFromTimeToTimeBothExist(keyFieldsList)) {
+			indicMsg = processBothTimes(keyFieldsList, awaitingTask);
+		}
+
+		if (indicMsg != null && !indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		return updateEachFieldsAndSave(keyFieldsList, index, smtData, indicMsg,
+				awaitingTask);
+	}
+
+	/**
+	 * updateEachFieldsAndSave method updates individual fields and update the
+	 * awaiting task object to the Data object
+	 * 
+	 * @param keyFieldsList
+	 *            contains the list of keyword and the data it has
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param indicMsg
+	 *            the indicator message pair
+	 * @param awaitingTask
+	 *            the temporary task which is updated task
+	 * @return the return message
+	 */
+	private static String updateEachFieldsAndSave(
+			Map<String, String> keyFieldsList, int index, Data smtData,
+			IndicatorMessagePair indicMsg, Task awaitingTask) {
+		KeywordType.List_Keywords getKey;
+		for (String key : keyFieldsList.keySet()) {
+			getKey = KeywordType.getKeyword(key);
+			switch (getKey) {
+			case BY:
+			case ON:
+				indicMsg = updateTaskByOrEndWhen(smtData, awaitingTask,
+						keyFieldsList.get(key));
+				break;
+			case TASKDESC:
+				indicMsg = updateTaskDesc(awaitingTask, keyFieldsList.get(key));
+				break;
+			case FROM:
+				indicMsg = updateTaskFromOrToTimeWhen(awaitingTask,
+						keyFieldsList.get(key), KeywordType.List_Keywords.FROM);
+				break;
+			case TO:
+				indicMsg = updateTaskFromOrToTimeWhen(awaitingTask,
+						keyFieldsList.get(key), KeywordType.List_Keywords.TO);
+				break;
+			case EVERY:
+				indicMsg = updateRecurringWeek(awaitingTask,
+						keyFieldsList.get(key));
+				break;
+			case COMPLETE:
+				indicMsg = updateTaskStatus(awaitingTask,
+						keyFieldsList.get(key), true);
+				break;
+			case INCOMPLETE:
+				indicMsg = updateTaskStatus(awaitingTask,
+						keyFieldsList.get(key), false);
+				break;
+			default:
+				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+						"Update");
+			}
+
+			if (!indicMsg.isTrue()) {
+				return indicMsg.getMessage();
+			}
+		}
+
+		// until here it means success
+		smtData.updateTaskList(index, awaitingTask);
+
+		indicMsg = smtData.writeTaskListToFile();
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		// save the current history
+		CacheCommandsHandler.newHistory(smtData);
+
+		// logging
+		taskLogger.log(
+				Level.INFO,
+				String.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						smtData.getATask(index)));
+
+		return String.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+				smtData.getATask(index));
+	}
+
+	/**
+	 * updateTaskByOrEndWhen method will update the task end date and will
+	 * determine whether it can be updated as well.
+	 * 
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param keyFields
+	 *            contains the data it has
+	 * @return true if success, false if there is an invalid conversion object
+	 *         and message
+	 */
+	private static IndicatorMessagePair updateTaskByOrEndWhen(Data smtData,
+			Task currentTask, String keyFields) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
+		DateTime newStartDateTime = null;
+		DateTime newEndDateTime = null;
+
+		if (keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(keyFields);
+		String errorMessage = "";
+		if (endDate == null) {
+			errorMessage = DateTimeParser.getDateFormatError(keyFields);
+			return new IndicatorMessagePair(false, errorMessage);
+		}
+
+		if (clashWithBlockDate(smtData, endDate)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE);
+		}
+
+		if (currentTask.getTaskStartDateTime() != null) {
+			newStartDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(),
+					currentTask.getTaskStartDateTime().getHourOfDay(),
+					currentTask.getTaskStartDateTime().getMinuteOfHour());
+		}
+
+		if (currentTask.getTaskEndDateTime() != null) {
+			newEndDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(),
+					currentTask.getTaskEndDateTime().getHourOfDay(),
+					currentTask.getTaskEndDateTime().getMinuteOfHour());
+		}
+
+		if (newEndDateTime == null) {
+			newEndDateTime = endDate;
+		}
+
+		currentTask.setTaskStartDateTime(newStartDateTime);
+		currentTask.setTaskEndDateTime(newEndDateTime);
+		currentTask.setWeeklyDay(EMPTY_STRING);
+		currentTask.setDeadLineStatus(true);
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * updateRecurringWeek method will update the task to be happening in every
+	 * week
+	 * 
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param keyFields
+	 *            contains the data it has
+	 * @return true if success, false if there is an invalid conversion object
+	 *         and message
+	 */
+	private static IndicatorMessagePair updateRecurringWeek(Task currentTask,
+			String keyFields) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
+		if (keyFields == null || keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime weeklyDate = DateTimeParser.generateDate(keyFields);
+
+		if (weeklyDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, WEEKLY_WORD));
+		}
+		DateTime newStartTime = null;
+		DateTime newEndTime = null;
+
+		if (currentTask.getTaskStartDateTime() != null) {
+			newStartTime = new DateTime(weeklyDate.getYear(),
+					weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(),
+					currentTask.getTaskStartDateTime().getHourOfDay(),
+					currentTask.getTaskStartDateTime().getMinuteOfHour());
+		}
+
+		if (currentTask.getTaskEndDateTime() != null) {
+			newEndTime = new DateTime(weeklyDate.getYear(),
+					weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(),
+					currentTask.getTaskEndDateTime().getHourOfDay(),
+					currentTask.getTaskEndDateTime().getMinuteOfHour());
+		}
+
+		currentTask.setTaskStartDateTime(newStartTime);
+		currentTask.setTaskEndDateTime(newEndTime);
+		currentTask.setWeeklyDay(keyFields);
+		currentTask.setDeadLineStatus(false);
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * This method will update the task description and will determine whether
+	 * it can be updated as well.
+	 * 
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param keyFields
+	 *            contains the keyword and the data it has
+	 * @return true if success, false if the parameter and message
+	 */
+	private static IndicatorMessagePair updateTaskDesc(Task currentTask,
+			String keyFields) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
+		if (keyFields == null || keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_DESCRIPTION_EMPTY);
+		}
+
+		currentTask.setTaskDescription(keyFields);
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * This method will update the task start date and will determine whether it
+	 * can be updated as well.
+	 * 
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param keyFields
+	 *            contains the keyword and the data it has
+	 * @return true if success, false if there is an invalid conversion object
+	 *         and message
+	 */
+	private static IndicatorMessagePair updateTaskFromOrToTimeWhen(
+			Task currentTask, String keyFields,
+			KeywordType.List_Keywords direction) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
+		if (keyFields == null || keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_TIME_GIVEN);
+		}
+
+		DateTime startOrEndTime = DateTimeParser.generateTime(keyFields);
+		if (startOrEndTime == null) {
+			return new IndicatorMessagePair(false,
+					String.format(MessageList.MESSAGE_INCORRECT_TIME_FORMAT));
+		}
+
+		if (direction == KeywordType.List_Keywords.FROM) {
+			DateTime newStartTime = updateTimeToExistingDateTime(currentTask,
+					startOrEndTime);
+			if (currentTask.getTaskEndDateTime() != null
+					&& !checkFromTimeToTimeBothValid(newStartTime,
+							currentTask.getTaskEndDateTime())) {
+				return new IndicatorMessagePair(false,
+						MessageList.MESSAGE_TIME_WRONG_FLOW);
+			}
+			currentTask.setTaskStartDateTime(newStartTime);
+		} else if (direction == KeywordType.List_Keywords.TO) {
+			DateTime newEndTime = updateTimeToExistingDateTime(currentTask,
+					startOrEndTime);
+			if (currentTask.getTaskStartDateTime() != null
+					&& !checkFromTimeToTimeBothValid(
+							currentTask.getTaskStartDateTime(), newEndTime)) {
+				return new IndicatorMessagePair(false,
+						MessageList.MESSAGE_TIME_WRONG_FLOW);
+			}
+			currentTask.setTaskEndDateTime(newEndTime);
+		}
+
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * This method update the status of the task to completed or pending.
+	 * 
+	 * @param smtData
+	 *            contains the whole information including the task list
+	 * @param index
+	 *            indicate the location of the intended task to be updated
+	 * @param keyFields
+	 *            contains the keyword and the data it has
+	 * @param status
+	 *            the task status in boolean
+	 * @return true if success, false if there is an invalid conversion object
+	 *         and message
+	 */
+	private static IndicatorMessagePair updateTaskStatus(Task currentTask,
+			String keyFields, boolean status) {
+		if (currentTask == null) {
+			assert false : "Task object is null";
+		}
+
+		if (keyFields == null || !keyFields.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD);
+		}
+
+		currentTask.setTaskStatus(status);
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * searchTaskIndexStored method search for a task in the ArrayList
+	 * 
+	 * @param taskId
+	 *            taskId the task id for searching
+	 * @param smtData
+	 *            the data contains all the information such as task list
+	 * @return
+	 */
+	private static int searchTaskIndexStored(int taskId, Data smtData) {
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (taskId == smtData.getATask(i).getTaskId()) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * determineBothTimes method checks if both times are valid and proceed to
+	 * update if possible
+	 * 
+	 * @param keyFieldsList
+	 *            the input command
+	 * @param index
+	 *            the current task location
+	 * @param smtData
+	 *            the data object which contains the whole data
+	 * @return IndicatorMessagePair which states whether the times can be update
+	 */
+	private static IndicatorMessagePair processBothTimes(
+			Map<String, String> keyFieldsList, Task currentTask) {
+
+		if (!checkFromTimeToTimeBothField(keyFieldsList)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_INCORRECT_TIME_FORMAT);
+		}
+
+		DateTime startTime = DateTimeParser.generateTime(keyFieldsList
+				.get(KeywordType.List_Keywords.FROM.name()));
+		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
+				.get(KeywordType.List_Keywords.TO.name()));
+
+		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_TIME_WRONG_FLOW);
+		}
+
+		if (currentTask.getTaskStartDateTime() == null
+				&& currentTask.getTaskEndDateTime() == null) {
+			startTime = new DateTime(DateTime.now().getYear(), DateTime.now()
+					.getMonthOfYear(), DateTime.now().getDayOfMonth(),
+					startTime.getHourOfDay(), startTime.getMinuteOfHour());
+			endTime = new DateTime(DateTime.now().getYear(), DateTime.now()
+					.getMonthOfYear(), DateTime.now().getDayOfMonth(),
+					endTime.getHourOfDay(), endTime.getMinuteOfHour());
+		}
+
+		updateBothTimes(currentTask, startTime, endTime);
+
+		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
+		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
+		return new IndicatorMessagePair(true, EMPTY_STRING);
+	}
+
+	/**
+	 * updateBothTimes method will update both times to a task
+	 * 
+	 * @param index
+	 *            the index where the existing task is
+	 * @param smtData
+	 *            the data object which contains all the data
+	 * @param startTime
+	 *            the start time to update
+	 * @param endTime
+	 *            the end time to update
+	 */
+	private static void updateBothTimes(Task currentTask, DateTime startTime,
+			DateTime endTime) {
+		DateTime newStartTime = updateTimeToExistingDateTime(currentTask,
+				startTime);
+		DateTime newEndTime = updateTimeToExistingDateTime(currentTask, endTime);
+
+		currentTask.setTaskStartDateTime(updateTimeToExistingDateTime(
+				currentTask, newStartTime));
+		currentTask.setTaskEndDateTime(updateTimeToExistingDateTime(
+				currentTask, newEndTime));
+	}
+
+	/**
+	 * checkFromTimeToTimeBothExist method checks if both from and to keyword
+	 * exists
+	 * 
+	 * @param keyFieldsList
+	 *            the command input
+	 * @return true if it contains, else false
+	 */
+	private static boolean checkFromTimeToTimeBothExist(
+			Map<String, String> keyFieldsList) {
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.FROM.name())
+				&& keyFieldsList.containsKey(KeywordType.List_Keywords.TO
+						.name())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * checkFromTimeToTimeBothField method checks if it receives from and to
+	 * time
+	 * 
+	 * @param keyFieldsList
+	 *            the command input
+	 * @return true if both fields have some info, else false
+	 */
+	private static boolean checkFromTimeToTimeBothField(
+			Map<String, String> keyFieldsList) {
+		if (keyFieldsList.get(KeywordType.List_Keywords.FROM.name()) != null
+				&& keyFieldsList.get(KeywordType.List_Keywords.FROM.name())
+						.isEmpty()
+				&& keyFieldsList.get(KeywordType.List_Keywords.TO.name()) != null
+				&& keyFieldsList.get(KeywordType.List_Keywords.TO.name())
+						.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * checkFromTimeToTimeBothValid method checks if the time from both sides
+	 * are valid to proceed
+	 * 
+	 * @param startTime
+	 *            the start time
+	 * @param endTime
+	 *            the end time
+	 * @return true if possible, else false
+	 */
+	private static boolean checkFromTimeToTimeBothValid(DateTime startTime,
+			DateTime endTime) {
+		if (startTime == null) {
+			return false;
+		}
+
+		if (endTime == null) {
+			return false;
+		}
+
+		if (startTime.isAfter(endTime)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * updateTimeToExistingDateTime method updates the current task start or end
+	 * time with the existing time
+	 * 
+	 * @param currentTask
+	 *            the current task
+	 * @param existingDateTime
+	 *            the existing time to update
+	 * @return
+	 */
+	private static DateTime updateTimeToExistingDateTime(Task currentTask,
+			DateTime existingDateTime) {
+		if (currentTask.getTaskStartDateTime() == null
+				&& currentTask.getTaskEndDateTime() == null) {
+			// do nothing
+		} else if (currentTask.getTaskStartDateTime() == null) {
+			existingDateTime = new DateTime(currentTask.getTaskEndDateTime()
+					.getYear(), currentTask.getTaskEndDateTime()
+					.getMonthOfYear(), currentTask.getTaskEndDateTime()
+					.getDayOfMonth(), existingDateTime.getHourOfDay(),
+					existingDateTime.getMinuteOfHour());
+		} else {
+			existingDateTime = new DateTime(currentTask.getTaskStartDateTime()
+					.getYear(), currentTask.getTaskStartDateTime()
+					.getMonthOfYear(), currentTask.getTaskStartDateTime()
+					.getDayOfMonth(), existingDateTime.getHourOfDay(),
+					existingDateTime.getMinuteOfHour());
+		}
+
+		return existingDateTime;
+	}
+
+	/**
+	 * restrictOnlyUnqiueKeyWord method checks if the 'ON', 'BY', 'EVERY' exist
+	 * and count them
+	 * 
+	 * @param keyFieldsList
+	 *            the keyfieldList object
+	 * @return count
+	 */
+	private static int restrictOnlyUnqiueKeyWord(
+			Map<String, String> keyFieldsList) {
+		int count = 0;
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())) {
+			count++;
+		}
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
+			count++;
+		}
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())) {
+			count++;
+		}
+		return count;
+	}
+
+	/**
+	 * clashWithBlockDate checks if the list of blocked date clashes with the
+	 * date currently want to update
+	 * 
+	 * @param smtData
+	 *            Data object which contains the data of the overall
+	 * @param endDate
+	 *            the received date
+	 * @return true if clashed, else false
+	 */
+	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This method check if the given string can be converted to integer
+	 * 
+	 * @param inputStr
+	 *            the string to be converted
+	 * @return true if it is a integer, else false
+	 */
+	private static boolean isStringAnInteger(String inputStr) {
+		try {
+			Integer.parseInt(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\UpdateHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\parser\CommandStringParser.java
+	 */
+
+package parser;
+
+import java.util.Map;
+
+import utility.CommandType;
+import utility.KeywordType;
+
+/**
+ * This class allows the command in a line to break into keys and fields.
+ * It will returned a command type and also the referenced list of keyfields
+ */
+public class CommandStringParser {
+	
+	private static final String RESTRICT_EQUAL_SIGN = "=";
+	private static final String RESTRICT_VERTICAL_BAR = "|";
+	private static final String A_SPACE = " ";
+	private static final String EMPTY_STRING = "";
+	/**
+	 * This processString will process the commands entered by the user
+	 * @param input command in string
+	 * @param keyFieldsList a list of keys and fields and will be referenced back to the caller
+	 * @return Command Type
+	 */
+	public static CommandType.Command_Types processString(String input, Map<String, String> keyFieldsList){
+		if(keyFieldsList == null){
+			assert false : "Map object is null";
+		}
+		
+		if(input == null || input.equals(EMPTY_STRING)){
+			return CommandType.Command_Types.INVALID;
+		}
+		
+		if(input.contains(RESTRICT_EQUAL_SIGN) || input.contains(RESTRICT_VERTICAL_BAR)){
+			return CommandType.Command_Types.INVALID;
+		}
+		
+		String[] inputCmd = input.trim().split(A_SPACE);
+		
+		CommandType.Command_Types command = CommandType.getType(inputCmd);
+		if(command == CommandType.Command_Types.INVALID){
+			return CommandType.Command_Types.INVALID;
+		}
+		
+		generateKeyFieldPair(keyFieldsList, inputCmd, command);
+		
+		return command;
+	}
+
+	/**
+	 * This method generate the command which has broken up into words and process it.
+	 * The key and fields will be referenced back to the caller
+	 * @param keyFieldsList a list of key and fields
+	 * @param inputCmd the blocks of word
+	 */
+	private static void generateKeyFieldPair(Map<String, String> keyFieldsList,
+			String[] inputCmd, CommandType.Command_Types command) {
+		String key = command.name();
+		String eachWord = new String();
+		String tempFields = new String();
+		
+		for(int i = 1; i < inputCmd.length; i++){
+			eachWord = inputCmd[i];
+			if(KeywordType.contains(eachWord)){
+				keyFieldsList.put(key.toUpperCase(), tempFields.trim());
+				key = eachWord;
+				tempFields = "";
+			}
+			else{
+				tempFields += eachWord + A_SPACE;
+			}
+		}
+		
+		keyFieldsList.put(key.toUpperCase(), tempFields.trim());
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\parser\CommandStringParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\storage\FileStorage.java
+	 */
+
+package storage;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+
+import parser.DateTimeParser;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Task;
+import data.TaskParserFromTextFile;
+import data.TaskParserWriteToTextFile;
+
+public class FileStorage {
+
+	// file extension length including a '.'
+	private static final int FILE_EXTENSION_LENGTH = 4;
+	private static final String FILE_EXTENSION = ".txt";
+	private static final String EMPTY_STRING = "";
+
+	private static String fileName = "defaultTaskList.txt";
+	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
+	private static String blockedDateFileName = "defaultBlockedDateList.txt";
+
+	/**
+	 * get the filename for task list
+	 * 
+	 * @return
+	 */
+	public static String getFileNameForTasksList() {
+		return fileName;
+	}
+
+	/**
+	 * get the filename for last unused index
+	 * 
+	 * @return
+	 */
+	public static String getFileNameForLastUnusedIndex() {
+		return lastUnUsedIndexFileName;
+	}
+
+	/**
+	 * get the filename for blocked date list
+	 * 
+	 * @return
+	 */
+	public static String getFileNameForBlockedDatesList() {
+		return blockedDateFileName;
+	}
+
+	/**
+	 * setFileNameForTasksList method set the filename for task list
+	 * 
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForTasksList(String receivedFileName) {
+		fileName = receivedFileName;
+	}
+
+	/**
+	 * setFileNameForLastUnusedIndex method set the filename for last unused
+	 * index
+	 * 
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForLastUnusedIndex(String receivedFileName) {
+		lastUnUsedIndexFileName = receivedFileName;
+	}
+
+	/**
+	 * setFileNameForBlockedDatesList method set the filename for blocked date
+	 * list
+	 * 
+	 * @param receivedFileName
+	 */
+	public static void setFileNameForBlockedDatesList(String receivedFileName) {
+		blockedDateFileName = receivedFileName;
+	}
+
+	/**
+	 * checkAndLoadTaskFile method checks if file exists and load it to a array
+	 * list
+	 * 
+	 * @param msgPair
+	 *            the indicator of whether the files can be loaded
+	 * @return the list of task
+	 */
+	public static ArrayList<Task> checkAndLoadTaskFile(
+			IndicatorMessagePair msgPair) {
+		// Call to check for file is empty
+		exitIfUnspecificFileName(fileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		// Call to check for file format
+		exitIfWrongFileFormat(fileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		File filepath = new File(fileName);
+		ArrayList<Task> tasksList = new ArrayList<Task>();
+
+		if (filepath.exists() && !filepath.isDirectory()) {
+			tasksList = loadTaskListToArrayList(msgPair);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				setIndicatorMessagePair(msgPair, false, e.toString());
+				return null;
+			}
+		}
+
+		return tasksList;
+	}
+
+	/**
+	 * checkAndLoadLastTaskIndexFile checks if file exists and return the last
+	 * unused index
+	 * 
+	 * @param msgPair
+	 *            the indicator of whether the files can be loaded
+	 * @return last unused index
+	 */
+	public static int checkAndLoadLastTaskIndexFile(IndicatorMessagePair msgPair) {
+
+		// Call to check for file is empty
+		exitIfUnspecificFileName(lastUnUsedIndexFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return -1;
+		}
+
+		// Call to check for file format
+		exitIfWrongFileFormat(lastUnUsedIndexFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return -1;
+		}
+
+		File filepath = new File(lastUnUsedIndexFileName);
+
+		/*
+		 * Check if the file exists, it will load the data into the arraylist
+		 * else it will create a new file
+		 */
+		if (filepath.exists() && !filepath.isDirectory()) {
+			return loadLastIndexUnused(msgPair);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				setIndicatorMessagePair(msgPair, false, e.toString());
+				return -1;
+			}
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return 1;
+	}
+
+	/**
+	 * loadTaskListToArrayList method will load the contents from the text file
+	 * to ArrayList
+	 * 
+	 * @param msgPair
+	 *            the indicator of whether the files can be loaded into array
+	 *            list
+	 * @return a list of task
+	 */
+	private static ArrayList<Task> loadTaskListToArrayList(
+			IndicatorMessagePair msgPair) {
+		FileReader reader = null;
+		BufferedReader bufferRead = null;
+		try {
+			reader = new FileReader(fileName);
+			bufferRead = new BufferedReader(reader);
+		} catch (FileNotFoundException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+
+		assert (bufferRead != null);
+
+		return readTaskFromFile(msgPair, bufferRead);
+
+	}
+
+	/**
+	 * readTaskFromFile method read a list of task from the file
+	 * 
+	 * @param msgPair
+	 *            to indicate success or fail
+	 * @param bufferRead
+	 *            the buffer reader to read the contents in the file
+	 * @return a list of task list
+	 */
+	private static ArrayList<Task> readTaskFromFile(
+			IndicatorMessagePair msgPair, BufferedReader bufferRead) {
+		ArrayList<Task> tasksList = new ArrayList<Task>();
+		String txtLine = EMPTY_STRING;
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				Task taskObj = TaskParserFromTextFile
+						.generateStringFromTextFileToTask(txtLine);
+				if (taskObj == null) {
+					setIndicatorMessagePair(msgPair, false, String.format(
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
+							fileName));
+					bufferRead.close();
+					return null;
+				}
+				tasksList.add(taskObj);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return tasksList;
+	}
+
+	/**
+	 * loadLastIndexUnused method will load the last unused index number from
+	 * the file
+	 * 
+	 * @param msgPair
+	 *            to indicate whether it reads success or fail
+	 * @return the last unused index
+	 */
+	private static Integer loadLastIndexUnused(IndicatorMessagePair msgPair) {
+		FileReader reader;
+		BufferedReader bufferRead;
+		try {
+			reader = new FileReader(lastUnUsedIndexFileName);
+			bufferRead = new BufferedReader(reader);
+
+		} catch (FileNotFoundException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return -1;
+		}
+
+		assert (bufferRead != null);
+
+		return readLastUnUsedIndexFromFile(msgPair, bufferRead);
+	}
+
+	/**
+	 * readLastUnUsedIndexFromFile method read a line from text file
+	 * 
+	 * @param msgPair
+	 *            to indicate whether it reads success or fail
+	 * @param bufferRead
+	 *            the buffer reader to read the contents in the file
+	 * @return the last unused index
+	 */
+	private static Integer readLastUnUsedIndexFromFile(
+			IndicatorMessagePair msgPair, BufferedReader bufferRead) {
+		String txtLine = EMPTY_STRING;
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				if (!isStringAnInteger(txtLine)) {
+					setIndicatorMessagePair(msgPair, false,
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
+					return -1;
+				}
+				setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+				return Integer.parseInt(txtLine);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return -1;
+		}
+
+		return 1;
+	}
+
+	/**
+	 * writeToFile method for this case is write the list of task to file
+	 * 
+	 * @param tasksList
+	 *            the list of tasks
+	 * @param msgPair
+	 *            to indicate whether it writes success or fail
+	 */
+	public static IndicatorMessagePair writeToFile(ArrayList<Task> tasksList) {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		// Add the string to the file
+		try {
+			FileWriter fw = new FileWriter(fileName);// setup a file writer
+			fw.flush();
+			BufferedWriter bw = new BufferedWriter(fw);
+			String formattedString = new String();
+			for (int i = 0; i < tasksList.size(); i++) {
+				formattedString = TaskParserWriteToTextFile
+						.concatTaskFieldToString(tasksList.get(i));
+				if (formattedString == null) {
+					setIndicatorMessagePair(msgPair, false,
+							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
+					bw.close();
+					return msgPair;
+				}
+				bw.write(formattedString);
+				bw.newLine();
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return msgPair;
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return msgPair;
+	}
+
+	/**
+	 * writeToFile method for last unused index
+	 * 
+	 * @param lastUnUsedIndex
+	 *            the last unused index to be saved
+	 * @param msgPair
+	 *            to indicate whether it writes success or fail
+	 */
+	public static IndicatorMessagePair writeToFile(Integer lastUnUsedIndex) {
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		// Add the string to the file
+		try {
+			FileWriter fw = new FileWriter(lastUnUsedIndexFileName);// setup a
+																	// file
+																	// writer
+			fw.flush();
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(lastUnUsedIndex.toString());
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return msgPair;
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return msgPair;
+	}
+
+	/**
+	 * checkAndLoadBlockedDateFile method checks and load the list of blocked
+	 * date time to array list
+	 * 
+	 * @param msgPair
+	 *            to indicate whether it loads success or fail
+	 * @return a list of blocked date time
+	 */
+	public static ArrayList<DateTime> checkAndLoadBlockedDateFile(
+			IndicatorMessagePair msgPair) {
+
+		// Call to check for file is empty
+		exitIfUnspecificFileName(blockedDateFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		// Call to check for file format
+		exitIfWrongFileFormat(blockedDateFileName, msgPair);
+		if (!msgPair.isTrue()) {
+			return null;
+		}
+
+		File filepath = new File(blockedDateFileName);
+		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
+
+		if (filepath.exists() && !filepath.isDirectory()) {
+			blockedDatesList = loadBlockedDatesToArrayList(msgPair);
+		} else {
+			try {
+				filepath.createNewFile();
+			} catch (IOException e) {
+				setIndicatorMessagePair(msgPair, false, e.toString());
+				return null;
+			}
+		}
+
+		return blockedDatesList;
+	}
+
+	/**
+	 * loadBlockedDatesToArrayList method load the list of blocked date time to
+	 * arraylist
+	 * 
+	 * @param msgPair
+	 *            to indicate whether it loads success or fail
+	 * @return a list of blocked date time
+	 */
+	private static ArrayList<DateTime> loadBlockedDatesToArrayList(
+			IndicatorMessagePair msgPair) {
+		FileReader reader = null;
+		BufferedReader bufferRead = null;
+		try {
+			reader = new FileReader(blockedDateFileName);
+			bufferRead = new BufferedReader(reader);
+		} catch (FileNotFoundException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+
+		assert (bufferRead != null);
+
+		return readBlockedDateListFromFile(msgPair, bufferRead);
+
+	}
+
+	/**
+	 * readBlockedDateListFromFile method read the list of blocked dates line by
+	 * line from text file
+	 * 
+	 * @param msgPair
+	 *            to indicate whether it loads success or fail
+	 * @param bufferRead
+	 *            the buffer reader to read the contents in the file
+	 * @return a list of blocked dates
+	 */
+	private static ArrayList<DateTime> readBlockedDateListFromFile(
+			IndicatorMessagePair msgPair, BufferedReader bufferRead) {
+		ArrayList<DateTime> blockedDatesList = new ArrayList<DateTime>();
+		String txtLine = EMPTY_STRING;
+		try {
+			while ((txtLine = bufferRead.readLine()) != null) {
+				DateTime dateTimeObj = DateTimeParser.generateDate(txtLine);
+				if (dateTimeObj == null) {
+					setIndicatorMessagePair(msgPair, false, String.format(
+							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
+							blockedDateFileName));
+					bufferRead.close();
+					return null;
+				}
+				blockedDatesList.add(dateTimeObj);
+			}
+			bufferRead.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return null;
+		}
+
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return blockedDatesList;
+	}
+
+	/**
+	 * writeBlockedDateTimeToFile method write the list of blocked date time to
+	 * file
+	 * 
+	 * @param blockedDatesList
+	 *            a list of blocked date time
+	 * @param msgPair
+	 *            indicator that whether it saved successfully
+	 */
+	public static IndicatorMessagePair writeBlockedDateTimeToFile(
+			ArrayList<DateTime> blockedDatesList) {
+		// Add the string to the file
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+
+		try {
+			FileWriter fw = new FileWriter(blockedDateFileName);// setup a file
+																// writer
+			fw.flush();
+			BufferedWriter bw = new BufferedWriter(fw);
+			for (int i = 0; i < blockedDatesList.size(); i++) {
+				bw.write(blockedDatesList.get(i).toLocalDate().toString());
+				bw.newLine();
+			}
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			setIndicatorMessagePair(msgPair, false, e.toString());
+			return msgPair;
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+		return msgPair;
+	}
+
+	/**
+	 * This method check if the given string can be converted to integer
+	 * 
+	 * @param inputStr
+	 *            the string to be converted
+	 * @return true if can be converted, else false
+	 */
+	private static boolean isStringAnInteger(String inputStr) {
+		try {
+			Integer.parseInt(inputStr);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * This method will check if the filename is specified and exit if there is
+	 * no filename given
+	 * 
+	 * @param fileName
+	 */
+	private static void exitIfUnspecificFileName(String receivedFileName,
+			IndicatorMessagePair msgPair) {
+		if (receivedFileName == null || receivedFileName.trim().isEmpty()) {
+			setIndicatorMessagePair(msgPair, false,
+					MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED);
+			return;
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+	}
+
+	/**
+	 * exitIfWrongFileFormat method will check if the file is in correct format
+	 * and exit if incorrect
+	 * 
+	 * @param receivedFileName
+	 *            the filename to be checked
+	 * @param msgPair
+	 *            to indicate success or fail
+	 */
+	private static void exitIfWrongFileFormat(String receivedFileName,
+			IndicatorMessagePair msgPair) {
+		boolean isFileContainsADot = receivedFileName.contains(".");
+		int fileExtLength = receivedFileName.length()
+				- receivedFileName.indexOf(".");
+		String fileExt = receivedFileName.substring(receivedFileName.length()
+				- FILE_EXTENSION_LENGTH, receivedFileName.length());
+
+		if (!(isFileContainsADot) || !(fileExtLength == FILE_EXTENSION_LENGTH)
+				|| !(fileExt.equals(FILE_EXTENSION))) {
+			setIndicatorMessagePair(msgPair, false,
+					MessageList.MESSAGE_FILENAME_INVALID_FORMAT);
+			return;
+		}
+		setIndicatorMessagePair(msgPair, true, EMPTY_STRING);
+	}
+
+	/**
+	 * setIndicatorMessagePair method sets the indication of the respective
+	 * operations
+	 * 
+	 * @param msgPair
+	 *            to indicate whether success or fail
+	 * @param isTrue
+	 *            to set true or false
+	 * @param msg
+	 *            the message to be written to
+	 */
+	private static void setIndicatorMessagePair(IndicatorMessagePair msgPair,
+			boolean isTrue, String msg) {
+		msgPair.setTrue(isTrue);
+		msgPair.setMessage(msg);
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\storage\FileStorage.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\CommandStringParserTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.CommandStringParser;
+
+public class CommandStringParserTest {
+
+	Map<String, String> keyFieldsTest;
+
+	@Before
+	public void setUp() {
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
+	}
+
+	@After
+	public void tearDown() {
+		keyFieldsTest.clear();
+	}
+
+	@Test
+	public void testProcessStringAddRegular() {
+		String command = "add do homework by Friday";
+		String expected = "ADD";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringDeleteRegular() {
+		String command = "delete 23";
+		String expected = "DELETE";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringDisplayRegular() {
+		String command = "display 24";
+		String expected = "DISPLAY";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringExitRegular() {
+		String command = "exit";
+		String expected = "EXIT";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringSearchRegular() {
+		String command = "search 25";
+		String expected = "SEARCH";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringSortRegular() {
+		String command = "sort";
+		String expected = "SORT";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringInvalidCommandType() {
+		String command = "try to process";
+		String expected = "INVALID";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringEmptyCommandRegular() {
+		String command = "";
+		String expected = "INVALID";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringNullCommandRegular() {
+		String command = null;
+		String expected = "INVALID";
+		assertEquals(expected,
+				CommandStringParser.processString(command, keyFieldsTest)
+						.name());
+	}
+
+	@Test
+	public void testProcessStringAddWithReturnKeyFieldsTestNumberRegular() {
+		String command = "add Do homework by Friday";
+		int expected = 2;
+		CommandStringParser.processString(command, keyFieldsTest);
+		assertTrue(expected == keyFieldsTest.size());
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\CommandStringParserTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\FileStorageTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import data.Data;
+import data.Task;
+import storage.FileStorage;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+
+public class FileStorageTest {
+	IndicatorMessagePair msgPair;
+	private String testFileName = "taskListTest.txt";
+	private String testLastUnusedIndex = "lastUnUsedIndexFileNameTest.txt";
+	private String testBlockedDateTimeFileName = "blockedDateTimeFileNameTest.txt";
+
+	@Before
+	public void setUp() {
+		msgPair = new IndicatorMessagePair();
+	}
+
+	@After
+	public void tearDown() {
+		msgPair = null;
+	}
+
+	@Test
+	public void testLoadToArrayListValidFileName() {
+		FileStorage.setFileNameForTasksList(testFileName);
+		FileStorage.checkAndLoadTaskFile(msgPair);
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testFileName);
+		textList.delete();
+	}
+
+	/* This test case give error if filename is invalid */
+	@Test
+	public void testLoadToArrayListInvalidFileName() {
+		FileStorage.setFileNameForTasksList("taskListstxt");
+		FileStorage.checkAndLoadTaskFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	/* This test case give error if empty filename */
+	@Test
+	public void testLoadToArrayListEmptyFileName() {
+		FileStorage.setFileNameForTasksList("");
+		FileStorage.checkAndLoadTaskFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	/* This test case give error if null filename */
+	@Test
+	public void testLoadToArrayListNullFileName() {
+		FileStorage.setFileNameForTasksList(null);
+		FileStorage.checkAndLoadTaskFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testTaskListWriteToFile() {
+		Data smtDataTest = new Data();
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
+				new DateTime(), ""));
+		FileStorage.setFileNameForTasksList(testFileName);
+		msgPair = FileStorage.writeToFile(smtDataTest.getListTask());
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testFileName);
+		textList.delete();
+	}
+
+	@Test
+	public void testLastUnusedIndexValidFileName() {
+		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testLastUnusedIndex);
+		textList.delete();
+	}
+
+	@Test
+	public void testLastUnusedIndexInvalidFileName() {
+		FileStorage.setFileNameForLastUnusedIndex("taskListtxt");
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testLastUnusedIndexEmptyFileName() {
+		FileStorage.setFileNameForLastUnusedIndex("");
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testLastUnusedIndexNullFileName() {
+		FileStorage.setFileNameForLastUnusedIndex(null);
+		FileStorage.checkAndLoadLastTaskIndexFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testLastUnusedIndexWriteToFile() {
+		FileStorage.setFileNameForLastUnusedIndex(testLastUnusedIndex);
+		Integer lastUnusedIndex = 1;
+		msgPair = FileStorage.writeToFile(lastUnusedIndex);
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testLastUnusedIndex);
+		textList.delete();
+	}
+
+	@Test
+	public void testBlockedDateTimeValidFileName() {
+		FileStorage.setFileNameForBlockedDatesList(testBlockedDateTimeFileName);
+		FileStorage.checkAndLoadBlockedDateFile(msgPair);
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testBlockedDateTimeFileName);
+		textList.delete();
+	}
+
+	@Test
+	public void testBlockedDateTimeInvalidFileName() {
+		FileStorage.setFileNameForBlockedDatesList("taskListtxt");
+		FileStorage.checkAndLoadBlockedDateFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_FORMAT;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testBlockedDateTimeEmptyFileName() {
+		FileStorage.setFileNameForBlockedDatesList("");
+		FileStorage.checkAndLoadBlockedDateFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testBlockedDateTimeNullFileName() {
+		FileStorage.setFileNameForBlockedDatesList(null);
+		FileStorage.checkAndLoadBlockedDateFile(msgPair);
+		String expected = MessageList.MESSAGE_FILENAME_INVALID_UNSPECIFIED;
+		assertEquals(expected, msgPair.getMessage());
+	}
+
+	@Test
+	public void testBlockedDateTimeWriteToFile() {
+		FileStorage.setFileNameForBlockedDatesList(testBlockedDateTimeFileName);
+		ArrayList<DateTime> listBlockedDateTime = new ArrayList<DateTime>();
+		listBlockedDateTime.add(new DateTime());
+		msgPair = FileStorage.writeBlockedDateTimeToFile(listBlockedDateTime);
+		assertTrue(msgPair.isTrue());
+		File textList = new File(testBlockedDateTimeFileName);
+		textList.delete();
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\FileStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\TaskParserFromTextFileTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import data.Task;
+import data.TaskParserFromTextFile;
+
+public class TaskParserFromTextFileTest {
+
+	Task testTaskObj;
+
+	@Before
+	public void setUp() {
+		testTaskObj = new Task();
+	}
+
+	@After
+	public void tearDown() {
+		testTaskObj = null;
+	}
+
+	/*This is null object testing*/
+	@Test
+	public void testgenerateTaskWithNull() {
+		String taskStr = null;
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+	}
+
+	/*This is to check if the string only contains task id 2 and will expect null*/
+	@Test
+	public void testgenerateInvalidWithOnlyTaskWithTaskId() {
+		String taskStr = "Taskid=2";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+	}
+
+	/*success test*/
+	@Test
+	public void testgenerateTaskWithTaskIdAndDesc() {
+		String taskStr = "Taskid=2|TASKDESC=dadd adad dada";
+		testTaskObj = TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr);
+		assertEquals("dadd adad dada", testTaskObj.getTaskDescription());
+		assertEquals(2, testTaskObj.getTaskId());
+	}
+
+	/*success test with start date time*/
+	@Test
+	public void testgenerateTaskWithTaskIdAndDescStartDateTime() {
+		String taskStr = "Taskid=2|TASKDESC=dadd adad dada|TASKSTARTDATETIME=2015-03-03T00:00:00.000+08:00";
+		testTaskObj = TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr);
+		assertEquals("dadd adad dada", testTaskObj.getTaskDescription());
+		assertEquals("2015-03-03T00:00:00.000+08:00", testTaskObj
+				.getTaskStartDateTime().toString());
+	}
+
+	/*success with description, start date and end date*/
+	@Test
+	public void testgenerateTaskWithTaskIdAndDescStartDateTimeEndDateTime() {
+		String taskStr = "Taskid=2|TASKDESC=dadd adad dada|TASKSTARTDATETIME=2015-03-03T00:00:00.000+08:00|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00";
+		testTaskObj = TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr);
+		assertEquals("dadd adad dada", testTaskObj.getTaskDescription());
+		assertEquals("2015-03-03T00:00:00.000+08:00", testTaskObj
+				.getTaskStartDateTime().toString());
+		assertEquals("2015-04-03T00:00:00.000+08:00", testTaskObj
+				.getTaskEndDateTime().toString());
+	}
+
+	/*This is boundary case with task id is non integer*/
+	@Test
+	public void testgenerateTaskInvalidTaskIdWithTaskDesc() {
+		String taskStr = "Taskid=a|TASKDESC=please submit";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+	}
+
+	/*This is boundary case with task description is empty*/
+	@Test
+	public void testgenerateTaskInvalidTaskDesc() {
+		String taskStr = "Taskid=2|TASKDESC=";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+	}
+
+	/*This is boundary case with no task id*/
+	@Test
+	public void testgenerateTaskInvalidIfNoTaskId() {
+		String taskStr = "TASKDESC=please submit a report|TASKSTARTDATE=3-3-2015";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+	}
+
+	/*This is a success test case*/
+	@Test
+	public void testgenerateTaskIfTaskIdIsBehind() {
+		String taskStr = "TASKDESC=please submit a report|TASKID=3";
+		testTaskObj = TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr);
+		assertEquals("please submit a report", testTaskObj.getTaskDescription());
+		assertEquals(3, testTaskObj.getTaskId());
+	}
+
+	/*This is a success test case*/
+	@Test
+	public void testgenerateTaskIfDeadLineIsGiven() {
+		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEADLINESET=true";
+		testTaskObj = TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr);
+		assertEquals("please submit a report", testTaskObj.getTaskDescription());
+		assertEquals(3, testTaskObj.getTaskId());
+		assertTrue(testTaskObj.getDeadLineStatus());
+	}
+
+	/*This is a success test case*/
+	@Test
+	public void testgenerateTaskIfDeadLineKeyIsInvalid() {
+		String taskStr = "TASKDESC=please submit a report|TASKID=3|TASKENDDATETIME=2015-04-03T00:00:00.000+08:00|TASKDEAeINESET=true";
+		Task expected = null;
+		assertTrue(expected == TaskParserFromTextFile
+				.generateStringFromTextFileToTask(taskStr));
+
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\TaskParserFromTextFileTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\TaskParserWriteToTextFileTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import data.Task;
+import data.TaskParserWriteToTextFile;
+
+public class TaskParserWriteToTextFileTest {
+
+	private int year = 2015;
+	private int month = 9;
+	private int day = 3;
+	private int hour = 0;
+	private int min = 0;
+	
+	/* This is a null object testing */
+	@Test
+	public void testTaskNull() {
+		String expected = null;
+		assertEquals(expected,
+				TaskParserWriteToTextFile.concatTaskFieldToString(null));
+	}
+	
+	/* This is a success testing */
+	@Test
+	public void testToStringRegular() {
+		String expected = "TASKID=1|TASKDESC=Prepare a proposal|TASKSTARTDATETIME=2015-09-03T00:00:00.000+08:00|TASKENDDATETIME=2015-09-03T23:00:00.000+08:00|TASKSTATUS=false|TASKDEADLINESET=true";
+		Task testTask = new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true);
+		assertEquals(expected,
+				TaskParserWriteToTextFile.concatTaskFieldToString(testTask));
+	}
+	
+	/* This is a success testing */
+	@Test
+	public void testToStringNoEndDateTimeRegular() {
+		String expected = "TASKID=1|TASKDESC=Prepare a proposal|TASKSTARTDATETIME=2015-09-03T00:00:00.000+08:00|TASKSTATUS=false|TASKDEADLINESET=true";
+		Task testTask = new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), null, false, "", true);
+		assertEquals(expected,
+				TaskParserWriteToTextFile.concatTaskFieldToString(testTask));
+	}
+	
+	/* This is a success testing */
+	@Test
+	public void testToStringNoDatesRegular() {
+		String expected = "TASKID=1|TASKDESC=Prepare a proposal|TASKSTATUS=false|TASKDEADLINESET=true";
+		Task testTask = new Task(1, "Prepare a proposal",
+				null, null, false, "", true);
+		assertEquals(expected,
+				TaskParserWriteToTextFile.concatTaskFieldToString(testTask));
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\TaskParserWriteToTextFileTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\UpdateHandlerTest.java
+	 */
+
+package unit_testing;
+
+
+
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.UpdateHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import storage.FileStorage;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class UpdateHandlerTest {
+
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "taskListTest.txt";
+
+	@Before
+	public void setUp() {
+		int year = 2015;
+		int month = 9;
+		int day = 3;
+		int hour = 0;
+		int min = 0;
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(
+				year, month, day, hour, min), new DateTime(year, month, day,
+				hour + 23, min), false, "", true));
+	}
+
+	@After
+	public void tearDown() {
+		keyFieldsTest.clear();
+		File textList = new File(fileName);
+		textList.delete();
+	}
+
+	/* This is a boundary case for the ‘0’ partition */
+	@Test
+	public void testUpdateZeroTaskId() {
+		keyFieldsTest.put("UPDATE", "0");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
+		String expected = MessageList.MESSAGE_NO_SUCH_TASK;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test for invalid task id */
+	@Test
+	public void testUpdateInvalidTaskId() {
+		keyFieldsTest.put("UPDATE", "abc");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
+		String expected = String.format(
+				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/*
+	 * This test case test for regular update task description and return
+	 * success message
+	 */
+	@Test
+	public void testUpdateWithDescRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test for regular update task description */
+	@Test
+	public void testUpdateWithDescCheckRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
+		String expected = "Submit report to Ms Sarah and to IVLE";
+		UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest);
+		for (int i = 0; i < smtDataTest.getSize(); i++) {
+			if (smtDataTest.getATask(i).getTaskId() == 2) {
+				assertEquals(expected, smtDataTest.getATask(i)
+						.getTaskDescription());
+			}
+		}
+	}
+
+	/* This test case test update task to weekly task */
+	@Test
+	public void testUpdateWithWeeklyCheckRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("every", "friday");
+		String expected = "friday";
+		UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest);
+		for (int i = 0; i < smtDataTest.getSize(); i++) {
+			if (smtDataTest.getATask(i).getTaskId() == 2) {
+				assertEquals(expected, smtDataTest.getATask(i).getWeeklyDay());
+			}
+		}
+	}
+
+	/* This test case test update with description and deadline regular */
+	@Test
+	public void testUpdateWithDescAndByRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
+		keyFieldsTest.put("by", "03-03-2016");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah and to IVLE\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test update with regular deadline */
+	@Test
+	public void testUpdateWithByRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("by", "03-03-2016");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 March, 2016 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test update with start time regular */
+	@Test
+	public void testUpdateWithStartTimeRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("from", "5pm");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test update with end time regular */
+	@Test
+	public void testUpdateWithEndTimeRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("to", "11pm");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 12.00 AM\nEnd Time: 11.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case test start time end time regular */
+	@Test
+	public void testUpdateWithStartTimeAndEndTimeRegular() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("FROM", "5pm");
+		keyFieldsTest.put("TO", "6pm");
+		String expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStart Time: 5.00 PM\nEnd Time: 6.00 PM\nDeadline: 3 September, 2015 (Thu)\nStatus: Pending");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error message if found null in hashmap */
+	@Test
+	public void testUpdateWithNullKeyFields() {
+		String expected = MessageList.MESSAGE_NULL;
+		assertEquals(expected, UpdateHandler.executeUpdate(null, smtDataTest));
+	}
+
+	/* This test case will give error message if found null for Data */
+	@Test
+	public void testUpdateWithNullTaskList() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah.");
+		String expected = MessageList.MESSAGE_NO_TASK_IN_LIST;
+		assertEquals(expected, UpdateHandler.executeUpdate(keyFieldsTest, null));
+	}
+
+	/* This test case will give error message if description is empty */
+	@Test
+	public void testUpdateWithDescEmpty() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", "");
+		String expected = MessageList.MESSAGE_DESCRIPTION_EMPTY;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error is description is null */
+	@Test
+	public void testUpdateWithDescNull() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("taskdesc", null);
+		String expected = MessageList.MESSAGE_DESCRIPTION_EMPTY;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if start time is null */
+	@Test
+	public void testUpdateWithStartTimeNull() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("from", null);
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if start time is empty */
+	@Test
+	public void testUpdateWithStartTimeEmpty() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("from", "");
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if wrong time format */
+	@Test
+	public void testUpdateWithStartTimeInvalid() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("from", "5ap");
+		String expected = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if end time is null */
+	@Test
+	public void testUpdateWithEndTimeNull() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("to", null);
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if end time is empty */
+	@Test
+	public void testUpdateWithEndTimeEmpty() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("to", "");
+		String expected = MessageList.MESSAGE_NO_TIME_GIVEN;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if wrong time format */
+	@Test
+	public void testUpdateWithEndTimeInvalid() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("to", "11pa");
+		String expected = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if weekly is set to empty */
+	@Test
+	public void testUpdateWithWeeklyEmpty() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("every", "");
+		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if weekly is set to null */
+	@Test
+	public void testUpdateWithWeeklyNull() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("every", null);
+		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case is test the boundary case for weekly day */
+	@Test
+	public void testUpdateWithWeeklyInvalid() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("every", "testing");
+		String expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
+				"Weekly");
+
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/*
+	 * This is to check if the value in the hashmap is null, it will trigger an
+	 * error message
+	 */
+	@Test
+	public void testUpdateWithStatusNull() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("complete", null);
+		String expected = MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD;
+
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This test case will give error if there is some words beside incomplete */
+	@Test
+	public void testUpdateWithStatusInvalid() {
+		keyFieldsTest.put("UPDATE", "2");
+		keyFieldsTest.put("incomplete", "abc");
+		String expected = String.format(
+				MessageList.MESSAGE_UPDATE_STATUS_EXTRA_FIELD, "Weekly");
+
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+	/* This is to check if the input can be converted into integer */
+	@Test
+	public void testInvalidConvertAnInteger() {
+		keyFieldsTest.put("UPDATE", "ser@");
+		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah.");
+		String expected = String.format(
+				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		assertEquals(expected,
+				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\UpdateHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\IndicatorMessagePair.java
+	 */
+
+package utility;
+/**
+ * This class will stored a boolean and a string which will indicate if it is true or false, it will return a message
+ *
+ */
+public class IndicatorMessagePair {
+
+	private boolean isTrue;
+	private String message;
+	
+	/**
+	 * constructor which has parameters
+	 * @param isTrue
+	 * @param message
+	 */
+	public IndicatorMessagePair(boolean isTrue, String message) {
+		this.isTrue = isTrue;
+		this.message = message;
+	}
+	
+	/**
+	 * default constructor
+	 */
+	public IndicatorMessagePair(){
+		this.isTrue = false;
+		this.message = "";
+	}
+
+	/**
+	 * isTrue method will return the boolean status
+	 * @return the isTrue
+	 */
+	public boolean isTrue() {
+		return isTrue;
+	}
+
+	/**
+	 * setTrue method will set the boolean
+	 * @param isTrue the isTrue to set
+	 */
+	public void setTrue(boolean isTrue) {
+		this.isTrue = isTrue;
+	}
+
+	/**
+	 * getMessage method will return the message
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * setMessage method set the message
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\IndicatorMessagePair.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\KeywordType.java
+	 */
+
+package utility;
+
+public class KeywordType {
+	
+	public enum List_Keywords{
+		FROM, TO, BY, ID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, TASKID, ON
+	}
+	
+	public enum List_SearchKeywords{
+		ALL, COMPLETED, COMP, PENDING, PEND, DESCRIPTION, DESC, DEADLINE, STARTTIME, TODAY, TDY, TOMORROW, TMR, YESTERDAY, YTD, MONDAY, MON, TUESDAY, TUE, WEDNESDAY, WED, THURSDAY, THU, FRIDAY, FRI, SATURDAY, SAT, SUNDAY, SUN, THISWEEK, THISWK, LASTWEEK, LASTWK, NEXTWEEK, NEXTWK, BLOCK
+	}
+	
+	/**
+	 * This method is to determine the type of keyword that the parameter string has received
+	 * @param keywordTypeString the string to be converted
+	 * @return keyword a keyword
+	 */
+	public static List_Keywords getKeyword(String keywordTypeString){
+		if (keywordTypeString == null) {
+			return List_Keywords.FIELD;
+		}
+
+		switch(keywordTypeString.toLowerCase()){
+		case "from":
+			return List_Keywords.FROM;
+		case "to":
+			return List_Keywords.TO;
+		case "by":
+			return List_Keywords.BY;
+		case "taskid":
+			return List_Keywords.TASKID;
+		case "every":
+			return List_Keywords.EVERY;
+		case "taskdesc":
+			return List_Keywords.TASKDESC;
+		case "taskstart":
+			return List_Keywords.TASKSTART;
+		case "taskend":
+			return List_Keywords.TASKEND;
+		case "taskstatus":
+			return List_Keywords.TASKSTATUS;
+		case "complete":
+			return List_Keywords.COMPLETE;
+		case "incomplete":
+			return List_Keywords.INCOMPLETE;
+		case "on":
+			return List_Keywords.ON;
+		default:
+			return List_Keywords.FIELD;
+		}
+	}
+	
+	
+	public static List_Keywords getKeywordSearchWithIndexNum(String keywordTypeString){
+		if (keywordTypeString == null) {
+			return List_Keywords.FIELD;
+		}
+
+		switch(keywordTypeString.toLowerCase()){
+		case "1":
+			return List_Keywords.TASKID;
+		case "2":
+			return List_Keywords.TASKDESC;
+		case "3":
+			return List_Keywords.BY;
+		default:
+			return List_Keywords.FIELD;
+		}
+	}
+	
+	/**
+	 * This method will check whether the given parameter has a match with the list of keyword
+	 * @param input the string to compare
+	 * @return true if there is a match, else is false
+	 */
+	public static boolean contains(String input){
+		for (List_Keywords aKey : List_Keywords.values()) {
+	        if (aKey.name().equals(input.toUpperCase())) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\KeywordType.java
+
+
+
+
+
