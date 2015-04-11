@@ -1,4 +1,3 @@
-//@A0112502A
 package unit_testing;
 
 import static org.junit.Assert.*;
@@ -22,6 +21,10 @@ public class CacheCommandsHandlerUndoTest {
 	@Before
 	public void setUp() {
 		smtDataTest = new Data();
+		
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
+		CacheCommandsHandler.newHistory(smtDataTest);
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
 	}
 
 	@After
@@ -29,19 +32,17 @@ public class CacheCommandsHandlerUndoTest {
 		smtDataTest = null;
 	}
 	
-	// This is to test if the stack is empty, and it can know that the undo cannot be done
+	// This is to check if the stack is empty, if it is empty, undo operation cannot be done
 	@Test
 	public void testUndoEmpty(){
+		smtDataTest.clearTaskList();
 		String expected = MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
 		assertEquals(expected, CacheCommandsHandler.executeUndo(smtDataTest));
 	}
 	
-	// This is to test the normal undo
+	// This is to test the valid undo operation
 	@Test
-	public void testUndoRegular() {
-		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", new DateTime(), new DateTime(), ""));
-		CacheCommandsHandler.newHistory(smtDataTest);
-		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", new DateTime(), new DateTime(), ""));
+	public void testUndoValid() {
 		CacheCommandsHandler.newHistory(smtDataTest);
 		String expected = MessageList.MESSAGE_UNDO_SUCCESS;
 		assertEquals(expected, CacheCommandsHandler.executeUndo(smtDataTest));
