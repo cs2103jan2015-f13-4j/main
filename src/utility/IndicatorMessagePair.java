@@ -1,4 +1,4 @@
-//@A0111935L
+//@author A0111935L
 package utility;
 /**
  * This class will stored a boolean and a string which will indicate if it is true or false, it will return a message
