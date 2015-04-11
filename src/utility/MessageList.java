@@ -92,7 +92,7 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_DELETE_SUCCESS = "deleted from %s: \"%s\"";
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
-	public static final String MESSAGE_INVALID_DELETE = "Invalid delete arguments";
+	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
 
 	/**
 	 * This message are for HintHandler class
@@ -137,6 +137,7 @@ public class MessageList {
 			+ "\n%s dates has never been block.";
 	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
 	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days."; 
+	
 	/**
 	 * This message are for CacheCommandsHandler class
 	 */
