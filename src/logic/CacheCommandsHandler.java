@@ -1,4 +1,4 @@
-//@A0112502A
+//@author A0112502A
 package logic;
 
 import java.util.Stack;
@@ -13,6 +13,9 @@ import data.Data;
 
 public class CacheCommandsHandler {
 
+	/**
+	 * Declaration of constant variables
+	 */
 	private static Stack<Data> current = new Stack<Data>();
 	private static Stack<Data> aheadCmds = new Stack<Data>();
 	private static String cacheCommandStatus = "";
@@ -62,6 +65,7 @@ public class CacheCommandsHandler {
 		return false;
 	}
 
+	//@author A0112502A
 	/**
 	 * This method will check whether stack contains one item
 	 * @return true if current stack contains one item, return false if current stack contains more or less than one
