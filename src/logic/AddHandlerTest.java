@@ -35,7 +35,8 @@ public class AddHandlerTest {
 		smtDataTest = new Data();
 		FileStorage.setFileNameForTasksList(fileName);
 		FileStorage.setFileNameForLastUnusedIndex(lastUnUsedFileName);
-		keyFieldsTest = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
 		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
 				new DateTime(year, month, day, hour, min), new DateTime(year,
 						month, day, hour + 23, min), ""));
@@ -59,14 +60,17 @@ public class AddHandlerTest {
 	}
 
 	/**
-	 * This is to test the correct format of adding in a task The output of this
-	 * test is: Task Added
+	 * This is to test the correct format of adding in a task The output is :
+	 * Task ID: 4 Description: submit proposal End Time: 11.59 PM Deadline: 3
+	 * August, 2015 (Mon) status: Pending
 	 */
 	@Test
 	public void testAddWithDescRegular() {
 		keyFieldsTest.put("ADD", "submit proposal");
-		keyFieldsTest.put("BY", "03-03-2016");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: submit proposal\nStatus: Pending");
+		keyFieldsTest.put("BY", "03-08-2015");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: submit proposal\nEnd Time: 11.59 PM\nDeadline: 3 August, 2015 (Mon)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
@@ -79,69 +83,76 @@ public class AddHandlerTest {
 	public void testAddWithDescWithoutDate() {
 		keyFieldsTest.put("ADD", "Submit Proposal");
 		keyFieldsTest.put("BY", "");
-		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
-				"Add");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
-	 * This is to test the adding of incorrect date format The output of this
-	 * test is: Date Format is Incorrect
+	 * This is to test the adding of incorrect date format The output is : Date
+	 * Format is Incorrect
 	 */
 	@Test
 	public void testAddWithDescWithWrongDateFormat() {
 		keyFieldsTest.put("ADD", "Submit Report");
 		keyFieldsTest.put("BY", "03-March-2014");
-		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
-				"Add");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
-	 * This is to test the adding of incorrect date format for the data and year
-	 * position The output of this test is: Date Format is Incorrect
+	 * This is to test the adding of incorrect date format for month and year
+	 * position The output is : Date format is Incorrect
 	 */
 	@Test
 	public void testAddWithDescWithWrongDateFormatforMonth() {
 		keyFieldsTest.put("ADD", "Submit Report");
 		keyFieldsTest.put("BY", "03-2015-08");
-		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
-				"Add");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
 	 * This is to test the adding of incorrect date format for the day in
-	 * alphabetical form The output of this test is: Date Format is Incorrect
+	 * alphabetical form The output of this test is : Date format is Incorrect
 	 */
 	@Test
 	public void testInvalidDate() {
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("BY", "AA-12-2015");
-		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
-				"Add");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
 	 * This is to test adding the task by using day instead of a specified date
-	 * The output of this test is: Task added
+	 * The output is : Task ID: 4 Description: Submit Assignment End Time: 11.59
+	 * PM Deadline: 17 April, 2015 (Fri) Status: Pending"
+	 * 
 	 */
 	@Test
 	public void testAddByDay() {
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nEnd Time: 11.59 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
+
 	/**
 	 * This is to test adding the task within a certain period of time The
-	 * output of this test is: Task added
+	 * output of is : Task ID: 4 Description: Submit Assignment Start Time:
+	 * 10.00 AM End Time: 12.00 PM\nDeadline: 17 April, 2015 (Fri) Status:
+	 * Pending
 	 */
 	@Test
 	public void testAddByTime() {
@@ -149,14 +160,16 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10am");
 		keyFieldsTest.put("TO", "12pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 AM\nEnd Time: 12.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 AM\nEnd Time: 12.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
 	 * This is to test adding the task within a certain period of time The
-	 * output of this test is: Task added
+	 * output is: End Time is supposed to be later than the Start Time
 	 */
 	@Test
 	public void testAddInvalidTime() {
@@ -164,14 +177,14 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "6pm");
 		keyFieldsTest.put("TO", "5pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Time Mismatch";
+		String expected = String.format(MessageList.MESSAGE_TIME_MISMATCHED);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
-	 * This is to test adding the task, with missing time The output of this
-	 * test is: Time is not entered correctly
+	 * This is to test adding the task, with missing time The output is : Please
+	 * specify the Start time and the End Time.
 	 */
 	@Test
 	public void testAddTimeIsEmpty() {
@@ -179,17 +192,17 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "");
 		keyFieldsTest.put("TO", "");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Time is not entered correctly";
+		String expected = String.format(MessageList.MESSAGE_TIME_SLOT_EMPTY);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
 	 * This is to test adding the task, with missing AddTime for TO The output
-	 * of this test is: Time is not entered correctly
+	 * is: This command is invalid
 	 */
 	@Test
-	public void testAddTimeWithMissingTO() {
+	public void testAddTimeWithMissingTOKeyword() {
 		keyFieldsTest.put("ADD", "Submit Assignment");
 		keyFieldsTest.put("FROM", "3pm");
 		keyFieldsTest.put("BY", "Friday");
@@ -200,7 +213,7 @@ public class AddHandlerTest {
 
 	/**
 	 * This is to test adding the task, with missing AddTime for FROM The output
-	 * of this test is: Time is not entered correctly
+	 * is: This command is invalid
 	 */
 	@Test
 	public void testAddTimeWithMissingFROM() {
@@ -212,25 +225,11 @@ public class AddHandlerTest {
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
-	// This got problem (CHECK)
-	/**
-	 * This is to test adding the task, with the time in wrong time format, e.g
-	 * 10pm to 10zm The output of this test is: Time is not entered correctly
-	 */
-	@Test
-	public void testAddTimeFormat() {
-		keyFieldsTest.put("ADD", "Submit Assignment");
-		keyFieldsTest.put("FROM", "10zm");
-		keyFieldsTest.put("TO", "11pm");
-		keyFieldsTest.put("BY", "Friday");
-		String expected = "Time Mismatch";
-		assertEquals(expected,
-				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
-	}
-
 	/**
 	 * This is to test adding the task, with the time in 10 pm format, adding a
-	 * space in between time and am or pm The output of this test is: Task added
+	 * space in between time and am or pm The output is : Task ID: 4
+	 * Description: Submit Assignment Start Time: 10.00 PM End Time: 11.00 PM
+	 * Deadline: 17 April, 2015 (Fri) Status: Pending
 	 */
 	@Test
 	public void testAddTimeInDifferentFormat() {
@@ -238,14 +237,17 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10 pm");
 		keyFieldsTest.put("TO", "11 pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED, "\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 PM\nEnd Time: 11.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 PM\nEnd Time: 11.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
 	/**
 	 * This is to test adding the task, with the time in 10 pm format, adding a
-	 * space in between time and am or pm The output of this test is: Task added
+	 * space in between time and am or pm The output is : Invalid argument for
+	 * add command.\nPlease specify what to add
 	 */
 	@Test
 	public void testAddEmptyDescription() {
@@ -253,15 +255,17 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10 pm");
 		keyFieldsTest.put("TO", "11 pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = "Invalid argument for No Description command.";
+		String expected = String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION,
+				"add");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}
 
-	// GOT PROBLEM (NEED TO CHECK)
 	/**
-	 * This is to test adding the task, with the time in 10 pm format, adding a
-	 * space in between time and am or pm The output of this test is: Task added
+	 * This is to test adding the task, with the time in not whole number format
+	 * eg. 10.30pm The output is : Task ID: 4 Description: submit Start Time:
+	 * 10.30 PM End Time: 11.00 PM Deadline: 17 April, 2015 (Fri) Status: Pending");
+	 * Task added
 	 */
 	@Test
 	public void testAddTimeInBetween() {
@@ -269,7 +273,9 @@ public class AddHandlerTest {
 		keyFieldsTest.put("FROM", "10.30pm");
 		keyFieldsTest.put("TO", "11pm");
 		keyFieldsTest.put("BY", "Friday");
-		String expected = String.format(MessageList.MESSAGE_ADDED,"\nTask ID: 4\nDescription: submit\nStart Time: 10.30 PM\nEnd Time: 11.00 PM\nDeadline: 10 April, 2015 (Fri)\nStatus: Pending");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: submit\nStart Time: 10.30 PM\nEnd Time: 11.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}

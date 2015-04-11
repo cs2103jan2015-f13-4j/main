@@ -24,6 +24,7 @@ public class MenuTest {
 	String task1 = "Add submit report by 18-06-2015";
 	String task2 = "Add attending meeting by 20-05-2015";
 	String task3 = "Add prepare a proposal by 14-05-2015";
+	String task12 = "Add ";
 
 	/* block sample tasks */
 	String task4 = "Block 18-07-2015";
@@ -31,6 +32,31 @@ public class MenuTest {
 	String task6 = "Delete 1";
 	String task7 = "redo";
 	String task8 = "block 18-06-2015";
+	String task10 = "Block ";
+
+	/* unblock sample tasks */
+	String task11 = "Unblock ";
+
+	/* delete sample task */
+	String task13 = "Delete ";
+
+	/* update sample task */
+	String task14 = "Update ";
+
+	/* display sample task */
+	String task15 = "Display ";
+
+	/* search sample task */
+	String task16 = "Search ";
+
+	/* sort sample task */
+	String task17 = "Sort ";
+
+	/* redo sample task */
+	String task18 = "add submit EE2024 assignment2 by 20-08-2015";
+	String task19 = "add submit developer guide by 21-05-2015";
+	String task20 = "undo";
+	String task21 = "redo";
 
 	/* add test */
 	String addValidTask = "Add submit report by Fri";
@@ -91,6 +117,7 @@ public class MenuTest {
 	/* redo test */
 	String redoTaskValid = "redo";
 	String redoTaskInvalid = "red0";
+	String redoLastTask = "redo";
 
 	/* Block Task */
 	String BlockOneDateTaskValid = "Block 18-07-2015";
@@ -102,6 +129,7 @@ public class MenuTest {
 	String BlockWrongDateFormatEnd = "Block from 20-07-2015 to 80 Auguest 2o15";
 	String BlockWrongDateFormatStart = "Block from 1o-o7-2o15 to 12-07-2015";
 	String BlockEndDateIsEarlierThanStart = "block from 10-06-2015 to 08-06-2015";
+	String BlockEmpty = " ";
 
 	/* Unblock test */
 	String UnblockOneDateTaskValid = "Unblock 18-07-2015";
@@ -131,19 +159,21 @@ public class MenuTest {
 		textList.delete();
 
 	}
-	/**
-	 * This is to test adding a empty content
-	 * The output is : Please enter a valid command.
-	 */
-	@Test
-	public void testAddEmpty(){
-		expected = String.format(MessageList.MESSAGE_INVALID);
-		assertEquals(expected, controller.commandExecution(addEmpty));
-	}
-	
 
 	/**
-	 * This is to test the adding new task The output is : Task Added.
+	 * This is to test adding a empty content The output is : Invalid argument
+	 * for add command. Please specify what to add";
+	 */
+	@Test
+	public void testAddEmpty() {
+		expected = String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION, "add");
+		assertEquals(expected, controller.commandExecution(task12));
+	}
+
+	/**
+	 * This is to test the adding new task The output is : Task ID: 1
+	 * Description: submit report End Time: 11.59 PM Deadline: 17 April, 2015
+	 * (Fri) Status: Pending
 	 */
 	@Test
 	public void testAddNewTaskValid() {
@@ -154,7 +184,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * \n This is to test the adding recurring task The output is : Task Added.
+	 * This is to test the adding recurring task The output is : New Task
+	 * TaskID: 5 Description: submit report Every:fri Status:Pending Added
 	 */
 	@Test
 	public void testAddNewTaskWeeklyValid() {
@@ -166,7 +197,9 @@ public class MenuTest {
 
 	/**
 	 * This is to test the adding new task for a specific time The output is :
-	 * Task Added.
+	 * New Task Task ID: 1 Description: attend meeting Start Time: 11.00AM End
+	 * Time: 12.00 PM Deadline: 17 April, 2015 (Fri) Status: Pending Task ID:1
+	 * Description: attend meeting Start Time: 11.00 AM
 	 */
 	@Test
 	public void testAddNewTaskFromTimeToTimeValid() {
@@ -178,8 +211,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test the adding of invalid task The output is : Invalid
-	 * argument for add command.
+	 * This is to test the adding of invalid task The output is : Date format is
+	 * incorrect
 	 */
 	@Test
 	public void testAddNewTaskInValid() {
@@ -189,14 +222,24 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test the add by and on in a single task The output is :Invalid
-	 * argument for add command.
+	 * This is to test the add by and on in a single task The output is : Only
+	 * one date can be added for a single task.
 	 */
 	@Test
 	public void addByandOnAtSameTask() {
-		expected = "No deadline and weekly task should be happening at the same time.";
+		expected = String.format(MessageList.MESSAGE_NO_WEEKLY_DEADLINE);
 		assertEquals(expected,
 				controller.commandExecution(addByandOnAtSameTask));
+	}
+
+	/**
+	 * This is to test when the delete is empty The output is There is no file
+	 * to be deleted
+	 */
+	@Test
+	public void testDeleteEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_FILE_DELETED);
+		assertEquals(expected, controller.commandExecution(task13));
 	}
 
 	/**
@@ -235,6 +278,16 @@ public class MenuTest {
 	public void testDeleteTaskNotExist() {
 		expected = MessageList.MESSAGE_NO_FILE_DELETED;
 		assertEquals(expected, controller.commandExecution(deleteNoSuchTask));
+	}
+
+	/**
+	 * This is to test the update with no input The output is : There is no task
+	 * in the list.
+	 */
+	@Test
+	public void testUpdateEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_TASK_IN_LIST);
+		assertEquals(expected, controller.commandExecution(task14));
 	}
 
 	/**
@@ -284,8 +337,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test update task that do not exist The output is :
-	 * MESSAGE_NO_SUCH_TASK
+	 * This is to test update task that do not exist The output is : Task does
+	 * not exist.
 	 */
 
 	@Test
@@ -299,8 +352,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test update Invalid time mismatch The output is : Time
-	 * mismatch.
+	 * This is to test update Invalid time mismatch The output is : Start Time
+	 * and End Time conflicts.
 	 */
 
 	@Test
@@ -334,7 +387,8 @@ public class MenuTest {
 	 */
 	@Test
 	public void testUpdateInValidDescTask() {
-		expected = "Invalid argument for Update command.";
+		expected = String
+				.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -343,9 +397,19 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by ID The output is : Task ID:
-	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
-	 * Pending";
+	 * This is to test when the search is empty The output is : Invalid argument
+	 * for search command Please specify what to search.
+	 */
+
+	@Test
+	public void testSearchEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH_CRITERIA);
+		assertEquals(expected, controller.commandExecution(task16));
+	}
+
+	/**
+	 * This is to test search task by ID The output is : Task ID: 1 Description:
+	 * submit report Deadline: 18 May, 2015 (Mon) Status: Pending";
 	 */
 	@Test
 	public void testSearchTaskByIDValid() {
@@ -357,9 +421,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by Date The output is :
-	 * "\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
-	 * ;
+	 * This is to test search task by Date The output is : Task ID: 3
+	 * Description: prepare a proposal Deadline: 14 May, 2015 (Thu) Status:
+	 * Pending
 	 */
 	@Test
 	public void testSearchTaskByDateValid() {
@@ -371,9 +435,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by Description The output is :
-	 * "\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus: Pending\n"
-	 * ;
+	 * This is to test search task by Description The output is : "Task ID: 2
+	 * Description: attending meeting Deadline: 19 May, 2015 (Tue) Status:
+	 * Pending
 	 */
 	@Test
 	public void testSearchTaskDescValid() {
@@ -385,8 +449,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by invalid ID The output is : This is a
-	 * invalid search.
+	 * This is to test search task by invalid ID The output is : Invalid
+	 * argument for search command Please specify what to search.
 	 */
 	@Test
 	public void testSearchTaskByIDInvalid() {
@@ -399,8 +463,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by invalid Date The output is : No Match
-	 * Found
+	 * This is to test search task by invalid Date The output is : Search format
+	 * is invalid, please look at our hint or enter help keyword for
+	 * assistance";
 	 */
 	@Test
 	public void testSearchTaskByDateInvalid() {
@@ -413,8 +478,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task by invalid Description The output is : No
-	 * Match Found
+	 * This is to test search task by invalid Description The output is : Search
+	 * format is invalid, please look at our hint or enter help keyword for
+	 * assistance";
 	 */
 	@Test
 	public void testSearchTaskDescInvalid() {
@@ -427,8 +493,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task with negative index The output is : This is a
-	 * invalid search.
+	 * This is to test search task with negative index The output is : Search
+	 * format is invalid, please look at our hint or enter help keyword for
+	 * assistance";
 	 */
 	@Test
 	public void testSearchTaskIDWithNegativeIndex() {
@@ -442,11 +509,11 @@ public class MenuTest {
 
 	/**
 	 * This is to test search task by description that do not exist The output
-	 * is : No Match Found
+	 * is : Description !}{JHKDKJH1 not found.
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
-		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 				"!}{JHKDKJH1");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
@@ -457,7 +524,8 @@ public class MenuTest {
 
 	/**
 	 * This is to test search task by date with incorrect format The output is :
-	 * This is a invalid search.
+	 * Search format is invalid, please look at our hint or enter help keyword
+	 * for assistance";
 	 */
 	@Test
 	public void testSearchTaskByDatetIncorrectFormat() {
@@ -470,8 +538,9 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test search task with past year The output is : This is a
-	 * invalid search.
+	 * This is to test search task with past year The output is : Search format
+	 * is invalid, please look at our hint or enter help keyword for
+	 * assistance";
 	 */
 	@Test
 	public void testSearchTaskByDatePastYear() {
@@ -484,8 +553,20 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test display pending of task The output is : \nTask ID:
-	 * 1\nDescription: submit report\nDeadline: 18
+	 * This is to test when the display is empty The output is : Invalid
+	 * argument for update command.
+	 */
+
+	@Test
+	public void testDisplayEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
+		assertEquals(expected, controller.commandExecution(task15));
+	}
+
+	/**
+	 * This is to test display pending of task The output is : Task ID:1
+	 * Description: submit report Deadline: 18
 	 */
 	@Test
 	public void testDisplayPendingValid() {
@@ -499,11 +580,14 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test display of schedule The output is : \nTask ID:
-	 * 1\nDescription: submit report\nDeadline: 6 April, 2015 (Mon)\nStatus:
-	 * Pending\n\nTask ID: 2\nDescription: attending meeting\nDeadline: 7 April,
-	 * 2015 (Tue)\nStatus: Pending\n\nTask ID: 3\nDescription: prepare a
-	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+	 * This is to test display of schedule The output is : Task ID: 1
+	 * Description: submit report Deadline: 6 April, 2015 (Mon) Status: Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 7 April, 2015 (Tue)
+	 * Status: Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending";
 	 */
 	@Test
 	public void testDisplayScheduleValid() {
@@ -546,8 +630,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test display Invalid pending task The output is : This is a
-	 * invalid search.
+	 * This is to test display Invalid pending task The output is : Please enter
+	 * a valid command.
 	 */
 	@Test
 	public void testDisplayPendingInvalid() {
@@ -560,8 +644,8 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test display Invalid Schedule task The output is : This is a
-	 * invalid search.
+	 * This is to test display Invalid Schedule task The output is : Please
+	 * enter a valid command.
 	 */
 	@Test
 	public void testDisplayScheduleInvalid() {
@@ -575,11 +659,12 @@ public class MenuTest {
 
 	/**
 	 * This is to test display Invalid Completed task The output is : Invalid
-	 * argument for Display command.
+	 * argument for Display command
 	 */
 	@Test
 	public void testDisplayCompletedInvalid() {
-		expected = "Invalid argument for Display command.";
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -594,7 +679,8 @@ public class MenuTest {
 	 */
 	@Test
 	public void testDisplayTodayInvalid() {
-		expected = "Invalid argument for Display command.";
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
@@ -602,13 +688,28 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test sort task by description The output is : \nTask ID:
-	 * 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus:
-	 * Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May,
-	 * 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: submit
-	 * report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n";
+	 * This is to test sort with no input The output is : Invalid argument for
+	 * Sort command.
+	 * 
 	 */
 
+	@Test
+	public void testSortEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		assertEquals(expected, controller.commandExecution(task17));
+	}
+
+	/**
+	 * This is to test sort task by description The output is : Task ID: 2
+	 * Description: attending meeting Deadline: 19 May, 2015 (Tue) Status:
+	 * Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May,2015 (Thu)
+	 * Status: Pending
+	 * 
+	 * Task ID: 1Description: submit report Deadline: 18 May, 2015 (Mon) Status:
+	 * Pending
+	 */
 	@Test
 	public void testSortDescValid() {
 		expected = "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
@@ -621,31 +722,14 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test sort start date \nTask ID: 1\nDescription: submit
-	 * report\nDeadline: 18 May, 2015 (Mon)\nStatus: Pending\n\nTask ID:
-	 * 2\nDescription: attending meeting\nDeadline: 19 May, 2015 (Tue)\nStatus:
-	 * Pending\n\nTask ID: 3\nDescription: prepare a proposal\nDeadline: 14 May,
-	 * 2015 (Thu)\nStatus: Pending\n";
-	 */
-
-	// problem
-	@Test
-	public void testSortStartDateValid() {
-		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending"
-				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
-				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
-		controller.commandExecution(task1);
-		controller.commandExecution(task2);
-		controller.commandExecution(task3);
-		assertEquals(expected, controller.commandExecution(sortStartDateValid));
-	}
-
-	/**
-	 * This is to test sort completed task The output is : "\nTask ID:
-	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
-	 * Pending \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May,
-	 * 2015 (Tue)\nStatus: Pending \n\nTask ID: 3\nDescription: prepare a
-	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n"
+	 * This is to test sort completed task The output is : Task ID: 1
+	 * Description: submit report Deadline: 18 May, 2015 (Mon) Status: Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 19 May,2015 (Tue)
+	 * Status: Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending
 	 */
 	@Test
 	public void testSortCompletedValid() {
@@ -659,11 +743,13 @@ public class MenuTest {
 	}
 
 	/**
-	 * This is to test sort pending task The output is : "\nTask ID:
-	 * 1\nDescription: submit report\nDeadline: 18 May, 2015 (Mon)\nStatus:
-	 * Pending \n\nTask ID: 2\nDescription: attending meeting\nDeadline: 19 May,
-	 * 2015 (Tue)\nStatus: Pending \n\nTask ID: 3\nDescription: prepare a
-	 * proposal\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n" ;
+	 * This is to test sort pending task The output is : Task ID: 1 Description:
+	 * submit report Deadline: 18 May, 2015 (Mon) Status: Pending Task ID: 2
+	 * Description: attending meeting Deadline: 19 May,2015 (Tue) Status:
+	 * Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending
 	 */
 	@Test
 	public void testSortPendingValid() {
@@ -699,6 +785,12 @@ public class MenuTest {
 		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
 	}
 
+	@Test
+	public void testUndoEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		assertEquals(expected, controller.commandExecution(task17));
+	}
+
 	/**
 	 * This is to test the valid undo The output is : Undo operation done
 	 */
@@ -725,21 +817,56 @@ public class MenuTest {
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
 	}
+	/**
+	 * This is to test the redo when the list is empty
+	 * The output is : Last command in the list. Could not perform redo
+	 */
+	@Test
+	public void testRedoEmpty() {
+		expected = String.format(MessageList.MESSAGE_LAST_COMMAND);
+		controller.commandExecution(task21);
+		assertEquals(expected, controller.commandExecution(redoTaskValid));
+	}
+	
+	/**
+	 * This is to test wrong spelling of the command redo to red0
+	 * The output is : Please enter a valid command.
+	 */
+	@Test
+	public void testRedoIncorrectCommand() {
+		expected = String.format(MessageList.MESSAGE_INVALID);
+		controller.commandExecution(task21);
+		assertEquals(expected, controller.commandExecution(redoTaskInvalid));
+	}
+	
+	/**
+	 * This is to test the redo successfully
+	 * The output is : Redo operation done.
+	 */
+	@Test
+	public void testRedoValid() {
+		expected = String.format(MessageList.MESSAGE_REDO_SUCCESS);
+		controller.commandExecution(task18);
+		controller.commandExecution(task19);
+		controller.commandExecution(task20);
+		assertEquals(expected, controller.commandExecution(redoTaskValid));
+	}
+	
+	/**
+	 * This is to test the block with no date input
+	 * The output is No date given.
+	 */
 
-	// @Test
-	// public void testRedoValid() {
-	// expected = String.format(MessageList.MESSAGE_UNDO_SUCCESS);
-	// controller.commandExecution(task1);
-	// controller.commandExecution(task2);
-	// controller.commandExecution(task3);
-	// controller.commandExecution(task5);
-	// controller.commandExecution(task6);
-	// assertEquals(expected, controller.commandExecution(redoTaskValid));
-	// }
-
-	/*
-	 * This is testing blocking a single date The output is :
-	 * "18-07-2015 Blocked Successfully"
+	@Test
+	public void testBlockEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_DATE_GIVEN,
+				"No date given");
+		assertEquals(expected, controller.commandExecution(task10));
+	}
+	
+	/**
+	 * This is to test the blocking successfully of a day
+	 * The output is : "18-07-2015" Blocked Successfully
 	 */
 	@Test
 	public void testBlockOndDateValid() {
@@ -812,34 +939,59 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(BlockDateExceedTwoYears));
 	}
+
 	/**
-	 * This is to test the end block date invalid
-	 * The output is : Wrong date format for End date
+	 * This is to test the end block date invalid The output is : Wrong date
+	 * format for End date
 	 */
 	@Test
-	public void testBlockDateInvalid(){
-		expected= String.format(MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END, "Wrong date format for End date");
-		assertEquals(expected, controller.commandExecution(BlockWrongDateFormatEnd));
+	public void testBlockDateInvalid() {
+		expected = String.format(
+				MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END,
+				"Wrong date format for End date");
+		assertEquals(expected,
+				controller.commandExecution(BlockWrongDateFormatEnd));
+	}
+
+	/**
+	 * This is to test the start block date invalid The output is : Wrong date
+	 * format for Start date
+	 */
+	@Test
+	public void testStartBlockDateInvalid() {
+		expected = String.format(
+				MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START,
+				"Wrong date format for Start date");
+		assertEquals(expected,
+				controller.commandExecution(BlockWrongDateFormatStart));
 	}
 	
 	/**
-	 * This is to test the start block date invalid
-	 * The output is : Wrong date format for Start date
+	 * This is to test the block end date is earlier than the start date
+	 * The output is : Start Date should not be later than End Date
 	 */
 	@Test
-	public void testStartBlockDateInvalid(){
-		expected= String.format(MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START, "Wrong date format for Start date");
-		assertEquals(expected, controller.commandExecution(BlockWrongDateFormatStart));
+	public void testBlockEndDateIsEarlierThanStart() {
+		expected = String
+				.format(MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END);
+		assertEquals(expected,
+				controller.commandExecution(BlockEndDateIsEarlierThanStart));
 	}
 	
+	/**
+	 * This is to test no date input for unblock
+	 * The output is : No date given.
+	 */
 	@Test
-	public void testBlockEndDateIsEarlierThanStart(){
-		expected = String.format(MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END);
-		assertEquals(expected, controller.commandExecution(BlockEndDateIsEarlierThanStart));
+	public void testUnblockEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_DATE_GIVEN,
+				"No date given");
+		assertEquals(expected, controller.commandExecution(task11));
 	}
+
 	/**
 	 * This is to test the unblock range of date which is valid The output is :
-	 * "19-07-2015" to "30-07-2015" Blocked Successfully.
+	 * "19-07-2015" to "30-07-2015" Unblocked Successfully.
 	 * 
 	 */
 	@Test
@@ -849,9 +1001,10 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(UnblockRangeOfDateValid));
 	}
+
 	/**
-	 * This is to test unblocking of a single date 
-	 * The output is : "18-07-2015" Unblocked Successfully
+	 * This is to test unblocking of a single date The output is : "18-07-2015"
+	 * Unblocked Successfully
 	 */
 	@Test
 	public void testUnblockOneDateValid() {
@@ -860,15 +1013,16 @@ public class MenuTest {
 		assertEquals(expected,
 				controller.commandExecution(UnblockOneDateTaskValid));
 	}
+
 	/**
-	 * This is to test invalid unblocking date format
-	 * The output is : Wrong date format for Start date
+	 * This is to test invalid unblocking date format The output is : Wrong date
+	 * format for Start date
 	 */
 	@Test
-	public void testUnblockRangeOfDateInvalid(){
-		expected = String.format(MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END);
+	public void testUnblockRangeOfDateInvalid() {
+		expected = String
+				.format(MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END);
 		assertEquals(expected, controller.commandExecution(UnblockInvalidDate));
 	}
-	
 
 }

@@ -103,7 +103,7 @@ public class SearchHandler {
 			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE,
 					deadLine[1]);
 		}
 	}
@@ -127,7 +127,7 @@ public class SearchHandler {
 			}
 		}
 		taskLogger.log(Level.INFO, "Search By Task ID");
-		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND, index[1]);
+		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class SearchHandler {
 			}
 		}
 		if (tempList.size() == 0) {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
 		taskLogger.log(Level.INFO, "Search By Task Description");
