@@ -44,6 +44,7 @@ public class DataTest {
 				hour + 23, min), false, "", true));
 		
 		smtDataTest.addBlockedDateTime(DateTime.now());
+		smtDataTest.addBlockedDateTime(DateTime.now().plusDays(1));
 	}
 
 	@After
@@ -84,7 +85,7 @@ public class DataTest {
 	public void testRemoveATaskFromListInValid() {
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
 		String expected = null;
-		assertEquals(expected, smtDataTest.removeATaskFromList(3, indicMsg));
+		assertEquals(expected, smtDataTest.removeATaskFromList(smtDataTest.getSize(), indicMsg));
 	}
 	
 	/*test set a task*/
@@ -114,13 +115,24 @@ public class DataTest {
 	
 	/*boundary case where the task id is not valid for update*/
 	@Test
-	public void testUpdateATaskInValid() {
+	public void testUpdateATaskIndexNegativeInValid() {
 		Task updatedTask = (new Task(1, "Prepare two proposal",
 				new DateTime(year, month, day, hour, min), new DateTime(year,
 						month, day, hour + 23, min), false, "", true));
 		String expected = MessageList.MESSAGE_INDEX_OUT_OF_RANGE;
 		
 		assertEquals(expected, smtDataTest.updateTaskList(-1, updatedTask).getMessage());
+	}
+	
+	/*boundary case where the task id is not valid(e.g 3 for update*/
+	@Test
+	public void testUpdateATaskIndexOutOfRangeInValid() {
+		Task updatedTask = (new Task(1, "Prepare two proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		String expected = MessageList.MESSAGE_INDEX_OUT_OF_RANGE;
+		
+		assertEquals(expected, smtDataTest.updateTaskList(smtDataTest.getSize(), updatedTask).getMessage());
 	}
 	
 	/*set blocked date list */
@@ -131,5 +143,54 @@ public class DataTest {
 		smtDataTest.setBlockedDateTimeList(blockedDateList);
 		assertEquals(blockedDateList.size(), smtDataTest.getBlockedDateTimeList().size());
 	}
+	
+	/*set blocked date list null will do nothing */
+	@Test
+	public void testSetBlockedDateListNullValid() {
+		int expectedBlockedDateListSize = smtDataTest.getBlockedDateTimeList().size();
+		smtDataTest.setBlockedDateTimeList(null);
+		assertEquals(expectedBlockedDateListSize, smtDataTest.getBlockedDateTimeList().size());
+	}
+	
+	/*add a blocked datetime*/
+	@Test
+	public void testAddABlockedDateValid() {
+		DateTime blockDateTime = new DateTime();
+		assertTrue(smtDataTest.addBlockedDateTime(blockDateTime).isTrue());
+	}
+	
+	/*add a block date time null*/
+	@Test
+	public void testAddABlockedDateNullInValid() {
+		String expected = MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST;
+		assertEquals(expected, smtDataTest.addBlockedDateTime(null).getMessage());
+	}
+	
+	/*removed a blocked date time */
+	@Test
+	public void testRemovedABlockedDateTimeValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		smtDataTest.removeBlockedDateTime(0,  indicMsg);
+		assertTrue(indicMsg.isTrue());
+	}
+	
+	/*boundary case where index is -1*/
+	@Test
+	public void testRemovedABlockedDateTimeNegativeInValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE;
+		smtDataTest.removeBlockedDateTime(-1,  indicMsg);
+		assertEquals(expected, indicMsg.getMessage());
+	}
+	
+	/*boundary case where index is out of range for blocked list date*/
+	@Test
+	public void testRemovedANullBlockedDateTimeValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE;
+		smtDataTest.removeBlockedDateTime(smtDataTest.getBlockedDateTimeList().size(),  indicMsg);
+		assertEquals(expected, indicMsg.getMessage());
+	}
+	
 	
 }
