@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.Map;
 import java.util.TreeMap;
 
-import logic.DisplayHandler;
 import logic.SortHandler;
 
 import org.joda.time.DateTime;
