@@ -169,6 +169,7 @@ public class MessageList {
 	 * These message are for UpdateHandler class
 	 */
 	public static final String MESSAGE_NO_UPDATE_COMMAND_FOUND = "No update command found.";
+	public static final String MESSAGE_NO_UPDATE_FIELDS_FOUND = "Please update at least a particular detail.";
 	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
 	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 	public static final String MESSAGE_INVALID_UPDATE_ID = "Invalid Task ID for the update to proceed";
