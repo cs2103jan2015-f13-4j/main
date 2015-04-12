@@ -7,35 +7,50 @@ public class MessageList {
 	/**
 	 * These message are the Commonly Used Message
 	 */
-
-	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command.";
-	public static final String MESSAGE_VALID_ARGUMENT = "Valid argument for %1$s command.";
-	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid type to integer for %1$s command";
 	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
 	public static final String MESSAGE_NULL = "Command is empty. Please enter again";
-	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
-	public static final String MESSAGE_NO_TASK_IN_DISPLAY_LIST = "There is no task in the display list.";
+	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
 	public static final String MESSAGE_LIST_IS_NOT_EMPTY = "The list is not empty.";
-	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
-	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
-	public static final String MESSAGE_NO_TIME_GIVEN = "No time given.";
-	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
+
+	/**
+	 * These message are for valid Message
+	 */
+	public static final String MESSAGE_INVALID = "Please enter a valid command.";
+	public static final String MESSAGE_VALID_ARGUMENT = "Valid argument for %1$s command.";
+
+	/**
+	 * These message are for Invalid Message
+	 */
+	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command.";
+	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid type to integer for %1$s command";
 	public static final String MESSAGE_INVALID_COMMAND = "This command is invalid";
+	public static final String MESSAGE_INVALID_FOR_SYMBOL = "Please enter a valid command. Remove characters such as '=' and '|'";
+
+	/**
+	 * These message are for DateTime
+	 */
+	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "Only one date can be added for a single task.";
+	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
 	public static final String MESSAGE_INCORRECT_DATE_FORMAT = "Date format is incorrect";
 	public static final String MESSAGE_INCORRECT_TIME_FORMAT = "Time format is incorrect";
 	public static final String MESSAGE_DATE_IS_BEFORE_TODAY = "Date provided is before Today's date.";
-	public static final String MESSAGE_ERROR_CONVERT_TASKID = "Error in converting the taskid to integer";
-	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
-	public static final String MESSAGE_INVALID = "Please enter a valid command.";
-	public static final String MESSAGE_INVALID_FOR_SYMBOL = "Please enter a valid command. Remove characters such as '=' and '|'";
-	public static final String MESSAGE_NO_WEEKLY_DEADLINE = "Only one date can be added for a single task.";
-	public static final String MESSAGE_TIME_WRONG_FLOW = "Start Time and End Time conflicts.";
+	public static final String MESSAGE_NO_DATE_GIVEN = "No date given.";
+	public static final String MESSAGE_NO_TIME_GIVEN = "No time given.";
+	public static final String MESSAGE_WRONG_DATE_FORMAT = "Wrong date format for %1$s date";
+
+	/**
+	 * These message are for Display
+	 * 
+	 */
+	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
+	public static final String MESSAGE_NO_TASK_IN_DISPLAY_LIST = "There is no task in the display list.";
 
 	/**
 	 * These message are for DeleteHandler Class
 	 */
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
+	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
 
 	/**
 	 * This message are for CacheCommandsHandler class
@@ -172,6 +187,7 @@ public class MessageList {
 	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
 	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 	public static final String MESSAGE_INVALID_UPDATE_ID = "Invalid Task ID for the update to proceed";
+	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 
 	/**
 	 * These message are for File Storage
