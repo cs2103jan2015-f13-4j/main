@@ -17,6 +17,11 @@ import data.Task;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is use to search task by 1 Task ID,
+ * search 2 Task Description and search 3 Task Date
+ *
+ */
 public class SearchHandler {
 
 	private static final int KEYWORD = 1;
