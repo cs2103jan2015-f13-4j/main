@@ -1,0 +1,3658 @@
+//@author: a0112501e
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\AddHandler.java
+	 */
+
+package logic;
+
+import java.util.Map;
+
+import data.Data;
+import data.Task;
+
+import org.joda.time.DateTime;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import parser.DateTimeParser;
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.KeywordType;
+import utility.MessageList;
+import utility.TaskLogging;
+
+public class AddHandler {
+	private static final int RESTRICT_KEYWORD = 1;
+
+	/**
+	 * Declaration for Logger
+	 */
+	private static Logger taskLogger = TaskLogging.getInstance();
+
+	/**
+	 * This method retrieve the last unused index and return that index back
+	 * 
+	 * @param smtData
+	 * @return the last unused index
+	 */
+	private static int loadLastUsedIndex(Data smtData) {
+		return smtData.getLastUnUsedIndex();
+	}
+
+	/**
+	 * This method is to check if the add command input is valid and if the
+	 * storage exist.
+	 * 
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
+	public static String executeAdd(Map<String, String> keyFieldsList,
+			Data smtData) {
+
+		if (keyFieldsList == null) {
+			assert false : "The mapped object is null";
+		}
+
+		if (smtData == null) {
+			assert false : "The data object is null";
+		}
+
+		if (keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
+		}
+
+		return addContents(keyFieldsList, smtData);
+	}
+
+	/**
+	 * This method is to add in the content added by the user
+	 * 
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
+	private static String addContents(Map<String, String> keyFieldsList,
+			Data smtData) {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		KeywordType.List_Keywords getKey;
+		Task newTask = new Task();
+
+		int lastUnUsedIndex = loadLastUsedIndex(smtData);
+		indicMsg = new IndicatorMessagePair();
+
+		// This restrict number of keyword to 1 per task.
+		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > RESTRICT_KEYWORD) {
+			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
+		}
+		// Get new index for a new task added.
+		newTask.setTaskId(lastUnUsedIndex);
+		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		// first check if command contains from and to keywords and process them
+		//
+		if (checkFromTimeToTimeBothExist(keyFieldsList)) {
+			indicMsg = processBothTimes(keyFieldsList, newTask);
+		}
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
+		// remove the add key pair as it has already been saved 
+		keyFieldsList.remove(CommandType.Command_Types.ADD.name());
+		
+
+		for (String key : keyFieldsList.keySet()) {
+			getKey = KeywordType.getKeyword(key);
+			switch (getKey) {
+			case BY:
+			case ON: {
+				indicMsg = addTaskByWhen(smtData, newTask, lastUnUsedIndex,
+						keyFieldsList, getKey);
+				break;
+			}
+
+			case EVERY: {
+				indicMsg = addRecurringWeek(newTask, lastUnUsedIndex,
+						keyFieldsList);
+				break;
+
+			}
+			default: {
+				return String
+						.format(MessageList.MESSAGE_INVALID_COMMAND, "Add");
+			}
+			}
+
+			if (!indicMsg.isTrue()) {
+				return indicMsg.getMessage();
+			}
+		}
+
+		indicMsg = smtData.addATaskToList(newTask);
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		lastUnUsedIndex++;
+
+		smtData.setLastUnUsedIndex(lastUnUsedIndex);
+		indicMsg = smtData.writeTaskListToFile();
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		indicMsg = smtData.writeLastUnUsedIndexToFile();
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		// To log add operation
+		taskLogger.log(Level.INFO, "Task Added");
+		CacheCommandsHandler.newHistory(smtData);
+		return String.format(MessageList.MESSAGE_ADDED, newTask.toString());
+	}
+
+	/**
+	 * This method is to generate the date base on the keyword
+	 * To check if the date is included as well as to check if
+	 * the date chosen to block is already occupied.
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
+	private static IndicatorMessagePair addTaskByWhen(Data smtData,
+			Task newTask, int index, Map<String, String> keyFieldsList,
+			KeywordType.List_Keywords keyword) {
+
+		String errorMessage = "";
+		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
+				MessageList.MESSAGE_NO_DATE_GIVEN);
+		
+		//generate End date depending on the keyword 
+		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
+				.get(keyword.name()));
+		if (endDate == null) {
+			errorMessage = DateTimeParser.getDateFormatError(keyFieldsList
+					.get(keyword.name()));
+			return new IndicatorMessagePair(false, errorMessage);
+		}
+
+		if (clashWithBlockDate(smtData, endDate)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_CONFLICT_WITH_BLOCKED_DATE, "End"));
+		}
+
+		DateTime newStartDateTime = null;
+		DateTime newEndDateTime = null;
+
+		if (newTask.getTaskStartDateTime() != null) {
+			newStartDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(), newTask
+							.getTaskStartDateTime().getHourOfDay(), newTask
+							.getTaskStartDateTime().getMinuteOfHour());
+		}
+
+		if (newTask.getTaskEndDateTime() != null) {
+			newEndDateTime = new DateTime(endDate.getYear(),
+					endDate.getMonthOfYear(), endDate.getDayOfMonth(), newTask
+							.getTaskEndDateTime().getHourOfDay(), newTask
+							.getTaskEndDateTime().getMinuteOfHour());
+		}
+
+		if (newEndDateTime == null) {
+			newEndDateTime = endDate;
+		}
+
+		newTask.setTaskStartDateTime(newStartDateTime);
+		newTask.setTaskEndDateTime(newEndDateTime);
+		newTask.setDeadLineStatus(true);
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * This method is for the use of adding recurring week feature
+	 * 
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
+	private static IndicatorMessagePair addRecurringWeek(Task newTask,
+			int index, Map<String, String> keyFieldsList) {
+		DateTime weeklyDate = DateTimeParser.generateDate(keyFieldsList
+				.get(KeywordType.List_Keywords.EVERY.name()));
+
+		if (weeklyDate == null) {
+			return new IndicatorMessagePair(false,
+					String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT));
+		}
+
+		DateTime newStartTime = null;
+		DateTime newEndTime = null;
+
+		if (newTask.getTaskStartDateTime() != null) {
+			newStartTime = new DateTime(weeklyDate.getYear(),
+					weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(),
+					newTask.getTaskStartDateTime().getHourOfDay(), newTask
+							.getTaskStartDateTime().getMinuteOfHour());
+		}
+
+		if (newTask.getTaskEndDateTime() != null) {
+			newEndTime = new DateTime(weeklyDate.getYear(),
+					weeklyDate.getMonthOfYear(), weeklyDate.getDayOfMonth(),
+					newTask.getTaskEndDateTime().getHourOfDay(), newTask
+							.getTaskEndDateTime().getMinuteOfHour());
+		}
+
+		newTask.setTaskStartDateTime(newStartTime);
+		newTask.setTaskEndDateTime(newEndTime);
+		newTask.setWeeklyDay(keyFieldsList.get(KeywordType.List_Keywords.EVERY
+				.name()));
+		newTask.setDeadLineStatus(false);
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * This method is to check the the add content 
+	 * 
+	 * @param newTask
+	 * @param index
+	 * @param keyFieldsList
+	 * @return
+	 */
+	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
+			Map<String, String> keyFieldsList) {
+		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
+				CommandType.Command_Types.ADD.name(),
+				String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION, "add"));
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg;
+		}
+
+		newTask.setTaskDescription(keyFieldsList
+				.get(CommandType.Command_Types.ADD.name()));
+		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
+	}
+
+	//This is to check if the keyword is empty or null
+	private static IndicatorMessagePair checkEmptyKeyFieldsList(
+			Map<String, String> keyFieldsList, String keyWord, String message) {
+		if (!keyFieldsList.containsKey(keyWord)) {
+			return new IndicatorMessagePair(false, message);
+		}
+		if (keyFieldsList.get(keyWord) == null
+				|| keyFieldsList.get(keyWord).isEmpty()) {
+			return new IndicatorMessagePair(false, message);
+		}
+		return new IndicatorMessagePair(true, String.format("", "Add"));
+	}
+
+	/**
+	 * determineBothTimes method checks if both times are valid and proceed to
+	 * update if possible
+	 * 
+	 * @param keyFieldsList
+	 *            the input command
+	 * @param index
+	 *            the current task location
+	 * @param smtData
+	 *            the data object which contains the whole data
+	 * @return IndicatorMessagePair which states whether the times can be update
+	 */
+	private static IndicatorMessagePair processBothTimes(
+			Map<String, String> keyFieldsList, Task newTask) {
+
+		if (!checkFromTimeToTimeBothField(keyFieldsList)) {
+			return new IndicatorMessagePair(false,
+					String.format(MessageList.MESSAGE_TIME_SLOT_EMPTY));
+		}
+
+		DateTime startTime = DateTimeParser.generateTime(keyFieldsList
+				.get(KeywordType.List_Keywords.FROM.name()));
+		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
+				.get(KeywordType.List_Keywords.TO.name()));
+		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_TIME_MISMATCHED, startTime, endTime));
+		}
+
+		DateTime newDateStartTime = new DateTime(DateTime.now().getYear(),
+				DateTime.now().getMonthOfYear(),
+				DateTime.now().getDayOfMonth(), startTime.getHourOfDay(),
+				startTime.getMinuteOfHour());
+		DateTime newDateEndTime = new DateTime(DateTime.now().getYear(),
+				DateTime.now().getMonthOfYear(),
+				DateTime.now().getDayOfMonth(), endTime.getHourOfDay(),
+				endTime.getMinuteOfHour());
+
+		updateBothTimes(newTask, newDateStartTime, newDateEndTime);
+		keyFieldsList.remove(KeywordType.List_Keywords.FROM.name());
+		keyFieldsList.remove(KeywordType.List_Keywords.TO.name());
+		return new IndicatorMessagePair(true, "");
+
+	}
+
+	/**
+	 * updateBothTimes method will update both times to a task
+	 * 
+	 * @param index
+	 *            the index where the existing task is
+	 * @param smtData
+	 *            the data object which contains all the data
+	 * @param startTime
+	 *            the start time to update
+	 * @param endTime
+	 *            the end time to update
+	 */
+	private static void updateBothTimes(Task newTask, DateTime startTime,
+			DateTime endTime) {
+		newTask.setTaskStartDateTime(startTime);
+		newTask.setTaskEndDateTime(endTime);
+	}
+
+	/**
+	 * checkFromTimeToTimeBothExist method checks if both from and to keyword
+	 * exists
+	 * 
+	 * @param keyFieldsList
+	 *            the command input
+	 * @return true if it contains, else false
+	 */
+	private static boolean checkFromTimeToTimeBothExist(
+			Map<String, String> keyFieldsList) {
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.FROM.name())
+				&& keyFieldsList.containsKey(KeywordType.List_Keywords.TO
+						.name())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * checkFromTimeToTimeBothField method checks if it receives from and to
+	 * time
+	 * 
+	 * @param keyFieldsList
+	 *            the command input
+	 * @return true if both fields have some info, else false
+	 */
+	private static boolean checkFromTimeToTimeBothField(
+			Map<String, String> keyFieldsList) {
+		if (keyFieldsList.get(KeywordType.List_Keywords.FROM.name()) != null
+				&& keyFieldsList.get(KeywordType.List_Keywords.FROM.name())
+						.isEmpty()
+				&& keyFieldsList.get(KeywordType.List_Keywords.TO.name()) != null
+				&& keyFieldsList.get(KeywordType.List_Keywords.TO.name())
+						.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * This method is to count the number of keywords appeared in a single task
+	 * @param keyFieldsList
+	 * @return
+	 */
+
+	private static int restrictOnlyUnqiueKeyWord(
+			Map<String, String> keyFieldsList) {
+		int count = 0;
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.ON.name())) {
+			count++;
+		}
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.BY.name())) {
+			count++;
+		}
+		if (keyFieldsList.containsKey(KeywordType.List_Keywords.EVERY.name())) {
+			count++;
+		}
+		return count;
+	}
+
+	/**
+	 * checkFromTimeToTimeBothValid method checks if the time from both sides
+	 * are valid to proceed
+	 * 
+	 * @param startTime
+	 *            the start time
+	 * @param endTime
+	 *            the end time
+	 * @return true if possible, else false
+	 */
+	private static boolean checkFromTimeToTimeBothValid(DateTime startTime,
+			DateTime endTime) {
+		if (startTime == null) {
+			return false;
+		}
+
+		if (endTime == null) {
+			return false;
+		}
+
+		if (startTime.isAfter(endTime)) {
+			return false;
+		}
+
+		return true;
+	}
+   /**
+    * This method is to check the block date input with the date blocked in the storage to check if it clash
+    * @param smtData
+    * @param endDate
+    * @return
+    */
+	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\AddHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\BlockDateHandler.java
+	 */
+
+package logic;
+
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
+import parser.DateTimeParser;
+import data.Data;
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.KeywordType;
+import utility.MessageList;
+
+public class BlockDateHandler {
+	
+	/* Global variable */
+	private static final int ONE_KEYWORD = 1;
+	private static final int THREE_KEYWORDS = 3;
+	private static final int ONE_MONTH = 31;
+	private static final int TWO_YEARS_LIMIT = 2;
+	private static final int ADD_ONE_DAY = 1;
+	private static final int ONE_DAY = 1;
+
+	/**
+	 * This method is used to check whether is it block or unblock
+	 * 
+	 * @param keyFieldsList
+	 * @param keyCommand
+	 * @param smtData
+	 * @return
+	 */
+	public static String executeBlockOrUnblock(
+			Map<String, String> keyFieldsList, String keyCommand, Data smtData) {
+		IndicatorMessagePair indicMsg = checkIfCommandKeyExist(keyFieldsList,
+				keyCommand);
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		CommandType.Command_Types cmd = CommandType.getType(keyCommand
+				.split(" "));
+		switch (cmd) {
+		case BLOCK:
+			indicMsg = checkBlockDate(keyFieldsList, smtData);
+			break;
+		case UNBLOCK:
+			indicMsg = checkUnblockDate(keyFieldsList, smtData);
+			break;
+
+		default:
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+					"Block/Unblock");
+		}
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+
+		// writing the block date into the storage
+		IndicatorMessagePair indicMsg_File = smtData
+				.writeBlockedDateTimeListToFile();
+
+		if (!indicMsg_File.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		CacheCommandsHandler.newHistory(smtData);
+
+		return indicMsg.getMessage();
+	}
+
+	// CHECK IF COMMENTS CORRECT
+	/**
+	 * This method is to check if the time is specified
+	 * 
+	 * @param keyFieldsList
+	 * @param keyCommand
+	 * @return
+	 */
+	private static IndicatorMessagePair checkIfCommandKeyExist(
+			Map<String, String> keyFieldsList, String keyCommand) {
+
+		if (!keyFieldsList.containsKey(keyCommand)) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_BLOCK_SPECIFICATION);
+		}
+		if (keyFieldsList.get(keyCommand) == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		return new IndicatorMessagePair(true, "");
+	}
+
+	/**
+	 * This method is to check if the block is a date or a range of dates
+	 * 
+	 * @param keyFieldList
+	 * @param smtData
+	 * @return
+	 */
+	private static IndicatorMessagePair checkBlockDate(
+			Map<String, String> keyFieldList, Data smtData) {
+
+		if (keyFieldList == null) {
+			assert false : "The mapped object is null";
+		}
+
+		if (smtData == null) {
+			assert false : "The data object is null";
+		}
+
+		if (keyFieldList.isEmpty()) {
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
+		}
+
+		if (keyFieldList.size() == ONE_KEYWORD) {
+			return blockOneDate(
+					keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
+					smtData);
+		} else if (keyFieldList.size() == THREE_KEYWORDS
+				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
+						.name())
+				&& keyFieldList
+						.containsKey(KeywordType.List_Keywords.TO.name())) {
+			return blockRangeOfDates(
+					keyFieldList.get(KeywordType.List_Keywords.FROM.name()),
+					keyFieldList.get(KeywordType.List_Keywords.TO.name()),
+					smtData);
+		} else {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD);
+		}
+	}
+
+	/**
+	 * This method is to check if the range of block start and end time correct
+	 * 
+	 */
+	private static IndicatorMessagePair blockRangeOfDates(String fromDate,
+			String toDate, Data smtData) {
+		if (fromDate.isEmpty() || toDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_BLOCK_SPECIFICATION);
+		}
+
+		DateTime startDate = DateTimeParser.generateDate(fromDate);
+		if (startDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(toDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		}
+
+		if (!checkFromTimeToTimeBothValid(startDate, endDate)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END,
+					fromDate, toDate));
+		}
+
+		// change the message
+		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
+		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
+		}
+		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
+		}
+
+		int numberOfDatesFromThisRange = Days.daysBetween(
+				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + ADD_ONE_DAY;
+		if (numberOfDatesFromThisRange > ONE_MONTH) {
+			// change the message that the range has exceed 31 days
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
+					toDate));
+		}
+
+		// will execute checkBlockedFailed to check for blocked range
+		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
+	}
+
+	/**
+	 * This is to check how many dates that want to block are already occupied.
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * @param smtData
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	private static IndicatorMessagePair checkBlockedFailed(String fromDate,
+			String toDate, Data smtData, DateTime startDate, DateTime endDate) {
+		int countBlockedFailed = 0;
+		int totalBlockedDatesPending = 0;
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
+				.plusDays(ONE_DAY)).toLocalDate()); date = date.plusDays(ONE_DAY)) {
+			if (!blockOneDate(date.toString(), smtData).isTrue()) {
+				countBlockedFailed++;
+			}
+			totalBlockedDatesPending++;
+
+		}
+		// total number of block dates is not fully occupied, will count number
+		// of occupied dates
+		if (countBlockedFailed > totalBlockedDatesPending
+				&& (countBlockedFailed < totalBlockedDatesPending)) {
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
+					fromDate, toDate));
+		}
+		// All block dates are already occupied
+		if (countBlockedFailed > totalBlockedDatesPending
+				&& (countBlockedFailed == totalBlockedDatesPending)) {
+			return new IndicatorMessagePair(true, String.format(
+					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,
+					toDate, countBlockedFailed));
+		}
+		// No dates are occupied. blocked successfully.
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_BLOCKED_RANGE, fromDate, toDate));
+	}
+
+	/**
+	 * This method is to check the date is input, or if the date format is
+	 * incorrect also to limit the length of blocked dates to 2 years.
+	 * 
+	 * @param receivedDate
+	 * @param smtData
+	 * @return
+	 */
+	private static IndicatorMessagePair blockOneDate(String receivedDate,
+			Data smtData) {
+		if (receivedDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(receivedDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+		}
+
+		// change the message
+		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
+		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false,
+					String.format(
+							MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
+							receivedDate));
+		}
+
+		if (checkIfBlockDateExist(endDate, smtData)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
+		}
+
+		if (checkIfBlockDateClashedWithTask(endDate, smtData)) {
+			// return blocked date clashed with a task
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST, receivedDate));
+		}
+
+		smtData.addBlockedDateTime(endDate);
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_BLOCKED, receivedDate));
+	}
+
+	/**
+	 * This is to check if block date is already occupied
+	 * 
+	 * @param dateTimeReceived
+	 * @param smtData
+	 * @return
+	 */
+	private static boolean checkIfBlockDateClashedWithTask(
+			DateTime dateTimeReceived, Data smtData) {
+
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (smtData.getATask(i).getTaskEndDateTime() != null
+					&& smtData.getATask(i).getDeadLineStatus()
+					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
+							.equals(dateTimeReceived.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This is to check if the block date has already been blocked.
+	 * 
+	 * @param dateTimeReceived
+	 * @param smtData
+	 * @return
+	 */
+	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
+			Data smtData) {
+		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(dateTimeReceived.toLocalDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This is to check the unblock date, is unblock for a single date or a range of dates.
+	 * @param keyFieldList
+	 * @param smtData
+	 * @return
+	 */
+	private static IndicatorMessagePair checkUnblockDate(
+			Map<String, String> keyFieldList, Data smtData) {
+
+		if (keyFieldList == null || keyFieldList.isEmpty())
+			if (keyFieldList == null || keyFieldList.isEmpty()) {
+				return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
+			}
+
+		if (smtData == null) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_TASK_IN_LIST);
+		}
+
+		if (keyFieldList.size() == ONE_KEYWORD) {
+			return unblockOneDate(
+					keyFieldList.get(CommandType.Command_Types.UNBLOCK.name()),
+					smtData);
+		} else if (keyFieldList.size() == THREE_KEYWORDS
+				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
+						.name())
+				&& keyFieldList
+						.containsKey(KeywordType.List_Keywords.TO.name())) {
+			return unblockRangeOfDates(
+					keyFieldList.get(KeywordType.List_Keywords.FROM.name()),
+					keyFieldList.get(KeywordType.List_Keywords.TO.name()),
+					smtData);
+		} else {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD);
+		}
+
+	}
+	/**
+	 * This method is to check if the start date and end date are in correct format
+	 * if the start date and end date is correct,unblock successfully.
+	 * @param fromDate
+	 * @param toDate
+	 * @param smtData
+	 * @return
+	 */
+	private static IndicatorMessagePair unblockRangeOfDates(String fromDate,
+			String toDate, Data smtData) {
+
+		DateTime startDate = DateTimeParser.generateDate(fromDate);
+		if (startDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "Start"));
+		}
+
+		DateTime endDate = DateTimeParser.generateDate(toDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_WRONG_DATE_FORMAT, "End"));
+		}
+
+		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
+				.plusDays(1)).toLocalDate()); date = date.plusDays(1)) {
+			unblockOneDate(date.toString(), smtData);
+		}
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate, toDate));
+
+	}
+	
+	/**
+	 * This method is to check if no date received, the date is never block before, 
+	 * or the unblock date do not exit
+	 * @param receivedDate
+	 * @param smtData
+	 * @return
+	 */
+	private static IndicatorMessagePair unblockOneDate(String receivedDate,
+			Data smtData) {
+		if (receivedDate.isEmpty()) {
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_DATE_GIVEN);
+		}
+		DateTime endDate = DateTimeParser.generateDate(receivedDate);
+		if (endDate == null) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+		}
+
+		if (!checkIfBlockDateExist(endDate, smtData)) {
+			// return this date is not inside the block list
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_DO_NOT_EXIST, receivedDate));
+		}
+		int i;
+
+		for (i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
+			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
+					.equals(endDate.toLocalDate())) {
+				break;
+			}
+		}
+
+		IndicatorMessagePair msgPair = new IndicatorMessagePair();
+		smtData.removeBlockedDateTime(i, msgPair);
+		if (!msgPair.isTrue()) {
+			return msgPair;
+		}
+
+		return new IndicatorMessagePair(true, String.format(
+				MessageList.MESSAGE_UNBLOCKED, receivedDate));
+	}
+	
+	/**
+	 * This is to check the end time later than start time
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	private static boolean checkFromTimeToTimeBothValid(DateTime startTime,
+			DateTime endTime) {
+		if (startTime == null) {
+			return false;
+		}
+
+		if (endTime == null) {
+			return false;
+		}
+
+		if (startTime.isAfter(endTime)) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\BlockDateHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\HelpCommandListHandler.java
+	 */
+
+package logic;
+
+//import java.util.ArrayList;
+import java.util.Map;
+
+import utility.CommandType;
+import utility.MessageList;
+
+//import commonUsage.KeyFieldPair;
+
+/**
+ * 
+ *
+ * 
+ */
+public class HelpCommandListHandler {
+
+	public static String getCommandHelp(Map<String, String> keyFieldsList) {
+		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
+		}
+
+		if (keyFieldsList.size() != 1) {
+			return MessageList.MESSAGE_INVALID;
+		}
+
+		if (keyFieldsList.get(CommandType.Command_Types.HELP.name()).isEmpty()) {
+			return MessageList.MESSAGE_HELP;
+		}
+
+		keyFieldsList.remove(CommandType.Command_Types.HELP.name());// remove
+																	// this pair
+
+		for (String key : keyFieldsList.keySet()) {
+			CommandType.Command_Types getType = CommandType.getType(key
+					.split(" "));
+
+			return getCommandType(getType);
+		}
+		return "";
+	}
+
+	/**
+	 * @param getType
+	 * @return
+	 */
+	public static String getCommandType(CommandType.Command_Types getType) {
+		switch (getType) {
+
+		case ADD: {
+			return MessageList.MESSAGE_ADD_HELP;
+		}
+		case DISPLAY: {
+			return MessageList.MESSAGE_DISPLAY_HELP;
+		}
+		case DELETE: {
+			return MessageList.MESSAGE_DELETE_HELP;
+		}
+		case SEARCH: {
+			return MessageList.MESSAGE_SEARCH_HELP;
+		}
+		case SORT: {
+			return MessageList.MESSAGE_SORT_HELP;
+		}
+		case UPDATE: {
+			return MessageList.MESSAGE_UPDATE_HELP;
+		}
+		case EXIT: {
+			return MessageList.MESSAGE_EXIT_HELP;
+		}
+		case UNDO: {
+			return MessageList.MESSAGE_UNDO_HELP;
+		}
+		case REDO: {
+			return MessageList.MESSAGE_REDO_HELP;
+		}
+		case BLOCK: {
+			return MessageList.MESSAGE_BLOCK_HELP;
+		}
+		case UNBLOCK: {
+			return MessageList.MESSAGE_UNBLOCK_HELP;
+		}
+		default: {
+			return MessageList.MESSAGE_INVALID;
+		}
+		}
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\HelpCommandListHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\LogicController.java
+	 */
+
+package logic;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import parser.CommandStringParser;
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Data;
+
+public class LogicController {
+	private Data smtData;
+	private static LogicController onlyMenu;
+
+	private LogicController() {
+		smtData = new Data();
+	}
+
+	public static LogicController getInstance() {
+		if (onlyMenu == null) {
+			onlyMenu = new LogicController();
+		}
+		return onlyMenu;
+	}
+
+	public String commandExecution(String input) {
+		Map<String, String> keyFieldsList = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
+		CommandType.Command_Types cmd = CommandStringParser.processString(
+				input, keyFieldsList);
+
+		switch (cmd) {
+
+		case ADD: {
+			return AddHandler.executeAdd(keyFieldsList, smtData);
+		}
+		case DISPLAY: {
+			return DisplayHandler.executeDisplay(keyFieldsList, smtData);
+		}
+		case DELETE: {
+			return DeleteHandler.executeDelete(keyFieldsList, smtData);
+		}
+		case INVALID: {
+			return MessageList.MESSAGE_INVALID;
+		}
+		case SEARCH: {
+			return SearchHandler.executeSearch(keyFieldsList, smtData);
+		}
+		case SORT: {
+			return SortHandler.executeSort(keyFieldsList, smtData);
+		}
+		case HELP: {
+			return HelpCommandListHandler.getCommandHelp(keyFieldsList);
+		}
+		case UPDATE: {
+			return UpdateHandler.executeUpdate(keyFieldsList, smtData);
+		}
+		case UNDO: {
+			return CacheCommandsHandler.executeUndo(smtData);
+		}
+		case REDO: {
+			return CacheCommandsHandler.executeRedo(smtData);
+
+		}
+		case BLOCK: {
+			return BlockDateHandler.executeBlockOrUnblock(keyFieldsList,
+					cmd.name(), smtData);
+		}
+		case UNBLOCK: {
+			return BlockDateHandler.executeBlockOrUnblock(keyFieldsList,
+					cmd.name(), smtData);
+		}
+		case EXIT: {
+			LockApp.unLockApp();
+			System.exit(0);
+			break;
+		}
+		default: {
+
+			return MessageList.MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED;
+		}
+		}
+
+		return MessageList.MESSAGE_LOGICCONTROLLER_NO_COMMAND;
+	}
+
+	public IndicatorMessagePair setUp() {
+		IndicatorMessagePair indicMsg = smtData.loadEveryThingFromFile();
+		CacheCommandsHandler.newHistory(smtData);
+		return indicMsg;
+	}
+
+	public String getHint(String userCmd) {
+		return HintHandler.executeHint(userCmd);
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\LogicController.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\SearchHandler.java
+	 */
+
+package logic;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+
+import parser.DateTimeParser;
+import utility.CommandType;
+import utility.KeywordType;
+import utility.MessageList;
+import utility.TaskLogging;
+import data.Data;
+import data.Task;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class SearchHandler {
+
+	private static final int KEYWORD = 1;
+	private static final int LENGTH_OF_INPUT = 2;
+	private static final int LENGTH_OF_ARGUMENTS = 1;
+	private static final int EXCEEDED_CRITERIA_LENGTH = 2;
+	private static final int NO_MATCH = 0;
+	
+	//Declaration for Logger
+	private static Logger taskLogger = TaskLogging.getInstance();
+
+	/**
+	 * 
+	 * @param keyFieldsList
+	 * @param listTask
+	 * @return
+	 */
+	public static String executeSearch(Map<String, String> keyFieldsList,
+			Data smtData) {
+
+		checkForValidData(keyFieldsList, smtData);
+
+		return searchTask(smtData, keyFieldsList);
+	}
+
+	/**
+	 * This method is to search task, further breakup the search by different
+	 * method
+	 * 
+	 * @param listTask
+	 * @param searchCriteria
+	 * @return
+	 */
+	private static String searchTask(Data smtData,
+			Map<String, String> searchCriteria) {
+
+		if (!searchCriteria
+				.containsKey(CommandType.Command_Types.SEARCH.name())) {
+			return MessageList.MESSAGE_INVALID_SEARCH;
+		}
+
+		String[] searchList = searchCriteria.get(
+				CommandType.Command_Types.SEARCH.name()).split(" ");
+		if (searchList.length < LENGTH_OF_INPUT) {
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
+		}
+
+		KeywordType.List_Keywords getKey = KeywordType
+				.getKeywordSearchWithIndexNum(searchList[0]);
+
+		switch (getKey) {
+		case TASKID:
+			return searchTaskID(searchList, smtData);
+		case TASKDESC:
+			return searchTaskDesc(smtData, searchList);
+		case BY:
+			return searchTaskDate(searchList, smtData);
+		default:
+			return MessageList.MESSAGE_INVALID_SEARCH;
+		}
+
+	}
+
+	/**
+	 * This is to check for a list of tasks with given deadLine
+	 * 
+	 * @param deadLine
+	 * @param listTask
+	 * @return
+	 */
+	private static String searchTaskDate(String[] deadLine, Data smtData) {
+		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS || deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
+		}
+
+		String searchDetails = "";
+		DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
+
+		if (endDate == null) {
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
+		}
+
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (smtData.getATask(i).getTaskEndDateTime() != null
+					&& smtData.getATask(i).getTaskEndDateTime().toLocalDate()
+							.equals(endDate.toLocalDate())
+					&& smtData.getATask(i).getDeadLineStatus())
+				searchDetails += smtData.getATask(i).toString() + "\n";
+		}
+		if (!searchDetails.isEmpty()) {
+			taskLogger.log(Level.INFO, "Search By Task Date");
+			return searchDetails;
+		} else {
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE,
+					deadLine[1]);
+		}
+	}
+
+	/**
+	 * Search Task by the task index
+	 * 
+	 * @param index
+	 * @param listTask
+	 * @return
+	 */
+	private static String searchTaskID(String[] index, Data smtData) {
+
+		if (index.length <= LENGTH_OF_ARGUMENTS || index.length > EXCEEDED_CRITERIA_LENGTH || !checkInteger(index[1])) {
+			return MessageList.MESSAGE_INVALID_SEARCH;
+		}
+
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (smtData.getATask(i).getTaskId() == Integer.parseInt(index[1])) {
+				return smtData.getATask(i).toString();
+			}
+		}
+		
+		// To log search operation
+		taskLogger.log(Level.INFO, "Search By Task ID");
+		return String
+				.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
+	}
+
+	/**
+	 * Search task by the task description
+	 * 
+	 * @param listTask
+	 * @param wordAbstracted
+	 * @return
+	 */
+	private static String searchTaskDesc(Data smtData, String[] wordList) {
+		if (wordList.length <= LENGTH_OF_INPUT) {
+			return MessageList.MESSAGE_INVALID_SEARCH;
+		}
+
+		String wordAbstracted = mergeStringInArray(wordList);
+		ArrayList<Task> tempList = new ArrayList<Task>();
+		for (int i = 0; i < smtData.getSize(); i++) {
+			if (smtData.getATask(i).getTaskDescription()
+					.contains(wordAbstracted)) {
+				tempList.add(smtData.getATask(i));
+			}
+		}
+		if (tempList.size() == NO_MATCH) {
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
+					wordAbstracted);
+		}
+		//To log search operation
+		taskLogger.log(Level.INFO, "Search By Task Description");
+		return displayTaskDetails(tempList);
+
+	}
+
+	//CHECK CORRECT NOT THE COMMENT
+	/**
+	 * concatinate the string together
+	 * @param wordList
+	 * @return
+	 */
+	private static String mergeStringInArray(String[] wordList) {
+		String mergedString = new String();
+		for (int i = 1; i < wordList.length; i++) {
+			mergedString += wordList[i] + " ";
+		}
+
+		return mergedString.trim();
+	}
+
+	/**
+	 * returning converted array list in String
+	 * 
+	 * @param displayTasksList
+	 * @return
+	 */
+	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
+		String taskDetails = "";
+		for (int i = 0; i < displayTasksList.size(); i++) {
+			taskDetails += displayTasksList.get(i).toString() + "\n";
+		}
+		return taskDetails;
+	}
+
+	/**
+	 * convert to integer
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private static boolean checkInteger(String text) {
+		try {
+			Integer.parseInt(text);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * This is to check if the search is valid
+	 * 
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
+	private static String checkForValidData(Map<String, String> keyFieldsList,
+			Data smtData) {
+		if (keyFieldsList == null) {
+			assert false : "The data object is null";
+		}
+
+		if (smtData == null) {
+			assert false : "The mapped object is null";
+		}
+		if (keyFieldsList.isEmpty()) {
+			return MessageList.MESSAGE_NULL;
+		}
+
+		if (keyFieldsList.size() != KEYWORD) {
+			return MessageList.MESSAGE_INVALID_SEARCH;
+		}
+		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\SearchHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\AddHandlerTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.AddHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import storage.FileStorage;
+//import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class AddHandlerTest {
+
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "taskListTest.txt";
+	String lastUnUsedFileName = "lastUnUsedIndexTest.txt";
+
+	@Before
+	public void setup() {
+		int year = 2015;
+		int month = 10;
+		int day = 5;
+		int hour = 0;
+		int min = 0;
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		FileStorage.setFileNameForLastUnusedIndex(lastUnUsedFileName);
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(
+				year, month, day, hour, min), new DateTime(year, month, day,
+				hour + 23, min), ""));
+
+	}
+
+	@After
+	public void tearDown() {
+		smtDataTest = null;
+		keyFieldsTest.clear();
+		File textList = new File(fileName);
+		textList.delete();
+		textList = new File(lastUnUsedFileName);
+		textList.delete();
+	}
+
+	/**
+	 * This is to test the correct format of adding in a task The output is :
+	 * Task ID: 4 Description: submit proposal End Time: 11.59 PM Deadline: 3
+	 * August, 2015 (Mon) status: Pending
+	 */
+	@Test
+	public void testAddWithDescRegular() {
+		keyFieldsTest.put("ADD", "submit proposal");
+		keyFieldsTest.put("BY", "03-08-2015");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: submit proposal\nEnd Time: 11.59 PM\nDeadline: 3 August, 2015 (Mon)\nStatus: Pending");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test the the adding of correct format but without date The
+	 * output of this test is: No Date Given
+	 */
+	@Test
+	public void testAddWithDescWithoutDate() {
+		keyFieldsTest.put("ADD", "Submit Proposal");
+		keyFieldsTest.put("BY", "");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test the adding of incorrect date format The output is : Date
+	 * Format is Incorrect
+	 */
+	@Test
+	public void testAddWithDescWithWrongDateFormat() {
+		keyFieldsTest.put("ADD", "Submit Report");
+		keyFieldsTest.put("BY", "03-March-2014");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test the adding of incorrect date format for month and year
+	 * position The output is : Date format is Incorrect
+	 */
+	@Test
+	public void testAddWithDescWithWrongDateFormatforMonth() {
+		keyFieldsTest.put("ADD", "Submit Report");
+		keyFieldsTest.put("BY", "03-2015-08");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test the adding of incorrect date format for the day in
+	 * alphabetical form The output of this test is : Date format is Incorrect
+	 */
+	@Test
+	public void testInvalidDate() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("BY", "AA-12-2015");
+		String expected = String
+				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task by using day instead of a specified date
+	 * The output is : Task ID: 4 Description: Submit Assignment End Time: 11.59
+	 * PM Deadline: 17 April, 2015 (Fri) Status: Pending"
+	 * 
+	 */
+	@Test
+	public void testAddByDay() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nEnd Time: 11.59 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task within a certain period of time The
+	 * output of is : Task ID: 4 Description: Submit Assignment Start Time:
+	 * 10.00 AM End Time: 12.00 PM\nDeadline: 17 April, 2015 (Fri) Status:
+	 * Pending
+	 */
+	@Test
+	public void testAddByTime() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "10am");
+		keyFieldsTest.put("TO", "12pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 AM\nEnd Time: 12.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task within a certain period of time The
+	 * output is: End Time is supposed to be later than the Start Time
+	 */
+	@Test
+	public void testAddInvalidTime() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "6pm");
+		keyFieldsTest.put("TO", "5pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String.format(MessageList.MESSAGE_TIME_MISMATCHED);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with missing time The output is : Please
+	 * specify the Start time and the End Time.
+	 */
+	@Test
+	public void testAddTimeIsEmpty() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "");
+		keyFieldsTest.put("TO", "");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String.format(MessageList.MESSAGE_TIME_SLOT_EMPTY);
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with missing AddTime for TO The output
+	 * is: This command is invalid
+	 */
+	@Test
+	public void testAddTimeWithMissingTOKeyword() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "3pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_INVALID_COMMAND;
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with missing AddTime for FROM The output
+	 * is: This command is invalid
+	 */
+	@Test
+	public void testAddTimeWithMissingFROM() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("TO", "3pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = MessageList.MESSAGE_INVALID_COMMAND;
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with the time in 10 pm format, adding a
+	 * space in between time and am or pm The output is : Task ID: 4
+	 * Description: Submit Assignment Start Time: 10.00 PM End Time: 11.00 PM
+	 * Deadline: 17 April, 2015 (Fri) Status: Pending
+	 */
+	@Test
+	public void testAddTimeInDifferentFormat() {
+		keyFieldsTest.put("ADD", "Submit Assignment");
+		keyFieldsTest.put("FROM", "10 pm");
+		keyFieldsTest.put("TO", "11 pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: Submit Assignment\nStart Time: 10.00 PM\nEnd Time: 11.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with the time in 10 pm format, adding a
+	 * space in between time and am or pm The output is : Invalid argument for
+	 * add command.\nPlease specify what to add
+	 */
+	@Test
+	public void testAddEmptyDescription() {
+		keyFieldsTest.put("ADD", "");
+		keyFieldsTest.put("FROM", "10 pm");
+		keyFieldsTest.put("TO", "11 pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION,
+				"add");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+	/**
+	 * This is to test adding the task, with the time in not whole number format
+	 * eg. 10.30pm The output is : Task ID: 4 Description: submit Start Time:
+	 * 10.30 PM End Time: 11.00 PM Deadline: 17 April, 2015 (Fri) Status: Pending");
+	 * Task added
+	 */
+	@Test
+	public void testAddTimeInBetween() {
+		keyFieldsTest.put("ADD", "submit");
+		keyFieldsTest.put("FROM", "10.30pm");
+		keyFieldsTest.put("TO", "11pm");
+		keyFieldsTest.put("BY", "Friday");
+		String expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 4\nDescription: submit\nStart Time: 10.30 PM\nEnd Time: 11.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected,
+				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\AddHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\BlockDateHandlerTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.BlockDateHandler;
+import logic.SearchHandler;
+
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class BlockDateHandlerTest {
+
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "listTaskTest.txt";
+
+	@Before
+	public void setUp() {
+		smtDataTest = new Data();
+		keyFieldsTest = new TreeMap<String, String>();
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(), new DateTime(), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
+				new DateTime(), ""));
+	}
+
+	/**
+	 * This is to test the block one date out of bounce(Eg. April do not have
+	 * 31st) The output is: Date Format is incorrect
+	 */
+	@Test
+	public void testBlockOneDateThatDoNotExist() {
+		keyFieldsTest.put("BLOCK", "31-04-2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the unblock one date out of bounce(Eg. April do not have
+	 * 31st) The output is: Date Format is incorrect
+	 */
+	@Test
+	public void testUnblockOneDateThatDoNotExist() {
+		keyFieldsTest.put("UNBLOCK", "31-04-2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the correct format of block one date The output is:
+	 * "19-04-2015" Blocked Successful
+	 */
+	@Test
+	public void testBlockOneDate() {
+		keyFieldsTest.put("BLOCK", "19-04-2015");
+		String expected = String.format(MessageList.MESSAGE_BLOCKED,
+				"19-04-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the correct format of the unblock one date The output is:
+	 * "19-04-2015"Unblocked Successful
+	 */
+
+	@Test
+	public void testUnBlockOneDate() {
+		keyFieldsTest.put("BLOCK", "19-04-2015");
+		BlockDateHandler.executeBlockOrUnblock(keyFieldsTest, "BLOCK",
+				smtDataTest);
+		keyFieldsTest.clear();
+		keyFieldsTest.put("UNBLOCK", "19-04-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED,
+				"19-04-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the blocking of range of date The output is: "19-04-2015"
+	 * to "25-04-2015" Unblocked Successful
+	 */
+
+	@Test
+	public void testBlockRangeOfDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "25-04-2015");
+		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE,
+				"19-04-2015", "25-04-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This to to test the blocking of date from a month extend into another
+	 * month The output is : "19-04-2015" to "01-05-2015" Blocked Successful
+	 */
+
+	@Test
+	public void testBlockRangeOfDateExtendToAnotherMonth() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "01-05-2015");
+		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE,
+				"19-04-2015", "01-05-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This to to test the unblocking of date from a month extend into another
+	 * month The output is : "19-04-2015" to "01-06-2015 "Unblocked Successful
+	 */
+	@Test
+	public void testUnBlockRangeOfDateExtendToAnotherMonth() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "01-06-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE,
+				"19-04-2015", "01-06-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the unblocking of a range of date The output is :
+	 * "19-04-2015" to "21-04-2015' Unblocked Successful
+	 */
+	@Test
+	public void testUnblockRangeOfDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "21-04-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE,
+				"19-04-2015", "21-04-2015");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect of block date format The output is: Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testInvalidBlockDate() {
+		keyFieldsTest.put("BLOCK", "100-04-2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect of unblock date format The output is: Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testInvalidUnBlockDate() {
+		keyFieldsTest.put("UNBLOCK", "100-04-2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the block date with no date enter The output is: No date
+	 * given.
+	 */
+	@Test
+	public void testEmptyBlockDate() {
+		keyFieldsTest.put("BLOCK", "");
+		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the unblock date with no date enter The output is: No
+	 * date given.
+	 */
+	@Test
+	public void testEmptyUnBlockDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		String expected = MessageList.MESSAGE_NO_DATE_GIVEN;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect date enter for unblock The output is: Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testIncorrectUnBlockDate() {
+		keyFieldsTest.put("UNBLOCK", "@#$%^&*^%$#$%^&");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect date enter for block The output is : Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testIncorrectBlockDate() {
+		keyFieldsTest.put("BLOCK", "!?/*");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the wrong Date format for block The output is : Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testWrongDateFormatForBlockDate() {
+		keyFieldsTest.put("BLOCK", "14 June 2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the wrong Date format for unblock The output is : Date
+	 * format is incorrect
+	 */
+	@Test
+	public void testWrongUnBlockDate() {
+		keyFieldsTest.put("UNBLOCK", "14 July 2015");
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect keyword input for block date The output is
+	 * : Invalid argument for Block/Unblock command.
+	 */
+	@Test
+	public void testIncorrectBlockDateKeyword() {
+		keyFieldsTest.put("VLOCK", "14-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "VLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect keyword input for unblock date The output
+	 * is : Invalid argument for Block/Unblock command.
+	 */
+	@Test
+	public void testWrongUnBlockDateKeyword() {
+		keyFieldsTest.put("UNVLOCK", "14-07-2015");
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Block/Unblock");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNVLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the Invalid start date for block range of date The output
+	 * is : Wrong date format for Start date
+	 */
+
+	@Test
+	public void testInvalidForStartDateForBlockRangeOfDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "100-04-2015");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the Invalid end date for block range of date The output
+	 * is : Wrong date format for End date
+	 */
+
+	@Test
+	public void testInvalidForEndDateForBlockRangeOfDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "25-04-2015");
+		keyFieldsTest.put("TO", "200-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the Invalid start date for unblock range of date The
+	 * output is : Wrong date format for Start date
+	 */
+	@Test
+	public void testInvalidForStartDateForUnblockRangeOfDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", "100-04-2015");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the Invalid keyword for unblock range of date The output
+	 * is :Invalid argument for Block/Unblock command.
+	 */
+
+	@Test
+	public void testInvalidUnblockRangeOfDate() {
+		keyFieldsTest.put("UNBLOCKKK", "");
+		keyFieldsTest.put("FROM", "10-04-2015");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Block/Unblock");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCKKK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+	}
+
+	/**
+	 * This is to test the invalid keyword for block for range of date The
+	 * output is : Invalid argument for Block/Unblock command.
+	 */
+	@Test
+	public void testInvalidBlockRangeOfDate() {
+		keyFieldsTest.put("BLOCCCKKK", "");
+		keyFieldsTest.put("FROM", "10-04-2015");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Block/Unblock");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCCCKKK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the invalid keyword FROM for range of date The output is
+	 * : Invalid argument for Block/Unblock command.
+	 */
+
+	@Test
+	public void testWrongKeywordFrom() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROMM", "10-04-2015");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = String.format(
+				MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD, "Block/Unblock");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the invalid keyword TO for range of date The output is :
+	 * Invalid argument for Block/Unblock command.
+	 */
+
+	@Test
+	public void testWrongKeywordTo() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "10-04-2015");
+		keyFieldsTest.put("T0", "20-04-2015");
+		String expected = String.format(
+				MessageList.MESSAGE_BLOCK_INCORRECT_KEYWORD, "Block/Unblock");
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the startDate being empty for the block date range The
+	 * output is : Wrong date format for Start date
+	 */
+	@Test
+	public void testEmptyForBlockStartDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", " ");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the end Date being empty for the block date range The
+	 * output is : Wrong date format for End date
+	 */
+	@Test
+	public void testEmptyForRangeBlockEndDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "20-04-2015");
+		keyFieldsTest.put("TO", " ");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the end Date being empty for the unblock date range The
+	 * output is : Wrong date format for Start date
+	 */
+	@Test
+	public void testEmptyForRangeUNnblockStartDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", " ");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the unblock to date is empty The output is : Wrong date
+	 * format for End date
+	 */
+	@Test
+	public void testEmptyForRangeUnblockEndDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", "20-04-2015");
+		keyFieldsTest.put("TO", " ");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect block start date The output is : Wrong date
+	 * format for Start date
+	 */
+	@Test
+	public void testIncorrectInputForRangeBlockStartDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "------====");
+		keyFieldsTest.put("TO", "20-04-2015");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect block end date The output is : Wrong date
+	 * format for End date
+	 */
+	@Test
+	public void testIncorrectInputForRangeBlockEndtDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "20-04-2015");
+		keyFieldsTest.put("TO", "!@#$%^$$^*%^&$");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect unblock end date The output is : Wrong date
+	 * format for End date
+	 */
+	@Test
+	public void testIncorrectInputForRangeUnBlockEndDate() {
+		keyFieldsTest.put("UNBLOCK", "");
+		keyFieldsTest.put("FROM", "20-04-2015");
+		keyFieldsTest.put("TO", "!@#$%^&@#$%^@#$%^");
+		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "UNBLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the incorrect unblock end date The output is : Wrong date
+	 * format for End date
+	 */
+	@Test
+	public void testBlockStartDateIsLaterThanEndDate() {
+		keyFieldsTest.put("BLOCK", "");
+		keyFieldsTest.put("FROM", "20-05-2015");
+		keyFieldsTest.put("TO", "10-05-2015");
+		String expected = MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END;
+		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+				keyFieldsTest, "BLOCK", smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	// GOT PROBLEM
+	/**
+	 * This is to test the blocking the blocked date again
+	 * */
+
+	// @Test
+	// public void testBlockingTheBlockedDate() {
+	// keyFieldsTest.put("BLOCK", "");
+	// keyFieldsTest.put("FROM", "20-06-2015");
+	// keyFieldsTest.put("TO", "30-06-2015");
+	// keyFieldsTest.put("BLOCK", "25-06-2015");
+	// String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+	// assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+	// keyFieldsTest, "BLOCK", smtDataTest));
+	// SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	// }
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\BlockDateHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\LogicControllerTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+
+import logic.LogicController;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import storage.FileStorage;
+import utility.MessageList;
+
+public class LogicControllerTest {
+
+	LogicController controller;
+	String expected;
+	String fileName = "taskListTest.txt";
+	String fileNameLastUnusedIndex = "lastUnusedIndexTest.txt";
+	String fileNameBlockedDateList = "blockedDateList.txt";
+
+	/* add sample tasks */
+	String task1 = "Add submit report by 18-06-2015";
+	String task2 = "Add attending meeting by 20-05-2015";
+	String task3 = "Add prepare a proposal by 14-05-2015";
+	String task12 = "Add ";
+
+	/* block sample tasks */
+	String task4 = "Block 18-07-2015";
+	String task5 = "Block from 14-05-2015 to 20-05-2015";
+	String task6 = "Delete 1";
+	String task7 = "redo";
+	String task8 = "block 18-06-2015";
+	String task10 = "Block ";
+
+	/* unblock sample tasks */
+	String task11 = "Unblock ";
+
+	/* delete sample task */
+	String task13 = "Delete ";
+
+	/* update sample task */
+	String task14 = "Update ";
+
+	/* display sample task */
+	String task15 = "Display ";
+
+	/* search sample task */
+	String task16 = "Search ";
+
+	/* sort sample task */
+	String task17 = "Sort ";
+
+	/* redo sample task */
+	String task18 = "add submit EE2024 assignment2 by 20-08-2015";
+	String task19 = "add submit developer guide by 21-05-2015";
+	String task20 = "undo";
+	String task21 = "redo";
+
+	/* add test */
+	String addValidTask = "Add submit report by Fri";
+	String addValidWeeklyTask = "Add submit report every Fri";
+	String addValidFromTimeToTimeTask = "Add attend meeting from 11am to 12pm by Fri";
+	String addInvalidTask = "Add submit report by when";
+	String addByandOnAtSameTask = "Add submit assignment by monday and report on tuesday";
+	String addEmpty = "";
+
+	/* delete test */
+	String deleteValidTask = "Delete 1";
+	String deleteInvalidTask = "Delete a";
+	String deleteNoSuchTask = "Delete 100";
+
+	/* update test */
+	String updateValidTask = "update 1 taskdesc submit a report by mon";
+	String updateValidWeeklyTask = "update 2 every monday";
+	String updateValidFromTimeToTimeTask = "update 3 from 10am to 1pm";
+	String updateInvalidNoSuchTask = "update 8 from 10am to 1pm";
+	String updateInvalidTimeMismatchTask = "update 1 from 2pm to 1pm";
+	String updateInvalidWeeklyTask = "update 1 every when";
+	String updateInvalidDescTask = "update 1 submit";
+
+	/* display test */
+	String displayPendingValid = "display Pending";
+	String displayScheduleValid = "display Schedule";
+	String displayCompletedValid = "display Completed";
+	String displayTodayValid = "display Today";
+	String displayPendingInvalid = "display[ending";
+	String displayScheduleInvalid = "display Schefule";
+	String displayCompletedInvalid = "display xomplete";
+	String displayTodayInvalid = "display T0day";
+
+	/* search test */
+	String searchTaskByID = "search 1 1";
+	String searchTaskByDesc = "search 2 attending meeting";
+	String searchTaskByDate = "search 3 14-05-2015";
+	String searchTaskByIncorrectID = "search 1 14-05-2015";
+	String searchTaskByIncorrectDate = "search 3 a-05-2015";
+	String searchTaskByNegativeIndex = "search -2 meeting Professor";
+	String searchTaskByNumberDesc = "search 2 !}{JHKDKJH1";
+	String searchTaskByDateIncorrectFormat = "search 14 May 2015";
+	String searchTaskByDatePastYear = "search 14 May 1992";
+
+	/* sort test */
+	String sortTaskInvalid = "s0rt";
+	String sortDescValid = "Sort Description";
+	String sortDeadLineValid = "Sort Deadline";
+	String sortStartDateValid = "Sort StartDate";
+	String sortCompletedValid = "Sort Completed";
+	String sortPendingValid = "Sort Pending";
+	String sortPendingInvalid = "Sort StartDate";
+
+	/* undo test */
+	String undoTaskValid = "undo";
+	String undoTaskInvalid = "und0";
+
+	/* redo test */
+	String redoTaskValid = "redo";
+	String redoTaskInvalid = "red0";
+	String redoLastTask = "redo";
+
+	/* Block Task */
+	String BlockOneDateTaskValid = "Block 18-07-2015";
+	String BlockRangeOfDateValid = "Block from 19-08-2015 to 30-08-2015";
+	String BlockDateClashes = "Block 18-06-2015";
+	String BlockDateOnlyRestrictedToAMonthValid = "Block from 10-06-2015  to 09-07-2015";
+	String BlockDateOverOneMonthInvalid = "Block from 10-07-2015 to 12-09-2015";
+	String BlockDateExceedTwoYears = "Block from 10-06-2018 to 19-06-2018";
+	String BlockWrongDateFormatEnd = "Block from 20-07-2015 to 80 Auguest 2o15";
+	String BlockWrongDateFormatStart = "Block from 1o-o7-2o15 to 12-07-2015";
+	String BlockEndDateIsEarlierThanStart = "block from 10-06-2015 to 08-06-2015";
+	String BlockEmpty = " ";
+
+	/* Unblock test */
+	String UnblockOneDateTaskValid = "Unblock 18-07-2015";
+	String UnblockRangeOfDateValid = "Unblock from 19-07-2015 to 30-07-2015";
+	String UnblockInvalidDate = "Unblock from 20-07-2015 to 40 August 2015";
+
+	@Before
+	public void setUp() throws Exception {
+
+		expected = new String();
+		controller = LogicController.getInstance();
+		FileStorage.setFileNameForTasksList(fileName);
+		FileStorage.setFileNameForLastUnusedIndex(fileNameLastUnusedIndex);
+		FileStorage.setFileNameForBlockedDatesList(fileNameBlockedDateList);
+		controller.setUp();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		File textList = new File(fileName);
+		textList.delete();
+
+		textList = new File(fileNameLastUnusedIndex);
+		textList.delete();
+
+		textList = new File(fileNameBlockedDateList);
+		textList.delete();
+
+	}
+
+	/**
+	 * This is to test adding a empty content The output is : Invalid argument
+	 * for add command. Please specify what to add";
+	 */
+	@Test
+	public void testAddEmpty() {
+		expected = String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION, "add");
+		assertEquals(expected, controller.commandExecution(task12));
+	}
+
+	/**
+	 * This is to test the adding new task The output is : Task ID: 1
+	 * Description: submit report End Time: 11.59 PM Deadline: 17 April, 2015
+	 * (Fri) Status: Pending
+	 */
+	@Test
+	public void testAddNewTaskValid() {
+		expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected, controller.commandExecution(addValidTask));
+	}
+
+	/**
+	 * This is to test the adding recurring task The output is : New Task
+	 * TaskID: 5 Description: submit report Every:fri Status:Pending Added
+	 */
+	@Test
+	public void testAddNewTaskWeeklyValid() {
+		expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 1\nDescription: submit report\nEvery: Fri\nStatus: Pending");
+		assertEquals(expected, controller.commandExecution(addValidWeeklyTask));
+	}
+
+	/**
+	 * This is to test the adding new task for a specific time The output is :
+	 * New Task Task ID: 1 Description: attend meeting Start Time: 11.00AM End
+	 * Time: 12.00 PM Deadline: 17 April, 2015 (Fri) Status: Pending Task ID:1
+	 * Description: attend meeting Start Time: 11.00 AM
+	 */
+	@Test
+	public void testAddNewTaskFromTimeToTimeValid() {
+		expected = String
+				.format(MessageList.MESSAGE_ADDED,
+						"\nTask ID: 1\nDescription: attend meeting\nStart Time: 11.00 AM\nEnd Time: 12.00 PM\nDeadline: 17 April, 2015 (Fri)\nStatus: Pending");
+		assertEquals(expected,
+				controller.commandExecution(addValidFromTimeToTimeTask));
+	}
+
+	/**
+	 * This is to test the adding of invalid task The output is : Date format is
+	 * incorrect
+	 */
+	@Test
+	public void testAddNewTaskInValid() {
+		expected = String.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT,
+				"Add");
+		assertEquals(expected, controller.commandExecution(addInvalidTask));
+	}
+
+	/**
+	 * This is to test the add by and on in a single task The output is : Only
+	 * one date can be added for a single task.
+	 */
+	@Test
+	public void addByandOnAtSameTask() {
+		expected = String.format(MessageList.MESSAGE_NO_WEEKLY_DEADLINE);
+		assertEquals(expected,
+				controller.commandExecution(addByandOnAtSameTask));
+	}
+
+	/**
+	 * This is to test when the delete is empty The output is There is no file
+	 * to be deleted
+	 */
+	@Test
+	public void testDeleteEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_FILE_DELETED);
+		assertEquals(expected, controller.commandExecution(task13));
+	}
+
+	/**
+	 * This is to test delete task The output is : deleted from
+	 * defaultTaskList.txt:"Add submit report by Mon".
+	 */
+	@Test
+	public void testDeleteTaskValid() {
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\nDeleted";
+				
+				//FileStorage.getFileNameForTasksList(), "submit report");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		controller.commandExecution(task4);
+		assertEquals(expected, controller.commandExecution(deleteValidTask));
+	}
+
+	/**
+	 * This is to test invalid delete task The output is : Invalid delete
+	 * arguments
+	 */
+	@Test
+	public void testDeleteInValid() {
+		expected = MessageList.MESSAGE_INVALID_DELETE;
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(deleteInvalidTask));
+	}
+
+	/**
+	 * This is to test delete task that do not exist The output is : There is no
+	 * file to be deleted
+	 */
+	@Test
+	public void testDeleteTaskNotExist() {
+		expected = MessageList.MESSAGE_NO_FILE_DELETED;
+		assertEquals(expected, controller.commandExecution(deleteNoSuchTask));
+	}
+
+	/**
+	 * This is to test the update with no input The output is : There is no task
+	 * in the list.
+	 */
+	@Test
+	public void testUpdateEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_TASK_IN_LIST);
+		assertEquals(expected, controller.commandExecution(task14));
+	}
+
+	/**
+	 * This is to test update task The output is : Update successful.
+	 */
+	@Test
+	public void testUpdateValid() {
+		expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 1\nDescription: submit a report\nEnd Time: 11.59 PM\nDeadline: 13 April, 2015 (Mon)\nStatus: Pending");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(updateValidTask));
+	}
+
+	/**
+	 * This is to test update task to recurring The output is : Update
+	 * successful.
+	 */
+	@Test
+	public void testUpdateWeeklyValid() {
+		expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: No specified date.\nEvery: monday\nStatus: Pending");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateValidWeeklyTask));
+	}
+
+	/**
+	 * This is to test update task for a specific time The output is : Update
+	 * successful.
+	 */
+	@Test
+	public void testUpdateFromTimeToTimeValid() {
+		expected = String
+				.format(MessageList.MESSAGE_UPDATE_SUCCESS,
+						"\nTask ID: 3\nDescription: prepare a proposal\nStart Time: 10.00 AM\nEnd Time: 1.00 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateValidFromTimeToTimeTask));
+	}
+
+	/**
+	 * This is to test update task that do not exist The output is : Task does
+	 * not exist.
+	 */
+
+	@Test
+	public void testUpdateInValidNoSuch() {
+		expected = MessageList.MESSAGE_NO_SUCH_TASK;
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateInvalidNoSuchTask));
+	}
+
+	/**
+	 * This is to test update Invalid time mismatch The output is : Start Time
+	 * and End Time conflicts.
+	 */
+
+	@Test
+	public void testUpdateInValidTimeMismatch() {
+		expected = MessageList.MESSAGE_TIME_WRONG_FLOW;
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateInvalidTimeMismatchTask));
+	}
+
+	/**
+	 * This is to test update Invalid recurring task The output is : Wrong date
+	 * format for Weekly date
+	 */
+	@Test
+	public void testUpdateInValidWeeklyTask() {
+		expected = String.format(MessageList.MESSAGE_WRONG_DATE_FORMAT,
+				"Weekly");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateInvalidWeeklyTask));
+	}
+
+	/**
+	 * This is to test update Invalid task by description The output is :
+	 * Invalid argument for Update command.
+	 */
+	@Test
+	public void testUpdateInValidDescTask() {
+		expected = String
+				.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Update");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(updateInvalidDescTask));
+	}
+
+	/**
+	 * This is to test when the search is empty The output is : Invalid argument
+	 * for search command Please specify what to search.
+	 */
+
+	@Test
+	public void testSearchEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH_CRITERIA);
+		assertEquals(expected, controller.commandExecution(task16));
+	}
+
+	/**
+	 * This is to test search task by ID The output is : Task ID: 1 Description:
+	 * submit report Deadline: 18 May, 2015 (Mon) Status: Pending";
+	 */
+	@Test
+	public void testSearchTaskByIDValid() {
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(searchTaskByID));
+	}
+
+	/**
+	 * This is to test search task by Date The output is : Task ID: 3
+	 * Description: prepare a proposal Deadline: 14 May, 2015 (Thu) Status:
+	 * Pending
+	 */
+	@Test
+	public void testSearchTaskByDateValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(searchTaskByDate));
+	}
+
+	/**
+	 * This is to test search task by Description The output is : "Task ID: 2
+	 * Description: attending meeting Deadline: 19 May, 2015 (Tue) Status:
+	 * Pending
+	 */
+	@Test
+	public void testSearchTaskDescValid() {
+		expected = "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(searchTaskByDesc));
+	}
+
+	/**
+	 * This is to test search task by invalid ID The output is : Invalid
+	 * argument for search command Please specify what to search.
+	 */
+	@Test
+	public void testSearchTaskByIDInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH_CRITERIA);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByIncorrectDate));
+	}
+
+	/**
+	 * This is to test search task by invalid Date The output is : Search format
+	 * is invalid, please look at our hint or enter help keyword for
+	 * assistance";
+	 */
+	@Test
+	public void testSearchTaskByDateInvalid() {
+		expected = MessageList.MESSAGE_INVALID_SEARCH;
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByIncorrectID));
+	}
+
+	/**
+	 * This is to test search task by invalid Description The output is : Search
+	 * format is invalid, please look at our hint or enter help keyword for
+	 * assistance";
+	 */
+	@Test
+	public void testSearchTaskDescInvalid() {
+		expected = MessageList.MESSAGE_INVALID_SEARCH;
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByIncorrectID));
+	}
+
+	/**
+	 * This is to test search task with negative index The output is : Search
+	 * format is invalid, please look at our hint or enter help keyword for
+	 * assistance";
+	 */
+	@Test
+	public void testSearchTaskIDWithNegativeIndex() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByNegativeIndex));
+	}
+
+	/**
+	 * This is to test search task by description that do not exist The output
+	 * is : Description !}{JHKDKJH1 not found.
+	 */
+	@Test
+	public void testSearchTaskByDescNonExist() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH,
+				"!}{JHKDKJH1");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByNumberDesc));
+	}
+
+	/**
+	 * This is to test search task by date with incorrect format The output is :
+	 * Search format is invalid, please look at our hint or enter help keyword
+	 * for assistance";
+	 */
+	@Test
+	public void testSearchTaskByDatetIncorrectFormat() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByDateIncorrectFormat));
+	}
+
+	/**
+	 * This is to test search task with past year The output is : Search format
+	 * is invalid, please look at our hint or enter help keyword for
+	 * assistance";
+	 */
+	@Test
+	public void testSearchTaskByDatePastYear() {
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(searchTaskByDatePastYear));
+	}
+
+	/**
+	 * This is to test when the display is empty The output is : Invalid
+	 * argument for update command.
+	 */
+
+	@Test
+	public void testDisplayEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
+		assertEquals(expected, controller.commandExecution(task15));
+	}
+
+	/**
+	 * This is to test display pending of task The output is : Task ID:1
+	 * Description: submit report Deadline: 18
+	 */
+	@Test
+	public void testDisplayPendingValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(displayPendingValid));
+	}
+
+	/**
+	 * This is to test display of schedule The output is : Task ID: 1
+	 * Description: submit report Deadline: 6 April, 2015 (Mon) Status: Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 7 April, 2015 (Tue)
+	 * Status: Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending";
+	 */
+	@Test
+	public void testDisplayScheduleValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\n"
+				+ "End Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(displayPendingValid));
+	}
+
+	/**
+	 * This is to test display Completed task The output is : There is no task
+	 * in the display list.
+	 */
+	@Test
+	public void testDisplayCompletedValid() {
+		expected = "There is no task in the display list.";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(displayCompletedValid));
+
+	}
+
+	/**
+	 * This is to test display Today task The output is : There is no task in
+	 * the display list.
+	 */
+	@Test
+	public void testDisplayTodayValid() {
+		expected = "There is no task in the display list.";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(displayTodayValid));
+	}
+
+	/**
+	 * This is to test display Invalid pending task The output is : Please enter
+	 * a valid command.
+	 */
+	@Test
+	public void testDisplayPendingInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(displayPendingInvalid));
+	}
+
+	/**
+	 * This is to test display Invalid Schedule task The output is : Please
+	 * enter a valid command.
+	 */
+	@Test
+	public void testDisplayScheduleInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(displayPendingInvalid));
+	}
+
+	/**
+	 * This is to test display Invalid Completed task The output is : Invalid
+	 * argument for Display command
+	 */
+	@Test
+	public void testDisplayCompletedInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected,
+				controller.commandExecution(displayCompletedInvalid));
+
+	}
+
+	/**
+	 * This is to test display Invalid Today task The output is : Invalid
+	 * argument for Display command.
+	 */
+	@Test
+	public void testDisplayTodayInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT,
+				"Display");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(displayTodayInvalid));
+	}
+
+	/**
+	 * This is to test sort with no input The output is : Invalid argument for
+	 * Sort command.
+	 * 
+	 */
+
+	@Test
+	public void testSortEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		assertEquals(expected, controller.commandExecution(task17));
+	}
+
+	/**
+	 * This is to test sort task by description The output is : Task ID: 2
+	 * Description: attending meeting Deadline: 19 May, 2015 (Tue) Status:
+	 * Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May,2015 (Thu)
+	 * Status: Pending
+	 * 
+	 * Task ID: 1Description: submit report Deadline: 18 May, 2015 (Mon) Status:
+	 * Pending
+	 */
+	@Test
+	public void testSortDescValid() {
+		expected = "\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortDescValid));
+	}
+
+	/**
+	 * This is to test sort completed task The output is : Task ID: 1
+	 * Description: submit report Deadline: 18 May, 2015 (Mon) Status: Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 19 May,2015 (Tue)
+	 * Status: Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending
+	 */
+	@Test
+	public void testSortCompletedValid() {
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)"
+				+ "\nStatus: Pending\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortCompletedValid));
+	}
+
+	/**
+	 * This is to test sort pending task The output is : Task ID: 1 Description:
+	 * submit report Deadline: 18 May, 2015 (Mon) Status: Pending Task ID: 2
+	 * Description: attending meeting Deadline: 19 May,2015 (Tue) Status:
+	 * Pending
+	 * 
+	 * Task ID: 3 Description: prepare a proposal Deadline: 14 May, 2015 (Thu)
+	 * Status: Pending
+	 */
+	@Test
+	public void testSortPendingValid() {
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortPendingValid));
+	}
+
+	/**
+	 * This is to test the sorting by deadline The output is Task ID: 3
+	 * Description: prepare a proposal Deadline: 14 May, 2015 (Thu) Status:
+	 * Pending
+	 * 
+	 * Task ID: 2 Description: attending meeting Deadline: 20 May, 2015 (Wed)
+	 * Status: Pending
+	 * 
+	 * Task ID: 1 Description: submit report Deadline: 18 June, 2015 (Thu)
+	 * Status: Pending";
+	 */
+
+	@Test
+	public void testSortDeadlineValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
+	}
+
+	@Test
+	public void testUndoEmpty() {
+		expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		assertEquals(expected, controller.commandExecution(task17));
+	}
+
+	/**
+	 * This is to test the valid undo The output is : Undo operation done
+	 */
+
+	@Test
+	public void testUndoValid() {
+		expected = String.format(MessageList.MESSAGE_UNDO_SUCCESS);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(undoTaskValid));
+	}
+
+	/**
+	 * This is to test the invalid undo The out put is : Please enter a valid
+	 * command.
+	 */
+
+	@Test
+	public void testUndoInvalid() {
+		expected = String.format(MessageList.MESSAGE_INVALID);
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(undoTaskInvalid));
+	}
+	/**
+	 * This is to test the redo when the list is empty
+	 * The output is : Last command in the list. Could not perform redo
+	 */
+	@Test
+	public void testRedoEmpty() {
+		expected = String.format(MessageList.MESSAGE_LAST_COMMAND);
+		controller.commandExecution(task21);
+		assertEquals(expected, controller.commandExecution(redoTaskValid));
+	}
+	
+	/**
+	 * This is to test wrong spelling of the command redo to red0
+	 * The output is : Please enter a valid command.
+	 */
+	@Test
+	public void testRedoIncorrectCommand() {
+		expected = String.format(MessageList.MESSAGE_INVALID);
+		controller.commandExecution(task21);
+		assertEquals(expected, controller.commandExecution(redoTaskInvalid));
+	}
+	
+	/**
+	 * This is to test the redo successfully
+	 * The output is : Redo operation done.
+	 */
+	@Test
+	public void testRedoValid() {
+		expected = String.format(MessageList.MESSAGE_REDO_SUCCESS);
+		controller.commandExecution(task18);
+		controller.commandExecution(task19);
+		controller.commandExecution(task20);
+		assertEquals(expected, controller.commandExecution(redoTaskValid));
+	}
+	
+	/**
+	 * This is to test the block with no date input
+	 * The output is No date given.
+	 */
+
+	@Test
+	public void testBlockEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_DATE_GIVEN,
+				"No date given");
+		assertEquals(expected, controller.commandExecution(task10));
+	}
+	
+	/**
+	 * This is to test the blocking successfully of a day
+	 * The output is : "18-07-2015" Blocked Successfully
+	 */
+	@Test
+	public void testBlockOndDateValid() {
+		expected = String.format(MessageList.MESSAGE_BLOCKED, "18-07-2015");
+		assertEquals(expected,
+				controller.commandExecution(BlockOneDateTaskValid));
+	}
+
+	/**
+	 * This is to test the range of valid blocked date The output is :
+	 * "19-08-2015" to "30-08-2015" Blocked Successfully.
+	 */
+	@Test
+	public void testBlockRangeOfDateValid() {
+		expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE,
+				"19-08-2015", "30-08-2015");
+		assertEquals(expected,
+				controller.commandExecution(BlockRangeOfDateValid));
+	}
+
+	/**
+	 * This is to test the date to block already have task on that date. The
+	 * output is : "18-06-2015" already exist.
+	 */
+	@Test
+	public void testblockDateThatHaveClashes() {
+		expected = String.format(MessageList.MESSAGE_BLOCK_DATE_ALREADY_EXIST,
+				"18-06-2015");
+		controller.commandExecution(task1);
+		controller.commandExecution(task8);
+		assertEquals(expected, controller.commandExecution(BlockDateClashes));
+
+	}
+
+	/**
+	 * This is to test the block date whether it is within 31 days period The
+	 * output is : "10-06-2015" to "09-07-2015" Blocked Successfully.
+	 */
+	@Test
+	public void testblockDateWithinAMonthValid() {
+		expected = String.format(MessageList.MESSAGE_BLOCKED,
+				"10-06-2015\" to \"09-07-2015");
+		assertEquals(expected,
+				controller
+						.commandExecution(BlockDateOnlyRestrictedToAMonthValid));
+	}
+
+	/**
+	 * This is to test block date exceeded 31 days The output is : "10-07-2015"
+	 * to "12-09-2015" has exceeded 31 days.
+	 */
+	@Test
+	public void testBlockDateWithinAMonthInvalid() {
+		expected = String.format(
+				MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, "10-07-2015",
+				"12-09-2015");
+		assertEquals(expected,
+				controller.commandExecution(BlockDateOverOneMonthInvalid));
+	}
+
+	/**
+	 * This is to test the block date has exceeded two years The output is :
+	 * Blocking of dates only allow up to 2 years starting from "10-06-2015"
+	 */
+
+	@Test
+	public void testBlockDateExceedTwoYears() {
+		expected = String.format(MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
+				"10-06-2018");
+		assertEquals(expected,
+				controller.commandExecution(BlockDateExceedTwoYears));
+	}
+
+	/**
+	 * This is to test the end block date invalid The output is : Wrong date
+	 * format for End date
+	 */
+	@Test
+	public void testBlockDateInvalid() {
+		expected = String.format(
+				MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END,
+				"Wrong date format for End date");
+		assertEquals(expected,
+				controller.commandExecution(BlockWrongDateFormatEnd));
+	}
+
+	/**
+	 * This is to test the start block date invalid The output is : Wrong date
+	 * format for Start date
+	 */
+	@Test
+	public void testStartBlockDateInvalid() {
+		expected = String.format(
+				MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_START,
+				"Wrong date format for Start date");
+		assertEquals(expected,
+				controller.commandExecution(BlockWrongDateFormatStart));
+	}
+	
+	/**
+	 * This is to test the block end date is earlier than the start date
+	 * The output is : Start Date should not be later than End Date
+	 */
+	@Test
+	public void testBlockEndDateIsEarlierThanStart() {
+		expected = String
+				.format(MessageList.MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END);
+		assertEquals(expected,
+				controller.commandExecution(BlockEndDateIsEarlierThanStart));
+	}
+	
+	/**
+	 * This is to test no date input for unblock
+	 * The output is : No date given.
+	 */
+	@Test
+	public void testUnblockEmpty() {
+		expected = String.format(MessageList.MESSAGE_NO_DATE_GIVEN,
+				"No date given");
+		assertEquals(expected, controller.commandExecution(task11));
+	}
+
+	/**
+	 * This is to test the unblock range of date which is valid The output is :
+	 * "19-07-2015" to "30-07-2015" Unblocked Successfully.
+	 * 
+	 */
+	@Test
+	public void testUnblockRangeOfDateValid() {
+		expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE,
+				"19-07-2015", "30-07-2015");
+		assertEquals(expected,
+				controller.commandExecution(UnblockRangeOfDateValid));
+	}
+
+	/**
+	 * This is to test unblocking of a single date The output is : "18-07-2015"
+	 * Unblocked Successfully
+	 */
+	@Test
+	public void testUnblockOneDateValid() {
+		expected = String.format(MessageList.MESSAGE_UNBLOCKED, "18-07-2015");
+		controller.commandExecution(task4);
+		assertEquals(expected,
+				controller.commandExecution(UnblockOneDateTaskValid));
+	}
+
+	/**
+	 * This is to test invalid unblocking date format The output is : Wrong date
+	 * format for Start date
+	 */
+	@Test
+	public void testUnblockRangeOfDateInvalid() {
+		expected = String
+				.format(MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END);
+		assertEquals(expected, controller.commandExecution(UnblockInvalidDate));
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\LogicControllerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\SearchHandlerTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.SearchHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class SearchHandlerTest {
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "listTaskTest.txt";
+
+	@Before
+	public void setUp() {
+		int year = 2015;
+		int month = 6;
+		int day = 3;
+		int hour = 0;
+		int min = 0;
+		smtDataTest = new Data();
+		keyFieldsTest = new TreeMap<String, String>(
+				String.CASE_INSENSITIVE_ORDER);
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(
+				year, month, day, hour, min), new DateTime(year, month, day,
+				hour + 23, min), ""));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+
+		keyFieldsTest.clear();
+	}
+
+	/**
+	 * This is to test the search task using the keyword taskDesc The output is:
+	 * EE2024 report proposal
+	 */
+	@Test
+	public void testSearchWithRegularTaskDesc() {
+		keyFieldsTest.put("SEARCH", "2 EE2024 report proposal");
+		String expected = String.format(
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
+				"EE2024 report proposal");
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search task using the keyword taskId The output is:
+	 * Invalid argument for search command Please specify what to search.
+	 */
+	@Test
+	public void testSearchWithRegularTaskId() {
+		keyFieldsTest.put("SEARCH", "1");
+		keyFieldsTest.put("1", "");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search when there is no matching task The output is :
+	 * ID 8 not found.
+	 */
+	@Test
+	public void testSearchWithNoMatch() {
+		keyFieldsTest.put("SEARCH", "1 8");
+		String expected = String.format(
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, "8");
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search by the deadline The output is: Date 03-06-2015
+	 * not found.
+	 */
+	@Test
+	public void testSearchWithDeadLine() {
+		keyFieldsTest.put("SEARCH", "3 03-06-2015");
+		String expected = String.format(
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE, "03-06-2015");
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search by deadline which do not match with any task
+	 * user have in the list The output is: Date 14-03-2016 not found
+	 */
+	@Test
+	public void testSearchWithInvalidDeadLine() {
+		keyFieldsTest.put("SEARCH", "3 14-03-2016");
+		String expected = String.format(
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE, "14-03-2016");
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search without any description added to the search
+	 * task The output is: Description 14-03-2015 not found.
+	 */
+	@Test
+	public void testSearchWithWrongFormatForTaskDesc() {
+		keyFieldsTest.put("SEARCH", "2 14-03-2015");
+		String expected = String.format(
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC, "14-03-2015");
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to search if user did not key in any keyword and any input The
+	 * output is: Search format is invalid, please look at our hint enter help
+	 * keyword for assistance
+	 */
+	@Test
+	public void testSearchWithEmptyTask() {
+		keyFieldsTest.put("SEARCH", "");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test if the search keyword key in by user is TaskId which do
+	 * not match with the input search entered by user which is description The
+	 * output is: Search format is invalid, please look at our hint or enter
+	 * help keyword for assistance";
+	 */
+	@Test
+	public void testSearchWithIncorrectTaskIdCommand() {
+		keyFieldsTest.put("SEARCH", "a Assignment1");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test if the search keyword key in by user is TaskDesc which do
+	 * not match with the input search entered by user which is deadline The
+	 * output is: Search format is invalid, please look at our hint or enter
+	 * help keyword for assistance
+	 */
+	@Test
+	public void testSearchWithIncorrectTaskDescCommand() {
+		keyFieldsTest.put("SEACH", "2 1");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test if the search keyword key in by user is Deadline which do
+	 * not match with the input search entered by user which is taskId The
+	 * output is: Search format is wrong, please look at our hint or enter help
+	 * keyword for assistance
+	 */
+	@Test
+	public void testSearchWithIncorrectDeadLineCommand() {
+		keyFieldsTest.put("SEACH", "3, 1");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+	/**
+	 * This is to test the search with negative index output is: Search format
+	 * is wrong, please look at our hint or enter help keyword for assistance
+	 */
+	@Test
+	public void testSearchWithNegativeIndex() {
+		keyFieldsTest.put("SEACH", "3, -1");
+		String expected = MessageList.MESSAGE_INVALID_SEARCH;
+		assertEquals(expected,
+				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
+		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	}
+
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\SearchHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
+	 */
+
+	/**
+	 * These message are for HelpCommandList class
+	 */
+	public static final String MESSAGE_HELP = "************************************************************************************"
+			+ "\n\n1) Add\n\n- Add <Description>\n- Add <Description> from <Date> to <Date>"
+			+ "\n-Add <Description> every <Date>\n\n 2) Delete\n\n- Delete <Task #>\n\n "
+			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
+			+ "\n- Update <Task #> By <Date/Day>"
+			+ "\n- Update <Task #> Complete"
+			+ "\n- Update <Task #> Incomplete"
+			+ "\n- Update<Task #> TaskEnd <date>"
+			+ "\n- Update<Task #>TaskStart <date>"
+			+ "\n- Update<Task #> Every <Friday>"
+			+ "\n- Update<Task #> By date or weekly day\n\n"
+			+ "4) Delete\n\n- Delete <#>\n\n"
+			+ "5) Display \n\n- Display Today [tdy] "
+			+ "\n- Display Tomorrow [tmr]"
+			+ "\n- Display monday [mon]"
+			+ "\n- Display tuesday [tue]"
+			+ "\n- Display wednesday [wed]"
+			+ "\n- Display thursday [thu]"
+			+ "\n- Display friday [fri]"
+			+ "\n- Display saturday [sat]"
+			+ "\n- Display sunday [sun]"
+			+ "\n- Display Pending[pend]"
+			+ "\n- Display Schedule"
+			+ "\n- Display Complete[comp]\n\n "
+			+ "6) Search\n\n- Search by Task ID "
+			+ "\n Search 1 <Task #> "
+			+ "\n Search by Task Description"
+			+ "\n- Search 2 <Task Description>"
+			+ "\n- Search 3 <Date>\n\n "
+			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
+			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
+			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
+			+ "10) Undo\n\n -Undo\n\n "
+			+ "11) Redo\n\n************************************************************************************";
+
+	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>"
+			+ "\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>"
+			+ "\n\n- Add <Description> every <Date>";
+	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
+	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
+	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
+	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
+			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
+			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
+	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
+			+ "- Display Yesterday [ytd]\n\n- Display Thisweek [thiswk]\n\n"
+			+ "- Display Lastweek [lastwk]\n\n- Display Nextweek [nextweek]\n\n"
+			+ "- Display Monday [mon]\n\n- Display Tuesday [tue]\n\n- Display Wednesday [wed]\n\n"
+			+ "- Display Thursday [thu]\n\n- Display Friday [fri]\n\n- Display Saturday [sat]\n\n"
+			+ "- Display Sunday [sun]\n\n- Display Pending [pend]\n\n- Display Completed [comp]";
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort Completed [comp]"
+			+ "\n\n- Sort Pending [pend]";
+	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
+			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
+	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
+	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
+	public static final String MESSAGE_REDO_HELP = "- Redo\n\n";
+
+	/**
+	 * These message are for the AddHandler Class
+	 */
+	public static final String MESSAGE_ADDED = "New Task %1$s\nAdded";
+	public static final String MESSAGE_ADD_NO_DESCRIPTION = "Invalid argument for %1$s command.\nPlease specify what to add";
+	public static final String MESSAGE_TIME_MISMATCHED = "End Time is supposed to be later than the Start Time";
+	public static final String MESSAGE_TIME_SLOT_EMPTY = "Please specify the Start time and the End Time.";
+
+	/**
+	 * These message are for SearchHandler class
+	 */
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_DESC = "Description %1$s\nnot found.";
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_DATE = "Date %1$s\nnot found.";
+	public static final String MESSAGE_NO_MATCH_FOUND_BY_ID = "ID %s\nnot found.";
+	public static final String MESSAGE_INVALID_SEARCH = "Search format is invalid, please look at our hint or"
+			+ "\nenter help keyword for assistance";
+	public static final String MESSAGE_INVALID_SEARCH_CRITERIA = "Invalid argument for search command\nPlease specify what to search.";
+
+	/**
+	 * These message are for BlockDate class
+	 */
+	public static final String MESSAGE_BLOCK_NO_SPECIFICATION = "Please Enter a Valid Date";
+	public static final String MESSAGE_BLOCKED = "\"%1$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED = "\"%1$s\"\nUnblocked Successfully";
+	public static final String MESSAGE_BLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nBlocked Successfully";
+	public static final String MESSAGE_UNBLOCKED_RANGE = "\"%1$s\" to \"%2$s\"\nUnblocked Successfully";
+	public static final String MESSAGE_BLOCK_SPECIFICATION = "Please Enter a Valid Start Date and End Date";
+	public static final String MESSAGE_BLOCK_INCORRECT_KEYWORD = "Please Enter a Valid Command";
+	public static final String MESSAGE_BLOCK_INCORRECT_START_EARLIER_THAN_END = "Start Date should not be later than End Date";
+	public static final String MESSAGE_BLOCK_DATE_DO_NOT_EXIST = "\"%1$s\" is not inside the block list";
+	public static final String MESSAGE_BLOCK_DATE_ALREADY_EXIST = "\"%1$s\" already exist";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_END = "Wrong date format for End date";
+	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START = "Wrong date format for Start date";
+	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
+	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list, "
+			+ "\nthe date you trying to block is already occupied";
+	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s is ocuppied\n";
+	public static final String MESSAGE_UNBLOCKED_DATE_NOT_EXIST = "%1$s is not inside the block list";
+	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "\"%s\", \"%s\""
+			+ "\n%s days are occupied, please select other dates.";
+	public static final String MESSAGE_UNBLOCKED_DATE_NOT_BLOCKED = "\"%s\", \"%s\""
+			+ "\n%s dates has never been block.";
+	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
+	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days.";
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
+
+
+
+
+

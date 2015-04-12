@@ -1,0 +1,1359 @@
+//@author: a0112502a
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\CacheCommandsHandler.java
+	 */
+
+package logic;
+
+import java.util.Stack;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Data;
+
+/**
+ * This class is doing the undo and re-do operation
+ *
+ */
+
+public class CacheCommandsHandler {
+
+	/**
+	 * Declaration of constant variables
+	 */
+	private static Stack<Data> current = new Stack<Data>();
+	private static Stack<Data> aheadCmds = new Stack<Data>();
+	private static String cacheCommandStatus = "";
+	private static String result = "";
+
+	/**
+	 * This method will do an undo operation
+	 * @param fileName will get this fileName from the menu class
+	 * @param listTask contains the list of current tasks
+	 * @param msgPair to indicate the message type
+	 * @return message depending on situation met
+	 */
+	public static String executeUndo(Data smtData) {
+		
+		// check if smtData is null or empty
+		if(smtData == null){
+			assert false : "Data is null";
+		}
+		
+		if (isStackContainsOneItem()) {
+			return MessageList.MESSAGE_NO_PREVIOUS_COMMAND;
+		}
+
+		// pop out the latest operation from current and push to aheadCmds
+		aheadCmds.push(current.pop());
+		cacheCommandStatus = "undo";
+
+		return updateTaskList(smtData);
+	}
+	
+	public static String executeRedo(Data smtData) {
+		
+		if(isStackContainsLastItem()) {
+			return MessageList.MESSAGE_LAST_COMMAND;
+		}
+		
+		current.push(aheadCmds.pop());
+		cacheCommandStatus = "redo";
+		
+		return updateTaskList(smtData);
+	}
+	
+	private static boolean isStackContainsLastItem() {
+		if(aheadCmds.size() == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\CacheCommandsHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\CacheCommandsHandler.java
+	 */
+
+	/**
+	 * This method will check whether stack contains one item
+	 * @return true if current stack contains one item, return false if current stack contains more or less than one
+	 */
+	private static boolean isStackContainsOneItem() {
+		if(current.size() == 1){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * This method will update the task list
+	 * @param smtData contains the whole information including the task list
+	 * @return result to indicate undo and re-do successfully
+	 */
+	private static String updateTaskList(Data smtData) {
+		if(current.isEmpty()){
+			return MessageList.MESSAGE_ERROR;
+		}
+			
+		smtData.setListTask(current.peek().getListTask());
+
+		// this will call updateLastUnUsedIndex and updatedBlockedOutDates to update the last unused index and the dates blocked
+		updateLastUnUsedIndex(smtData);
+		updatedBlockedOutDates(smtData);
+		
+		// write to file the updated task list to file
+		IndicatorMessagePair indicMsg = smtData.writeTaskListToFile();
+
+		if (!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
+		if(cacheCommandStatus.equals("undo")) {
+			result = MessageList.MESSAGE_UNDO_SUCCESS;
+		} else if(cacheCommandStatus.equals("redo")) {
+			result = MessageList.MESSAGE_REDO_SUCCESS;
+		}
+		
+		return result;
+	}
+
+	/**
+	 * This method will update the latest unused index
+	 * @param smtData contains the whole information including the task list
+	 */
+	private static void updateLastUnUsedIndex(Data smtData) {
+		Data prevIndex;
+
+		prevIndex = current.peek();
+		smtData.setLastUnUsedIndex(prevIndex.getLastUnUsedIndex());
+
+		// write to file the updated last unused index to file
+		smtData.writeLastUnUsedIndexToFile();
+	}
+	
+	/**
+	 * This method will update the blocked out dates
+	 * @param smtData contains the whole information including the task list
+	 */
+	private static void updatedBlockedOutDates(Data smtData){
+		smtData.setBlockedDateTimeList(current.peek().getBlockedDateTimeList());
+		smtData.writeBlockedDateTimeListToFile();
+	}
+
+	/**
+	 * This method will add a new history to current stack and clear the aheadCmds stack
+	 * @param smtData contains the whole information including the task list
+	 */
+	public static void newHistory(Data smtData) {
+		Data newData = createData(smtData);
+		current.push(newData);
+		aheadCmds.clear();
+	}
+
+	/**
+	 * This method will create a new data for set the blocked date, last unused index and list task
+	 * @param smtData contains the whole information including the task list
+	 * @return newData created
+	 */
+	private static Data createData(Data smtData) {
+		Data newData = new Data();
+		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
+		newData.setLastUnUsedIndex(smtData.getLastUnUsedIndex());
+		newData.setListTask(smtData.getListTask());
+		return newData;
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\CacheCommandsHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\DeleteHandler.java
+	 */
+
+package logic;
+
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+import utility.CommandType;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import utility.TaskLogging;
+import data.Data;
+import data.Task;
+
+/**
+ * This class is doing the delete operation
+ *
+ */
+
+public class DeleteHandler {
+
+	/**
+	 * Declaration for constant variable and Logger
+	 */
+    private static Logger taskLogger = TaskLogging.getInstance();
+    private static int length = 0;
+    private static int size = 1;
+	
+    /**
+     * This method is to check if the input is integer
+     * @param text input that user have typed in
+     * @return true if input is integer, false if input is not integer
+     */
+	private static boolean checkInteger(String text){
+		try{
+			Integer.parseInt(text);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * This method is use to execute the delete operation
+	 * @param keyFieldsList contains the list of keyword and the data it has
+	 * @param smtData contains the whole information including the task list
+	 * @return accordingly to the condition met
+	 */
+	public static String executeDelete(Map<String, String> keyFieldsList, Data smtData) {
+
+		// Local declaration
+		int i;
+		int index;
+		
+		if(smtData == null){
+			assert false : "Data object is null";
+		}
+		
+		if(keyFieldsList == null){
+			assert false : "Map object is null";
+		}
+		
+		if(keyFieldsList == null || keyFieldsList.isEmpty()){
+			return MessageList.MESSAGE_INVALID_DELETE;
+		}
+		
+		if(smtData == null || smtData.getListTask().isEmpty()){
+			return MessageList.MESSAGE_NO_FILE_DELETED;
+		}
+		
+		if(!(keyFieldsList.size() == size) || !(checkInteger(keyFieldsList.get(CommandType.Command_Types.DELETE.name())))){
+			return MessageList.MESSAGE_INVALID_DELETE;
+		}
+		
+		// converting command type from string into integer
+		index = Integer.parseInt(keyFieldsList.get(CommandType.Command_Types.DELETE.name()));
+		
+		// will search the task id from the list and delete the task
+		for(i = 0; i < smtData.getSize(); i++){
+			if(smtData.getListTask().get(i).getTaskId() == index){
+				break;
+			}
+		}
+		
+		// will execute the checkTaskIDSize
+		return checkTaskIDSize(smtData, i);
+	}
+
+	/**
+	 * This method is to check if user input's task id to be delete is more than or equal to 0, 
+	 * and check if it is lesser than the list task size
+	 * @param smtData contains the whole information including the task list
+	 * @param taskId number assigned to each task 
+	 * @return delete success message if taskId is lesser than 0 and list task size
+	 */
+	private static String checkTaskIDSize(Data smtData, int taskId) {
+		// Local declaration
+		Task removedText;
+		
+		if(taskId >= length && taskId < smtData.getListTask().size())
+		{
+			IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+			removedText = smtData.removeATaskFromList(taskId, indicMsg);
+			
+			if(!indicMsg.isTrue()){
+				return indicMsg.getMessage();
+			}
+			
+			indicMsg = new IndicatorMessagePair();
+			indicMsg = smtData.writeTaskListToFile();
+			
+			if(!indicMsg.isTrue()){
+				return indicMsg.getMessage();
+			}
+			
+			// this will call the CacheCommandsHandler and update the history of the list
+			CacheCommandsHandler.newHistory(smtData);
+			
+			// to log delete operation
+            taskLogger.log(Level.INFO, "Task ID deleted: " + removedText.getTaskId());
+			
+            return String.format(removedText.toString() + "\nDeleted");
+            //return String.format(MessageList.MESSAGE_DELETE_SUCCESS, FileStorage.getFileNameForTasksList(), removedText.getTaskDescription());
+		}
+			
+		return MessageList.MESSAGE_NO_FILE_DELETED;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\DeleteHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\HintHandler.java
+	 */
+
+package logic;
+
+import utility.CommandType.Command_Types;
+import utility.MessageList;
+import utility.CommandType;
+
+/**
+ * This class will be executing the hint operation, which will act as the command assistance to the user.
+ *
+ */
+
+public class HintHandler {
+
+	/**
+	 * This method will execute the hint
+	 * @param userCmd command that user have typed in so far
+	 * @return 
+	 */
+	public static String executeHint(String userCmd) {
+		return getMessageTyping(userCmd);
+	}
+
+	/**
+	 * This method will get what the user has typed in so far
+	 * @param userCmd
+	 * @return
+	 */
+	public static String getMessageTyping(String userCmd) {
+
+		String listOfHint = "";
+		
+		// if command entered by the user is null, do assertion
+		if(userCmd == null){
+			assert false : "No command has been entered";
+		}
+
+		// if there is no command entered by the user, return invalid message
+		if (isCommandInvalid(userCmd)) {
+			return MessageList.MESSAGE_HINT_INVALID;
+		}
+
+		String[] userCmdList = userCmd.split(" ");
+	
+		// check if commands entered by the user starts with any of the command type
+		for (Command_Types aCmd : CommandType.Command_Types.values()) {
+			if (aCmd.name().startsWith(userCmdList[0].toUpperCase())) {
+				listOfHint += HelpCommandListHandler.getCommandType(aCmd) + "\n";
+			}
+		}
+
+		return listOfHint;
+	}
+
+	/**
+	 * This method is use to check if the command is valid or invalid
+	 * @param userCmd command that user have typed in so far
+	 * @return true if command is invalid, otherwise return false
+	 */
+	public static boolean isCommandInvalid(String userCmd) {
+
+		boolean isCommandNull = (userCmd == null);
+		boolean isCommandEmpty = !isCommandNull && userCmd.trim().isEmpty();
+		boolean isCommandInvalid = isCommandNull || isCommandEmpty;
+
+		return isCommandInvalid;
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\HintHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\SmtSurvival.java
+	 */
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.events.KeyAdapter;
+
+import logic.CommandEnteredHistoryHandler;
+import logic.LockApp;
+import logic.LogicController;
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+
+/**
+ * This class is for the UI 
+ *
+ */
+
+public class SmtSurvival extends Composite {
+
+	/**
+	 * Declare the constant variables
+	 */
+	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+	private Composite composite = null;
+	private Composite compositeBackground;
+	private CTabFolder displayTaskFolder;
+	private CTabItem tabMain;
+	private CTabItem tabAll;
+	private CTabItem tabToday;
+	private CTabItem tabCompleted;
+	private CTabItem tabPending;
+	private CTabItem tabBlocked;
+	private Label lblMain;
+	private Label lblAll;
+	private Label lblToday;
+	private Label lblCompleted;
+	private Label lblPending;
+	private Label lblBlocked;
+	private ScrolledComposite scMain;
+	private ScrolledComposite scAll;
+	private ScrolledComposite scToday;
+	private ScrolledComposite scCompleted;
+	private ScrolledComposite scPending;
+	private ScrolledComposite scBlocked;
+	private static LogicController controller;
+	private Combo combo;
+	private static String savedExistingContents = new String();
+	private static boolean flagForSwitchTab = false;
+	private static String saveCurrentCommand = new String();
+
+	/**
+	 * Create the composite
+	 * @param parent of the composite created
+	 * @param style value describing its behavior and appearance
+	 */
+	public SmtSurvival(Composite parent, int style) {
+		super(parent, style);
+		setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				toolkit.dispose();
+			}
+		});
+
+		// this is to create the background by calling the backgroundComposite method
+		backgroundComposite();
+		
+		// this is to create the tab folder by calling the tabFolder method
+		tabFolder();
+
+		// this will create the tab items by calling the corresponding method for the tab
+		createTabMain();
+		createTabAll();
+		createTabToday();
+		createTabCompleted();
+		createTabPending();
+		createTabBlocked();
+
+		displayTaskFolder.setSelection(tabMain);
+		tabMain.setControl(scMain);
+
+		// this is to create the combo box by calling the comboBox method
+		comboBox();
+	}
+
+	/**
+	 * This method is to create the tab "blocked"
+	 */
+	private void createTabBlocked() {
+		/* Blocked Tab */
+		tabBlocked = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabBlocked.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabBlocked.setText("Blocked");
+		tabBlocked.setToolTipText("Select this tab to show the Blocked tasks");
+
+		scBlocked = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scBlocked, SWT.None);
+		lblBlocked = new Label(composite, SWT.NONE);
+		
+		tabItem(scBlocked, tabBlocked, lblBlocked);
+		lblBlocked.setForeground(SWTResourceManager.getColor(255, 0, 0));
+		lblBlocked.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblBlocked.setText("This page is for Blocked Tasks");
+	}
+
+	/**
+	 * This method is to create the tab "pending"
+	 */
+	private void createTabPending() {
+		/* Pending Tab */
+		tabPending = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabPending.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabPending.setText("Pending");
+		tabPending.setToolTipText("Select this tab to show the Pending tasks");
+
+		scPending = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scPending, SWT.None);
+		lblPending = new Label(composite, SWT.NONE);
+		
+		tabItem(scPending, tabPending, lblPending);
+		lblPending.setForeground(SWTResourceManager.getColor(255, 102, 0));
+		lblPending.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblPending.setText("This page is for Pending Tasks");
+	}
+
+	/**
+	 * This method is to create the tab "completed"
+	 */
+	private void createTabCompleted() {
+		/* Completed Tab */
+		tabCompleted = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabCompleted.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabCompleted.setText("Completed");
+		tabCompleted.setToolTipText("Select this tab to show the Completed tasks");
+
+		scCompleted = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scCompleted, SWT.None);
+		lblCompleted = new Label(composite, SWT.NONE);
+	}
+
+	/**
+	 * This method is to create the tab "today"
+	 */
+	private void createTabToday() {
+		/* Today Tab */
+		tabToday = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabToday.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabToday.setText("Today");
+		tabToday.setToolTipText("Select this tab to show the Today's tasks");
+
+		scToday = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scToday, SWT.None);
+		lblToday = new Label(composite, SWT.NONE);
+		
+		tabItem(scToday, tabToday, lblToday);
+		lblToday.setForeground(SWTResourceManager.getColor(128, 0, 128));
+		lblToday.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblToday.setText("This page is for Today's Tasks");
+	}
+
+	/**
+	 * This method is to create the tab "all"
+	 */
+	private void createTabAll() {
+		/* All Tab */
+		tabAll = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabAll.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabAll.setText("All");
+		tabAll.setToolTipText("Select this tab to show all tasks");
+
+		scAll = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scAll, SWT.None);
+		lblAll = new Label(composite, SWT.NONE);
+		
+		tabItem(scAll, tabAll, lblAll);
+		lblAll.setForeground(SWTResourceManager.getColor(0, 128, 128));
+		lblAll.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblAll.setText("This page is for All Tasks");
+	}
+
+	/**
+	 * This method is to create the tab "main"
+	 */
+	private void createTabMain() {
+		/* Main Tab */
+		tabMain = new CTabItem(displayTaskFolder, SWT.NONE);
+		tabMain.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		tabMain.setText("Main");
+		tabMain.setToolTipText("Select this tab to show the Main page");
+
+		scMain = new ScrolledComposite(displayTaskFolder, SWT.BORDER | SWT.V_SCROLL);
+		composite = new Composite(scMain, SWT.None);
+		lblMain = new Label(composite, SWT.NONE);
+		
+		tabItem(scMain, tabMain, lblMain);
+		lblMain.setForeground(SWTResourceManager.getColor(30, 144, 255));
+		lblMain.setFont(SWTResourceManager.getFont("Century Gothic", 11, SWT.BOLD));
+		lblMain.setAlignment(SWT.CENTER);
+		lblMain.setText("Welcome to Smart Management Tool");
+	}
+
+	/**
+	 * This method is to create the combo box
+	 */
+	private void comboBox() {
+		combo = new Combo(compositeBackground, SWT.NONE);
+		combo.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		combo.setLocation(10, 10);
+		combo.setSize(435, 28);
+		combo.setText("Enter command here");
+		combo.setToolTipText("Enter command to manage your tasks");
+		
+		combo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				switchTabControl(e);
+				loadCommandHistory(e);
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				passControl(e);
+			}
+		});
+		
+		toolkit.adapt(combo);
+		toolkit.paintBordersFor(combo);
+		combo.setFocus();
+
+		displayTaskFolder.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				tabControl(event);
+			}
+		});
+	}
+	
+	/**
+	 * This method is to create the tab item
+	 * @param scReceived received the corresponding scrolled composite
+	 * @param tabReceived received the corresponding tab item
+	 * @param lblReceived received the corresponding label
+	 */
+	public void tabItem(ScrolledComposite scReceived, CTabItem tabReceived, Label lblReceived){
+		scReceived.setShowFocusedControl(true);
+		tabReceived.setControl(scReceived);
+		composite.setLayout(new FillLayout());
+		composite.setSize(435, 452);
+		
+		scReceived.setContent(composite);
+		scMouseWheel(scReceived);
+		scReceived.setExpandVertical(true);
+		scReceived.setFocus();
+		scReceived.setMinSize(composite.computeSize(2000, 2000));
+	}
+
+	/**
+	 * This method is use to create tab folder
+	 */
+	private void tabFolder() {
+		displayTaskFolder = new CTabFolder(compositeBackground, SWT.BORDER);
+		displayTaskFolder.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		displayTaskFolder.setLocation(10, 44);
+		displayTaskFolder.setSize(435, 401);
+		displayTaskFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		toolkit.adapt(displayTaskFolder);
+		toolkit.paintBordersFor(displayTaskFolder);
+	}
+
+	/**
+	 * This method is use to create the background using composite
+	 */
+	private void backgroundComposite() {
+		compositeBackground = new Composite(this, SWT.NONE);
+		compositeBackground.setBackground(SWTResourceManager.getColor(102, 153,
+				204));
+		compositeBackground.setBounds(0, 0, 454, 465);
+	}
+
+	/**
+	 * This method is to activate the Mouse Wheel for the scroll composite
+	 * @param scReceived received the corresponding scrolled composite
+	 */
+	private void scMouseWheel(final ScrolledComposite scReceived) {
+		scReceived.addListener(SWT.Activate, new Listener() {
+			public void handleEvent(Event e) {
+				scReceived.setFocus();
+			}
+		});
+	}
+
+	/**
+	 * This method is to get the selection of the corresponding tab and set the tab control by calling setTabControl method
+	 * @param event of the selection event
+	 */
+	private void tabControl(SelectionEvent event) {
+
+		lblMain = new Label(displayTaskFolder, SWT.NONE);
+
+		if (displayTaskFolder.getSelection() == tabMain) {
+			setTabControl(tabMain, lblMain, scMain, savedExistingContents);
+		} else if (displayTaskFolder.getSelection() == tabAll) {
+			setTabControl(tabAll, lblAll, scAll, "Display All");
+		} else if (displayTaskFolder.getSelection() == tabToday) {
+			setTabControl(tabToday, lblToday, scToday, "Display Today");
+		} else if (displayTaskFolder.getSelection() == tabCompleted) {
+			setTabControl(tabCompleted, lblCompleted, scCompleted,
+					"Display Completed");
+		} else if (displayTaskFolder.getSelection() == tabPending) {
+			setTabControl(tabPending, lblPending, scPending, "Display Pending");
+		} else if (displayTaskFolder.getSelection() == tabBlocked) {
+			setTabControl(tabBlocked, lblBlocked, scBlocked, "Display Block");
+		}
+	}
+
+	/**
+	 * This method is to pass control to the logic component's menu class to
+	 * read the output from the command text box
+	 * @param e represent the keyboard event
+	 */
+	private void passControl(KeyEvent e) {
+
+		String output = new String();
+
+		if ((e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
+				&& combo.getSelectionIndex() == -1) {
+			CommandEnteredHistoryHandler.newCommandEntered(saveCurrentCommand);
+			setTabControl(tabMain, lblMain, scMain, saveCurrentCommand);
+			combo.removeAll();
+			lblMain.setAlignment(SWT.LEFT);
+			savedExistingContents = lblMain.getText();
+		} else if (combo.getSelectionIndex() > -1) {
+			// do nth
+		} else if (!flagForSwitchTab && (e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN)) {
+
+			output = controller.getHint(combo.getText());
+			displayTaskFolder.setSelection(tabMain);
+
+			if (combo.getItemCount() > 0) {
+				combo.remove(0, combo.getItemCount() - 1);
+			}
+
+			if (output.contains(MessageList.MESSAGE_HINT_INVALID)
+					|| output.contains(MessageList.MESSAGE_INVALID)) {
+				combo.setListVisible(false);
+				return;
+			}
+
+			String[] outputArr = output.split("\n");
+			for (String indiString : outputArr) {
+				combo.add(indiString);
+			}
+
+			if (outputArr.length > 0 && !output.isEmpty()) {
+				combo.setListVisible(true);
+			} else {
+				combo.setListVisible(false);
+			}
+			saveCurrentCommand = combo.getText();
+			savedExistingContents = lblMain.getText();
+		}
+
+	}
+
+	/**
+	 * This method will help to switch the tab control using short cut key
+	 * @param e represent the keyboard event
+	 */
+	private void switchTabControl(KeyEvent e) {
+		flagForSwitchTab = true;
+		
+		if ((((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '1'))) {
+			displayTaskFolder.setSelection(tabMain);
+			lblMain.setText(savedExistingContents);
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '2')) {
+			setTabControl(tabAll, lblAll, scAll, "Display All");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '3')) {
+			flagForSwitchTab = true;
+			setTabControl(tabToday, lblToday, scToday, "Display Today");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '4')) {
+			setTabControl(tabCompleted, lblCompleted, scCompleted,
+					"Display Completed");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '5')) {
+			setTabControl(tabPending, lblPending, scPending, "Display Pending");
+		} else if (((e.stateMask & SWT.ALT) == SWT.ALT) && (e.keyCode == '6')) {
+			setTabControl(tabBlocked, lblBlocked, scBlocked, "Display Block");
+		} else if ((e.stateMask & SWT.ALT) == SWT.ALT) {
+			// do nothing
+		} else {
+			flagForSwitchTab = false;
+		}
+	}
+
+	/**
+	 * This method is to set the control of the tab
+	 * @param tabReceived receive the corresponding tab item
+	 * @param lblReceive receive the corresponding label
+	 * @param scReceived receive the corresponding scroll composite
+	 * @param command is the command that user have typed in
+	 */
+	private void setTabControl(CTabItem tabReceived, Label lblReceived,
+			ScrolledComposite scReceived, String command) {
+		displayTaskFolder.setSelection(tabReceived);
+		tabReceived.setControl(scReceived);
+		lblReceived.setText(controller.commandExecution(command));
+	}
+
+	/**
+	 * This method will load the command history so that user can use the up
+	 * down button for execution
+	 * @param e represent the keyboard event
+	 */
+	private void loadCommandHistory(KeyEvent e) {
+
+		if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_LEFT) {
+			combo.select(-1);
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getPrevCmd()));
+			saveCurrentCommand = combo.getText();
+		} else if (((e.stateMask & SWT.SHIFT) == SWT.SHIFT) && e.keyCode == SWT.ARROW_RIGHT) {
+			combo.select(-1);
+			combo.setText(CommandEnteredHistoryHandler.retrieveCommand(CommandEnteredHistoryHandler.getAfterCmd()));
+			saveCurrentCommand = combo.getText();
+		}
+	}
+	
+	/**
+	 * This method is to set up the files
+	 */
+	private static void setUpFiles() {
+		controller = LogicController.getInstance();
+		IndicatorMessagePair msgPair = controller.setUp();
+
+		if (!msgPair.isTrue()) {
+			MessageList.printErrorMessageAndExit(msgPair.getMessage());
+		}
+	}
+
+	/**
+	 * This is the main method
+	 * @param args is an array of String objects
+	 */
+	public static void main(String[] args) {
+		Display display = new Display();
+		Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
+		shell.setText("Smart Management Tool");
+		
+		// this will prevent user from launching the program when one is running
+		LockApp.checkExistingApp();
+		
+		// this will open the shell and start up the program
+		shellOpen(shell);
+
+		// this will call to set up files by
+		setUpFiles();
+
+		// run the event loop as long as the window is open
+		while (!shell.isDisposed()) {
+			
+			// read the next OS event queue and transfer it to a SWT event
+			if (!display.readAndDispatch())
+				// if there are currently no other OS event to process
+				// sleep until the next OS event is available
+				display.sleep();
+		}
+		
+		// this will release the program
+		LockApp.unLockApp();
+		
+		// disposes all associated windows and their components
+		display.dispose();
+	}
+
+	private static void shellOpen(Shell shell) {
+		shell.open();
+		SmtSurvival Smt = new SmtSurvival(shell, SWT.NONE);
+		Smt.pack();
+		shell.pack();
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\SmtSurvival.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DeleteHandlerTest.java
+	 */
+
+package unit_testing;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+import logic.DeleteHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.DateTimeParser;
+import storage.FileStorage;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+/**
+ * This class is the junit testing for the delete operation
+ *
+ */
+
+public class DeleteHandlerTest {
+
+	String fileName = "testfile.txt";
+	Data smtDataTest;
+	TreeMap<String, String> keyFieldsTest;
+	ArrayList<Task> taskList;
+	
+	@Before
+	public void setUp() {
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		DateTime startDate = DateTimeParser.generateDate("30/8/2015");
+		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
+		keyFieldsTest = new TreeMap<String, String>();
+		taskList = new ArrayList<Task>();
+		
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal", startDate, endDate, ""));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah", null, null, ""));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", startDate, endDate, ""));
+	}
+
+	@After
+	public void tearDown() {
+		keyFieldsTest.clear();
+		taskList.clear();
+	}
+	
+	// This is to test normal deletion
+	@Test
+	public void testDeleteWithIDRegular() {
+		keyFieldsTest.put("DELETE", "2");
+		String expected = String.format("\nTask ID: 2\nDescription: Submit report to Ms Sarah\nStatus: Pending\nDeleted");
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	// This is to test if user can delete with an empty input
+	@Test
+	public void testDeleteWithIDEmpty(){
+		smtDataTest.clearTaskList();
+		keyFieldsTest.put("DELETE", "");
+		String expected = MessageList.MESSAGE_NO_FILE_DELETED;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	// This is to test if the ID that user has keyed in is invalid
+	@Test
+	public void testDeleteWithIDInvalid(){
+		keyFieldsTest.put("DELETE", "4abc");
+		String expected = MessageList.MESSAGE_INVALID_DELETE;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	//This is to test if user can delete with multiple ID
+	@Test
+	public void testDeleteWithMultipleID(){
+		keyFieldsTest.put("DELETE", "1 2");
+		String expected = MessageList.MESSAGE_INVALID_DELETE;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+	
+	// This is to test if the ID entered by user is out of bound
+	@Test
+	public void testDeleteOutOfBound() {
+		keyFieldsTest.put("DELETE", "4");
+		String expected = MessageList.MESSAGE_NO_FILE_DELETED;
+		assertEquals(expected, DeleteHandler.executeDelete(keyFieldsTest, smtDataTest));
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DeleteHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\HintHandlerTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+import logic.HintHandler;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import utility.MessageList;
+
+public class HintHandlerTest {
+	
+	@Before
+	public void setUp() {
+	}
+
+	@After
+	public void tearDown() {
+	}
+	
+	/**************************************************** Testing valid command ****************************************************/
+	
+	// This is to test normal hint with word add valid
+	@Test
+	public void testHintWithWordAddValid1(){
+		String input = "a";
+		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordAddValid2() {
+		String input = "ad";
+		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordAddValid3() {
+		String input = "add";
+		String expected = MessageList.MESSAGE_ADD_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word delete valid
+	@Test
+	public void testHintWithWordDeleteValid1(){
+		String input = "de";
+		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordDeleteValid2(){
+		String input = "del";
+		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordDeleteValid3(){
+		String input = "delete";
+		String expected = MessageList.MESSAGE_DELETE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word display valid
+	@Test
+	public void testHintWithWordDisplayValid1(){
+		String input = "di";
+		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordDisplayValid2(){
+		String input = "dis";
+		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordDisplayValid3(){
+		String input = "display";
+		String expected = MessageList.MESSAGE_DISPLAY_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word update valid
+	@Test
+	public void testHintWithWordUpdateValid1(){
+		String input = "up";
+		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordUpdateValid2(){
+		String input = "upd";
+		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordUpdateValid3(){
+		String input = "update";
+		String expected = MessageList.MESSAGE_UPDATE_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word search valid
+	@Test
+	public void testHintWithWordSearchValid1(){
+		String input = "se";
+		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordSearchValid2(){
+		String input = "sea";
+		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordSearchValid3(){
+		String input = "search";
+		String expected = MessageList.MESSAGE_SEARCH_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word sort valid
+	@Test
+	public void testHintWithWordSortValid1(){
+		String input = "so";
+		String expected = MessageList.MESSAGE_SORT_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordSortValid2(){
+		String input = "sort";
+		String expected = MessageList.MESSAGE_SORT_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word undo valid
+	@Test
+	public void testHintWithWordUndoValid1(){
+		String input = "und";
+		String expected = MessageList.MESSAGE_UNDO_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+
+	@Test
+	public void testHintWithWordUndoValid2(){
+		String input = "undo";
+		String expected = MessageList.MESSAGE_UNDO_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	// This is to test normal hint with word redo valid
+	@Test
+	public void testHintWithWordRedoValid1(){
+		String input = "re";
+		String expected = MessageList.MESSAGE_REDO_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordRedoValid2(){
+		String input = "redo";
+		String expected = MessageList.MESSAGE_REDO_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	//This is to test normal hint with word block valid
+	@Test
+	public void testHintWithWordBlockValid1(){
+		String input = "b";
+		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordBlockValid2(){
+		String input = "blo";
+		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordBlockValid3(){
+		String input = "block";
+		String expected = MessageList.MESSAGE_BLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	//This is to test normal hint with word unblock valid
+	@Test
+	public void testHintWithWordUnblockValid1(){
+		String input = "unb";
+		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordUnblockValid2(){
+		String input = "unbl";
+		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	@Test
+	public void testHintWithWordUnblockValid3(){
+		String input = "unblock";
+		String expected = MessageList.MESSAGE_UNBLOCK_HELP + "\n";
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+	
+	/**************************************************** Testing invalid command ****************************************************/
+
+	// This is to test empty command entered
+	@Test
+	public void testHintWithEmptyCommand(){
+		String input = "";
+		String expected = MessageList.MESSAGE_HINT_INVALID;
+		assertEquals(expected, HintHandler.executeHint(input));
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\HintHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\CommandType.java
+	 */
+
+package utility;
+
+/**
+ * This class is use to indicate the command types
+ *
+ */
+
+public class CommandType {
+	public enum Command_Types {
+		ADD, DELETE, DISPLAY, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
+	}
+
+
+	/**
+	 * This method will check the commands input by the user and go to the necessary case
+	 * @param commandTypeString is the command type that user has input 
+	 * @return the corresponding command type with the commandTypeString received
+	 */
+	public static Command_Types getType(String[] commandTypeString) {
+
+		if (commandTypeString == null) {
+			assert false : "Invalid command types entered";
+			return Command_Types.INVALID;
+		}
+		
+		switch (commandTypeString[0].toLowerCase()) {
+		case "add":
+		case "a":
+			return Command_Types.ADD;
+		case "delete": 
+		case "del":
+			return Command_Types.DELETE;
+		case "display": 
+		case "dis":
+			return Command_Types.DISPLAY;
+		case "update": 
+		case "up":
+			return Command_Types.UPDATE;
+		case "exit":
+			return Command_Types.EXIT;
+		case "search":
+		case "sh":
+			return Command_Types.SEARCH;
+		case "sort": 
+		case "st":
+			return Command_Types.SORT;
+		case "help":
+			return Command_Types.HELP;
+		case "undo":
+		case "ud":
+			return Command_Types.UNDO;
+		case "redo":
+		case "rd":
+			return Command_Types.REDO;
+		case "block":
+		case "b": 
+			return Command_Types.BLOCK;
+		case "unblock":
+		case "ub": 
+			return Command_Types.UNBLOCK;
+		default: 
+			return Command_Types.INVALID;
+		}
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\CommandType.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
+	 */
+
+	/**
+	 * These message are for DeleteHandler Class
+	 */
+	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
+	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
+
+	/**
+	 * This message are for CacheCommandsHandler class
+	 */
+	public static final String MESSAGE_NO_PREVIOUS_COMMAND = "No previous command entered";
+	public static final String MESSAGE_LAST_COMMAND = "Last command in the list. Could not perform redo";
+	public static final String MESSAGE_ERROR = "Unable to proceed";
+	public static final String MESSAGE_UNDO_SUCCESS = "Undo operation done";
+	public static final String MESSAGE_REDO_SUCCESS = "Redo operation done";
+
+	/**
+	 * This message are for HintHandler class
+	 */
+	public static final String MESSAGE_HINT_INVALID = "Please key in a command";
+
+	/**
+	 * These message are for the LogicController
+	 */
+	public static final String MESSAGE_LOGICCONTROLLER_NO_COMMAND = "There is no command.";
+	public static final String MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED = "Command unrecognised, prevent using \"=\",\"|\"";
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
+
+
+
+
+
