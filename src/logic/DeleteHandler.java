@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import storage.FileStorage;
 import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
@@ -25,6 +24,7 @@ public class DeleteHandler {
 	 */
     private static Logger taskLogger = TaskLogging.getInstance();
     private static int length = 0;
+    private static int size = 1;
 	
     /**
      * This method is to check if the input is integer
@@ -69,7 +69,7 @@ public class DeleteHandler {
 			return MessageList.MESSAGE_NO_FILE_DELETED;
 		}
 		
-		if(!(keyFieldsList.size() == 1) || !(checkInteger(keyFieldsList.get(CommandType.Command_Types.DELETE.name())))){
+		if(!(keyFieldsList.size() == size) || !(checkInteger(keyFieldsList.get(CommandType.Command_Types.DELETE.name())))){
 			return MessageList.MESSAGE_INVALID_DELETE;
 		}
 		
