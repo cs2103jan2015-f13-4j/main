@@ -169,8 +169,13 @@ public class AddHandler {
 			KeywordType.List_Keywords keyword) {
 
 		String errorMessage = "";
-		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
-				MessageList.MESSAGE_NO_DATE_GIVEN);
+		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,keyword.name(),MessageList.MESSAGE_NO_DATE_GIVEN);
+		if(!indicMsg.isTrue())
+		{
+			return indicMsg;
+		}
+		//checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
+				//MessageList.MESSAGE_NO_DATE_GIVEN);
 		
 		//generate End date depending on the keyword 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
