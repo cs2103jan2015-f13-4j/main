@@ -1,7 +1,9 @@
-//@A0111935L
+//@author A0111935L
 package unit_testing;
 
-import static org.junit.Assert.*;
+
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Map;
@@ -60,17 +62,6 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "0");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
 		String expected = MessageList.MESSAGE_NO_SUCH_TASK;
-		assertEquals(expected,
-				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
-	}
-
-	/* This test case test for invalid task id */
-	@Test
-	public void testUpdateInvalidTaskId() {
-		keyFieldsTest.put("UPDATE", "abc");
-		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -339,11 +330,10 @@ public class UpdateHandlerTest {
 
 	/* This is to check if the input can be converted into integer */
 	@Test
-	public void testInvalidConvertAnInteger() {
+	public void testUpdateInvalidTaskId() {
 		keyFieldsTest.put("UPDATE", "ser@");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah.");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		String expected = MessageList.MESSAGE_INVALID_UPDATE_ID;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}

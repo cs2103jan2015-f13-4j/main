@@ -1,4 +1,4 @@
-//@A0112502A
+//@author A0111935L
 package utility;
 
 /**
@@ -11,6 +11,8 @@ public class CommandType {
 		ADD, DELETE, DISPLAY, EXIT, UPDATE, INVALID, SEARCH, SORT, HELP, UNDO, REDO, BLOCK, UNBLOCK
 	}
 
+	
+	//@author A0112502A
 	/**
 	 * This method will check the commands input by the user and go to the necessary case
 	 * @param commandTypeString is the command type that user has input 

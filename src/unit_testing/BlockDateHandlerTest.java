@@ -1,10 +1,13 @@
-//@A0112501E
-package logic;
+//@author A0112501E
+package unit_testing;
 
 import static org.junit.Assert.*;
 
 import java.util.Map;
 import java.util.TreeMap;
+
+import logic.BlockDateHandler;
+import logic.SearchHandler;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -31,10 +34,10 @@ public class BlockDateHandlerTest {
 		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(),
 				new DateTime(), ""));
 	}
-	
+
 	/**
-	 * This is to test the block one date out of bounce(Eg. April do not have 31st) 
-	 * The output is: Date Format is incorrect
+	 * This is to test the block one date out of bounce(Eg. April do not have
+	 * 31st) The output is: Date Format is incorrect
 	 */
 	@Test
 	public void testBlockOneDateThatDoNotExist() {
@@ -44,10 +47,10 @@ public class BlockDateHandlerTest {
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
 	}
-	
+
 	/**
-	 * This is to test the unblock one date out of bounce(Eg. April do not have 31st) 
-	 * The output is: Date Format is incorrect
+	 * This is to test the unblock one date out of bounce(Eg. April do not have
+	 * 31st) The output is: Date Format is incorrect
 	 */
 	@Test
 	public void testUnblockOneDateThatDoNotExist() {
@@ -58,15 +61,15 @@ public class BlockDateHandlerTest {
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
 	}
 
-
 	/**
 	 * This is to test the correct format of block one date The output is:
-	 * Blocked Successful
+	 * "19-04-2015" Blocked Successful
 	 */
 	@Test
 	public void testBlockOneDate() {
-		keyFieldsTest.put("BLOCK", "14-04-2015");
-		String expected = String.format(MessageList.MESSAGE_BLOCKED,"14-04-2015");
+		keyFieldsTest.put("BLOCK", "19-04-2015");
+		String expected = String.format(MessageList.MESSAGE_BLOCKED,
+				"19-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -74,17 +77,18 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the correct format of the unblock one date The output is:
-	 * Unblocked Successful
+	 * "19-04-2015"Unblocked Successful
 	 */
 
 	@Test
 	public void testUnBlockOneDate() {
-		keyFieldsTest.put("BLOCK", "14-04-2015");
-		BlockDateHandler.executeBlockOrUnblock(
-				keyFieldsTest, "BLOCK", smtDataTest);
+		keyFieldsTest.put("BLOCK", "19-04-2015");
+		BlockDateHandler.executeBlockOrUnblock(keyFieldsTest, "BLOCK",
+				smtDataTest);
 		keyFieldsTest.clear();
-		keyFieldsTest.put("UNBLOCK", "14-04-2015");
-		String expected = String.format(MessageList.MESSAGE_UNBLOCKED, "14-04-2015");
+		keyFieldsTest.put("UNBLOCK", "19-04-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED,
+				"19-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -92,16 +96,17 @@ public class BlockDateHandlerTest {
 	}
 
 	/**
-	 * This is to test the blocking of range of date The output is: Blocked
-	 * Successful
+	 * This is to test the blocking of range of date The output is: "19-04-2015"
+	 * to "25-04-2015" Unblocked Successful
 	 */
 
 	@Test
 	public void testBlockRangeOfDate() {
 		keyFieldsTest.put("BLOCK", "");
-		keyFieldsTest.put("FROM", "14-04-2015");
-		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE, "14-04-2015", "20-04-2015");
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "25-04-2015");
+		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE,
+				"19-04-2015", "25-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -110,15 +115,16 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This to to test the blocking of date from a month extend into another
-	 * month The output is : blocked Successful
+	 * month The output is : "19-04-2015" to "01-05-2015" Blocked Successful
 	 */
 
 	@Test
 	public void testBlockRangeOfDateExtendToAnotherMonth() {
 		keyFieldsTest.put("BLOCK", "");
-		keyFieldsTest.put("FROM", "14-04-2015");
+		keyFieldsTest.put("FROM", "19-04-2015");
 		keyFieldsTest.put("TO", "01-05-2015");
-		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015" ,"01-05-2015") ;
+		String expected = String.format(MessageList.MESSAGE_BLOCKED_RANGE,
+				"19-04-2015", "01-05-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -127,14 +133,15 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This to to test the unblocking of date from a month extend into another
-	 * month The output is : Unblocked Successful
+	 * month The output is : "19-04-2015" to "01-06-2015 "Unblocked Successful
 	 */
 	@Test
 	public void testUnBlockRangeOfDateExtendToAnotherMonth() {
 		keyFieldsTest.put("UNBLOCK", "");
-		keyFieldsTest.put("FROM", "14-04-2015");
+		keyFieldsTest.put("FROM", "19-04-2015");
 		keyFieldsTest.put("TO", "01-06-2015");
-		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015", "01-06-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE,
+				"19-04-2015", "01-06-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -142,15 +149,16 @@ public class BlockDateHandlerTest {
 	}
 
 	/**
-	 * This is to test the unblocking of a range of date The output is:
-	 * Unblocked Successful
+	 * This is to test the unblocking of a range of date The output is :
+	 * "19-04-2015" to "21-04-2015' Unblocked Successful
 	 */
 	@Test
 	public void testUnblockRangeOfDate() {
 		keyFieldsTest.put("UNBLOCK", "");
-		keyFieldsTest.put("FROM", "14-04-2015");
-		keyFieldsTest.put("TO", "20-04-2015");
-		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE, "14-04-2015","20-04-2015") ;
+		keyFieldsTest.put("FROM", "19-04-2015");
+		keyFieldsTest.put("TO", "21-04-2015");
+		String expected = String.format(MessageList.MESSAGE_UNBLOCKED_RANGE,
+				"19-04-2015", "21-04-2015");
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -159,7 +167,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the incorrect of block date format The output is: Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testInvalidBlockDate() {
@@ -173,7 +181,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the incorrect of unblock date format The output is: Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testInvalidUnBlockDate() {
@@ -215,7 +223,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the incorrect date enter for unblock The output is: Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testIncorrectUnBlockDate() {
@@ -229,7 +237,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the incorrect date enter for block The output is : Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testIncorrectBlockDate() {
@@ -243,7 +251,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the wrong Date format for block The output is : Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testWrongDateFormatForBlockDate() {
@@ -257,7 +265,7 @@ public class BlockDateHandlerTest {
 
 	/**
 	 * This is to test the wrong Date format for unblock The output is : Date
-	 * Format is incorrect
+	 * format is incorrect
 	 */
 	@Test
 	public void testWrongUnBlockDate() {
@@ -323,7 +331,7 @@ public class BlockDateHandlerTest {
 	@Test
 	public void testInvalidForEndDateForBlockRangeOfDate() {
 		keyFieldsTest.put("BLOCK", "");
-		keyFieldsTest.put("FROM", "10-04-2015");
+		keyFieldsTest.put("FROM", "25-04-2015");
 		keyFieldsTest.put("TO", "200-04-2015");
 		String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
@@ -525,9 +533,9 @@ public class BlockDateHandlerTest {
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "UNBLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
-		
+
 	}
-	
+
 	/**
 	 * This is to test the incorrect unblock end date The output is : Wrong date
 	 * format for End date
@@ -541,24 +549,24 @@ public class BlockDateHandlerTest {
 		assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
 				keyFieldsTest, "BLOCK", smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
-		
+
 	}
-	
-	//GOT PROBLEM
+
+	// GOT PROBLEM
 	/**
 	 * This is to test the blocking the blocked date again
 	 * */
-	
-	//@Test
-	//public void testBlockingTheBlockedDate() {
-		//keyFieldsTest.put("BLOCK", "");
-		//keyFieldsTest.put("FROM", "20-06-2015");
-		//keyFieldsTest.put("TO", "30-06-2015");
-		//keyFieldsTest.put("BLOCK", "25-06-2015");
-		//String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
-		//assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
-				//keyFieldsTest, "BLOCK", smtDataTest));
-		//SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
-		
-	//}
+
+	// @Test
+	// public void testBlockingTheBlockedDate() {
+	// keyFieldsTest.put("BLOCK", "");
+	// keyFieldsTest.put("FROM", "20-06-2015");
+	// keyFieldsTest.put("TO", "30-06-2015");
+	// keyFieldsTest.put("BLOCK", "25-06-2015");
+	// String expected = MessageList.MESSAGE_BLOCK_WRONG_DATE_FORMAT_END;
+	// assertEquals(expected, BlockDateHandler.executeBlockOrUnblock(
+	// keyFieldsTest, "BLOCK", smtDataTest));
+	// SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
+
+	// }
 }

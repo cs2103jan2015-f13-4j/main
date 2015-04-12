@@ -1,4 +1,4 @@
-//@A0111935L
+//@author A0111935L
 package storage;
 
 import java.io.BufferedReader;
@@ -9,12 +9,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
 import parser.DateTimeParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
+import utility.TaskLogging;
 import data.Task;
 import data.TaskParserFromTextFile;
 import data.TaskParserWriteToTextFile;
@@ -29,7 +32,7 @@ public class FileStorage {
 	private static String fileName = "defaultTaskList.txt";
 	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
 	private static String blockedDateFileName = "defaultBlockedDateList.txt";
-
+	private static Logger taskLogger = TaskLogging.getInstance();
 	/**
 	 * get the filename for task list
 	 * 
@@ -212,6 +215,9 @@ public class FileStorage {
 				Task taskObj = TaskParserFromTextFile
 						.generateStringFromTextFileToTask(txtLine);
 				if (taskObj == null) {
+					// logging
+					taskLogger.log(
+							Level.INFO,"text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false, String.format(
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
 							fileName));
@@ -270,6 +276,9 @@ public class FileStorage {
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
 				if (!isStringAnInteger(txtLine)) {
+					// logging
+					taskLogger.log(
+							Level.INFO,"text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
 					return -1;
@@ -306,6 +315,9 @@ public class FileStorage {
 				formattedString = TaskParserWriteToTextFile
 						.concatTaskFieldToString(tasksList.get(i));
 				if (formattedString == null) {
+					// logging
+					taskLogger.log(
+							Level.INFO,"Task object error");
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
 					bw.close();

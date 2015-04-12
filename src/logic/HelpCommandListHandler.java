@@ -1,4 +1,4 @@
-//@A0112501E
+//@author A0112501E
 package logic;
 
 //import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class HelpCommandListHandler {
 		}
 
 		if (keyFieldsList.size() != 1) {
-			return MessageList.MESSAGE_INVAILD;
+			return MessageList.MESSAGE_INVALID;
 		}
 
 		if (keyFieldsList.get(CommandType.Command_Types.HELP.name()).isEmpty()) {
@@ -82,7 +82,7 @@ public class HelpCommandListHandler {
 			return MessageList.MESSAGE_UNBLOCK_HELP;
 		}
 		default: {
-			return MessageList.MESSAGE_INVAILD;
+			return MessageList.MESSAGE_INVALID;
 		}
 		}
 	}

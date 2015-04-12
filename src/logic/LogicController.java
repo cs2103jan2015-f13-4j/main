@@ -1,4 +1,4 @@
-//@A0112501E
+//@author A0112501E
 package logic;
 
 import java.util.Map;
@@ -10,17 +10,17 @@ import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
 
-public class Menu {
+public class LogicController {
 	private Data smtData;
-	private static Menu onlyMenu;
+	private static LogicController onlyMenu;
 
-	private Menu() {
+	private LogicController() {
 		smtData = new Data();
 	}
 
-	public static Menu getInstance() {
+	public static LogicController getInstance() {
 		if (onlyMenu == null) {
-			onlyMenu = new Menu();
+			onlyMenu = new LogicController();
 		}
 		return onlyMenu;
 	}
@@ -43,7 +43,7 @@ public class Menu {
 			return DeleteHandler.executeDelete(keyFieldsList, smtData);
 		}
 		case INVALID: {
-			return MessageList.MESSAGE_INVAILD;
+			return MessageList.MESSAGE_INVALID;
 		}
 		case SEARCH: {
 			return SearchHandler.executeSearch(keyFieldsList, smtData);
@@ -79,11 +79,11 @@ public class Menu {
 		}
 		default: {
 
-			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
+			return MessageList.MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED;
 		}
 		}
 
-		return MessageList.MESSAGE_MENU_NO_COMMAND;
+		return MessageList.MESSAGE_LOGICCONTROLLER_NO_COMMAND;
 	}
 
 	public IndicatorMessagePair setUp() {

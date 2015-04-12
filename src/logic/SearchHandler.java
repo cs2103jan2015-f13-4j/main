@@ -1,4 +1,4 @@
-//@A0112501E
+//@author A0112501E
 package logic;
 
 import java.util.ArrayList;
@@ -19,6 +19,9 @@ import java.util.logging.Logger;
 
 public class SearchHandler {
 
+	private static final int KEYWORD = 1;
+	
+	//Declaration for Logger
 	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
@@ -48,13 +51,13 @@ public class SearchHandler {
 
 		if (!searchCriteria
 				.containsKey(CommandType.Command_Types.SEARCH.name())) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
 		if (searchList.length < 2) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		KeywordType.List_Keywords getKey = KeywordType
@@ -68,7 +71,7 @@ public class SearchHandler {
 		case BY:
 			return searchTaskDate(searchList, smtData);
 		default:
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 	}
@@ -82,14 +85,14 @@ public class SearchHandler {
 	 */
 	private static String searchTaskDate(String[] deadLine, Data smtData) {
 		if (deadLine == null || deadLine.length <= 1 || deadLine.length > 2) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		String searchDetails = "";
 		DateTime endDate = DateTimeParser.generateDate(deadLine[1]);
 
 		if (endDate == null) {
-			return MessageList.MESSAGE_INVAILD_SEARCH_CRITERIA;
+			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
@@ -103,7 +106,7 @@ public class SearchHandler {
 			taskLogger.log(Level.INFO, "Search By Task Date");
 			return searchDetails;
 		} else {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DATE,
 					deadLine[1]);
 		}
 	}
@@ -118,7 +121,7 @@ public class SearchHandler {
 	private static String searchTaskID(String[] index, Data smtData) {
 
 		if (index.length <= 1 || index.length > 2 || !checkInteger(index[1])) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		for (int i = 0; i < smtData.getSize(); i++) {
@@ -126,8 +129,11 @@ public class SearchHandler {
 				return smtData.getATask(i).toString();
 			}
 		}
+		
+		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task ID");
-		return String.format(MessageList.MESSAGE_NO_MATCH_FOUND, index[1]);
+		return String
+				.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_ID, index[1]);
 	}
 
 	/**
@@ -139,7 +145,7 @@ public class SearchHandler {
 	 */
 	private static String searchTaskDesc(Data smtData, String[] wordList) {
 		if (wordList.length <= 1) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
 		String wordAbstracted = mergeStringInArray(wordList);
@@ -151,7 +157,7 @@ public class SearchHandler {
 			}
 		}
 		if (tempList.size() == 0) {
-			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND,
+			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
 		taskLogger.log(Level.INFO, "Search By Task Description");
@@ -159,6 +165,12 @@ public class SearchHandler {
 
 	}
 
+	//CHECK CORRECT NOT THE COMMENT
+	/**
+	 * concatinate the string together
+	 * @param wordList
+	 * @return
+	 */
 	private static String mergeStringInArray(String[] wordList) {
 		String mergedString = new String();
 		for (int i = 1; i < wordList.length; i++) {
@@ -169,7 +181,7 @@ public class SearchHandler {
 	}
 
 	/**
-	 * returning converted arraylist in String
+	 * returning converted array list in String
 	 * 
 	 * @param displayTasksList
 	 * @return
@@ -198,6 +210,13 @@ public class SearchHandler {
 		return true;
 	}
 
+	/**
+	 * This is to check if the search is valid
+	 * 
+	 * @param keyFieldsList
+	 * @param smtData
+	 * @return
+	 */
 	private static String checkForValidData(Map<String, String> keyFieldsList,
 			Data smtData) {
 		if (keyFieldsList == null) {
@@ -211,8 +230,8 @@ public class SearchHandler {
 			return MessageList.MESSAGE_NULL;
 		}
 
-		if (keyFieldsList.size() != 1) {
-			return MessageList.MESSAGE_INVAILD_SEARCH;
+		if (keyFieldsList.size() != KEYWORD) {
+			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}

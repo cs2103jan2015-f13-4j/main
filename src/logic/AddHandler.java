@@ -1,4 +1,4 @@
-//@A0112501E 
+//@author A0112501E 
 package logic;
 
 import java.util.Map;
@@ -19,6 +19,7 @@ import utility.MessageList;
 import utility.TaskLogging;
 
 public class AddHandler {
+	private static final int RESTRICT_KEYWORD = 1;
 
 	/**
 	 * Declaration for Logger
@@ -77,19 +78,20 @@ public class AddHandler {
 		int lastUnUsedIndex = loadLastUsedIndex(smtData);
 		indicMsg = new IndicatorMessagePair();
 
-		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > 1) {
+		// This restrict number of keyword to 1 per task.
+		if (restrictOnlyUnqiueKeyWord(keyFieldsList) > RESTRICT_KEYWORD) {
 			return MessageList.MESSAGE_NO_WEEKLY_DEADLINE;
 		}
+		// Get new index for a new task added.
 		newTask.setTaskId(lastUnUsedIndex);
 		indicMsg = addTaskDesc(newTask, lastUnUsedIndex, keyFieldsList);
-		// field is here so no need to do in switch case
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
 
 		// first check if command contains from and to keywords and process them
-		// first
+		//
 		if (checkFromTimeToTimeBothExist(keyFieldsList)) {
 			indicMsg = processBothTimes(keyFieldsList, newTask);
 		}
@@ -97,9 +99,10 @@ public class AddHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
-
+		
+		// remove the add key pair as it has already been saved 
 		keyFieldsList.remove(CommandType.Command_Types.ADD.name());
-		// remove the add key pair as it has already been saved to the taskDesc
+		
 
 		for (String key : keyFieldsList.keySet()) {
 			getKey = KeywordType.getKeyword(key);
@@ -145,24 +148,22 @@ public class AddHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
-		
-		
-		//To log add operation
+
+		// To log add operation
 		taskLogger.log(Level.INFO, "Task Added");
 		CacheCommandsHandler.newHistory(smtData);
 		return String.format(MessageList.MESSAGE_ADDED, newTask.toString());
 	}
 
 	/**
-	 * This method is to check if the date is not included or the date format is
-	 * incorrect
-	 * 
+	 * This method is to generate the date base on the keyword
+	 * To check if the date is included as well as to check if
+	 * the date chosen to block is already occupied.
 	 * @param newTask
 	 * @param index
 	 * @param keyFieldsList
 	 * @return
 	 */
-	
 	private static IndicatorMessagePair addTaskByWhen(Data smtData,
 			Task newTask, int index, Map<String, String> keyFieldsList,
 			KeywordType.List_Keywords keyword) {
@@ -170,12 +171,13 @@ public class AddHandler {
 		String errorMessage = "";
 		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
 				MessageList.MESSAGE_NO_DATE_GIVEN);
-
+		
+		//generate End date depending on the keyword 
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(keyword.name()));
 		if (endDate == null) {
-				errorMessage = DateTimeParser.getDateFormatError(keyFieldsList
-						.get(keyword.name()));
+			errorMessage = DateTimeParser.getDateFormatError(keyFieldsList
+					.get(keyword.name()));
 			return new IndicatorMessagePair(false, errorMessage);
 		}
 
@@ -255,7 +257,7 @@ public class AddHandler {
 	}
 
 	/**
-	 * This method is to check the add content....
+	 * This method is to check the the add content 
 	 * 
 	 * @param newTask
 	 * @param index
@@ -265,8 +267,8 @@ public class AddHandler {
 	private static IndicatorMessagePair addTaskDesc(Task newTask, int index,
 			Map<String, String> keyFieldsList) {
 		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
-				CommandType.Command_Types.ADD.name(), String.format(
-						MessageList.MESSAGE_INVALID_ARGUMENT, "No Description"));
+				CommandType.Command_Types.ADD.name(),
+				String.format(MessageList.MESSAGE_ADD_NO_DESCRIPTION, "add"));
 
 		if (!indicMsg.isTrue()) {
 			return indicMsg;
@@ -277,6 +279,7 @@ public class AddHandler {
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
 	}
 
+	//This is to check if the keyword is empty or null
 	private static IndicatorMessagePair checkEmptyKeyFieldsList(
 			Map<String, String> keyFieldsList, String keyWord, String message) {
 		if (!keyFieldsList.containsKey(keyWord)) {
@@ -306,7 +309,7 @@ public class AddHandler {
 
 		if (!checkFromTimeToTimeBothField(keyFieldsList)) {
 			return new IndicatorMessagePair(false,
-					"Time is not entered correctly");
+					String.format(MessageList.MESSAGE_TIME_SLOT_EMPTY));
 		}
 
 		DateTime startTime = DateTimeParser.generateTime(keyFieldsList
@@ -314,7 +317,8 @@ public class AddHandler {
 		DateTime endTime = DateTimeParser.generateTime(keyFieldsList
 				.get(KeywordType.List_Keywords.TO.name()));
 		if (!checkFromTimeToTimeBothValid(startTime, endTime)) {
-			return new IndicatorMessagePair(false, "Time Mismatch");
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_TIME_MISMATCHED, startTime, endTime));
 		}
 
 		DateTime newDateStartTime = new DateTime(DateTime.now().getYear(),
@@ -389,6 +393,11 @@ public class AddHandler {
 		}
 		return true;
 	}
+	/**
+	 * This method is to count the number of keywords appeared in a single task
+	 * @param keyFieldsList
+	 * @return
+	 */
 
 	private static int restrictOnlyUnqiueKeyWord(
 			Map<String, String> keyFieldsList) {
@@ -431,7 +440,12 @@ public class AddHandler {
 
 		return true;
 	}
-
+   /**
+    * This method is to check the block date input with the date blocked in the storage to check if it clash
+    * @param smtData
+    * @param endDate
+    * @return
+    */
 	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
 		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
 			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()

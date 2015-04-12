@@ -1,4 +1,4 @@
-//@A0112501E
+//@author A0112501E
 package logic;
 
 import java.util.Map;
@@ -15,7 +15,17 @@ import utility.KeywordType;
 import utility.MessageList;
 
 public class BlockDateHandler {
+	private static final int ONE_KEYWORD = 1;
+	private static final int THREE_KEYWORDS = 3;
 
+	/**
+	 * This method is used to check whether is it block or unblock
+	 * 
+	 * @param keyFieldsList
+	 * @param keyCommand
+	 * @param smtData
+	 * @return
+	 */
 	public static String executeBlockOrUnblock(
 			Map<String, String> keyFieldsList, String keyCommand, Data smtData) {
 		IndicatorMessagePair indicMsg = checkIfCommandKeyExist(keyFieldsList,
@@ -44,6 +54,7 @@ public class BlockDateHandler {
 			return indicMsg.getMessage();
 		}
 
+		// writing the block date into the storage
 		IndicatorMessagePair indicMsg_File = smtData
 				.writeBlockedDateTimeListToFile();
 
@@ -55,6 +66,14 @@ public class BlockDateHandler {
 		return indicMsg.getMessage();
 	}
 
+	// CHECK IF COMMENTS CORRECT
+	/**
+	 * This method is to check if the time is specified
+	 * 
+	 * @param keyFieldsList
+	 * @param keyCommand
+	 * @return
+	 */
 	private static IndicatorMessagePair checkIfCommandKeyExist(
 			Map<String, String> keyFieldsList, String keyCommand) {
 
@@ -69,6 +88,13 @@ public class BlockDateHandler {
 		return new IndicatorMessagePair(true, "");
 	}
 
+	/**
+	 * This method is to check if the block is a date or a range of dates
+	 * 
+	 * @param keyFieldList
+	 * @param smtData
+	 * @return
+	 */
 	private static IndicatorMessagePair checkBlockDate(
 			Map<String, String> keyFieldList, Data smtData) {
 
@@ -84,11 +110,11 @@ public class BlockDateHandler {
 			return new IndicatorMessagePair(false, MessageList.MESSAGE_NULL);
 		}
 
-		if (keyFieldList.size() == 1) {
+		if (keyFieldList.size() == ONE_KEYWORD) {
 			return blockOneDate(
 					keyFieldList.get(CommandType.Command_Types.BLOCK.name()),
 					smtData);
-		} else if (keyFieldList.size() == 3
+		} else if (keyFieldList.size() == THREE_KEYWORDS
 				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
 						.name())
 				&& keyFieldList
@@ -103,6 +129,10 @@ public class BlockDateHandler {
 		}
 	}
 
+	/**
+	 * This method is to check if the range of block start and end time correct
+	 * 
+	 */
 	private static IndicatorMessagePair blockRangeOfDates(String fromDate,
 			String toDate, Data smtData) {
 		if (fromDate.isEmpty() || toDate.isEmpty()) {
@@ -131,10 +161,12 @@ public class BlockDateHandler {
 		// change the message
 		DateTime twoYearsLater = DateTime.now().plusYears(2);
 		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
-			return new IndicatorMessagePair(false,
-					String.format(
-							MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS,
-							fromDate));
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
+		}
+		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
+			return new IndicatorMessagePair(false, String.format(
+					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
 		}
 
 		int numberOfDatesFromThisRange = Days.daysBetween(
@@ -151,6 +183,8 @@ public class BlockDateHandler {
 	}
 
 	/**
+	 * This is to check how many dates that want to block are already occupied.
+	 * 
 	 * @param fromDate
 	 * @param toDate
 	 * @param smtData
@@ -170,24 +204,35 @@ public class BlockDateHandler {
 			totalBlockedDatesPending++;
 
 		}
-
+		// total number of block dates is not fully occupied, will count number
+		// of
+		// occupied dates
 		if (countBlockedFailed > 0
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
 					fromDate, toDate));
 		}
+		// All block dates are already occupied
 		if (countBlockedFailed > 0
 				&& (countBlockedFailed == totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,
 					toDate, countBlockedFailed));
 		}
-
+		// No dates are occupied. blocked successfully.
 		return new IndicatorMessagePair(true, String.format(
 				MessageList.MESSAGE_BLOCKED_RANGE, fromDate, toDate));
 	}
 
+	/**
+	 * This method is to check the date is input, or if the date format is
+	 * incorrect also to limit the length of blocked dates to 2 years.
+	 * 
+	 * @param receivedDate
+	 * @param smtData
+	 * @return
+	 */
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
 			Data smtData) {
 		if (receivedDate.isEmpty()) {
@@ -226,6 +271,13 @@ public class BlockDateHandler {
 				MessageList.MESSAGE_BLOCKED, receivedDate));
 	}
 
+	/**
+	 * This is to check if block date is already occupied
+	 * 
+	 * @param dateTimeReceived
+	 * @param smtData
+	 * @return
+	 */
 	private static boolean checkIfBlockDateClashedWithTask(
 			DateTime dateTimeReceived, Data smtData) {
 
@@ -240,6 +292,13 @@ public class BlockDateHandler {
 		return false;
 	}
 
+	/**
+	 * This is to check if the block date has already been blocked.
+	 * 
+	 * @param dateTimeReceived
+	 * @param smtData
+	 * @return
+	 */
 	private static boolean checkIfBlockDateExist(DateTime dateTimeReceived,
 			Data smtData) {
 		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
@@ -251,6 +310,12 @@ public class BlockDateHandler {
 		return false;
 	}
 
+	/**
+	 * This is to check the unblock date, is unblock for a single date or a range of dates.
+	 * @param keyFieldList
+	 * @param smtData
+	 * @return
+	 */
 	private static IndicatorMessagePair checkUnblockDate(
 			Map<String, String> keyFieldList, Data smtData) {
 
@@ -264,11 +329,11 @@ public class BlockDateHandler {
 					MessageList.MESSAGE_NO_TASK_IN_LIST);
 		}
 
-		if (keyFieldList.size() == 1) {
+		if (keyFieldList.size() == ONE_KEYWORD) {
 			return unblockOneDate(
 					keyFieldList.get(CommandType.Command_Types.UNBLOCK.name()),
 					smtData);
-		} else if (keyFieldList.size() == 3
+		} else if (keyFieldList.size() == THREE_KEYWORDS
 				&& keyFieldList.containsKey(KeywordType.List_Keywords.FROM
 						.name())
 				&& keyFieldList
@@ -283,7 +348,14 @@ public class BlockDateHandler {
 		}
 
 	}
-
+	/**
+	 * This method is to check if the start date and end date are in correct format
+	 * if the start date and end date is correct,unblock successfully.
+	 * @param fromDate
+	 * @param toDate
+	 * @param smtData
+	 * @return
+	 */
 	private static IndicatorMessagePair unblockRangeOfDates(String fromDate,
 			String toDate, Data smtData) {
 
@@ -307,7 +379,14 @@ public class BlockDateHandler {
 				MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate, toDate));
 
 	}
-
+	
+	/**
+	 * This method is to check if no date received, the date is never block before, 
+	 * or the unblock date do not exit
+	 * @param receivedDate
+	 * @param smtData
+	 * @return
+	 */
 	private static IndicatorMessagePair unblockOneDate(String receivedDate,
 			Data smtData) {
 		if (receivedDate.isEmpty()) {
@@ -343,7 +422,13 @@ public class BlockDateHandler {
 		return new IndicatorMessagePair(true, String.format(
 				MessageList.MESSAGE_UNBLOCKED, receivedDate));
 	}
-
+	
+	/**
+	 * This is to check the end time later than start time
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
 	private static boolean checkFromTimeToTimeBothValid(DateTime startTime,
 			DateTime endTime) {
 		if (startTime == null) {
