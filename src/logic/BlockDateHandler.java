@@ -14,8 +14,12 @@ import utility.IndicatorMessagePair;
 import utility.KeywordType;
 import utility.MessageList;
 
+/**
+ * This class is for blocking, unblocking of dates
+ * 
+ */
 public class BlockDateHandler {
-	
+
 	/* Global variable */
 	private static final int ONE_KEYWORD = 1;
 	private static final int THREE_KEYWORDS = 3;
@@ -176,7 +180,8 @@ public class BlockDateHandler {
 		}
 
 		int numberOfDatesFromThisRange = Days.daysBetween(
-				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + ADD_ONE_DAY;
+				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
+				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
 			// change the message that the range has exceed 31 days
 			return new IndicatorMessagePair(true, String.format(
@@ -203,7 +208,8 @@ public class BlockDateHandler {
 		int countBlockedFailed = 0;
 		int totalBlockedDatesPending = 0;
 		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
-				.plusDays(ONE_DAY)).toLocalDate()); date = date.plusDays(ONE_DAY)) {
+				.plusDays(ONE_DAY)).toLocalDate()); date = date
+				.plusDays(ONE_DAY)) {
 			if (!blockOneDate(date.toString(), smtData).isTrue()) {
 				countBlockedFailed++;
 			}
@@ -316,7 +322,9 @@ public class BlockDateHandler {
 	}
 
 	/**
-	 * This is to check the unblock date, is unblock for a single date or a range of dates.
+	 * This is to check the unblock date, is unblock for a single date or a
+	 * range of dates.
+	 * 
 	 * @param keyFieldList
 	 * @param smtData
 	 * @return
@@ -353,9 +361,11 @@ public class BlockDateHandler {
 		}
 
 	}
+
 	/**
-	 * This method is to check if the start date and end date are in correct format
-	 * if the start date and end date is correct,unblock successfully.
+	 * This method is to check if the start date and end date are in correct
+	 * format if the start date and end date is correct,unblock successfully.
+	 * 
 	 * @param fromDate
 	 * @param toDate
 	 * @param smtData
@@ -384,10 +394,11 @@ public class BlockDateHandler {
 				MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate, toDate));
 
 	}
-	
+
 	/**
-	 * This method is to check if no date received, the date is never block before, 
-	 * or the unblock date do not exit
+	 * This method is to check if no date received, the date is never block
+	 * before, or the unblock date do not exit
+	 * 
 	 * @param receivedDate
 	 * @param smtData
 	 * @return
@@ -427,9 +438,10 @@ public class BlockDateHandler {
 		return new IndicatorMessagePair(true, String.format(
 				MessageList.MESSAGE_UNBLOCKED, receivedDate));
 	}
-	
+
 	/**
 	 * This is to check the end time later than start time
+	 * 
 	 * @param startTime
 	 * @param endTime
 	 * @return

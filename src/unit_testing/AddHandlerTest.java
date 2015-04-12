@@ -86,7 +86,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("ADD", "Submit Proposal");
 		keyFieldsTest.put("BY", "");
 		String expected = String
-				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+				.format(MessageList.MESSAGE_NO_DATE_GIVEN);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}

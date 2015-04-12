@@ -18,6 +18,11 @@ import utility.KeywordType;
 import utility.MessageList;
 import utility.TaskLogging;
 
+/**
+ * This class add in the task and date also allow adding in the task, time and
+ * date.
+ * 
+ */
 public class AddHandler {
 	private static final int RESTRICT_KEYWORD = 1;
 
@@ -99,10 +104,9 @@ public class AddHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
-		
-		// remove the add key pair as it has already been saved 
+
+		// remove the add key pair as it has already been saved
 		keyFieldsList.remove(CommandType.Command_Types.ADD.name());
-		
 
 		for (String key : keyFieldsList.keySet()) {
 			getKey = KeywordType.getKeyword(key);
@@ -156,9 +160,10 @@ public class AddHandler {
 	}
 
 	/**
-	 * This method is to generate the date base on the keyword
-	 * To check if the date is included as well as to check if
-	 * the date chosen to block is already occupied.
+	 * This method is to generate the date base on the keyword To check if the
+	 * date is included as well as to check if the date chosen to block is
+	 * already occupied.
+	 * 
 	 * @param newTask
 	 * @param index
 	 * @param keyFieldsList
@@ -169,10 +174,15 @@ public class AddHandler {
 			KeywordType.List_Keywords keyword) {
 
 		String errorMessage = "";
-		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
-				MessageList.MESSAGE_NO_DATE_GIVEN);
-		
-		//generate End date depending on the keyword 
+		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
+				keyword.name(), MessageList.MESSAGE_NO_DATE_GIVEN);
+		if (!indicMsg.isTrue()) {
+			return indicMsg;
+		}
+		// checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
+		// MessageList.MESSAGE_NO_DATE_GIVEN);
+
+		// generate End date depending on the keyword
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(keyword.name()));
 		if (endDate == null) {
@@ -257,7 +267,7 @@ public class AddHandler {
 	}
 
 	/**
-	 * This method is to check the the add content 
+	 * This method is to check the the add content
 	 * 
 	 * @param newTask
 	 * @param index
@@ -279,7 +289,7 @@ public class AddHandler {
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
 	}
 
-	//This is to check if the keyword is empty or null
+	// This is to check if the keyword is empty or null
 	private static IndicatorMessagePair checkEmptyKeyFieldsList(
 			Map<String, String> keyFieldsList, String keyWord, String message) {
 		if (!keyFieldsList.containsKey(keyWord)) {
@@ -393,8 +403,10 @@ public class AddHandler {
 		}
 		return true;
 	}
+
 	/**
 	 * This method is to count the number of keywords appeared in a single task
+	 * 
 	 * @param keyFieldsList
 	 * @return
 	 */
@@ -440,12 +452,15 @@ public class AddHandler {
 
 		return true;
 	}
-   /**
-    * This method is to check the block date input with the date blocked in the storage to check if it clash
-    * @param smtData
-    * @param endDate
-    * @return
-    */
+
+	/**
+	 * This method is to check the block date input with the date blocked in the
+	 * storage to check if it clash
+	 * 
+	 * @param smtData
+	 * @param endDate
+	 * @return
+	 */
 	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
 		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
 			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()

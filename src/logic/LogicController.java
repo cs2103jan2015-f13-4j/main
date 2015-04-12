@@ -10,6 +10,10 @@ import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
 
+/**
+ * This class handle all the commands from the user and proceed accordingly
+ * 
+ */
 public class LogicController {
 	private Data smtData;
 	private static LogicController onlyMenu;
