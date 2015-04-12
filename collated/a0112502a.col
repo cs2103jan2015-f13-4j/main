@@ -1330,6 +1330,7 @@ public class CommandType {
 	 */
 	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
+	public static final String MESSAGE_EMPTY_WEEKLY_DAY = "Weekly day is empty";
 
 	/**
 	 * This message are for CacheCommandsHandler class

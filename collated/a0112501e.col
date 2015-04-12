@@ -25,6 +25,11 @@ import utility.KeywordType;
 import utility.MessageList;
 import utility.TaskLogging;
 
+/**
+ * This class add in the task and date also allow adding in the task, time and
+ * date.
+ * 
+ */
 public class AddHandler {
 	private static final int RESTRICT_KEYWORD = 1;
 
@@ -106,10 +111,9 @@ public class AddHandler {
 		if (!indicMsg.isTrue()) {
 			return indicMsg.getMessage();
 		}
-		
-		// remove the add key pair as it has already been saved 
+
+		// remove the add key pair as it has already been saved
 		keyFieldsList.remove(CommandType.Command_Types.ADD.name());
-		
 
 		for (String key : keyFieldsList.keySet()) {
 			getKey = KeywordType.getKeyword(key);
@@ -163,9 +167,10 @@ public class AddHandler {
 	}
 
 	/**
-	 * This method is to generate the date base on the keyword
-	 * To check if the date is included as well as to check if
-	 * the date chosen to block is already occupied.
+	 * This method is to generate the date base on the keyword To check if the
+	 * date is included as well as to check if the date chosen to block is
+	 * already occupied.
+	 * 
 	 * @param newTask
 	 * @param index
 	 * @param keyFieldsList
@@ -176,10 +181,15 @@ public class AddHandler {
 			KeywordType.List_Keywords keyword) {
 
 		String errorMessage = "";
-		checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
-				MessageList.MESSAGE_NO_DATE_GIVEN);
-		
-		//generate End date depending on the keyword 
+		IndicatorMessagePair indicMsg = checkEmptyKeyFieldsList(keyFieldsList,
+				keyword.name(), MessageList.MESSAGE_NO_DATE_GIVEN);
+		if (!indicMsg.isTrue()) {
+			return indicMsg;
+		}
+		// checkEmptyKeyFieldsList(keyFieldsList, keyword.name(),
+		// MessageList.MESSAGE_NO_DATE_GIVEN);
+
+		// generate End date depending on the keyword
 		DateTime endDate = DateTimeParser.generateDate(keyFieldsList
 				.get(keyword.name()));
 		if (endDate == null) {
@@ -264,7 +274,7 @@ public class AddHandler {
 	}
 
 	/**
-	 * This method is to check the the add content 
+	 * This method is to check the the add content
 	 * 
 	 * @param newTask
 	 * @param index
@@ -286,7 +296,7 @@ public class AddHandler {
 		return new IndicatorMessagePair(true, MessageList.MESSAGE_NO_DATE_GIVEN);
 	}
 
-	//This is to check if the keyword is empty or null
+	// This is to check if the keyword is empty or null
 	private static IndicatorMessagePair checkEmptyKeyFieldsList(
 			Map<String, String> keyFieldsList, String keyWord, String message) {
 		if (!keyFieldsList.containsKey(keyWord)) {
@@ -400,8 +410,10 @@ public class AddHandler {
 		}
 		return true;
 	}
+
 	/**
 	 * This method is to count the number of keywords appeared in a single task
+	 * 
 	 * @param keyFieldsList
 	 * @return
 	 */
@@ -447,12 +459,15 @@ public class AddHandler {
 
 		return true;
 	}
-   /**
-    * This method is to check the block date input with the date blocked in the storage to check if it clash
-    * @param smtData
-    * @param endDate
-    * @return
-    */
+
+	/**
+	 * This method is to check the block date input with the date blocked in the
+	 * storage to check if it clash
+	 * 
+	 * @param smtData
+	 * @param endDate
+	 * @return
+	 */
 	private static boolean clashWithBlockDate(Data smtData, DateTime endDate) {
 		for (int i = 0; i < smtData.getBlockedDateTimeList().size(); i++) {
 			if (smtData.getBlockedDateTimeList().get(i).toLocalDate()
@@ -489,8 +504,12 @@ import utility.IndicatorMessagePair;
 import utility.KeywordType;
 import utility.MessageList;
 
+/**
+ * This class is for blocking, unblocking of dates
+ * 
+ */
 public class BlockDateHandler {
-	
+
 	/* Global variable */
 	private static final int ONE_KEYWORD = 1;
 	private static final int THREE_KEYWORDS = 3;
@@ -651,7 +670,8 @@ public class BlockDateHandler {
 		}
 
 		int numberOfDatesFromThisRange = Days.daysBetween(
-				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + ADD_ONE_DAY;
+				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
+				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
 			// change the message that the range has exceed 31 days
 			return new IndicatorMessagePair(true, String.format(
@@ -678,7 +698,8 @@ public class BlockDateHandler {
 		int countBlockedFailed = 0;
 		int totalBlockedDatesPending = 0;
 		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
-				.plusDays(ONE_DAY)).toLocalDate()); date = date.plusDays(ONE_DAY)) {
+				.plusDays(ONE_DAY)).toLocalDate()); date = date
+				.plusDays(ONE_DAY)) {
 			if (!blockOneDate(date.toString(), smtData).isTrue()) {
 				countBlockedFailed++;
 			}
@@ -791,7 +812,9 @@ public class BlockDateHandler {
 	}
 
 	/**
-	 * This is to check the unblock date, is unblock for a single date or a range of dates.
+	 * This is to check the unblock date, is unblock for a single date or a
+	 * range of dates.
+	 * 
 	 * @param keyFieldList
 	 * @param smtData
 	 * @return
@@ -828,9 +851,11 @@ public class BlockDateHandler {
 		}
 
 	}
+
 	/**
-	 * This method is to check if the start date and end date are in correct format
-	 * if the start date and end date is correct,unblock successfully.
+	 * This method is to check if the start date and end date are in correct
+	 * format if the start date and end date is correct,unblock successfully.
+	 * 
 	 * @param fromDate
 	 * @param toDate
 	 * @param smtData
@@ -859,10 +884,11 @@ public class BlockDateHandler {
 				MessageList.MESSAGE_UNBLOCKED_RANGE, fromDate, toDate));
 
 	}
-	
+
 	/**
-	 * This method is to check if no date received, the date is never block before, 
-	 * or the unblock date do not exit
+	 * This method is to check if no date received, the date is never block
+	 * before, or the unblock date do not exit
+	 * 
 	 * @param receivedDate
 	 * @param smtData
 	 * @return
@@ -902,9 +928,10 @@ public class BlockDateHandler {
 		return new IndicatorMessagePair(true, String.format(
 				MessageList.MESSAGE_UNBLOCKED, receivedDate));
 	}
-	
+
 	/**
 	 * This is to check the end time later than start time
+	 * 
 	 * @param startTime
 	 * @param endTime
 	 * @return
@@ -939,27 +966,28 @@ public class BlockDateHandler {
 
 package logic;
 
-//import java.util.ArrayList;
 import java.util.Map;
 
 import utility.CommandType;
 import utility.MessageList;
 
-//import commonUsage.KeyFieldPair;
-
-/**
- * 
- *
- * 
- */
+//This class is use to print out the hint for hint handler, when user enter a 
+//specific character or command. It also use to print out the Help command list
 public class HelpCommandListHandler {
 
+	// Declare global variable
+	private static final int KEYWORD = 1;
+
+	/**
+	 * This method is to check if there is a keyword. If there is only help but
+	 * no keyword given, will display help commandlist
+	 */
 	public static String getCommandHelp(Map<String, String> keyFieldsList) {
 		if (keyFieldsList == null || keyFieldsList.isEmpty()) {
 			return MessageList.MESSAGE_NULL;
 		}
 
-		if (keyFieldsList.size() != 1) {
+		if (keyFieldsList.size() != KEYWORD) {
 			return MessageList.MESSAGE_INVALID;
 		}
 
@@ -967,8 +995,7 @@ public class HelpCommandListHandler {
 			return MessageList.MESSAGE_HELP;
 		}
 
-		keyFieldsList.remove(CommandType.Command_Types.HELP.name());// remove
-																	// this pair
+		keyFieldsList.remove(CommandType.Command_Types.HELP.name());
 
 		for (String key : keyFieldsList.keySet()) {
 			CommandType.Command_Types getType = CommandType.getType(key
@@ -980,6 +1007,9 @@ public class HelpCommandListHandler {
 	}
 
 	/**
+	 * This method is to print out the help message for the hintHandler
+	 * accordingly to the keyword input.
+	 * 
 	 * @param getType
 	 * @return
 	 */
@@ -1046,6 +1076,10 @@ import utility.IndicatorMessagePair;
 import utility.MessageList;
 import data.Data;
 
+/**
+ * This class handle all the commands from the user and proceed accordingly
+ * 
+ */
 public class LogicController {
 	private Data smtData;
 	private static LogicController onlyMenu;
@@ -1161,6 +1195,11 @@ import data.Task;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is use to search task by 1 Task ID,
+ * search 2 Task Description and search 3 Task Date
+ *
+ */
 public class SearchHandler {
 
 	private static final int KEYWORD = 1;
@@ -1483,7 +1522,7 @@ public class AddHandlerTest {
 		keyFieldsTest.put("ADD", "Submit Proposal");
 		keyFieldsTest.put("BY", "");
 		String expected = String
-				.format(MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+				.format(MessageList.MESSAGE_NO_DATE_GIVEN);
 		assertEquals(expected,
 				AddHandler.executeAdd(keyFieldsTest, smtDataTest));
 	}

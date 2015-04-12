@@ -16,6 +16,11 @@ import storage.FileStorage;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
+/**
+ * This class stores the list of task, the last unused index and also the list
+ * of blocked dates
+ * 
+ */
 public class Data {
 	private ArrayList<Task> tasksList;
 	private ArrayList<DateTime> blockedDateTimeList;
@@ -119,7 +124,8 @@ public class Data {
 	 */
 	public IndicatorMessagePair addATaskToList(Task newTask) {
 		if (newTask == null) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
 		}
 
 		tasksList.add(newTask);
@@ -189,7 +195,7 @@ public class Data {
 		if (receivedBlockedDateTimeList == null) {
 			return;
 		}
-		
+
 		blockedDateTimeList.clear();
 		for (int i = 0; i < receivedBlockedDateTimeList.size(); i++) {
 			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
@@ -206,7 +212,8 @@ public class Data {
 	public IndicatorMessagePair addBlockedDateTime(
 			DateTime receivedBlockedDateTime) {
 		if (receivedBlockedDateTime == null) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
 		}
 
 		blockedDateTimeList.add(receivedBlockedDateTime);
@@ -3428,27 +3435,34 @@ public class IndicatorMessagePair {
 
 package utility;
 
+/**
+ * This class contains the list of keywords
+ * 
+ */
 public class KeywordType {
-	
-	public enum List_Keywords{
+
+	public enum List_Keywords {
 		FROM, TO, BY, EVERY, TASKDESC, COMPLETE, INCOMPLETE, FIELD, TASKID, ON
 	}
-	
-	public enum List_SearchKeywords{
+
+	public enum List_SearchKeywords {
 		ALL, COMPLETED, COMP, PENDING, PEND, DESCRIPTION, DESC, DEADLINE, STARTTIME, TODAY, TDY, TOMORROW, TMR, YESTERDAY, YTD, MONDAY, MON, TUESDAY, TUE, WEDNESDAY, WED, THURSDAY, THU, FRIDAY, FRI, SATURDAY, SAT, SUNDAY, SUN, THISWEEK, THISWK, LASTWEEK, LASTWK, NEXTWEEK, NEXTWK, BLOCK
 	}
-	
+
 	/**
-	 * This method is to determine the type of keyword that the parameter string has received
-	 * @param keywordTypeString the string to be converted
+	 * This method is to determine the type of keyword that the parameter string
+	 * has received
+	 * 
+	 * @param keywordTypeString
+	 *            the string to be converted
 	 * @return keyword a keyword
 	 */
-	public static List_Keywords getKeyword(String keywordTypeString){
+	public static List_Keywords getKeyword(String keywordTypeString) {
 		if (keywordTypeString == null) {
 			return List_Keywords.FIELD;
 		}
 
-		switch(keywordTypeString.toLowerCase()){
+		switch (keywordTypeString.toLowerCase()) {
 		case "from":
 			return List_Keywords.FROM;
 		case "to":
@@ -3471,14 +3485,19 @@ public class KeywordType {
 			return List_Keywords.FIELD;
 		}
 	}
-	
-	
-	public static List_Keywords getKeywordSearchWithIndexNum(String keywordTypeString){
+
+	/**
+	 * getKeywordSearchWithIndexNum method will treat a number as an keyword
+	 * @param keywordTypeString the string to compare
+	 * @return the keyword
+	 */
+	public static List_Keywords getKeywordSearchWithIndexNum(
+			String keywordTypeString) {
 		if (keywordTypeString == null) {
 			return List_Keywords.FIELD;
 		}
 
-		switch(keywordTypeString.toLowerCase()){
+		switch (keywordTypeString.toLowerCase()) {
 		case "1":
 			return List_Keywords.TASKID;
 		case "2":
@@ -3489,20 +3508,23 @@ public class KeywordType {
 			return List_Keywords.FIELD;
 		}
 	}
-	
+
 	/**
-	 * This method will check whether the given parameter has a match with the list of keyword
-	 * @param input the string to compare
+	 * This method will check whether the given parameter has a match with the
+	 * list of keyword
+	 * 
+	 * @param input
+	 *            the string to compare
 	 * @return true if there is a match, else is false
 	 */
-	public static boolean contains(String input){
+	public static boolean contains(String input) {
 		for (List_Keywords aKey : List_Keywords.values()) {
-	        if (aKey.name().equals(input.toUpperCase())) {
-	            return true;
-	        }
-	    }
+			if (aKey.name().equals(input.toUpperCase())) {
+				return true;
+			}
+		}
 
-	    return false;
+		return false;
 	}
 }
 
@@ -3524,6 +3546,7 @@ public class KeywordType {
 	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
 	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 	public static final String MESSAGE_INVALID_UPDATE_ID = "Invalid Task ID for the update to proceed";
+	public static final String MESSAGE_DESCRIPTION_EMPTY = "Cannot let task description be empty";
 
 	/**
 	 * These message are for File Storage
@@ -3545,7 +3568,7 @@ public class KeywordType {
 	public static final String MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST = "No blocked date added";
 	public static final String MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE = "Invalid blocked date";
 	public static final String MESSAGE_INDEX_OUT_OF_RANGE = "Index Out of Range.";
-	
+
 	/**
 	 * This method will print out the error message before exiting the system
 	 * 
