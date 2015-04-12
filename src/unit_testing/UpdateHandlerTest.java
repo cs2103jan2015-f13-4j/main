@@ -66,17 +66,6 @@ public class UpdateHandlerTest {
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
 
-	/* This test case test for invalid task id */
-	@Test
-	public void testUpdateInvalidTaskId() {
-		keyFieldsTest.put("UPDATE", "abc");
-		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
-		assertEquals(expected,
-				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
-	}
-
 	/*
 	 * This test case test for regular update task description and return
 	 * success message
@@ -341,11 +330,10 @@ public class UpdateHandlerTest {
 
 	/* This is to check if the input can be converted into integer */
 	@Test
-	public void testInvalidConvertAnInteger() {
+	public void testUpdateInvalidTaskId() {
 		keyFieldsTest.put("UPDATE", "ser@");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah.");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		String expected = MessageList.MESSAGE_INVALID_UPDATE_ID;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}

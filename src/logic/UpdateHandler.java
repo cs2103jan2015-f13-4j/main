@@ -57,7 +57,7 @@ public class UpdateHandler {
 
 		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
 			assert false : "Update should be present before coming to this method";
-			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
+			return MessageList.MESSAGE_NO_UPDATE_COMMAND_FOUND;
 		}
 
 		if (smtData == null || smtData.getListTask().isEmpty()) {
@@ -72,9 +72,7 @@ public class UpdateHandler {
 
 		if (!isStringAnInteger(keyFieldsList
 				.get(CommandType.Command_Types.UPDATE.name()))) {
-			return String
-					.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER,
-							UPDATE_WORD);
+			return MessageList.MESSAGE_INVALID_UPDATE_ID;
 		}
 
 		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList
