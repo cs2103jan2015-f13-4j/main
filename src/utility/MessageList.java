@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 public class MessageList {
 
+	// @author A0112978W
 	/**
 	 * These message are the Commonly Used Message
 	 */
@@ -45,7 +46,7 @@ public class MessageList {
 	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
 	public static final String MESSAGE_NO_TASK_IN_DISPLAY_LIST = "There is no task in the display list.";
 
-	//@author A0112502A
+	// @author A0112502A
 	/**
 	 * These message are for DeleteHandler Class
 	 */
@@ -211,7 +212,7 @@ public class MessageList {
 	public static final String MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST = "No blocked date added";
 	public static final String MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE = "Invalid blocked date";
 	public static final String MESSAGE_INDEX_OUT_OF_RANGE = "Index Out of Range.";
-	
+
 	/**
 	 * This method will print out the error message before exiting the system
 	 * 
