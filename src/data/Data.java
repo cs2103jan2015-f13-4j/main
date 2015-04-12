@@ -13,7 +13,6 @@ public class Data {
 	private ArrayList<Task> tasksList;
 	private ArrayList<DateTime> blockedDateTimeList;
 	private Integer lastUnUsedIndex;
-	private static String errorMsgForTaskId = "The Last Unused Index has been modified illegally.";
 
 	public Data() {
 		tasksList = new ArrayList<Task>();
@@ -110,7 +109,7 @@ public class Data {
 	 */
 	public IndicatorMessagePair addATaskToList(Task newTask) {
 		if (newTask == null) {
-			return new IndicatorMessagePair(false, "No Task added");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
 		}
 
 		tasksList.add(newTask);
@@ -131,7 +130,7 @@ public class Data {
 	public Task removeATaskFromList(int index, IndicatorMessagePair msgPair) {
 		if (!checkTasksListForValidIndex(index, msgPair)) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Invalid task");
+			msgPair.setMessage(MessageList.MESSAGE_INVALID_TASK_TO_REMOVE);
 			return null;
 		}
 
@@ -157,7 +156,7 @@ public class Data {
 
 		tasksList.set(index, updatedTask);
 		msgPair.setTrue(true);
-		msgPair.setMessage("Update Success");
+		msgPair.setMessage(MessageList.MESSAGE_SUCCESS_UPDATE_TASK_TO_ARRAYLIST);
 		return msgPair;
 	}
 
@@ -177,10 +176,11 @@ public class Data {
 	 */
 	public void setBlockedDateTimeList(
 			ArrayList<DateTime> receivedBlockedDateTimeList) {
-		blockedDateTimeList.clear();
 		if (receivedBlockedDateTimeList == null) {
 			return;
 		}
+		
+		blockedDateTimeList.clear();
 		for (int i = 0; i < receivedBlockedDateTimeList.size(); i++) {
 			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
 		}
@@ -196,7 +196,7 @@ public class Data {
 	public IndicatorMessagePair addBlockedDateTime(
 			DateTime receivedBlockedDateTime) {
 		if (receivedBlockedDateTime == null) {
-			return new IndicatorMessagePair(false, "No blocked date added");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
 		}
 
 		blockedDateTimeList.add(receivedBlockedDateTime);
@@ -216,7 +216,7 @@ public class Data {
 			IndicatorMessagePair msgPair) {
 		if (!checkBlockedDateTimeListForValidIndex(index, msgPair)) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Invalid blocked date");
+			msgPair.setMessage(MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE);
 			return null;
 		}
 
@@ -253,9 +253,9 @@ public class Data {
 	 */
 	private boolean checkTasksListForValidIndex(int index,
 			IndicatorMessagePair msgPair) {
-		if (index < 0 || index > tasksList.size()) {
+		if (index < 0 || index >= tasksList.size()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Index Out of Range.");
+			msgPair.setMessage(MessageList.MESSAGE_INDEX_OUT_OF_RANGE);
 			return false;
 		}
 		return true;
@@ -273,9 +273,9 @@ public class Data {
 	 */
 	private boolean checkBlockedDateTimeListForValidIndex(int index,
 			IndicatorMessagePair msgPair) {
-		if (index < 0 || index > blockedDateTimeList.size()) {
+		if (index < 0 || index >= blockedDateTimeList.size()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Index Out of Range.");
+			msgPair.setMessage(MessageList.MESSAGE_INDEX_OUT_OF_RANGE);
 			return false;
 		}
 		return true;
@@ -359,7 +359,7 @@ public class Data {
 
 		if (checkIfTaskIdExistWithLastUnusedIndex()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage(errorMsgForTaskId);
+			msgPair.setMessage(MessageList.MESSAGE_TASKID_ERROR);
 			return msgPair;
 		}
 

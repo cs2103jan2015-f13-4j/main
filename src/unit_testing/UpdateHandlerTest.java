@@ -1,8 +1,6 @@
 //@author A0111935L
 package unit_testing;
 
-
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
