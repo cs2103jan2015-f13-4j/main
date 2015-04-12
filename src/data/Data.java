@@ -9,6 +9,11 @@ import storage.FileStorage;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
+/**
+ * This class stores the list of task, the last unused index and also the list
+ * of blocked dates
+ * 
+ */
 public class Data {
 	private ArrayList<Task> tasksList;
 	private ArrayList<DateTime> blockedDateTimeList;
@@ -112,7 +117,8 @@ public class Data {
 	 */
 	public IndicatorMessagePair addATaskToList(Task newTask) {
 		if (newTask == null) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
 		}
 
 		tasksList.add(newTask);
@@ -182,7 +188,7 @@ public class Data {
 		if (receivedBlockedDateTimeList == null) {
 			return;
 		}
-		
+
 		blockedDateTimeList.clear();
 		for (int i = 0; i < receivedBlockedDateTimeList.size(); i++) {
 			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
@@ -199,7 +205,8 @@ public class Data {
 	public IndicatorMessagePair addBlockedDateTime(
 			DateTime receivedBlockedDateTime) {
 		if (receivedBlockedDateTime == null) {
-			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
+			return new IndicatorMessagePair(false,
+					MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
 		}
 
 		blockedDateTimeList.add(receivedBlockedDateTime);
