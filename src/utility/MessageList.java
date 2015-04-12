@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 public class MessageList {
 
-	
 	/**
 	 * These message are the Commonly Used Message
 	 */
@@ -57,7 +56,8 @@ public class MessageList {
 	 */
 	public static final String MESSAGE_LOGICCONTROLLER_NO_COMMAND = "There is no command.";
 	public static final String MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED = "Command Unrecognised, prevent using \"=\",\"|\"";
-	
+
+	// @author A0112501E
 	/**
 	 * These message are for HelpCommandList class
 	 */
@@ -119,7 +119,6 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
 	public static final String MESSAGE_REDO_HELP = "- Redo\n\n";
 
-
 	/**
 	 * These message are for the AddHandler Class
 	 */
@@ -165,6 +164,7 @@ public class MessageList {
 	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
 	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days.";
 
+	// @author A0111935L
 	/**
 	 * These message are for UpdateHandler class
 	 */
@@ -172,7 +172,7 @@ public class MessageList {
 	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
 	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
 	public static final String MESSAGE_INVALID_UPDATE_ID = "Invalid Task ID for the update to proceed";
-	
+
 	/**
 	 * These message are for File Storage
 	 */
