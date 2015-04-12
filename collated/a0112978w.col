@@ -1,0 +1,2402 @@
+//@author: a0112978w
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\data\Task.java
+	 */
+
+package data;
+
+import parser.DateTimeParser;
+import utility.KeywordType;
+
+import org.joda.time.DateTime;
+
+/**
+ * This class will create the task object and provide the get and set methods.
+ * It has toString() to display the details of the tasks.  
+ */
+public class Task implements Comparable<Task> {
+	
+	// Declaration of attributes
+	private int taskId;
+	private String taskDescription;
+	private DateTime taskStartDateTime;
+	private DateTime taskEndDateTime;
+	private boolean taskStatus;
+	private String weeklyDay;
+	private String taskCompleted = "Completed";
+	private String taskPending = "Pending";
+	private boolean deadlineSet;
+
+	// Overriding Constructor
+	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, String weeklyDay) {
+		super();
+		this.taskId = taskId;
+		this.taskDescription = taskDescription;
+		this.taskStartDateTime = taskStartDateTime;
+		this.taskEndDateTime = taskEndDateTime;
+		this.weeklyDay = weeklyDay;
+	}
+	
+	// Overriding Constructor
+	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, boolean taskStatus, String weeklyDay, boolean deadlineSet) {
+		super();
+		this.taskId = taskId;
+		this.taskDescription = taskDescription;
+		this.taskStartDateTime = taskStartDateTime;
+		this.taskEndDateTime = taskEndDateTime;
+		this.taskStatus = taskStatus;
+		this.weeklyDay = weeklyDay;
+		this.deadlineSet = deadlineSet;
+	}
+	
+	// Constructor
+	public Task(){
+		this.taskId = -1;
+		this.taskDescription = "";
+		this.taskStartDateTime = null;
+		this.taskEndDateTime = null;
+		this.taskStatus = false;
+		this.weeklyDay = "";
+		this.deadlineSet = false;
+	}
+	
+	/**
+	 * This method will get the Task ID
+	 * 
+	 * @return The Task ID.
+	 */
+	public int getTaskId() {
+		return taskId;
+	}
+	
+	/**
+	 * This method sets a new Task ID
+	 * 
+	 * @param taskId
+	 * 			This is the new Task ID.
+	 */
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+	
+	/**
+	 * This method will get the Task Description
+	 * 
+	 * @return The Task Description.
+	 */
+	public String getTaskDescription() {
+		return taskDescription;
+	}
+	
+	/**
+	 * This method sets a new Task Description
+	 * 
+	 * @param taskDescription
+	 * 			This is the new Task Description.
+	 */
+	public void setTaskDescription(String taskDescription) {
+		this.taskDescription = taskDescription;
+	}
+	
+	/**
+	 * This method will get the Task Start Time
+	 * 
+	 * @return The Task Start Time.
+	 */
+	public DateTime getTaskStartDateTime() {
+		return taskStartDateTime;
+	}
+	
+	/**
+	 * This method sets a new Task Start Time
+	 * 
+	 * @param taskStartDateTime
+	 * 			This is the new Task Start Time.
+	 */
+	public void setTaskStartDateTime(DateTime taskStartDateTime) {
+		this.taskStartDateTime = taskStartDateTime;
+	}
+	
+	/**
+	 * This method will get the Task End Date
+	 * 
+	 * @return The Task End Date.
+	 */
+	public DateTime getTaskEndDateTime() {
+		return taskEndDateTime;
+	}
+	
+	/**
+	 * This method sets a new Task End Date
+	 * 
+	 * @param taskEndDateTime
+	 * 			This is the new Task End Date.
+	 */
+	public void setTaskEndDateTime(DateTime taskEndDateTime) {
+		this.taskEndDateTime = taskEndDateTime;
+	}
+	
+	/**
+	 * This method will get the Task Status
+	 * 
+	 * @return The Task Status.
+	 */
+	public boolean getTaskStatus() {
+		return taskStatus;
+	}
+	
+	/**
+	 * This method sets a new Task Status
+	 * 
+	 * @param taskStatus
+	 * 			This is the new Task Status.
+	 */
+	public void setTaskStatus(boolean taskStatus) {
+		this.taskStatus = taskStatus;
+	}
+	
+	/**
+	 * This method will get the Weekly Day
+	 * 
+	 * @return The Weekly Day.
+	 */
+	public String getWeeklyDay() {
+		return weeklyDay;
+	}
+	
+	/**
+	 * This method sets a new Weekly Day
+	 * 
+	 * @param weeklyDay
+	 * 			This is the new Weekly Day.
+	 */
+	public void setWeeklyDay(String weeklyDay) {
+		this.weeklyDay = weeklyDay;
+	}
+	
+	/**
+	 * This method will get the Deadline Status
+	 * 
+	 * @return The Deadline Status.
+	 */
+	public boolean getDeadLineStatus() {
+		return deadlineSet;
+	}
+	
+	/**
+	 * This method sets a new Deadline Status
+	 * 
+	 * @param deadlineSet
+	 * 			This is the new Deadline Status.
+	 */
+	public void setDeadLineStatus(boolean deadlineSet) {
+		this.deadlineSet = deadlineSet;
+	}
+	
+	@Override
+	/**
+	 * This method will display the Task's information
+	 */
+	public String toString() {
+		
+		String fullDetails = "";
+		
+		if(taskId > 0) {
+			fullDetails += "\nTask ID: " + taskId + "\n";
+		}
+		
+		if(taskDescription != null && !taskDescription.isEmpty()) {
+			fullDetails += "Description: " + taskDescription + "\n";
+		}
+		
+		if(taskStartDateTime != null) {
+			fullDetails += "Start Time: " + DateTimeParser.displayTime(taskStartDateTime) + "\n";
+		}
+		
+		if(taskEndDateTime != null) {
+			fullDetails += "End Time: " + DateTimeParser.displayTime(taskEndDateTime) + "\n";
+			if(deadlineSet) {
+				fullDetails += "Deadline: " + DateTimeParser.displayDate(taskEndDateTime) + "\n";
+			} else {
+				fullDetails += "Deadline: No specified date.\n";
+			}
+		}
+		
+		if(weeklyDay != null && !weeklyDay.isEmpty()) {
+			fullDetails += "Every: " + weeklyDay + "\n";
+		}
+		
+		if(taskStatus) {
+			fullDetails += "Status: " + taskCompleted;
+		} else {
+			fullDetails += "Status: " + taskPending;
+		}
+
+		return fullDetails;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + taskId;
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (taskId != other.taskId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public int compareTo(Task arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public KeywordType getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\data\Task.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\CommandEnteredHistoryHandler.java
+	 */
+
+package logic;
+
+import java.util.ArrayList;
+
+/**
+ * This class will keep track of the commands entered by the User.
+ * In the application, User can make use of 'Shift' + 'Left' or 'Right' arrow keys
+ * to navigate through the list of entered commands.
+ */
+public class CommandEnteredHistoryHandler {
+
+	// ArrayList to store the commands entered by the User
+	private static ArrayList<String> listPastCommandEntered = new ArrayList<String>();
+	private static int currentIndex = -1;
+
+	/**
+	 * This method will get the List of Commands Entered
+	 * 
+	 * @return The List of Commands Entered.
+	 */
+	public static ArrayList<String> getListPastCommandEntered() {
+		return listPastCommandEntered;
+	}
+
+	/**
+	 * This method sets a new List of Commands Entered
+	 * 
+	 * @param listPastCommandEntered
+	 * 			This is the new List of Commands Entered.
+	 */
+	public static void setListPastCommandEntered(ArrayList<String> listPastCommandEntered) {
+		CommandEnteredHistoryHandler.listPastCommandEntered = listPastCommandEntered;
+	}
+
+	/**
+	 * This method will get the Current Index
+	 * 
+	 * @return The Current Index.
+	 */
+	public static int getCurrentIndex() {
+		return currentIndex;
+	}
+
+	/**
+	 * This method sets a new Current Index
+	 * 
+	 * @param currentIndex
+	 * 			This is the new Current Index.
+	 */
+	public static void setCurrentIndex(int currentIndex) {
+		CommandEnteredHistoryHandler.currentIndex = currentIndex;
+	}
+
+	/**
+	 * This method will store the command entered into List of Commands Entered
+	 * and set the currentIndex to the size of List of Commands Entered
+	 * 
+	 * @param cmd
+	 * 			This is the Command Entered.
+	 */
+	public static void newCommandEntered(String cmd) {
+		listPastCommandEntered.add(cmd);
+		currentIndex = listPastCommandEntered.size();
+	}
+	
+	/**
+	 * This method will get the previous command entered
+	 * 
+	 * @return The Previous Command.
+	 */
+	public static int getPrevCmd() {
+		if(currentIndex > 0) {
+			return --currentIndex;
+		}
+		return currentIndex;
+	}
+	
+	/**
+	 * This method will get the next command entered
+	 * 
+	 * @return The Next Command.
+	 */
+	public static int getAfterCmd() {
+		if(currentIndex < listPastCommandEntered.size()) {
+			return ++currentIndex;
+		}
+		return currentIndex;
+	}
+	
+	/**
+	 * This method will get the command entered at a specific index
+	 * 
+	 * @param index
+	 * 			This is the index of the command.
+	 * 
+	 * @return The Command Entered at the specific index.
+	 */
+	public static String retrieveCommand(int index) {
+		if(index >= listPastCommandEntered.size() || index < 0) {
+			return "";
+		}
+		return listPastCommandEntered.get(index);
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\CommandEnteredHistoryHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\DisplayHandler.java
+	 */
+
+package logic;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+
+import parser.DateTimeParser;
+import utility.IndicatorMessagePair;
+import utility.KeywordType;
+import utility.MessageList;
+import utility.TaskLogging;
+import data.Data;
+import data.Task;
+
+/**
+ * This class will handle the display tasks based on the User's input.
+ * It supports displaying tasks by specifying the criteria. The entire list is as shown below.
+ * 
+ * display all - Displaying all the tasks in the list.
+ * display today - Displaying Today's tasks.
+ * display tomorrow - Displaying Tomorrow's tasks.
+ * display yesterday - Displaying Yesterday's tasks.
+ * display thisweek - Displaying This Week's tasks. 
+ * display nextweek - Displaying Next Week's tasks.
+ * display lastweek - Displaying Last Week's tasks.
+ * display monday - Displaying Monday's tasks.
+ *        :                    :
+ *        :                    :
+ * display sunday - Displaying Sunday's tasks.
+ * display completed - Displaying Completed tasks.
+ * display pending - Displaying Pending tasks.
+ */
+public class DisplayHandler {
+
+	// Get the TaskLogging object to log the events
+	private static Logger taskLogger = TaskLogging.getInstance();
+	
+	private static final int NUM_OF_DAYS = 7;
+	private static final int NUM_ITEMS_EXPECTED = 1;
+	
+	/**
+	 * This method will execute the display function based on the display criteria from the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The task's information to be displayed to the User.
+	 */
+	public static String executeDisplay(Map<String, String> keyFieldsList, Data smtData) {
+		
+		// Data validation
+		checkForValidData(keyFieldsList, smtData);
+		
+		return displayContents(keyFieldsList, smtData);	
+	}
+	
+	/**
+	 * This method will retrieve the task's information and display to the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The retrieved task's information.
+	 */
+	private static String displayContents(Map<String, String> keyFieldsList, Data smtData) {
+		// Initialize IndicatorMessagePair to get result message
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		
+		// ArrayList to store the retrieved Task and DateTime objects
+		ArrayList<Task> displayTasksList = new ArrayList<Task>();
+		ArrayList<DateTime> displayDataList = new ArrayList<DateTime>();
+		
+		// Determine the display criteria
+		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
+		
+			// switch case selection to determine which display function to execute
+			switch(firstKey) {
+			case "ALL":
+				indicMsg = displaySchedule(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "COMPLETED":
+			case "COMP":
+				indicMsg = displayCompletedTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "PENDING":
+			case "PEND":
+				indicMsg = displayNotCompletedTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "TODAY":
+			case "TDY":
+				indicMsg = displayTodayTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "TOMORROW":
+			case "TMR":
+				indicMsg = displayTomorrowTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "YESTERDAY":
+			case "YTD":
+				indicMsg = displayYesterdayTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "MONDAY":
+			case "MON":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.MONDAY.name(), DateTimeConstants.MONDAY);
+				break;
+			case "TUESDAY":
+			case "TUE":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.TUESDAY.name(), DateTimeConstants.TUESDAY);
+				break;
+			case "WEDNESDAY":
+			case "WED":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.WEDNESDAY.name(), DateTimeConstants.WEDNESDAY);
+				break;
+			case "THURSDAY":
+			case "THU":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.THURSDAY.name(), DateTimeConstants.THURSDAY);
+				break;
+			case "FRIDAY":
+			case "FRI":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.FRIDAY.name(), DateTimeConstants.FRIDAY);
+				break;
+			case "SATURDAY":
+			case "SAT":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.SATURDAY.name(), DateTimeConstants.SATURDAY);
+				break;
+			case "SUNDAY":
+			case "SUN":
+				indicMsg = displaySpecificDayTasks(keyFieldsList, smtData, displayTasksList, KeywordType.List_SearchKeywords.SUNDAY.name(), DateTimeConstants.SUNDAY);
+				break;
+			case "THISWEEK":
+			case "THISWK":
+				indicMsg = displayThisWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "LASTWEEK":
+			case "LASTWK":
+				indicMsg = displayLastWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "NEXTWEEK":
+			case "NEXTWK":
+				indicMsg = displayNextWeekTasks(keyFieldsList, smtData, displayTasksList);
+				break;
+			case "BLOCK":
+				indicMsg = displayBlockTasks(keyFieldsList, smtData, displayDataList);
+				return displayDataDetails(displayDataList);
+			default:
+				// Log the default case
+				taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
+				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
+			}
+		
+		if(!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
+		if(displayTasksList.isEmpty()) {
+			// Log when display list is empty
+			taskLogger.log(Level.INFO, "Display command: " +MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST);
+			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		}
+		// Log when display function executed
+		taskLogger.log(Level.INFO, "Executed Display " +firstKey);
+		return displayTaskDetails(displayTasksList);
+	}
+	
+	/**
+	 * This method will display all the task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displaySchedule(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.ALL.name());
+		
+		for(int i = 0; i < smtData.getSize(); i++) {
+			displayTasksList.add(smtData.getATask(i));		
+		}
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display completed task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
+		
+		// Retrieve the task that matches the status
+		retrieveMatchedStatusTasks(smtData, displayTasksList, true);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display pending task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayNotCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
+		
+		// Retrieve the task that matches the status
+		retrieveMatchedStatusTasks(smtData, displayTasksList, false);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display today's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayTodayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TODAY.name());
+		
+		DateTime endDate = generateTodayDate();
+		
+		// Retrieve the task that matches the date
+		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate());
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display tomorrow's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayTomorrowTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TOMORROW.name());
+	
+		DateTime endDate = generateTodayDate();
+		
+		// Retrieve the task that matches the date
+		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate().plusDays(1));
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display yesterday's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayYesterdayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.YESTERDAY.name());
+	
+		DateTime endDate = generateTodayDate();
+		
+		// Retrieve the task that matches the date
+		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate().minusDays(1));
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display the specific day task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param day
+	 * 			Day of the Week
+	 * @param dayValue
+	 * 			Day Value of the Week
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displaySpecificDayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList, String day, int dayValue) {
+
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, day);
+		
+		// Retrieve the task that matches the date
+		retrieveMatchedDateTasks(smtData, displayTasksList, DateTimeParser.generateDateAfterDayComparison(dayValue).toLocalDate());
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display this week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayThisWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// ArrayList to store the dates in this week
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.THISWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
+		// Add first day of the week
+		datesOfWeekList.add(weekStart);
+		
+		// Generate a list of dates in this week
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		// Retrieve the task that matches the list of dates
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display last week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayLastWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// ArrayList to store the dates of last week
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.LASTWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
+		weekStart = weekStart.minusDays(1).dayOfWeek().withMinimumValue();
+		// Add the first day of last week
+		datesOfWeekList.add(weekStart);
+		
+		// Generate a list of dates of last week
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		// Retrieve the task that matches the list of dates
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display next week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayNextWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
+		
+		// ArrayList to store the dates of next week
+		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.NEXTWEEK.name());
+		
+		DateTime endDate = generateTodayDate();
+		DateTime weekStart = endDate.dayOfWeek().withMaximumValue();
+		weekStart = weekStart.plusDays(1).dayOfWeek().withMinimumValue();
+		// Add the first day of next week
+		datesOfWeekList.add(weekStart);
+		
+		// Generate a list of dates of next week
+		generateListOfDates(weekStart, datesOfWeekList);
+		
+		// Retrieve the task that matches the list of dates
+		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display blocked task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayDataList
+	 * 			This list contains the retrieved data.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair displayBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<DateTime> displayDataList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
+		
+		Data newData = new Data();
+		// Set the blocked dates retrieved
+		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
+		
+		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
+			displayDataList.add(newData.getABlockedDateTime(i));		
+		}
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will generate today's date
+	 * 
+	 * @return Today's date.
+	 */
+	private static DateTime generateTodayDate() {
+		LocalDate date = new LocalDate();
+		DateTime endDate = DateTimeParser.generateDate(date.toString());
+		return endDate;
+	}
+	
+	/**
+	 * This method will generate a list of dates in that particular week
+	 * 
+	 * @param weekStart
+	 * 			First day of the Week.
+	 * @param datesOfWeekList
+	 * 			This list contains the dates in that particular week.
+	 * 
+	 * @return The list of dates in that particular week.
+	 */
+	private static ArrayList<DateTime> generateListOfDates(DateTime weekStart, ArrayList<DateTime> datesOfWeekList) {
+		
+		for(int i = 1; i < NUM_OF_DAYS; i++) {
+			weekStart = weekStart.plusDays(1);
+			datesOfWeekList.add(weekStart);
+		}
+		return datesOfWeekList;
+	}
+	
+	/**
+	 * This method will retrieve the task that matches the status
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param status
+	 * 			Task status to match.
+	 * 
+	 * @return The list of tasks that matches the status.
+	 */
+	private static ArrayList<Task> retrieveMatchedStatusTasks(Data smtData, ArrayList<Task> displayTasksList, boolean status) {
+		for(int i = 0; i < smtData.getSize(); i++) {
+			if(smtData.getATask(i).getTaskStatus() == status) {
+				displayTasksList.add(smtData.getATask(i));		
+			}
+		}
+		return displayTasksList;
+	}
+	
+	/**
+	 * This method will retrieve the task that matches the date
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param matchDate
+	 * 			Date to match.
+	 * 
+	 * @return The list of tasks that matches the date.
+	 */
+	private static ArrayList<Task> retrieveMatchedDateTasks(Data smtData, ArrayList<Task> displayTasksList, LocalDate matchDate) {
+		for(int i = 0; i < smtData.getSize(); i++) {
+			if(smtData.getATask(i).getTaskEndDateTime() != null) {
+				if(smtData.getATask(i).getTaskEndDateTime().toLocalDate().equals(matchDate)) {
+					displayTasksList.add(smtData.getATask(i));	
+				}
+			}
+		}
+		return displayTasksList;
+	}
+	
+	/**
+	 * This method will retrieve the task that matches a list of dates
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param datesOfWeekList
+	 * 			This list contains the blocked dates.
+	 * 
+	 * @return The list of tasks that matches the blocked dates.
+	 */
+	private static ArrayList<Task> retrieveMatchedListOfDatesTasks(Data smtData, ArrayList<Task> displayTasksList, ArrayList<DateTime> datesOfWeekList) {
+		for(int i = 0; i < smtData.getSize(); i++) {
+			if(smtData.getATask(i).getTaskEndDateTime() != null) {
+				for(int j = 0; j < datesOfWeekList.size(); j++) {
+					if(smtData.getATask(i).getTaskEndDateTime().toLocalDate().equals(datesOfWeekList.get(j).toLocalDate())) {
+						displayTasksList.add(smtData.getATask(i));	
+					}
+				}
+			}
+		}
+		return displayTasksList;
+	}
+	
+	/**
+	 * This method will check for valid data
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The error message.
+	 */
+	private static String checkForValidData(Map<String, String> keyFieldsList, Data smtData) {
+		
+		if (keyFieldsList == null) {
+			assert false : "Map object is null.";
+		}
+		
+		if (smtData == null) {
+			assert false : "Data object is null.";
+		}
+		
+		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
+			taskLogger.log(Level.INFO, "Display command: " +MessageList.MESSAGE_NULL);
+			return MessageList.MESSAGE_NULL;
+		}
+		
+		if(smtData == null || smtData.getListTask().isEmpty()) {
+			taskLogger.log(Level.INFO, "Display command: " +MessageList.MESSAGE_NO_TASK_IN_LIST);
+			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+		}
+		
+		if(keyFieldsList.size() != NUM_ITEMS_EXPECTED) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
+		}
+		
+		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
+	}
+	
+	/**
+	 * This method will check for invalid argument
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param keyWord
+	 * 			This is the keyword.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
+		if(keyFieldsList.get(keyWord) != null) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
+		}
+		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_VALID_ARGUMENT, "Display"));
+	}
+	
+	/**
+	 * This method will display the task's information
+	 * 
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The task's information.
+	 */
+	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
+		String taskDetails = "";
+		
+		// displayTasksList is sorted by deadline
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		
+		for (int i = 0; i < displayTasksList.size(); i++) {
+			taskDetails += displayTasksList.get(i).toString() +"\n";
+		}
+		return taskDetails;
+	}
+	
+	/**
+	 * This method will display the blocked dates
+	 * 
+	 * @param displayDataList
+	 * 			This list contains the retrieved data.
+	 * 
+	 * @return The blocked dates.
+	 */
+	private static String displayDataDetails(ArrayList<DateTime> displayDataList) {
+		String dataDetails = "";
+		
+		// displayDataList is sorted by deadline
+		Collections.sort(displayDataList, SortHandler.TaskDateTimeDeadlineComparator);
+		
+		for (int i = 0; i < displayDataList.size(); i++) {
+			dataDetails += displayDataList.get(i).toLocalDate().toString() +"\n";
+		}
+		return dataDetails;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\DisplayHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\SortHandler.java
+	 */
+
+package logic;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+
+import utility.IndicatorMessagePair;
+import utility.KeywordType;
+import utility.MessageList;
+import utility.TaskLogging;
+import data.Data;
+import data.Task;
+
+/**
+ * This class will handle the sort tasks based on the User's input.
+ * It supports sorting tasks by specifying the criteria. The entire list is as shown below.
+ * 
+ * sort description - Sorting the task description by alphabetical order.
+ * sort deadline - Sorting the task deadline by earliest date.
+ * sort starttime - Sorting the task start time by earliest time.
+ * sort completed - Sorting the tasks by completed status.
+ * sort pending - Sorting the tasks by pending status.
+ */
+public class SortHandler {
+	
+	// Get the TaskLogging object to log the events
+	private static Logger taskLogger = TaskLogging.getInstance();
+	
+	private static final int NUM_ITEMS_EXPECTED = 1;
+	
+	/**
+	 * This method will execute the sort function based on the sort criteria from the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The sorted task's information to be displayed to the User.
+	 */
+	public static String executeSort(Map<String, String> keyFieldsList, Data smtData) {
+		
+		// Data validation
+		checkForValidData(keyFieldsList, smtData);
+		
+		return sortContents(keyFieldsList, smtData);	
+	}
+	
+	/**
+	 * This method will sort the task's information and display to the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The sorted task's information.
+	 */
+	private static String sortContents(Map<String, String> keyFieldsList, Data smtData) {
+		
+		// Initialize IndicatorMessagePair to get result message
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		// ArrayList to store the retrieved Task object
+		ArrayList<Task> displayTasksList = new ArrayList<Task>();
+		
+		// Determine the sort criteria
+		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
+		
+		// switch case selection to determine which sort function to execute
+		switch(firstKey) {
+		case "DESCRIPTION":
+		case "DESC":
+			indicMsg = sortDescription(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "DEADLINE":
+			indicMsg = sortDeadline(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "STARTTIME":
+			indicMsg = sortStartTime(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "COMPLETED":
+		case "COMP":
+			indicMsg = sortCompleted(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		case "PENDING":
+		case "PEND":
+			indicMsg = sortPending(keyFieldsList, smtData.getListTask(), displayTasksList);
+			break;
+		default:
+			// Log the default case
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		}
+		
+		if(!indicMsg.isTrue()) {
+			return indicMsg.getMessage();
+		}
+		
+		if(displayTasksList.isEmpty()) {
+			// Log when display list is empty
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST);
+			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		}
+		// Log when sort function executed
+		taskLogger.log(Level.INFO, "Executed Sort " +firstKey);
+		return sortTaskDetails(displayTasksList);
+	}
+	
+	/**
+	 * This method will sort the task description by alphabetical order
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 * 			
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair sortDescription(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DESCRIPTION.name());
+		
+		// Clone the task list to displayTasksList
+		cloneTaskList(listTask, displayTasksList);
+		
+		// displayTasksList is sorted by task description
+		Collections.sort(displayTasksList, SortHandler.TaskDescriptionComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will sort the task deadline by earliest date
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 * 			
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair sortDeadline(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.DEADLINE.name());
+		
+		// Clone the task list to displayTasksList
+		cloneTaskList(listTask, displayTasksList);
+		
+		// displayTasksList is sorted by deadline
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will sort the task start time by earliest time
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 * 			
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair sortStartTime(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.STARTTIME.name());
+		
+		// Clone the task list to displayTasksList
+		cloneTaskList(listTask, displayTasksList);
+		
+		// displayTasksList is sorted by deadline
+		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
+		// displayTasksList is sorted by start time
+		Collections.sort(displayTasksList, SortHandler.TaskStartTimeComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will sort the task by completed status
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 * 			
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair sortCompleted(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
+		
+		// Clone the task list to displayTasksList
+		cloneTaskList(listTask, displayTasksList);
+		
+		// displayTasksList is sorted by completed status
+		Collections.sort(displayTasksList, SortHandler.TaskCompletedComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will sort the task by pending status
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 * 			
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair sortPending(Map<String, String> keyFieldsList, ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		// Check for invalid argument
+		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
+		
+		// Clone the task list to displayTasksList
+		cloneTaskList(listTask, displayTasksList);
+		
+		// displayTasksList is sorted by pending status
+		Collections.sort(displayTasksList, SortHandler.TaskPendingComparator);
+		
+		return new IndicatorMessagePair(true, "Success");
+	}
+	
+	/**
+	 * This method will display the sorted task's information
+	 * 
+	 * @param displayTasksList
+	 * 			This list contains the sorted tasks to be displayed.
+	 * 
+	 * @return The sorted task's information.
+	 */
+	private static String sortTaskDetails(ArrayList<Task> displayTasksList) {
+		String taskDetails = "";
+		for (int i = 0; i < displayTasksList.size(); i++) {
+			taskDetails += displayTasksList.get(i).toString() +"\n";
+		}
+		return taskDetails;
+	}
+	
+	/**
+	 * This method will clone the listTask to displayTasksList
+	 * 
+	 * @param listTask
+	 * 			This list contains a list of tasks.
+	 * @param displayTasksList
+	 * 			This list is cloned from listTask.
+	 */
+	private static void cloneTaskList(ArrayList<Task> listTask, ArrayList<Task> displayTasksList) {
+		
+		for(int i = 0; i < listTask.size(); i++) {
+			displayTasksList.add(listTask.get(i));		
+		}
+	}
+	
+	/**
+	 * Comparator<Task> to compare task description between the tasks
+	 */
+	public static Comparator<Task> TaskDescriptionComparator 
+								= new Comparator<Task>() {
+
+		public int compare(Task task1, Task task2) {
+		
+		String taskDescription1 = task1.getTaskDescription().toUpperCase();
+		String taskDescription2 = task2.getTaskDescription().toUpperCase();
+		
+		return taskDescription1.compareTo(taskDescription2);
+		}
+	};
+	
+	/**
+	 * Comparator<Task> to compare task deadline between the tasks
+	 */
+	public static Comparator<Task> TaskDeadlineComparator 
+								= new Comparator<Task>() {
+
+		public int compare(Task task1, Task task2) {
+		
+		if(task1.getTaskEndDateTime() == null || task2.getTaskEndDateTime() == null) {
+			return 0;
+		}
+		
+		return task1.getTaskEndDateTime().compareTo(task2.getTaskEndDateTime());
+		}
+	};
+	
+	/**
+	 * Comparator<DateTime> to compare date between the blocked dates
+	 */
+	public static Comparator<DateTime> TaskDateTimeDeadlineComparator 
+								= new Comparator<DateTime>() {
+		
+		public int compare(DateTime date1, DateTime date2) {
+		
+		if(date1.toLocalDate() == null || date2.toLocalDate() == null) {
+			return 0;
+		}
+		
+		return date1.toLocalDate().compareTo(date2.toLocalDate());
+		}
+	};
+	
+	/**
+	 * Comparator<Task> to compare task start time between the tasks
+	 */
+	public static Comparator<Task> TaskStartTimeComparator 
+								= new Comparator<Task>() {
+
+		public int compare(Task task1, Task task2) {
+
+		if(task1.getTaskStartDateTime() == null || task2.getTaskStartDateTime() == null) {
+			return 0;
+		}
+
+		return task1.getTaskStartDateTime().compareTo(task2.getTaskStartDateTime());
+		}
+	};
+	
+	/**
+	 * Comparator<Task> to compare task completed status between the tasks
+	 */
+	public static Comparator<Task> TaskCompletedComparator 
+									= new Comparator<Task>() {
+
+		public int compare(Task task1, Task task2) {
+
+			String taskDescription1 = ""+ task1.getTaskStatus();
+			String taskDescription2 = ""+ task2.getTaskStatus();
+			
+			return taskDescription2.compareTo(taskDescription1);
+		}
+	};
+	
+	/**
+	 * Comparator<Task> to compare task pending status between the tasks
+	 */
+	public static Comparator<Task> TaskPendingComparator 
+									= new Comparator<Task>() {
+
+		public int compare(Task task1, Task task2) {
+		
+		String taskDescription1 = ""+ task1.getTaskStatus();
+		String taskDescription2 = ""+ task2.getTaskStatus();
+		
+		return taskDescription1.compareTo(taskDescription2);
+		}
+	};
+	
+	/**
+	 * This method will check for valid data
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The error message.
+	 */
+	private static String checkForValidData(Map<String, String> keyFieldsList, Data smtData) {
+		
+		if (keyFieldsList == null) {
+			assert false : "Map object is null.";
+		}
+		
+		if (smtData == null) {
+			assert false : "Data object is null.";
+		}
+		
+		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NULL);
+			return MessageList.MESSAGE_NULL;
+		}
+		
+		if(smtData == null || smtData.getListTask().isEmpty()) {
+			taskLogger.log(Level.INFO, "Sort command: " +MessageList.MESSAGE_NO_TASK_IN_LIST);
+			return MessageList.MESSAGE_NO_TASK_IN_LIST;
+		}
+		
+		if(keyFieldsList.size() != NUM_ITEMS_EXPECTED) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
+			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		}
+		
+		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
+	}
+	
+	/**
+	 * This method will check for invalid argument
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param keyWord
+	 * 			This is the keyword.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
+	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
+		if(keyFieldsList.get(keyWord) != null) {
+			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
+			return new IndicatorMessagePair(false, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort"));
+		}
+		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_VALID_ARGUMENT, "Sort"));
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\SortHandler.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\parser\DateTimeParser.java
+	 */
+
+package parser;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import utility.MessageList;
+import utility.TaskLogging;
+
+/**
+ * This class will check for valid date and time format before generating the date and time objects.
+ */
+public class DateTimeParser {
+	
+	// Get the TaskLogging object to log the events
+	private static Logger taskLogger = TaskLogging.getInstance();
+	
+	private static final int NUM_OF_DAYS = 7;
+	
+	// Valid date and time formats
+	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
+	private static String[] timeFormatList = {"ha", "h a", "h.ma", "h.m a"};
+	private static String[] dayFormatList = {"today", "tdy", "tomorrow", "tmr", "monday", "mon", "tuesday", "tue", "wednesday", "wed", "thursday", "thu", "friday", "fri", "saturday", "sat", "sunday", "sun"};
+	private static String standardDateFormat = "d MMMM, yyyy (E)";
+	private static String standardTimeFormat = "h.mm a";
+	
+	// Initialize the date and time objects
+	private static DateTimeFormatter dtf = new DateTimeFormatter(null, null);
+	private static DateTime convertedDate = new DateTime();
+	private static DateTime convertedTime = new DateTime();
+	
+	/**
+	 * This method will generate a date object from a dateValue string.
+	 * 
+	 * @param dateValue
+	 * 			This is the value to be converted to a date object.
+	 * 
+	 * @return The date object.
+	 */
+	public static DateTime generateDate(String dateValue) {
+		
+		convertedDate = new DateTime();
+		String checkDateFormatStatus = "";
+		
+		// Check for valid date format
+		checkDateFormatStatus = checkDateFormat(dateValue);
+		
+		// Date format invalid, return null
+		if(checkDateFormatStatus.equals(MessageList.MESSAGE_INCORRECT_DATE_FORMAT) || 
+				checkDateFormatStatus.equals(MessageList.MESSAGE_DATE_IS_BEFORE_TODAY)) {
+			return null;
+		}
+		
+		if(dateValue.matches("[a-zA-Z]+")) {
+			// generate date based on alphabetic format
+			convertedDate = generateDateBasedOnDay(dateValue);
+		} else { 
+			// generate date based on numeric format
+			convertedDate = convertDateTime(checkDateFormatStatus, dateValue);
+		}
+		return new DateTime(convertedDate.getYear(), convertedDate.getMonthOfYear(), convertedDate.getDayOfMonth(), 23, 59);
+	}
+	
+	/**
+	 * This method will check for valid date format
+	 * 
+	 * @param dateValue
+	 * 			This is the value to be converted to a date object.
+	 * 			
+	 * @return The valid date format or error message.
+	 */
+	public static String checkDateFormat(String dateValue) {
+		
+		String dateFormat = "";
+		DateTime today = new DateTime();
+		
+		for(int i = 0; i < dateFormatList.length; i++) {
+			try	{
+				// Try to see whether the dateValue matches the list of valid date formats
+				convertedDate = convertDateTime(dateFormatList[i], dateValue);
+				
+				// Check if the date is before today's date
+				if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) < 0) {
+					dateFormat = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
+					taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_DATE_IS_BEFORE_TODAY);
+					break;
+				} // Check if the date falls on today or future date
+				  else if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) >= 0) {
+					dateFormat = dateFormatList[i];
+					break;
+				}
+			} catch (IllegalArgumentException e) {
+				dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+				taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
+				// Invalid conversion, continue to loop until valid date format found
+				continue;
+			}
+		}
+		
+		// Check whether the dateValue is a valid alphabetic date format
+		for(int i = 0; i < dayFormatList.length; i++) {
+			if(dateValue.equalsIgnoreCase(dayFormatList[i])) {
+				dateFormat = dayFormatList[i];
+				break;
+			}
+		}
+		return dateFormat;
+	}
+	
+	/**
+	 * This method will generate a time object from a dateValue string.
+	 * 
+	 * @param dateValue
+	 * 			This is the value to be converted to a time object.
+	 * 
+	 * @return The time object.
+	 */
+	public static DateTime generateTime(String timeValue) {
+		
+		convertedTime = new DateTime();
+		String checkTimeFormatStatus = "";
+		
+		// Check for valid time format
+		checkTimeFormatStatus = checkTimeFormat(timeValue);
+		
+		// Time format invalid, return null
+		if(checkTimeFormatStatus.equals(MessageList.MESSAGE_INCORRECT_TIME_FORMAT)) {
+			return null;
+		}
+		// generate time with valid time format
+		return convertedTime = convertDateTime(checkTimeFormatStatus, timeValue);
+	}
+	
+	/**
+	 * This method will check for valid time format
+	 * 
+	 * @param timeValue
+	 * 			This is the value to be converted to a time object.
+	 * 			
+	 * @return The valid date format or error message.
+	 */
+	public static String checkTimeFormat(String timeValue) {
+		String timeFormat = "";
+		
+		for(int i = 0; i < timeFormatList.length; i++) {
+			try	{	
+				// Try to see whether the timeValue matches the list of valid time formats
+				convertedTime = convertDateTime(timeFormatList[i], timeValue);
+				timeFormat = timeFormatList[i];
+				break;
+			} catch (IllegalArgumentException e) {
+				timeFormat = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+				taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_INCORRECT_TIME_FORMAT);
+				// Invalid conversion, continue to loop until valid time format found
+				continue;
+			}
+		}
+		return timeFormat;
+	}
+	
+	/**
+	 * This method will convert the datetimeValue to a DateTime object with valid date or time formats
+	 * 
+	 * @param datetimeFormat
+	 * 			This is the valid date or time format.
+	 * @param datetimeValue
+	 * 			This is the datetimeValue to be converted to DateTime object.
+	 * 
+	 * @return The converted DateTime object.
+	 */
+	public static DateTime convertDateTime(String datetimeFormat, String datetimeValue) {
+		DateTime convertedDatetime = new DateTime();
+		
+		// Make use of DateTimeFormatter to define the valid date or time format
+		dtf = DateTimeFormat.forPattern(datetimeFormat);
+		// Make use of DateTimeFormatter to parse the datetimeValue
+		convertedDatetime = dtf.parseDateTime(datetimeValue);
+		
+		return convertedDatetime;
+	}
+
+	/**
+	 * This method will display the date in a standard date format
+	 * 
+	 * @param receivedDateTime
+	 * 			This is the DateTime object to be displayed.
+	 * 
+	 * @return The String representation of the DateTime object in a standard date format.
+	 */
+	public static String displayDate(DateTime receivedDateTime) {
+		if(receivedDateTime == null){
+			return "";
+		}
+		// Make use of DateTimeFormatter to define the standard date format
+		DateTimeFormatter dtfout = DateTimeFormat.forPattern(standardDateFormat);
+		return dtfout.print(receivedDateTime);
+	}
+	
+	/**
+	 * This method will display the time in a standard time format
+	 * 
+	 * @param receivedDateTime
+	 * 			This is the DateTime object to be displayed.
+	 * 
+	 * @return The String representation of the DateTime object in a standard time format.
+	 */
+	public static String displayTime(DateTime receivedDateTime) {
+		if(receivedDateTime == null){
+			return "";
+		}
+		// Make use of DateTimeFormatter to define the standard time format
+		DateTimeFormatter dtfout = DateTimeFormat.forPattern(standardTimeFormat);
+		return dtfout.print(receivedDateTime);
+	}
+	
+	/**
+	 * This method will generate a date object based on the alphabetic date format
+	 * 
+	 * @param dateValue
+	 * 			This is the value to be converted to a date object.
+	 * 			
+	 * @return The date object.
+	 */
+	public static DateTime generateDateBasedOnDay(String dateValue) {
+		
+		// switch case selection to determine which day to execute
+		switch (dateValue.toUpperCase()) {
+			case "TODAY":
+			case "TDY":
+				return convertedDate;
+			case "TOMORROW": 
+			case "TMR":
+				return convertedDate.plusDays(1);
+			case "MONDAY":
+			case "MON":
+				return generateDateAfterDayComparison(DateTimeConstants.MONDAY);
+			case "TUESDAY":
+			case "TUE":
+				return generateDateAfterDayComparison(DateTimeConstants.TUESDAY);
+			case "WEDNESDAY":
+			case "WED":
+				return generateDateAfterDayComparison(DateTimeConstants.WEDNESDAY);
+			case "THURSDAY":
+			case "THU":
+				return generateDateAfterDayComparison(DateTimeConstants.THURSDAY);
+			case "FRIDAY":
+			case "FRI":
+				return generateDateAfterDayComparison(DateTimeConstants.FRIDAY);
+			case "SATURDAY":
+			case "SAT":
+				return generateDateAfterDayComparison(DateTimeConstants.SATURDAY);
+			case "SUNDAY":
+			case "SUN":
+				return generateDateAfterDayComparison(DateTimeConstants.SUNDAY);
+			default:
+				return null;
+		}
+	}
+	
+	/**
+	 * This method will generate a date object based on the day value
+	 * 
+	 * @param dayToCompare
+	 * 			This is the day value.
+	 * 
+	 * @return The date object.
+	 */
+	public static DateTime generateDateAfterDayComparison(int dayToCompare) {
+		
+		int dayOfWeek = convertedDate.getDayOfWeek();
+		int daysToAdd = 0;
+		int incrementDay = -1;
+		
+		if(dayOfWeek == dayToCompare) {
+			return convertedDate;
+		}
+		else if(dayOfWeek > dayToCompare) {
+			
+			for(int i = dayOfWeek; i <= NUM_OF_DAYS; i++) {
+				incrementDay++;
+				daysToAdd = dayToCompare + incrementDay;
+			}
+			return convertedDate.plusDays(daysToAdd);
+		}
+		else if(dayOfWeek < dayToCompare) {
+			return convertedDate.plusDays(dayToCompare - dayOfWeek);
+		}
+		return null;
+	}
+	
+	/**
+	 * This method will get the date format error
+	 * 
+	 * @param dateValue
+	 * 			This is the value to be converted to a date object.
+	 * 
+	 * @return The date format error.
+	 */
+	public static String getDateFormatError(String dateValue) {
+		String errorMessage = "";
+		return errorMessage = checkDateFormat(dateValue);
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\parser\DateTimeParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\CacheCommandsHandlerRedoTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+import logic.CacheCommandsHandler;
+import logic.DisplayHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.DateTimeParser;
+import storage.FileStorage;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class CacheCommandsHandlerRedoTest {
+	
+	Data smtDataTest;
+	String fileName = "taskList.txt";
+
+	@Before
+	public void setUp() throws Exception {
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		
+		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
+		
+		smtDataTest.addATaskToList(new Task(1, "CE1", null, endDate, true, "", true));
+		CacheCommandsHandler.newHistory(smtDataTest);
+		smtDataTest.addATaskToList(new Task(2, "CE2", null, endDate, true, "", true));
+		CacheCommandsHandler.newHistory(smtDataTest);
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		smtDataTest.clearTaskList();
+	}
+	
+	// To test no command entered
+	@Test
+	public void testRedoEmpty() {
+		smtDataTest.clearTaskList();
+		
+		String expected = MessageList.MESSAGE_LAST_COMMAND;
+		assertEquals(expected, CacheCommandsHandler.executeRedo(smtDataTest));
+	}
+
+	// To test a valid redo (2 commands entered, then perform undo follow by redo)
+	@Test
+	public void testRedoValid() {
+		
+		CacheCommandsHandler.executeUndo(smtDataTest);
+		
+		String expected = MessageList.MESSAGE_REDO_SUCCESS;
+		assertEquals(expected, CacheCommandsHandler.executeRedo(smtDataTest));
+	}
+	
+	// To test an invalid redo (2 commands entered, then perform redo)
+	@Test
+	public void testRedoInvalid() {
+		
+		String expected = MessageList.MESSAGE_LAST_COMMAND;
+		assertEquals(expected, CacheCommandsHandler.executeRedo(smtDataTest));
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\CacheCommandsHandlerRedoTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DateTimeParserTest.java
+	 */
+
+package unit_testing;
+import static org.junit.Assert.*;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.DateTimeParser;
+import utility.MessageList;
+
+public class DateTimeParserTest {
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	// To test empty date value
+	@Test
+	public void testDateParserEmpty() {
+		String dateValue = "";
+		String expected = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected, DateTimeParser.checkDateFormat(dateValue));
+	}
+	
+	// To test empty time value
+	@Test
+	public void testTimeParserEmpty() {
+		String timeValue = "";
+		String expected = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected, DateTimeParser.checkTimeFormat(timeValue));
+	}
+	
+	// To test valid numeric date formats
+	@Test
+	public void testNumericDateParser() {
+		String dateValue1 = "25-12-2015";
+		DateTimeFormatter dtf1 = DateTimeFormat.forPattern("dd-MM-yyyy");
+		DateTime expectedDateTimeObj1 = dtf1.parseDateTime(dateValue1);
+		assertTrue(expectedDateTimeObj1.toLocalDate().equals(DateTimeParser.generateDate(dateValue1).toLocalDate()));
+		
+		String dateValue2 = "25/12/2015";
+		DateTimeFormatter dtf2 = DateTimeFormat.forPattern("dd/MM/yyyy");
+		DateTime expectedDateTimeObj2 = dtf2.parseDateTime(dateValue2);
+		assertTrue(expectedDateTimeObj2.toLocalDate().equals(DateTimeParser.generateDate(dateValue2).toLocalDate()));
+		
+		String dateValue3 = "2015-12-25";
+		DateTimeFormatter dtf3 = DateTimeFormat.forPattern("yyyy-MM-dd");
+		DateTime expectedDateTimeObj3 = dtf3.parseDateTime(dateValue3);
+		assertTrue(expectedDateTimeObj3.toLocalDate().equals(DateTimeParser.generateDate(dateValue3).toLocalDate()));
+		
+		String dateValue4 = "2015/12/25";
+		DateTimeFormatter dtf4 = DateTimeFormat.forPattern("yyyy/MM/dd");
+		DateTime expectedDateTimeObj4 = dtf4.parseDateTime(dateValue4);
+		assertTrue(expectedDateTimeObj4.toLocalDate().equals(DateTimeParser.generateDate(dateValue4).toLocalDate()));
+		
+		String dateValue5 = "25 December, 2015";
+		DateTimeFormatter dtf5 = DateTimeFormat.forPattern("d MMMM, yyyy");
+		DateTime expectedDateTimeObj5 = dtf5.parseDateTime(dateValue5);
+		assertTrue(expectedDateTimeObj5.toLocalDate().equals(DateTimeParser.generateDate(dateValue5).toLocalDate()));
+	}
+	
+	// To test valid alphabetic date formats
+	@Test
+	public void testAlphabetDateParser() {
+		String dateValue1 = "today";
+		DateTime expectedDateTimeObj1 = new DateTime();
+		assertTrue(expectedDateTimeObj1.toLocalDate().equals(DateTimeParser.generateDate(dateValue1).toLocalDate()));
+		
+		String dateValue2 = "tomorrow";
+		DateTime expectedDateTimeObj2 = new DateTime();
+		assertTrue(expectedDateTimeObj2.plusDays(1).toLocalDate().equals(DateTimeParser.generateDate(dateValue2).toLocalDate()));
+	}
+	
+	// To test past date [invalid scenario]
+	@Test
+	public void testPastDateParser() {
+		String dateValue = "25-12-2014";
+		String expected = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
+		assertEquals(expected, DateTimeParser.checkDateFormat(dateValue));
+	}
+	
+	// To test invalid numeric date formats
+	@Test
+	public void testInvalidNumericDateParser() {
+		String dateValue1 = "25.12.2015";
+		String expected1 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected1, DateTimeParser.checkDateFormat(dateValue1));
+		
+		String dateValue2 = "251215";
+		String expected2 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected2, DateTimeParser.checkDateFormat(dateValue2));
+		
+		String dateValue3 = "25122015";
+		String expected3 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected3, DateTimeParser.checkDateFormat(dateValue3));
+	}
+		
+	// To test invalid alphabetic date formats
+	@Test
+	public void testInvalidAlphabetDateParser() {
+		String dateValue1 = "tues";
+		String expected1 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected1, DateTimeParser.checkDateFormat(dateValue1));
+		
+		String dateValue2 = "thurs";
+		String expected2 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected2, DateTimeParser.checkDateFormat(dateValue2));
+	}
+		
+	// To test boundary date value [invalid scenarios]
+	@Test
+	public void testInvalidNumericDateBoundary() {
+		String dateValue1 = "32-12-2015";
+		String expected1 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected1, DateTimeParser.checkDateFormat(dateValue1));
+		
+		String dateValue2 = "25-13-2015";
+		String expected2 = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+		assertEquals(expected2, DateTimeParser.checkDateFormat(dateValue2));
+	}
+	
+	// To test valid time formats
+	@Test
+	public void testTimeParser() {
+		String timeValue1 = "6pm";
+		DateTimeFormatter dtf1 = DateTimeFormat.forPattern("ha");
+		DateTime expectedDateTimeObj1 = dtf1.parseDateTime(timeValue1);
+		assertTrue(expectedDateTimeObj1.equals(DateTimeParser.generateTime(timeValue1)));
+		
+		String timeValue2 = "6 pm";
+		DateTimeFormatter dtf2 = DateTimeFormat.forPattern("h a");
+		DateTime expectedDateTimeObj2 = dtf2.parseDateTime(timeValue2);
+		assertTrue(expectedDateTimeObj2.equals(DateTimeParser.generateTime(timeValue2)));
+		
+		String timeValue3 = "6.30pm";
+		DateTimeFormatter dtf3 = DateTimeFormat.forPattern("h.ma");
+		DateTime expectedDateTimeObj3 = dtf3.parseDateTime(timeValue3);
+		assertTrue(expectedDateTimeObj3.equals(DateTimeParser.generateTime(timeValue3)));
+		
+		String timeValue4 = "6.30 pm";
+		DateTimeFormatter dtf4 = DateTimeFormat.forPattern("h.m a");
+		DateTime expectedDateTimeObj4 = dtf4.parseDateTime(timeValue4);
+		assertTrue(expectedDateTimeObj4.equals(DateTimeParser.generateTime(timeValue4)));
+	}
+	
+	// To test invalid time formats
+	@Test
+	public void testInvalidTimeParser() {
+		String timeValue1 = "6";
+		String expected1 = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected1, DateTimeParser.checkTimeFormat(timeValue1));
+		
+		String timeValue2 = "6:30pm";
+		String expected2 = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected2, DateTimeParser.checkTimeFormat(timeValue2));
+		
+		String timeValue3 = "1830";
+		String expected3 = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected3, DateTimeParser.checkTimeFormat(timeValue3));
+	}
+	
+	// To test boundary time value [invalid scenarios]
+	@Test
+	public void testInvalidTimeBoundary() {
+		String timeValue1 = "13pm";
+		String expected1 = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected1, DateTimeParser.checkTimeFormat(timeValue1));
+		
+		String timeValue2 = "12.60pm";
+		String expected2 = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+		assertEquals(expected2, DateTimeParser.checkTimeFormat(timeValue2));
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DateTimeParserTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DisplayHandlerTest.java
+	 */
+
+package unit_testing;
+import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.DisplayHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.DateTimeParser;
+import storage.FileStorage;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class DisplayHandlerTest {
+
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "taskList.txt";
+	
+	String today = DateTimeParser.displayDate(new DateTime());
+	
+	@Before
+	public void setUp() throws Exception {
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
+		keyFieldsTest = new TreeMap<String, String>();
+
+		smtDataTest.addATaskToList(new Task(1, "CE1", null, endDate, true, "", true));
+		smtDataTest.addATaskToList(new Task(2, "CE2", null, endDate, true, "", true));
+		smtDataTest.addATaskToList(new Task(3, "V5.0", null, DateTimeParser.generateDate("today"), false, "", true));
+		smtDataTest.addATaskToList(new Task(4, "Proj Demo", null, endDate, false, "", true));
+		smtDataTest.addATaskToList(new Task(5, "Proj Video", null, endDate, false, "", true));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		
+		keyFieldsTest.clear();
+		smtDataTest.clearTaskList();
+	}
+	
+	// To test displaying empty task list
+	@Test
+	public void testDisplayEmpty() {
+		
+		smtDataTest.clearTaskList();
+		keyFieldsTest.put("DISPLAY", "ALL");
+		
+		String expected = MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test displaying all tasks
+	@Test
+	public void testDisplaySchedule() {
+		
+		keyFieldsTest.put("DISPLAY", "ALL");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: "+ today +"\nStatus: Pending\n\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test displaying today's tasks
+	@Test
+	public void testDisplayTodayTasks() {
+		
+		keyFieldsTest.put("DISPLAY", "TODAY");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: "+ today + "\nStatus: Pending\n";
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+
+	// To test displaying completed tasks
+	@Test
+	public void testDisplayCompletedTasks() {
+		
+		keyFieldsTest.put("DISPLAY", "COMPLETED");
+		
+		String expected = "\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n";
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test displaying pending tasks
+	@Test
+	public void testDisplayNotCompletedTasks() {
+		
+		keyFieldsTest.put("DISPLAY", "PENDING");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: "+ today + "\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test invalid display argument
+	@Test
+	public void testDisplayInvalid() {
+		
+		keyFieldsTest.put("DISPLAY", "EVERYTHING");
+		
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
+		assertEquals(expected, DisplayHandler.executeDisplay(keyFieldsTest, smtDataTest));
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DisplayHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\SortHandlerTest.java
+	 */
+
+package unit_testing;
+import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import logic.SortHandler;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import parser.DateTimeParser;
+import storage.FileStorage;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+
+public class SortHandlerTest {
+
+	Map<String, String> keyFieldsTest;
+	Data smtDataTest;
+	String fileName = "taskListTest.txt";
+	
+	@Before
+	public void setUp() throws Exception {
+		smtDataTest = new Data();
+		FileStorage.setFileNameForTasksList(fileName);
+		DateTime startDate = DateTimeParser.generateDate("27/8/2015");
+		DateTime endDate = DateTimeParser.generateDate("30/8/2015");
+		keyFieldsTest = new TreeMap<String, String>();
+		
+		smtDataTest.addATaskToList(new Task(1, "CE1", null, endDate, true, "", true));
+		smtDataTest.addATaskToList(new Task(2, "CE2", null, endDate, true, "", true));
+		smtDataTest.addATaskToList(new Task(3, "V5.0", null, startDate, false, "", true));
+		smtDataTest.addATaskToList(new Task(4, "Proj Demo", null, endDate, false, "", true));
+		smtDataTest.addATaskToList(new Task(5, "Proj Video", null, endDate, false, "", true));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		keyFieldsTest.clear();
+	}
+
+	// To test sorting empty task list
+	@Test
+	public void testSortEmpty() {
+		
+		smtDataTest.clearTaskList();
+		keyFieldsTest.put("SORT", "DESCRIPTION");
+		
+		String expected = MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test sorting tasks by description
+	@Test
+	public void testSortDescription() {
+		
+		keyFieldsTest.put("SORT", "DESCRIPTION");
+		
+		String expected = "\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: 27 August, 2015 (Thu)\nStatus: Pending\n";
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test sorting tasks by deadline
+	@Test
+	public void testSortDeadline() {
+		
+		keyFieldsTest.put("SORT", "DEADLINE");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: 27 August, 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test sorting tasks by start time
+	@Test
+	public void testSortStartTime() {
+		
+		keyFieldsTest.put("SORT", "STARTTIME");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: 27 August, 2015 (Thu)\nStatus: Pending\n\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test sorting tasks by completed status
+	@Test
+	public void testSortCompleted() {
+		
+		keyFieldsTest.put("SORT", "COMPLETED");
+		
+		String expected = "\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: 27 August, 2015 (Thu)\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n";
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test sorting tasks by pending status
+	@Test
+	public void testSortPending() {
+		
+		keyFieldsTest.put("SORT", "PENDING");
+		
+		String expected = "\nTask ID: 3\nDescription: V5.0\nEnd Time: 11.59 PM\nDeadline: 27 August, 2015 (Thu)\nStatus: Pending\n\nTask ID: 4\nDescription: Proj Demo\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 5\nDescription: Proj Video\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Pending\n\nTask ID: 1\nDescription: CE1\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n\nTask ID: 2\nDescription: CE2\nEnd Time: 11.59 PM\nDeadline: 30 August, 2015 (Sun)\nStatus: Completed\n";
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+	
+	// To test invalid sort argument
+	@Test
+	public void testSortInvalid() {
+		
+		keyFieldsTest.put("SORT", "EVERYTHING");
+		
+		String expected = String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Sort");
+		assertEquals(expected, SortHandler.executeSort(keyFieldsTest, smtDataTest));
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\SortHandlerTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\TaskLogging.java
+	 */
+
+package utility;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+/**
+ * This class will provide the logging function to log the events occurred.
+ */
+public class TaskLogging {
+	public static Logger logger;
+	public static java.util.logging.FileHandler fileHandler = null;
+	
+	public TaskLogging() {
+	}
+	
+	/**
+	 * This method will return the Logger instance
+	 * 
+	 * @return The Logger instance.
+	 */
+	public static Logger getInstance() {
+		logger = Logger.getLogger("SMT");
+		
+		try {
+			// Initialize the file handler
+			fileHandler = new java.util.logging.FileHandler("tasklogging.log", true);
+		}
+		catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Configurations
+		fileHandler.setFormatter(new SimpleFormatter());
+		logger.addHandler(fileHandler);
+		logger.setLevel(Level.CONFIG);
+		
+		return logger;
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\TaskLogging.java
+
+
+
+
+

@@ -33,6 +33,7 @@ public class FileStorage {
 	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
 	private static String blockedDateFileName = "defaultBlockedDateList.txt";
 	private static Logger taskLogger = TaskLogging.getInstance();
+
 	/**
 	 * get the filename for task list
 	 * 
@@ -216,8 +217,7 @@ public class FileStorage {
 						.generateStringFromTextFileToTask(txtLine);
 				if (taskObj == null) {
 					// logging
-					taskLogger.log(
-							Level.INFO,"text file line: " + txtLine);
+					taskLogger.log(Level.INFO, "text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false, String.format(
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
 							fileName));
@@ -277,8 +277,7 @@ public class FileStorage {
 			while ((txtLine = bufferRead.readLine()) != null) {
 				if (!isStringAnInteger(txtLine)) {
 					// logging
-					taskLogger.log(
-							Level.INFO,"text file line: " + txtLine);
+					taskLogger.log(Level.INFO, "text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
 					return -1;
@@ -305,7 +304,6 @@ public class FileStorage {
 	 */
 	public static IndicatorMessagePair writeToFile(ArrayList<Task> tasksList) {
 		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(fileName);// setup a file writer
 			fw.flush();
@@ -316,8 +314,7 @@ public class FileStorage {
 						.concatTaskFieldToString(tasksList.get(i));
 				if (formattedString == null) {
 					// logging
-					taskLogger.log(
-							Level.INFO,"Task object error");
+					taskLogger.log(Level.INFO, "Task object error");
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
 					bw.close();

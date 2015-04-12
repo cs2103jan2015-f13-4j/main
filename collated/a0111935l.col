@@ -20,12 +20,12 @@ public class Data {
 	private ArrayList<Task> tasksList;
 	private ArrayList<DateTime> blockedDateTimeList;
 	private Integer lastUnUsedIndex;
-	private static String errorMsgForTaskId = "The Last Unused Index has been modified illegally.";
 
 	public Data() {
+		int initialIndex = 1;
 		tasksList = new ArrayList<Task>();
 		blockedDateTimeList = new ArrayList<DateTime>();
-		lastUnUsedIndex = 1;
+		lastUnUsedIndex = initialIndex;
 	}
 
 	/**
@@ -57,8 +57,9 @@ public class Data {
 	 */
 	public void setListTask(ArrayList<Task> receivedListTask) {
 		tasksList.clear();
+		int startIndex = 0;
 		Task newTask;
-		for (int i = 0; i < receivedListTask.size(); i++) {
+		for (int i = startIndex; i < receivedListTask.size(); i++) {
 			newTask = new Task();
 			newTask.setTaskId(receivedListTask.get(i).getTaskId());
 			newTask.setTaskDescription(receivedListTask.get(i)
@@ -102,7 +103,8 @@ public class Data {
 	 * @return a task object
 	 */
 	public Task getATask(int index) {
-		if (index >= tasksList.size() || index < 0) {
+		int startIndex = 0;
+		if (index >= tasksList.size() || index < startIndex) {
 			return null;
 		}
 		return tasksList.get(index);
@@ -117,7 +119,7 @@ public class Data {
 	 */
 	public IndicatorMessagePair addATaskToList(Task newTask) {
 		if (newTask == null) {
-			return new IndicatorMessagePair(false, "No Task added");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_TASK_ADDED_TO_DATA);
 		}
 
 		tasksList.add(newTask);
@@ -138,7 +140,7 @@ public class Data {
 	public Task removeATaskFromList(int index, IndicatorMessagePair msgPair) {
 		if (!checkTasksListForValidIndex(index, msgPair)) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Invalid task");
+			msgPair.setMessage(MessageList.MESSAGE_INVALID_TASK_TO_REMOVE);
 			return null;
 		}
 
@@ -164,7 +166,7 @@ public class Data {
 
 		tasksList.set(index, updatedTask);
 		msgPair.setTrue(true);
-		msgPair.setMessage("Update Success");
+		msgPair.setMessage(MessageList.MESSAGE_SUCCESS_UPDATE_TASK_TO_ARRAYLIST);
 		return msgPair;
 	}
 
@@ -184,10 +186,11 @@ public class Data {
 	 */
 	public void setBlockedDateTimeList(
 			ArrayList<DateTime> receivedBlockedDateTimeList) {
-		blockedDateTimeList.clear();
 		if (receivedBlockedDateTimeList == null) {
 			return;
 		}
+		
+		blockedDateTimeList.clear();
 		for (int i = 0; i < receivedBlockedDateTimeList.size(); i++) {
 			blockedDateTimeList.add(receivedBlockedDateTimeList.get(i));
 		}
@@ -203,7 +206,7 @@ public class Data {
 	public IndicatorMessagePair addBlockedDateTime(
 			DateTime receivedBlockedDateTime) {
 		if (receivedBlockedDateTime == null) {
-			return new IndicatorMessagePair(false, "No blocked date added");
+			return new IndicatorMessagePair(false, MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST);
 		}
 
 		blockedDateTimeList.add(receivedBlockedDateTime);
@@ -223,7 +226,7 @@ public class Data {
 			IndicatorMessagePair msgPair) {
 		if (!checkBlockedDateTimeListForValidIndex(index, msgPair)) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Invalid blocked date");
+			msgPair.setMessage(MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE);
 			return null;
 		}
 
@@ -241,7 +244,8 @@ public class Data {
 	 * @return the date time object
 	 */
 	public DateTime getABlockedDateTime(int index) {
-		if (index >= blockedDateTimeList.size() || index < 0) {
+		int startIndex = 0;
+		if (index >= blockedDateTimeList.size() || index < startIndex) {
 			return null;
 		}
 		return blockedDateTimeList.get(index);
@@ -260,9 +264,10 @@ public class Data {
 	 */
 	private boolean checkTasksListForValidIndex(int index,
 			IndicatorMessagePair msgPair) {
-		if (index < 0 || index > tasksList.size()) {
+		int startIndex = 0;
+		if (index < startIndex || index >= tasksList.size()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Index Out of Range.");
+			msgPair.setMessage(MessageList.MESSAGE_INDEX_OUT_OF_RANGE);
 			return false;
 		}
 		return true;
@@ -280,9 +285,10 @@ public class Data {
 	 */
 	private boolean checkBlockedDateTimeListForValidIndex(int index,
 			IndicatorMessagePair msgPair) {
-		if (index < 0 || index > blockedDateTimeList.size()) {
+		int startIndex = 0;
+		if (index < startIndex || index >= blockedDateTimeList.size()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage("Index Out of Range.");
+			msgPair.setMessage(MessageList.MESSAGE_INDEX_OUT_OF_RANGE);
 			return false;
 		}
 		return true;
@@ -295,7 +301,8 @@ public class Data {
 	 * @return true if conflicts, else false
 	 */
 	private boolean checkIfTaskIdExistWithLastUnusedIndex() {
-		for (int i = 0; i < tasksList.size(); i++) {
+		int startIndex = 0;
+		for (int i = startIndex; i < tasksList.size(); i++) {
 			if (tasksList.get(i).getTaskId() == lastUnUsedIndex) {
 				return true;
 			}
@@ -366,7 +373,7 @@ public class Data {
 
 		if (checkIfTaskIdExistWithLastUnusedIndex()) {
 			msgPair.setTrue(false);
-			msgPair.setMessage(errorMsgForTaskId);
+			msgPair.setMessage(MessageList.MESSAGE_TASKID_ERROR);
 			return msgPair;
 		}
 
@@ -950,7 +957,7 @@ public class UpdateHandler {
 
 		if (!keyFieldsList.containsKey(CommandType.Command_Types.UPDATE.name())) {
 			assert false : "Update should be present before coming to this method";
-			return MessageList.MESSAGE_MENU_COMMAND_UNRECOGNISED;
+			return MessageList.MESSAGE_NO_UPDATE_COMMAND_FOUND;
 		}
 
 		if (smtData == null || smtData.getListTask().isEmpty()) {
@@ -965,9 +972,7 @@ public class UpdateHandler {
 
 		if (!isStringAnInteger(keyFieldsList
 				.get(CommandType.Command_Types.UPDATE.name()))) {
-			return String
-					.format(MessageList.MESSAGE_INVALID_CONVERSION_INTEGER,
-							UPDATE_WORD);
+			return MessageList.MESSAGE_INVALID_UPDATE_ID;
 		}
 
 		int index = searchTaskIndexStored(Integer.parseInt(keyFieldsList
@@ -979,6 +984,10 @@ public class UpdateHandler {
 		// remove the update key pair as it has the index extracted
 		keyFieldsList.remove(CommandType.Command_Types.UPDATE.name());
 
+		if(keyFieldsList.isEmpty()){
+			return MessageList.MESSAGE_NO_UPDATE_FIELDS_FOUND;
+		}
+		
 		return checkAndUpdateContents(keyFieldsList, index, smtData);
 	}
 
@@ -1685,12 +1694,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
 import parser.DateTimeParser;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
+import utility.TaskLogging;
 import data.Task;
 import data.TaskParserFromTextFile;
 import data.TaskParserWriteToTextFile;
@@ -1705,6 +1717,7 @@ public class FileStorage {
 	private static String fileName = "defaultTaskList.txt";
 	private static String lastUnUsedIndexFileName = "lastUnusedIndex.txt";
 	private static String blockedDateFileName = "defaultBlockedDateList.txt";
+	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
 	 * get the filename for task list
@@ -1888,6 +1901,8 @@ public class FileStorage {
 				Task taskObj = TaskParserFromTextFile
 						.generateStringFromTextFileToTask(txtLine);
 				if (taskObj == null) {
+					// logging
+					taskLogger.log(Level.INFO, "text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false, String.format(
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED,
 							fileName));
@@ -1946,6 +1961,8 @@ public class FileStorage {
 		try {
 			while ((txtLine = bufferRead.readLine()) != null) {
 				if (!isStringAnInteger(txtLine)) {
+					// logging
+					taskLogger.log(Level.INFO, "text file line: " + txtLine);
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_TEXTFILE_INFO_CORRUPTED);
 					return -1;
@@ -1972,7 +1989,6 @@ public class FileStorage {
 	 */
 	public static IndicatorMessagePair writeToFile(ArrayList<Task> tasksList) {
 		IndicatorMessagePair msgPair = new IndicatorMessagePair();
-		// Add the string to the file
 		try {
 			FileWriter fw = new FileWriter(fileName);// setup a file writer
 			fw.flush();
@@ -1982,6 +1998,8 @@ public class FileStorage {
 				formattedString = TaskParserWriteToTextFile
 						.concatTaskFieldToString(tasksList.get(i));
 				if (formattedString == null) {
+					// logging
+					taskLogger.log(Level.INFO, "Task object error");
 					setIndicatorMessagePair(msgPair, false,
 							MessageList.MESSAGE_ERROR_ON_WRITING_TO_FILE);
 					bw.close();
@@ -2370,6 +2388,212 @@ public class CommandStringParserTest {
 }
 
 	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\CommandStringParserTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DataTest.java
+	 */
+
+package unit_testing;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import utility.IndicatorMessagePair;
+import utility.MessageList;
+import data.Data;
+import data.Task;
+
+public class DataTest {
+
+	Data smtDataTest;
+	String fileName = "taskListTest.txt";
+	int year;
+	int month;
+	int day;
+	int hour;
+	int min;
+	
+	@Before
+	public void setUp() throws Exception {
+		year = 2016;
+		month = 10;
+		day = 4;
+		hour = 0;
+		min = 0;
+		smtDataTest = new Data();
+		smtDataTest.addATaskToList(new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		smtDataTest.addATaskToList(new Task(2, "Submit report to Ms Sarah",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		smtDataTest.addATaskToList(new Task(3, "Prepare OP1", new DateTime(
+				year, month, day, hour, min), new DateTime(year, month, day,
+				hour + 23, min), false, "", true));
+		
+		smtDataTest.addBlockedDateTime(DateTime.now());
+		smtDataTest.addBlockedDateTime(DateTime.now().plusDays(1));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	/*boundary case where Task ID is not before 1*/
+	@Test
+	public void testGetATaskInvalid() {
+		String expected = null;
+		assertEquals(expected, smtDataTest.getATask(-1));
+	}
+	
+	/*test get a valid task*/
+	@Test
+	public void testGetATaskValid() {
+		String expected = smtDataTest.getATask(1).toString();
+		assertEquals(expected, smtDataTest.getATask(1).toString());
+	}
+	
+	/*boundary case where Task ID is out of the list*/
+	@Test
+	public void testGetATaskInvalidTwo() {
+		String expected = null;
+		assertEquals(expected, smtDataTest.getATask(3));
+	}
+
+	/*test remove a task from the list*/
+	@Test
+	public void testRemoveATaskFromListValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = smtDataTest.getATask(2).toString();
+		assertEquals(expected, smtDataTest.removeATaskFromList(2, indicMsg).toString());
+	}
+	
+	/*boundary case where Task ID is out of the list (e.g 3) for remove*/
+	@Test
+	public void testRemoveATaskFromListInValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = null;
+		assertEquals(expected, smtDataTest.removeATaskFromList(smtDataTest.getSize(), indicMsg));
+	}
+	
+	/*test set a task*/
+	@Test
+	public void testSetATaskValid() {
+		ArrayList<Task> updatedTaskList = new ArrayList<Task>();
+		Task updatedTask = (new Task(1, "Prepare a proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		updatedTaskList.add(updatedTask);
+		String expected = updatedTask.toString();
+		smtDataTest.setListTask(updatedTaskList);
+		assertEquals(expected, smtDataTest.getATask(0).toString());
+	}
+	
+	
+	/*update a task*/
+	@Test
+	public void testUpdateATaskValid() {
+		Task updatedTask = (new Task(1, "Prepare two proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		String expected = updatedTask.toString();
+		smtDataTest.updateTaskList(0, updatedTask);
+		assertEquals(expected, smtDataTest.getATask(0).toString());
+	}
+	
+	/*boundary case where the task id is not valid for update*/
+	@Test
+	public void testUpdateATaskIndexNegativeInValid() {
+		Task updatedTask = (new Task(1, "Prepare two proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		String expected = MessageList.MESSAGE_INDEX_OUT_OF_RANGE;
+		
+		assertEquals(expected, smtDataTest.updateTaskList(-1, updatedTask).getMessage());
+	}
+	
+	/*boundary case where the task id is not valid(e.g 3 for update*/
+	@Test
+	public void testUpdateATaskIndexOutOfRangeInValid() {
+		Task updatedTask = (new Task(1, "Prepare two proposal",
+				new DateTime(year, month, day, hour, min), new DateTime(year,
+						month, day, hour + 23, min), false, "", true));
+		String expected = MessageList.MESSAGE_INDEX_OUT_OF_RANGE;
+		
+		assertEquals(expected, smtDataTest.updateTaskList(smtDataTest.getSize(), updatedTask).getMessage());
+	}
+	
+	/*set blocked date list */
+	@Test
+	public void testSetBlockedDateListValid() {
+		ArrayList<DateTime> blockedDateList = new ArrayList<DateTime>();
+		blockedDateList.add(DateTime.now());
+		smtDataTest.setBlockedDateTimeList(blockedDateList);
+		assertEquals(blockedDateList.size(), smtDataTest.getBlockedDateTimeList().size());
+	}
+	
+	/*set blocked date list null will do nothing */
+	@Test
+	public void testSetBlockedDateListNullValid() {
+		int expectedBlockedDateListSize = smtDataTest.getBlockedDateTimeList().size();
+		smtDataTest.setBlockedDateTimeList(null);
+		assertEquals(expectedBlockedDateListSize, smtDataTest.getBlockedDateTimeList().size());
+	}
+	
+	/*add a blocked datetime*/
+	@Test
+	public void testAddABlockedDateValid() {
+		DateTime blockDateTime = new DateTime();
+		assertTrue(smtDataTest.addBlockedDateTime(blockDateTime).isTrue());
+	}
+	
+	/*add a block date time null*/
+	@Test
+	public void testAddABlockedDateNullInValid() {
+		String expected = MessageList.MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST;
+		assertEquals(expected, smtDataTest.addBlockedDateTime(null).getMessage());
+	}
+	
+	/*removed a blocked date time */
+	@Test
+	public void testRemovedABlockedDateTimeValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		smtDataTest.removeBlockedDateTime(0,  indicMsg);
+		assertTrue(indicMsg.isTrue());
+	}
+	
+	/*boundary case where index is -1*/
+	@Test
+	public void testRemovedABlockedDateTimeNegativeInValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE;
+		smtDataTest.removeBlockedDateTime(-1,  indicMsg);
+		assertEquals(expected, indicMsg.getMessage());
+	}
+	
+	/*boundary case where index is out of range for blocked list date*/
+	@Test
+	public void testRemovedANullBlockedDateTimeValid() {
+		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		String expected = MessageList.MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE;
+		smtDataTest.removeBlockedDateTime(smtDataTest.getBlockedDateTimeList().size(),  indicMsg);
+		assertEquals(expected, indicMsg.getMessage());
+	}
+	
+	
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\unit_testing\DataTest.java
 
 
 
@@ -2782,8 +3006,6 @@ public class TaskParserWriteToTextFileTest {
 
 package unit_testing;
 
-
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -2843,17 +3065,6 @@ public class UpdateHandlerTest {
 		keyFieldsTest.put("UPDATE", "0");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
 		String expected = MessageList.MESSAGE_NO_SUCH_TASK;
-		assertEquals(expected,
-				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
-	}
-
-	/* This test case test for invalid task id */
-	@Test
-	public void testUpdateInvalidTaskId() {
-		keyFieldsTest.put("UPDATE", "abc");
-		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah and to IVLE");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -3122,11 +3333,10 @@ public class UpdateHandlerTest {
 
 	/* This is to check if the input can be converted into integer */
 	@Test
-	public void testInvalidConvertAnInteger() {
+	public void testUpdateInvalidTaskId() {
 		keyFieldsTest.put("UPDATE", "ser@");
 		keyFieldsTest.put("taskdesc", "Submit report to Ms Sarah.");
-		String expected = String.format(
-				MessageList.MESSAGE_INVALID_CONVERSION_INTEGER, "Update");
+		String expected = MessageList.MESSAGE_INVALID_UPDATE_ID;
 		assertEquals(expected,
 				UpdateHandler.executeUpdate(keyFieldsTest, smtDataTest));
 	}
@@ -3221,7 +3431,7 @@ package utility;
 public class KeywordType {
 	
 	public enum List_Keywords{
-		FROM, TO, BY, ID, EVERY, TASKDESC, TASKSTART, TASKEND, COMPLETE, INCOMPLETE, TASKSTATUS, FIELD, TASKID, ON
+		FROM, TO, BY, EVERY, TASKDESC, COMPLETE, INCOMPLETE, FIELD, TASKID, ON
 	}
 	
 	public enum List_SearchKeywords{
@@ -3251,12 +3461,6 @@ public class KeywordType {
 			return List_Keywords.EVERY;
 		case "taskdesc":
 			return List_Keywords.TASKDESC;
-		case "taskstart":
-			return List_Keywords.TASKSTART;
-		case "taskend":
-			return List_Keywords.TASKEND;
-		case "taskstatus":
-			return List_Keywords.TASKSTATUS;
 		case "complete":
 			return List_Keywords.COMPLETE;
 		case "incomplete":
@@ -3303,6 +3507,60 @@ public class KeywordType {
 }
 
 	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\KeywordType.java
+
+
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
+	 */
+
+	/**
+	 * These message are for UpdateHandler class
+	 */
+	public static final String MESSAGE_NO_UPDATE_COMMAND_FOUND = "No update command found.";
+	public static final String MESSAGE_NO_UPDATE_FIELDS_FOUND = "Please update at least a particular detail.";
+	public static final String MESSAGE_UPDATE_SUCCESS = "%1$s\nUpdated";
+	public static final String MESSAGE_UPDATE_STATUS_EXTRA_FIELD = "Please remove any information after the word complete/pending.";
+	public static final String MESSAGE_INVALID_UPDATE_ID = "Invalid Task ID for the update to proceed";
+
+	/**
+	 * These message are for File Storage
+	 */
+	public static final String MESSAGE_FILENAME_INVALID_UNSPECIFIED = "Filename not specified.";
+	public static final String MESSAGE_FILENAME_INVALID_FORMAT = "Filename is in wrong format.";
+	public static final String MESSAGE_TEXTFILE_INFO_CORRUPTED = "Contents in the %1$s has been corrupted.";
+	public static final String MESSAGE_ERROR_ON_WRITING_TO_FILE = "Error on saving to file.";
+	public static final String MESSAGE_INVALID_STATUS = "Invalid status for a task.";
+	public static final String MESSAGE_INVALID_DEADLINESETSTATUS = "Invalid deadline set status for a task";
+
+	/**
+	 * These message are for the Data class
+	 */
+	public static final String MESSAGE_TASKID_ERROR = "The Last Unused Index has been modified illegally.";
+	public static final String MESSAGE_NO_TASK_ADDED_TO_DATA = "No Task added";
+	public static final String MESSAGE_INVALID_TASK_TO_REMOVE = "Invalid task";
+	public static final String MESSAGE_SUCCESS_UPDATE_TASK_TO_ARRAYLIST = "Update Success";
+	public static final String MESSAGE_NO_BLOCK_DATE_ADDED_TO_ARRAYLIST = "No blocked date added";
+	public static final String MESSAGE_INVALID_BLOCKED_DATE_TO_REMOVE = "Invalid blocked date";
+	public static final String MESSAGE_INDEX_OUT_OF_RANGE = "Index Out of Range.";
+	
+	/**
+	 * This method will print out the error message before exiting the system
+	 * 
+	 * @param message
+	 *            the message from various methods
+	 */
+	public static void printErrorMessageAndExit(String message) {
+		JOptionPane.showMessageDialog(null, message, "Error",
+				JOptionPane.ERROR_MESSAGE);
+		;
+		System.exit(0);
+	}
+}
+
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
 
 
 

@@ -84,6 +84,10 @@ public class UpdateHandler {
 		// remove the update key pair as it has the index extracted
 		keyFieldsList.remove(CommandType.Command_Types.UPDATE.name());
 
+		if(keyFieldsList.isEmpty()){
+			return MessageList.MESSAGE_NO_UPDATE_FIELDS_FOUND;
+		}
+		
 		return checkAndUpdateContents(keyFieldsList, index, smtData);
 	}
 
