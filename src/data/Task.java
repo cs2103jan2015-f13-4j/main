@@ -1,4 +1,4 @@
-//@A0112978W
+//@author A0112978W
 package data;
 
 import parser.DateTimeParser;
@@ -6,8 +6,13 @@ import utility.KeywordType;
 
 import org.joda.time.DateTime;
 
+/**
+ * This class will create the task object and provide the get and set methods.
+ * It has toString() to display the details of the tasks.  
+ */
 public class Task implements Comparable<Task> {
 	
+	// Declaration of attributes
 	private int taskId;
 	private String taskDescription;
 	private DateTime taskStartDateTime;
@@ -18,7 +23,7 @@ public class Task implements Comparable<Task> {
 	private String taskPending = "Pending";
 	private boolean deadlineSet;
 
-	
+	// Overriding Constructor
 	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, String weeklyDay) {
 		super();
 		this.taskId = taskId;
@@ -28,6 +33,7 @@ public class Task implements Comparable<Task> {
 		this.weeklyDay = weeklyDay;
 	}
 	
+	// Overriding Constructor
 	public Task(int taskId, String taskDescription, DateTime taskStartDateTime, DateTime taskEndDateTime, boolean taskStatus, String weeklyDay, boolean deadlineSet) {
 		super();
 		this.taskId = taskId;
@@ -39,6 +45,7 @@ public class Task implements Comparable<Task> {
 		this.deadlineSet = deadlineSet;
 	}
 	
+	// Constructor
 	public Task(){
 		this.taskId = -1;
 		this.taskDescription = "";
@@ -48,50 +55,144 @@ public class Task implements Comparable<Task> {
 		this.weeklyDay = "";
 		this.deadlineSet = false;
 	}
+	
+	/**
+	 * This method will get the Task ID
+	 * 
+	 * @return The Task ID.
+	 */
 	public int getTaskId() {
 		return taskId;
 	}
+	
+	/**
+	 * This method sets a new Task ID
+	 * 
+	 * @param taskId
+	 * 			This is the new Task ID.
+	 */
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}
+	
+	/**
+	 * This method will get the Task Description
+	 * 
+	 * @return The Task Description.
+	 */
 	public String getTaskDescription() {
 		return taskDescription;
 	}
+	
+	/**
+	 * This method sets a new Task Description
+	 * 
+	 * @param taskDescription
+	 * 			This is the new Task Description.
+	 */
 	public void setTaskDescription(String taskDescription) {
 		this.taskDescription = taskDescription;
 	}
+	
+	/**
+	 * This method will get the Task Start Time
+	 * 
+	 * @return The Task Start Time.
+	 */
 	public DateTime getTaskStartDateTime() {
 		return taskStartDateTime;
 	}
+	
+	/**
+	 * This method sets a new Task Start Time
+	 * 
+	 * @param taskStartDateTime
+	 * 			This is the new Task Start Time.
+	 */
 	public void setTaskStartDateTime(DateTime taskStartDateTime) {
 		this.taskStartDateTime = taskStartDateTime;
 	}
+	
+	/**
+	 * This method will get the Task End Date
+	 * 
+	 * @return The Task End Date.
+	 */
 	public DateTime getTaskEndDateTime() {
 		return taskEndDateTime;
 	}
+	
+	/**
+	 * This method sets a new Task End Date
+	 * 
+	 * @param taskEndDateTime
+	 * 			This is the new Task End Date.
+	 */
 	public void setTaskEndDateTime(DateTime taskEndDateTime) {
 		this.taskEndDateTime = taskEndDateTime;
 	}
+	
+	/**
+	 * This method will get the Task Status
+	 * 
+	 * @return The Task Status.
+	 */
 	public boolean getTaskStatus() {
 		return taskStatus;
 	}
+	
+	/**
+	 * This method sets a new Task Status
+	 * 
+	 * @param taskStatus
+	 * 			This is the new Task Status.
+	 */
 	public void setTaskStatus(boolean taskStatus) {
 		this.taskStatus = taskStatus;
 	}
+	
+	/**
+	 * This method will get the Weekly Day
+	 * 
+	 * @return The Weekly Day.
+	 */
 	public String getWeeklyDay() {
 		return weeklyDay;
 	}
+	
+	/**
+	 * This method sets a new Weekly Day
+	 * 
+	 * @param weeklyDay
+	 * 			This is the new Weekly Day.
+	 */
 	public void setWeeklyDay(String weeklyDay) {
 		this.weeklyDay = weeklyDay;
 	}
+	
+	/**
+	 * This method will get the Deadline Status
+	 * 
+	 * @return The Deadline Status.
+	 */
 	public boolean getDeadLineStatus() {
 		return deadlineSet;
 	}
+	
+	/**
+	 * This method sets a new Deadline Status
+	 * 
+	 * @param deadlineSet
+	 * 			This is the new Deadline Status.
+	 */
 	public void setDeadLineStatus(boolean deadlineSet) {
 		this.deadlineSet = deadlineSet;
 	}
 	
 	@Override
+	/**
+	 * This method will display the Task's information
+	 */
 	public String toString() {
 		
 		String fullDetails = "";
