@@ -1,13 +1,19 @@
-//@A0112978W
+//@author A0112978W
 package parser;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import utility.MessageList;
+import utility.TaskLogging;
 
 public class DateTimeParser {
+	
+	private static Logger taskLogger = TaskLogging.getInstance();
 	
 	private static String[] dateFormatList = {"dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "d MMMM, yyyy"}; 
 	private static String[] timeFormatList = {"ha", "h a", "h.ma", "h.m a"};
@@ -23,6 +29,7 @@ public class DateTimeParser {
 		
 		convertedDate = new DateTime();
 		String checkDateFormatStatus = "";
+		
 		checkDateFormatStatus = checkDateFormat(dateValue);
 		
 		if(checkDateFormatStatus.equals(MessageList.MESSAGE_INCORRECT_DATE_FORMAT) || 
@@ -33,8 +40,7 @@ public class DateTimeParser {
 		if(dateValue.matches("[a-zA-Z]+")) {
 			convertedDate = generateDateBasedOnDay(dateValue);
 		} else {
-			dtf = DateTimeFormat.forPattern(checkDateFormatStatus);
-			convertedDate = dtf.parseDateTime(dateValue);
+			convertedDate = convertDateTime(checkDateFormatStatus, dateValue);
 		}
 		return new DateTime(convertedDate.getYear(), convertedDate.getMonthOfYear(), convertedDate.getDayOfMonth(), 23, 59);
 	}
@@ -46,19 +52,20 @@ public class DateTimeParser {
 		
 		for(int i = 0; i < dateFormatList.length; i++) {
 			try	{
-					dtf = DateTimeFormat.forPattern(dateFormatList[i]);
-					convertedDate = dtf.parseDateTime(dateValue);
+				convertedDate = convertDateTime(dateFormatList[i], dateValue);
 					
-					if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) < 0) {
-						dateFormat = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
-						break;
-					} else if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) >= 0) {
-						dateFormat = dateFormatList[i];
-						break;
-					}
+				if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) < 0) {
+					dateFormat = MessageList.MESSAGE_DATE_IS_BEFORE_TODAY;
+					taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_DATE_IS_BEFORE_TODAY);
+					break;
+				} else if(convertedDate.toLocalDate().compareTo(today.toLocalDate()) >= 0) {
+					dateFormat = dateFormatList[i];
+					break;
+				}
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
 				dateFormat = MessageList.MESSAGE_INCORRECT_DATE_FORMAT;
+				taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_INCORRECT_DATE_FORMAT);
 				continue;
 			}
 		}
@@ -69,6 +76,7 @@ public class DateTimeParser {
 				break;
 			}
 		}
+		
 		return dateFormat;
 	}
 	
@@ -81,27 +89,34 @@ public class DateTimeParser {
 		if(checkTimeFormatStatus.equals(MessageList.MESSAGE_INCORRECT_TIME_FORMAT)) {
 			return null;
 		}
-		
-		dtf = DateTimeFormat.forPattern(checkTimeFormatStatus);
-		return convertedTime = dtf.parseDateTime(timeValue);
+		return convertedTime = convertDateTime(checkTimeFormatStatus, timeValue);
 	}
 	
 	public static String checkTimeFormat(String timeValue) {
 		String timeFormat = "";
 		
 		for(int i = 0; i < timeFormatList.length; i++) {
-			try	{
-					dtf = DateTimeFormat.forPattern(timeFormatList[i]);
-					convertedTime = dtf.parseDateTime(timeValue);
+			try	{	
+					convertedTime = convertDateTime(timeFormatList[i], timeValue);
 					timeFormat = timeFormatList[i];
 					break;
 			} catch (IllegalArgumentException e) {
 				//Invalid conversion, continue to loop until valid format found
 				timeFormat = MessageList.MESSAGE_INCORRECT_TIME_FORMAT;
+				taskLogger.log(Level.INFO, "DateTimeParser: " +MessageList.MESSAGE_INCORRECT_TIME_FORMAT);
 				continue;
 			}
 		}
 		return timeFormat;
+	}
+	
+	public static DateTime convertDateTime(String datetimeFormat, String datetimeValue) {
+		DateTime convertedDatetime = new DateTime();
+		
+		dtf = DateTimeFormat.forPattern(datetimeFormat);
+		convertedDatetime = dtf.parseDateTime(datetimeValue);
+		
+		return convertedDatetime;
 	}
 
 	public static String displayDate(DateTime receivedDateTime) {
