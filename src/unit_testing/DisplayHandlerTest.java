@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import logic.DisplayHandler;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

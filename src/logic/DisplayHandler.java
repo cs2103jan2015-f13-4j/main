@@ -1,4 +1,4 @@
-//@A0112978W
+//@author A0112978W
 package logic;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,6 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
 import parser.DateTimeParser;
-import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
 import utility.MessageList;
@@ -19,25 +18,72 @@ import utility.TaskLogging;
 import data.Data;
 import data.Task;
 
+/**
+ * This class will handle the display tasks based on the User's input.
+ * It supports displaying tasks by specifying the criteria. The entire list is as shown below.
+ * 
+ * display all - Displaying all the tasks in the list.
+ * display today - Displaying Today's tasks.
+ * display tomorrow - Displaying Tomorrow's tasks.
+ * display yesterday - Displaying Yesterday's tasks.
+ * display thisweek - Displaying This Week's tasks. 
+ * display nextweek - Displaying Next Week's tasks.
+ * display lastweek - Displaying Last Week's tasks.
+ * display monday - Displaying Monday's tasks.
+ *        :                    :
+ *        :                    :
+ * display sunday - Displaying Sunday's tasks.
+ * display completed - Displaying Completed tasks.
+ * display pending - Displaying Pending tasks.
+ */
 public class DisplayHandler {
 
+	// Get the TaskLogging object to log the events
 	private static Logger taskLogger = TaskLogging.getInstance();
 	
+	private static final int NUM_OF_DAYS = 7;
+	private static final int NUM_ITEMS_EXPECTED = 1;
+	
+	/**
+	 * This method will execute the display function based on the display criteria from the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The task's information to be displayed to the User.
+	 */
 	public static String executeDisplay(Map<String, String> keyFieldsList, Data smtData) {
 		
+		// Data validation
 		checkForValidData(keyFieldsList, smtData);
 		
 		return displayContents(keyFieldsList, smtData);	
 	}
 	
+	/**
+	 * This method will retrieve the task's information and display to the User
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The retrieved task's information.
+	 */
 	private static String displayContents(Map<String, String> keyFieldsList, Data smtData) {
-		
+		// Initialize IndicatorMessagePair to get result message
 		IndicatorMessagePair indicMsg = new IndicatorMessagePair();
+		
+		// ArrayList to store the retrieved Task and DateTime objects
 		ArrayList<Task> displayTasksList = new ArrayList<Task>();
 		ArrayList<DateTime> displayDataList = new ArrayList<DateTime>();
 		
+		// Determine the display criteria
 		String firstKey = keyFieldsList.get(keyFieldsList.keySet().iterator().next()).toUpperCase();
 		
+			// switch case selection to determine which display function to execute
 			switch(firstKey) {
 			case "ALL":
 				indicMsg = displaySchedule(keyFieldsList, smtData, displayTasksList);
@@ -106,6 +152,7 @@ public class DisplayHandler {
 				indicMsg = displayBlockTasks(keyFieldsList, smtData, displayDataList);
 				return displayDataDetails(displayDataList);
 			default:
+				// Log the default case
 				taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
 				return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
 			}
@@ -115,15 +162,30 @@ public class DisplayHandler {
 		}
 		
 		if(displayTasksList.isEmpty()) {
+			// Log when display list is empty
 			taskLogger.log(Level.INFO, "Display command: " +MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST);
 			return MessageList.MESSAGE_NO_TASK_IN_DISPLAY_LIST;
 		}
+		// Log when display function executed
 		taskLogger.log(Level.INFO, "Executed Display " +firstKey);
 		return displayTaskDetails(displayTasksList);
 	}
 	
+	/**
+	 * This method will display all the task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displaySchedule(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.ALL.name());
 		
 		for(int i = 0; i < smtData.getSize(); i++) {
@@ -132,124 +194,277 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display completed task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.COMPLETED.name());
 		
+		// Retrieve the task that matches the status
 		retrieveMatchedStatusTasks(smtData, displayTasksList, true);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display pending task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayNotCompletedTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.PENDING.name());
 		
+		// Retrieve the task that matches the status
 		retrieveMatchedStatusTasks(smtData, displayTasksList, false);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display today's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayTodayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TODAY.name());
 		
 		DateTime endDate = generateTodayDate();
 		
+		// Retrieve the task that matches the date
 		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate());
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display tomorrow's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayTomorrowTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.TOMORROW.name());
 	
 		DateTime endDate = generateTodayDate();
 		
+		// Retrieve the task that matches the date
 		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate().plusDays(1));
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display yesterday's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayYesterdayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.YESTERDAY.name());
 	
 		DateTime endDate = generateTodayDate();
 		
+		// Retrieve the task that matches the date
 		retrieveMatchedDateTasks(smtData, displayTasksList, endDate.toLocalDate().minusDays(1));
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display the specific day task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param day
+	 * 			Day of the Week
+	 * @param dayValue
+	 * 			Day Value of the Week
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displaySpecificDayTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList, String day, int dayValue) {
 
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, day);
 		
+		// Retrieve the task that matches the date
 		retrieveMatchedDateTasks(smtData, displayTasksList, DateTimeParser.generateDateAfterDayComparison(dayValue).toLocalDate());
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display this week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayThisWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// ArrayList to store the dates in this week
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.THISWEEK.name());
 		
 		DateTime endDate = generateTodayDate();
 		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
+		// Add first day of the week
 		datesOfWeekList.add(weekStart);
 		
+		// Generate a list of dates in this week
 		generateListOfDates(weekStart, datesOfWeekList);
 		
+		// Retrieve the task that matches the list of dates
 		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display last week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayLastWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// ArrayList to store the dates of last week
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.LASTWEEK.name());
 		
 		DateTime endDate = generateTodayDate();
 		DateTime weekStart = endDate.dayOfWeek().withMinimumValue();
 		weekStart = weekStart.minusDays(1).dayOfWeek().withMinimumValue();
+		// Add the first day of last week
 		datesOfWeekList.add(weekStart);
 		
+		// Generate a list of dates of last week
 		generateListOfDates(weekStart, datesOfWeekList);
 		
+		// Retrieve the task that matches the list of dates
 		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display next week's task information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayNextWeekTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<Task> displayTasksList) {
 		
+		// ArrayList to store the dates of next week
 		ArrayList<DateTime> datesOfWeekList = new ArrayList<DateTime>();
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.NEXTWEEK.name());
 		
 		DateTime endDate = generateTodayDate();
 		DateTime weekStart = endDate.dayOfWeek().withMaximumValue();
 		weekStart = weekStart.plusDays(1).dayOfWeek().withMinimumValue();
+		// Add the first day of next week
 		datesOfWeekList.add(weekStart);
 		
+		// Generate a list of dates of next week
 		generateListOfDates(weekStart, datesOfWeekList);
 		
+		// Retrieve the task that matches the list of dates
 		retrieveMatchedListOfDatesTasks(smtData, displayTasksList, datesOfWeekList);
 		
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will display blocked task's information in the list
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayDataList
+	 * 			This list contains the retrieved data.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair displayBlockTasks(Map<String, String> keyFieldsList, Data smtData, ArrayList<DateTime> displayDataList) {
 		
+		// Check for invalid argument
 		checkInvalidArgument(keyFieldsList, KeywordType.List_SearchKeywords.BLOCK.name());
 		
 		Data newData = new Data();
+		// Set the blocked dates retrieved
 		newData.setBlockedDateTimeList(smtData.getBlockedDateTimeList());
 		
 		for(int i = 0; i < newData.getBlockedDateTimeList().size(); i++) {
@@ -259,22 +474,48 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, "Success");
 	}
 	
+	/**
+	 * This method will generate today's date
+	 * 
+	 * @return Today's date.
+	 */
 	private static DateTime generateTodayDate() {
 		LocalDate date = new LocalDate();
 		DateTime endDate = DateTimeParser.generateDate(date.toString());
 		return endDate;
 	}
 	
+	/**
+	 * This method will generate a list of dates in that particular week
+	 * 
+	 * @param weekStart
+	 * 			First day of the Week.
+	 * @param datesOfWeekList
+	 * 			This list contains the dates in that particular week.
+	 * 
+	 * @return The list of dates in that particular week.
+	 */
 	private static ArrayList<DateTime> generateListOfDates(DateTime weekStart, ArrayList<DateTime> datesOfWeekList) {
-		int numOfDays = 7;
 		
-		for(int i = 1; i < numOfDays; i++) {
+		for(int i = 1; i < NUM_OF_DAYS; i++) {
 			weekStart = weekStart.plusDays(1);
 			datesOfWeekList.add(weekStart);
 		}
 		return datesOfWeekList;
 	}
 	
+	/**
+	 * This method will retrieve the task that matches the status
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param status
+	 * 			Task status to match.
+	 * 
+	 * @return The list of tasks that matches the status.
+	 */
 	private static ArrayList<Task> retrieveMatchedStatusTasks(Data smtData, ArrayList<Task> displayTasksList, boolean status) {
 		for(int i = 0; i < smtData.getSize(); i++) {
 			if(smtData.getATask(i).getTaskStatus() == status) {
@@ -284,6 +525,18 @@ public class DisplayHandler {
 		return displayTasksList;
 	}
 	
+	/**
+	 * This method will retrieve the task that matches the date
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param matchDate
+	 * 			Date to match.
+	 * 
+	 * @return The list of tasks that matches the date.
+	 */
 	private static ArrayList<Task> retrieveMatchedDateTasks(Data smtData, ArrayList<Task> displayTasksList, LocalDate matchDate) {
 		for(int i = 0; i < smtData.getSize(); i++) {
 			if(smtData.getATask(i).getTaskEndDateTime() != null) {
@@ -295,6 +548,18 @@ public class DisplayHandler {
 		return displayTasksList;
 	}
 	
+	/**
+	 * This method will retrieve the task that matches a list of dates
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * @param datesOfWeekList
+	 * 			This list contains the blocked dates.
+	 * 
+	 * @return The list of tasks that matches the blocked dates.
+	 */
 	private static ArrayList<Task> retrieveMatchedListOfDatesTasks(Data smtData, ArrayList<Task> displayTasksList, ArrayList<DateTime> datesOfWeekList) {
 		for(int i = 0; i < smtData.getSize(); i++) {
 			if(smtData.getATask(i).getTaskEndDateTime() != null) {
@@ -307,9 +572,26 @@ public class DisplayHandler {
 		}
 		return displayTasksList;
 	}
-
+	
+	/**
+	 * This method will check for valid data
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 
+	 * @return The error message.
+	 */
 	private static String checkForValidData(Map<String, String> keyFieldsList, Data smtData) {
-		int numItemExpected = 1;
+		
+		if (keyFieldsList == null) {
+			assert false : "Map object is null.";
+		}
+		
+		if (smtData == null) {
+			assert false : "Data object is null.";
+		}
 		
 		if(keyFieldsList == null || keyFieldsList.isEmpty()) {
 			taskLogger.log(Level.INFO, "Display command: " +MessageList.MESSAGE_NULL);
@@ -321,7 +603,7 @@ public class DisplayHandler {
 			return MessageList.MESSAGE_NO_TASK_IN_LIST;
 		}
 		
-		if(keyFieldsList.size() != numItemExpected) {
+		if(keyFieldsList.size() != NUM_ITEMS_EXPECTED) {
 			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
 			return String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display");
 		}
@@ -329,6 +611,16 @@ public class DisplayHandler {
 		return MessageList.MESSAGE_LIST_IS_NOT_EMPTY;
 	}
 	
+	/**
+	 * This method will check for invalid argument
+	 * 
+	 * @param keyFieldsList
+	 * 			This list contains the keywords and data.
+	 * @param keyWord
+	 * 			This is the keyword.
+	 * 
+	 * @return The IndicatorMessagePair result message.
+	 */
 	private static IndicatorMessagePair checkInvalidArgument(Map<String, String> keyFieldsList, String keyWord) {
 		if(keyFieldsList.get(keyWord) != null) {
 			taskLogger.log(Level.INFO, String.format(MessageList.MESSAGE_INVALID_ARGUMENT, "Display"));
@@ -337,9 +629,18 @@ public class DisplayHandler {
 		return new IndicatorMessagePair(true, String.format(MessageList.MESSAGE_VALID_ARGUMENT, "Display"));
 	}
 	
+	/**
+	 * This method will display the task's information
+	 * 
+	 * @param displayTasksList
+	 * 			This list contains the retrieved tasks to be displayed.
+	 * 
+	 * @return The task's information.
+	 */
 	private static String displayTaskDetails(ArrayList<Task> displayTasksList) {
 		String taskDetails = "";
 		
+		// displayTasksList is sorted by deadline
 		Collections.sort(displayTasksList, SortHandler.TaskDeadlineComparator);
 		
 		for (int i = 0; i < displayTasksList.size(); i++) {
@@ -348,9 +649,18 @@ public class DisplayHandler {
 		return taskDetails;
 	}
 	
+	/**
+	 * This method will display the blocked dates
+	 * 
+	 * @param displayDataList
+	 * 			This list contains the retrieved data.
+	 * 
+	 * @return The blocked dates.
+	 */
 	private static String displayDataDetails(ArrayList<DateTime> displayDataList) {
 		String dataDetails = "";
 		
+		// displayDataList is sorted by deadline
 		Collections.sort(displayDataList, SortHandler.TaskDateTimeDeadlineComparator);
 		
 		for (int i = 0; i < displayDataList.size(); i++) {
