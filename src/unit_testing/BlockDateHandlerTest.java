@@ -1,4 +1,4 @@
-//@A0112501E
+//@author A0112501E
 package unit_testing;
 
 import static org.junit.Assert.*;

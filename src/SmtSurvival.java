@@ -22,7 +22,7 @@ import org.eclipse.swt.events.KeyAdapter;
 
 import logic.CommandEnteredHistoryHandler;
 import logic.LockApp;
-import logic.Menu;
+import logic.LogicController;
 import utility.IndicatorMessagePair;
 import utility.MessageList;
 
@@ -58,7 +58,7 @@ public class SmtSurvival extends Composite {
 	private ScrolledComposite scCompleted;
 	private ScrolledComposite scPending;
 	private ScrolledComposite scBlocked;
-	private static Menu controller;
+	private static LogicController controller;
 	private Combo combo;
 	private static String savedExistingContents = new String();
 	private static boolean flagForSwitchTab = false;
@@ -445,7 +445,7 @@ public class SmtSurvival extends Composite {
 	 * This method is to set up the files
 	 */
 	private static void setUpFiles() {
-		controller = Menu.getInstance();
+		controller = LogicController.getInstance();
 		IndicatorMessagePair msgPair = controller.setUp();
 
 		if (!msgPair.isTrue()) {

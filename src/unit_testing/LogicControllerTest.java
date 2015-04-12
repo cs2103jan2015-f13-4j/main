@@ -1,11 +1,11 @@
-//@A0112501E
+//@author A0112501E
 package unit_testing;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 
-import logic.Menu;
+import logic.LogicController;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,9 +14,9 @@ import org.junit.Test;
 import storage.FileStorage;
 import utility.MessageList;
 
-public class MenuTest {
+public class LogicControllerTest {
 
-	Menu controller;
+	LogicController controller;
 	String expected;
 	String fileName = "taskListTest.txt";
 	String fileNameLastUnusedIndex = "lastUnusedIndexTest.txt";
@@ -142,7 +142,7 @@ public class MenuTest {
 	public void setUp() throws Exception {
 
 		expected = new String();
-		controller = Menu.getInstance();
+		controller = LogicController.getInstance();
 		FileStorage.setFileNameForTasksList(fileName);
 		FileStorage.setFileNameForLastUnusedIndex(fileNameLastUnusedIndex);
 		FileStorage.setFileNameForBlockedDatesList(fileNameBlockedDateList);
