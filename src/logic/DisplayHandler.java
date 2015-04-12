@@ -1,4 +1,4 @@
-//@A0112978W
+//@author A0112978W
 package logic;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,6 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
 import parser.DateTimeParser;
-import utility.CommandType;
 import utility.IndicatorMessagePair;
 import utility.KeywordType;
 import utility.MessageList;
@@ -19,9 +18,29 @@ import utility.TaskLogging;
 import data.Data;
 import data.Task;
 
+/**
+ * This class will handle the display tasks based on the User's input.
+ * It supports displaying tasks by specifying the criteria. The entire list is as shown below.
+ * 
+ * display all - Displaying all the tasks in the list.
+ * display today - Displaying Today's tasks.
+ * display tomorrow - Displaying Tomorrow's tasks.
+ * display yesterday - Displaying Yesterday's tasks.
+ * display thisweek - Displaying This Week's tasks. 
+ * display nextweek - Displaying Next Week's tasks.
+ * display lastweek - Displaying Last Week's tasks.
+ * display monday - Displaying Monday's tasks.
+ *        :                    :
+ *        :                    :
+ * display sunday - Displaying Sunday's tasks.
+ * display completed - Displaying Completed tasks.
+ * display pending - Displaying Pending tasks.
+ */
 public class DisplayHandler {
 
+	// Get the TaskLogging object to log the events
 	private static Logger taskLogger = TaskLogging.getInstance();
+	
 	
 	public static String executeDisplay(Map<String, String> keyFieldsList, Data smtData) {
 		
