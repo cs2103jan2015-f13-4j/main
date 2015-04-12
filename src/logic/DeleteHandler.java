@@ -95,6 +95,7 @@ public class DeleteHandler {
 	 * @return delete success message if taskId is lesser than 0 and list task size
 	 */
 	private static String checkTaskIDSize(Data smtData, int taskId) {
+		// Local declaration
 		Task removedText;
 		
 		if(taskId >= length && taskId < smtData.getListTask().size())
