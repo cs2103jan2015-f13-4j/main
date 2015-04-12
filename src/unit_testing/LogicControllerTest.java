@@ -248,16 +248,17 @@ public class LogicControllerTest {
 	 * This is to test delete task The output is : deleted from
 	 * defaultTaskList.txt:"Add submit report by Mon".
 	 */
-	//@Test
-	//public void testDeleteTaskValid() {
-		//expected = String.format(MessageList.MESSAGE_DELETE_SUCCESS,
-			//	FileStorage.getFileNameForTasksList(), "submit report");
-		//controller.commandExecution(task1);
-		//controller.commandExecution(task2);
-		//controller.commandExecution(task3);
-		//controller.commandExecution(task4);
-		//assertEquals(expected, controller.commandExecution(deleteValidTask));
-	//}
+	@Test
+	public void testDeleteTaskValid() {
+		expected = "\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\nDeleted";
+				
+				//FileStorage.getFileNameForTasksList(), "submit report");
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		controller.commandExecution(task4);
+		assertEquals(expected, controller.commandExecution(deleteValidTask));
+	}
 
 	/**
 	 * This is to test invalid delete task The output is : Invalid delete
@@ -515,7 +516,7 @@ public class LogicControllerTest {
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
-		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
+		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH,
 				"!}{JHKDKJH1");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
