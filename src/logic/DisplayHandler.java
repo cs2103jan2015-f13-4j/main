@@ -574,7 +574,7 @@ public class DisplayHandler {
 	}
 	
 	/**
-	 * This method will check for valid date
+	 * This method will check for valid data
 	 * 
 	 * @param keyFieldsList
 	 * 			This list contains the keywords and data.
