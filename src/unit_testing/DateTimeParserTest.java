@@ -68,7 +68,7 @@ public class DateTimeParserTest {
 		assertTrue(expectedDateTimeObj5.toLocalDate().equals(DateTimeParser.generateDate(dateValue5).toLocalDate()));
 	}
 	
-	// To test valid alphabet date formats
+	// To test valid alphabetic date formats
 	@Test
 	public void testAlphabetDateParser() {
 		String dateValue1 = "today";
@@ -104,7 +104,7 @@ public class DateTimeParserTest {
 		assertEquals(expected3, DateTimeParser.checkDateFormat(dateValue3));
 	}
 		
-	// To test invalid alphabet date formats
+	// To test invalid alphabetic date formats
 	@Test
 	public void testInvalidAlphabetDateParser() {
 		String dateValue1 = "tues";
