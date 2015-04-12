@@ -97,7 +97,7 @@ public class CommandEnteredHistoryHandler {
 	 * @return The Command Entered at the specific index.
 	 */
 	public static String retrieveCommand(int index) {
-		if(index >= listPastCommandEntered.size() || index < 0){
+		if(index >= listPastCommandEntered.size() || index < 0) {
 			return "";
 		}
 		return listPastCommandEntered.get(index);
