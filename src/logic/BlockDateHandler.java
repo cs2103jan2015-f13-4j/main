@@ -15,8 +15,14 @@ import utility.KeywordType;
 import utility.MessageList;
 
 public class BlockDateHandler {
+	
+	/* Global variable */
 	private static final int ONE_KEYWORD = 1;
 	private static final int THREE_KEYWORDS = 3;
+	private static final int ONE_MONTH = 31;
+	private static final int TWO_YEARS_LIMIT = 2;
+	private static final int ADD_ONE_DAY = 1;
+	private static final int ONE_DAY = 1;
 
 	/**
 	 * This method is used to check whether is it block or unblock
@@ -159,7 +165,7 @@ public class BlockDateHandler {
 		}
 
 		// change the message
-		DateTime twoYearsLater = DateTime.now().plusYears(2);
+		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
 		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
 			return new IndicatorMessagePair(false, String.format(
 					MessageList.MESSAGE_BLOCK_DATE_OVER_TWO_YEARS, fromDate));
@@ -170,8 +176,8 @@ public class BlockDateHandler {
 		}
 
 		int numberOfDatesFromThisRange = Days.daysBetween(
-				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + 1;
-		if (numberOfDatesFromThisRange > 31) {
+				startDate.toLocalDate(), endDate.toLocalDate()).getDays() + ADD_ONE_DAY;
+		if (numberOfDatesFromThisRange > ONE_MONTH) {
 			// change the message that the range has exceed 31 days
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
@@ -197,7 +203,7 @@ public class BlockDateHandler {
 		int countBlockedFailed = 0;
 		int totalBlockedDatesPending = 0;
 		for (LocalDate date = startDate.toLocalDate(); date.isBefore((endDate
-				.plusDays(1)).toLocalDate()); date = date.plusDays(1)) {
+				.plusDays(ONE_DAY)).toLocalDate()); date = date.plusDays(ONE_DAY)) {
 			if (!blockOneDate(date.toString(), smtData).isTrue()) {
 				countBlockedFailed++;
 			}
@@ -205,16 +211,15 @@ public class BlockDateHandler {
 
 		}
 		// total number of block dates is not fully occupied, will count number
-		// of
-		// occupied dates
-		if (countBlockedFailed > 0
+		// of occupied dates
+		if (countBlockedFailed > totalBlockedDatesPending
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
 					fromDate, toDate));
 		}
 		// All block dates are already occupied
-		if (countBlockedFailed > 0
+		if (countBlockedFailed > totalBlockedDatesPending
 				&& (countBlockedFailed == totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,
@@ -247,7 +252,7 @@ public class BlockDateHandler {
 		}
 
 		// change the message
-		DateTime twoYearsLater = DateTime.now().plusYears(2);
+		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
 		if (!checkFromTimeToTimeBothValid(endDate, twoYearsLater)) {
 			return new IndicatorMessagePair(false,
 					String.format(

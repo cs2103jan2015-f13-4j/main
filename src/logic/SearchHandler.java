@@ -20,6 +20,10 @@ import java.util.logging.Logger;
 public class SearchHandler {
 
 	private static final int KEYWORD = 1;
+	private static final int LENGTH_OF_INPUT = 2;
+	private static final int LENGTH_OF_ARGUMENTS = 1;
+	private static final int EXCEEDED_CRITERIA_LENGTH = 2;
+	private static final int NO_MATCH = 0;
 	
 	//Declaration for Logger
 	private static Logger taskLogger = TaskLogging.getInstance();
@@ -56,7 +60,7 @@ public class SearchHandler {
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
-		if (searchList.length < 2) {
+		if (searchList.length < LENGTH_OF_INPUT) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -84,7 +88,7 @@ public class SearchHandler {
 	 * @return
 	 */
 	private static String searchTaskDate(String[] deadLine, Data smtData) {
-		if (deadLine == null || deadLine.length <= 1 || deadLine.length > 2) {
+		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS || deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -120,7 +124,7 @@ public class SearchHandler {
 	 */
 	private static String searchTaskID(String[] index, Data smtData) {
 
-		if (index.length <= 1 || index.length > 2 || !checkInteger(index[1])) {
+		if (index.length <= LENGTH_OF_ARGUMENTS || index.length > EXCEEDED_CRITERIA_LENGTH || !checkInteger(index[1])) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -144,7 +148,7 @@ public class SearchHandler {
 	 * @return
 	 */
 	private static String searchTaskDesc(Data smtData, String[] wordList) {
-		if (wordList.length <= 1) {
+		if (wordList.length <= LENGTH_OF_INPUT) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -156,10 +160,11 @@ public class SearchHandler {
 				tempList.add(smtData.getATask(i));
 			}
 		}
-		if (tempList.size() == 0) {
+		if (tempList.size() == NO_MATCH) {
 			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
+		//To log search operation
 		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
 

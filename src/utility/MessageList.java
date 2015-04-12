@@ -10,7 +10,7 @@ public class MessageList {
 
 	public static final String MESSAGE_INVALID_ARGUMENT = "Invalid argument for %1$s command.";
 	public static final String MESSAGE_VALID_ARGUMENT = "Valid argument for %1$s command.";
-	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid Type to Integer for %1$s command";
+	public static final String MESSAGE_INVALID_CONVERSION_INTEGER = "Invalid type to integer for %1$s command";
 	public static final String MESSAGE_NO_SUCH_TASK = "Task does not exist.";
 	public static final String MESSAGE_NULL = "Command is empty. Please enter again";
 	public static final String MESSAGE_NO_TASK_IN_LIST = "There is no task in the list.";
@@ -56,22 +56,22 @@ public class MessageList {
 	 * These message are for the LogicController
 	 */
 	public static final String MESSAGE_LOGICCONTROLLER_NO_COMMAND = "There is no command.";
-	public static final String MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED = "Command Unrecognised, prevent using \"=\",\"|\"";
+	public static final String MESSAGE_LOGICCONTROLLER_COMMAND_UNRECOGNISED = "Command unrecognised, prevent using \"=\",\"|\"";
 
 	// @author A0112501E
 	/**
 	 * These message are for HelpCommandList class
 	 */
 	public static final String MESSAGE_HELP = "************************************************************************************"
-			+ "\n\n1) Add\n\n- Add <Desc>\n- Add <Description> from <Date> to <Date>"
-			+ "\n-Add<Description> every <Date>\n\n 2) Delete\n\n- Delete<Task#>\n\n "
-			+ "3) Update\n\n- Update <Task #> TaskDesc <description>"
-			+ "\n- Update <Task #> By <date/day>"
+			+ "\n\n1) Add\n\n- Add <Description>\n- Add <Description> from <Date> to <Date>"
+			+ "\n-Add <Description> every <Date>\n\n 2) Delete\n\n- Delete <Task #>\n\n "
+			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
+			+ "\n- Update <Task #> By <Date/Day>"
 			+ "\n- Update <Task #> Complete"
 			+ "\n- Update <Task #> Incomplete"
-			+ "\n- Update<Task #> TaskEnd<date>"
-			+ "\n- Update<Task #>TaskStart<date>"
-			+ "\n- Update<Task#> Every <Friday>"
+			+ "\n- Update<Task #> TaskEnd <date>"
+			+ "\n- Update<Task #>TaskStart <date>"
+			+ "\n- Update<Task #> Every <Friday>"
 			+ "\n- Update<Task #> By date or weekly day\n\n"
 			+ "4) Delete\n\n- Delete <#>\n\n"
 			+ "5) Display \n\n- Display Today [tdy] "
@@ -89,10 +89,10 @@ public class MessageList {
 			+ "6) Search\n\n- Search by Task ID "
 			+ "\n Search 1 <Task #> "
 			+ "\n Search by Task Description"
-			+ "\n- Search 2<Task Description>"
+			+ "\n- Search 2 <Task Description>"
 			+ "\n- Search 3 <Date>\n\n "
-			+ "7) Block\n\n- Block <date>\n-Block from <Date> to <Date>\n\n "
-			+ "8) Unblock\n\n- Unblock <date>\n- Unblock from <date> to <Date>\n\n "
+			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
+			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
 			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
 			+ "10) Undo\n\n -Undo\n\n "
 			+ "11) Redo\n\n************************************************************************************";
@@ -103,7 +103,7 @@ public class MessageList {
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
 	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
 	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
-	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDesc <description>\n\n- Update <Task #> By <date/day>"
+	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
 			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
 			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
