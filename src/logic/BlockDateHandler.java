@@ -243,6 +243,7 @@ public class BlockDateHandler {
 	 */
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
 			Data smtData) {
+		String errorMessage = "";
 		if (receivedDate.isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
@@ -250,8 +251,8 @@ public class BlockDateHandler {
 
 		DateTime endDate = DateTimeParser.generateDate(receivedDate);
 		if (endDate == null) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+			errorMessage = DateTimeParser.getDateFormatError(receivedDate);
+			return new IndicatorMessagePair(false, errorMessage);
 		}
 
 		// change the message
