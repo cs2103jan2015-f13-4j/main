@@ -173,7 +173,7 @@ public class MessageList {
 			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
 
 	// Sort Help
-	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n - Sort Completed [comp]"
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n- Sort Completed [comp]"
 			+ "\n\n- Sort Pending [pend]";
 
 	// Block Help
