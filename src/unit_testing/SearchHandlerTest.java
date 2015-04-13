@@ -127,13 +127,13 @@ public class SearchHandlerTest {
 
 	/**
 	 * This is to test the search without any description added to the search
-	 * task The output is: Description 14-03-2015 not found.
+	 * task The output is: Description 24-03-2015 not found.
 	 */
 	@Test
 	public void testSearchWithWrongFormatForTaskDesc() {
-		keyFieldsTest.put("SEARCH", "2 14-03-2015");
+		keyFieldsTest.put("SEARCH", "2 24-03-2015");
 		String expected = String.format(
-				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC, "14-03-2015");
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC, "24-03-2015");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
