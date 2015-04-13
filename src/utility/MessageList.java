@@ -88,7 +88,7 @@ public class MessageList {
 			+ "- Add <Description> from <Time> to <time>\n\n"
 
 			// Delete
-			+ "2) Delete\n\n- Delete <Task #>\n\n "
+			+ "2) Delete\n\n- Delete <Task #>\n\n"
 
 			// Update
 			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
@@ -111,7 +111,7 @@ public class MessageList {
 			+ "\n- Display Lastweek [lastwk]"
 			+ "\n- Display Nextweek [nextwk]"
 			+ "\n- Display Pending [pend]"
-			+ "\n- Display Completed [comp]\n\n "
+			+ "\n- Display Completed [comp]"
 			+ "\n- Display Monday [mon]"
 			+ "\n- Display Tuesday [tue]"
 			+ "\n- Display Wednesday [wed]"
@@ -121,25 +121,25 @@ public class MessageList {
 			+ "\n- Display Sunday [sun]"
 
 			// Search
-			+ "6) Search\n\n"
+			+ "\n\n5) Search\n\n"
 			+ "- Search by Task ID\n Search 1 <Task #> "
 			+ "\n- Search by Task Description\n Search 2 <Task Description>"
 			+ "\n- Search by Date\n Search 3 <Date>\n\n "
 
 			// Block
-			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
+			+ "6) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
 
 			// Unblock
-			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
+			+ "7) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
 
 			// Sort
-			+ "9) Sort\n\n -Sort Description [desc]\n\n Sort Deadline\n\n Sort StartTime\n\n Sort Completed [comp]\n\n Sort Pending [pend]"
+			+ "8) Sort\n\n -Sort Description [desc]\n -Sort Deadline\n -Sort StartTime\n -Sort Completed [comp]\n -Sort Pending [pend]"
 
 			// Undo
-			+ "10) Undo\n\n -Undo\n\n "
+			+ "\n\n9) Undo\n\n -Undo\n\n"
 
 			// Redo
-			+ "11) Redo\n\n -Redo\n\n************************************************************************************";
+			+ "10) Redo\n\n -Redo\n\n************************************************************************************";
 
 	// Add Help
 	public static final String MESSAGE_ADD_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
