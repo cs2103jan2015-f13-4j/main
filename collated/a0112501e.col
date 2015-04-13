@@ -517,7 +517,8 @@ public class BlockDateHandler {
 	private static final int TWO_YEARS_LIMIT = 2;
 	private static final int ADD_ONE_DAY = 1;
 	private static final int ONE_DAY = 1;
-
+	private static final int BASE_VALUE = 0;
+	
 	/**
 	 * This method is used to check whether is it block or unblock
 	 * 
@@ -566,9 +567,8 @@ public class BlockDateHandler {
 		return indicMsg.getMessage();
 	}
 
-	// CHECK IF COMMENTS CORRECT
 	/**
-	 * This method is to check if the time is specified
+	 * This method is to check if the date is specified
 	 * 
 	 * @param keyFieldsList
 	 * @param keyCommand
@@ -658,7 +658,6 @@ public class BlockDateHandler {
 					fromDate, toDate));
 		}
 
-		// change the message
 		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
 		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
 			return new IndicatorMessagePair(false, String.format(
@@ -673,13 +672,13 @@ public class BlockDateHandler {
 				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
 				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
-			// change the message that the range has exceed 31 days
+		
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
 					toDate));
 		}
 
-		// will execute checkBlockedFailed to check for blocked range
+		
 		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
 	}
 
@@ -708,14 +707,14 @@ public class BlockDateHandler {
 		}
 		// total number of block dates is not fully occupied, will count number
 		// of occupied dates
-		if (countBlockedFailed > totalBlockedDatesPending
+		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
 					fromDate, toDate));
 		}
 		// All block dates are already occupied
-		if (countBlockedFailed > totalBlockedDatesPending
+		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed == totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,
@@ -1196,19 +1195,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class is use to search task by 1 Task ID,
- * search 2 Task Description and search 3 Task Date
- *
+ * This class is use to search task by 1 Task ID, search 2 Task Description and
+ * search 3 Task Date
+ * 
  */
 public class SearchHandler {
 
 	private static final int KEYWORD = 1;
-	private static final int LENGTH_OF_INPUT = 2;
+	private static final int NUMBER_OF_ELEMENTS = 2;
 	private static final int LENGTH_OF_ARGUMENTS = 1;
 	private static final int EXCEEDED_CRITERIA_LENGTH = 2;
 	private static final int NO_MATCH = 0;
-	
-	//Declaration for Logger
+
+	// Declaration for Logger
 	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
@@ -1243,7 +1242,7 @@ public class SearchHandler {
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
-		if (searchList.length < LENGTH_OF_INPUT) {
+		if (searchList.length < NUMBER_OF_ELEMENTS) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -1264,14 +1263,15 @@ public class SearchHandler {
 	}
 
 	/**
-	 * This is to check for a list of tasks with given deadLine
+	 * This is to check for a list of tasks with given deadline
 	 * 
 	 * @param deadLine
 	 * @param listTask
 	 * @return
 	 */
 	private static String searchTaskDate(String[] deadLine, Data smtData) {
-		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS || deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
+		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS
+				|| deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -1307,7 +1307,9 @@ public class SearchHandler {
 	 */
 	private static String searchTaskID(String[] index, Data smtData) {
 
-		if (index.length <= LENGTH_OF_ARGUMENTS || index.length > EXCEEDED_CRITERIA_LENGTH || !checkInteger(index[1])) {
+		if (index.length <= LENGTH_OF_ARGUMENTS
+				|| index.length > EXCEEDED_CRITERIA_LENGTH
+				|| !checkInteger(index[1])) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -1316,7 +1318,7 @@ public class SearchHandler {
 				return smtData.getATask(i).toString();
 			}
 		}
-		
+
 		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task ID");
 		return String
@@ -1331,7 +1333,7 @@ public class SearchHandler {
 	 * @return
 	 */
 	private static String searchTaskDesc(Data smtData, String[] wordList) {
-		if (wordList.length <= LENGTH_OF_INPUT) {
+		if (wordList.length < NUMBER_OF_ELEMENTS) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -1347,15 +1349,16 @@ public class SearchHandler {
 			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
-		//To log search operation
+		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
 
 	}
 
-	//CHECK CORRECT NOT THE COMMENT
+	// CHECK CORRECT NOT THE COMMENT
 	/**
 	 * concatinate the string together
+	 * 
 	 * @param wordList
 	 * @return
 	 */
@@ -2420,7 +2423,7 @@ public class LogicControllerTest {
 	String sortTaskInvalid = "s0rt";
 	String sortDescValid = "Sort Description";
 	String sortDeadLineValid = "Sort Deadline";
-	String sortStartDateValid = "Sort StartDate";
+	String sortStartTimeValid = "Sort StartTime";
 	String sortCompletedValid = "Sort Completed";
 	String sortPendingValid = "Sort Pending";
 	String sortPendingInvalid = "Sort StartDate";
@@ -2829,7 +2832,7 @@ public class LogicControllerTest {
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
-		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH,
+		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 				"!}{JHKDKJH1");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);
@@ -3099,6 +3102,17 @@ public class LogicControllerTest {
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
+	}
+	
+	@Test
+	public void testSortStartTimeValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortStartTimeValid));
 	}
 
 	@Test
@@ -3481,13 +3495,13 @@ public class SearchHandlerTest {
 
 	/**
 	 * This is to test the search without any description added to the search
-	 * task The output is: Description 14-03-2015 not found.
+	 * task The output is: Description 24-03-2015 not found.
 	 */
 	@Test
 	public void testSearchWithWrongFormatForTaskDesc() {
-		keyFieldsTest.put("SEARCH", "2 14-03-2015");
+		keyFieldsTest.put("SEARCH", "2 24-03-2015");
 		String expected = String.format(
-				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC, "14-03-2015");
+				MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC, "24-03-2015");
 		assertEquals(expected,
 				SearchHandler.executeSearch(keyFieldsTest, smtDataTest));
 		SearchHandler.executeSearch(keyFieldsTest, smtDataTest);
@@ -3587,62 +3601,119 @@ public class SearchHandlerTest {
 	 * These message are for HelpCommandList class
 	 */
 	public static final String MESSAGE_HELP = "************************************************************************************"
-			+ "\n\n1) Add\n\n- Add <Description>\n- Add <Description> from <Date> to <Date>"
-			+ "\n-Add <Description> every <Date>\n\n 2) Delete\n\n- Delete <Task #>\n\n "
-			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
-			+ "\n- Update <Task #> By <Date/Day>"
-			+ "\n- Update <Task #> Complete"
-			+ "\n- Update <Task #> Incomplete"
-			+ "\n- Update<Task #> TaskEnd <date>"
-			+ "\n- Update<Task #>TaskStart <date>"
-			+ "\n- Update<Task #> Every <Friday>"
-			+ "\n- Update<Task #> By date or weekly day\n\n"
-			+ "4) Delete\n\n- Delete <#>\n\n"
-			+ "5) Display \n\n- Display Today [tdy] "
-			+ "\n- Display Tomorrow [tmr]"
-			+ "\n- Display monday [mon]"
-			+ "\n- Display tuesday [tue]"
-			+ "\n- Display wednesday [wed]"
-			+ "\n- Display thursday [thu]"
-			+ "\n- Display friday [fri]"
-			+ "\n- Display saturday [sat]"
-			+ "\n- Display sunday [sun]"
-			+ "\n- Display Pending[pend]"
-			+ "\n- Display Schedule"
-			+ "\n- Display Complete[comp]\n\n "
-			+ "6) Search\n\n- Search by Task ID "
-			+ "\n Search 1 <Task #> "
-			+ "\n Search by Task Description"
-			+ "\n- Search 2 <Task Description>"
-			+ "\n- Search 3 <Date>\n\n "
-			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
-			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
-			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
-			+ "10) Undo\n\n -Undo\n\n "
-			+ "11) Redo\n\n************************************************************************************";
 
-	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>"
+			// Add
+			+ "\n\n1) Add\n\n"
+			+ "- Add <Description>\n"
+			+ "- Add <Description> from <Date> to <Date>\n"
+			+ "- Add <Description> every <Date/Day>\n"
+			+ "- Add <Description> from <Time> to <time>\n\n"
+
+			// Delete
+			+ "2) Delete\n\n- Delete <Task #>\n\n "
+
+			// Update
+			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
+			+ "\n- Update <Task #> by <Date/Day>"
+			+ "\n- Update <Task #> complete"
+			+ "\n- Update <Task #> incomplete"
+			+ "\n- Update <Task #> from <Time>"
+			+ "\n- Update <Task #> to <Time>"
+			+ "\n- Update <Task #> on <Date/Day>"
+			+ "\n- Update <Task #> from <Time> to <Time>"
+			+ "\n- Update <Task #> every <Day>"
+			+ "\n- Update <Task #> by Date/Every Day\n\n"
+
+			// Display
+			+ "4) Display \n\n- Display All"
+			+ "\n- Display Today [tdy] "
+			+ "\n- Display Tomorrow [tmr]"
+			+ "\n- Display Yesterday [ytd]"
+			+ "\n- Display Thisweek [thiswk]"
+			+ "\n- Display Lastweek [lastwk]"
+			+ "\n- Display Nextweek [nextwk]"
+			+ "\n- Display Pending [pend]"
+			+ "\n- Display Completed [comp]\n\n "
+			+ "\n- Display Monday [mon]"
+			+ "\n- Display Tuesday [tue]"
+			+ "\n- Display Wednesday [wed]"
+			+ "\n- Display Thursday [thu]"
+			+ "\n- Display Friday [fri]"
+			+ "\n- Display Saturday [sat]"
+			+ "\n- Display Sunday [sun]"
+
+			// Search
+			+ "6) Search\n\n"
+			+ "- Search by Task ID\n Search 1 <Task #> "
+			+ "\n- Search by Task Description\n Search 2 <Task Description>"
+			+ "\n- Search by Date\n Search 3 <Date>\n\n "
+
+			// Block
+			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
+
+			// Unblock
+			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
+
+			// Sort
+			+ "9) Sort\n\n -Sort Description [desc]\n\n Sort Deadline\n\n Sort StartTime\n\n Sort Completed [comp]\n\n Sort Pending [pend]"
+
+			// Undo
+			+ "10) Undo\n\n -Undo\n\n "
+
+			// Redo
+			+ "11) Redo\n\n -Redo\n\n************************************************************************************";
+
+	// Add Help
+	public static final String MESSAGE_ADD_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
+			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
+			+ "\n\n- Add <Description>\n\n- Add <Description> by <Date>"
 			+ "\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>"
 			+ "\n\n- Add <Description> every <Date>";
+
+	// Delete Help
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
-	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
-	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
-	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
+
+	// Update Help
+	public static final String MESSAGE_UPDATE_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
+			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
+			+ "\n\n- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
 			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
 			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
+
+	// Display Help
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
 			+ "- Display Yesterday [ytd]\n\n- Display Thisweek [thiswk]\n\n"
 			+ "- Display Lastweek [lastwk]\n\n- Display Nextweek [nextweek]\n\n"
+			+ "- Display Pending [pend]\n\n- Display Completed [comp]\n\n"
 			+ "- Display Monday [mon]\n\n- Display Tuesday [tue]\n\n- Display Wednesday [wed]\n\n"
 			+ "- Display Thursday [thu]\n\n- Display Friday [fri]\n\n- Display Saturday [sat]\n\n"
-			+ "- Display Sunday [sun]\n\n- Display Pending [pend]\n\n- Display Completed [comp]";
-	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort Completed [comp]"
-			+ "\n\n- Sort Pending [pend]";
-	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
+			+ "- Display Sunday [sun]";
+
+	// Search Help
+	public static final String MESSAGE_SEARCH_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]"
+			+ "\n\n- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
 			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
-	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
-	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
+
+	// Sort Help
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n - Sort Completed [comp]"
+			+ "\n\n- Sort Pending [pend]";
+
+	// Block Help
+	public static final String MESSAGE_BLOCK_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n\n"
+			+ "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
+
+	// Unblock Help
+	public static final String MESSAGE_UNBLOCK_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n\n"
+			+ "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
+
+	// Undo Help
+	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
+
+	// Redo Help
 	public static final String MESSAGE_REDO_HELP = "- Redo\n\n";
+
+	// Exit Help
+	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
 
 	/**
 	 * These message are for the AddHandler Class
@@ -3679,7 +3750,7 @@ public class SearchHandlerTest {
 	public static final String MESSAGE_BLOCK_WRONG_DATE_FORMAT_START = "Wrong date format for Start date";
 	public static final String MESSAGE_BLOCK_INVALID_BLOCK_UNBLOCK_COMMAND = "Invalid argument for Block/Unblock command.";
 	public static final String MESSAGE_CONFLICT_WITH_BLOCKED_DATE = "This date conflicted in your blocked out date list, "
-			+ "\nthe date you trying to block is already occupied";
+			+ "\nthe date you are trying to block is already occupied";
 	public static final String MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE = "%1$s is ocuppied\n";
 	public static final String MESSAGE_UNBLOCKED_DATE_NOT_EXIST = "%1$s is not inside the block list";
 	public static final String MESSAGE_BLOCKED_DATE_NOT_AVAILABLE = "\"%s\", \"%s\""
