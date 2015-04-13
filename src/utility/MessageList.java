@@ -155,7 +155,7 @@ public class MessageList {
 	public static final String MESSAGE_UPDATE_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
 			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
 			+ "\n\n- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
-			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
+			+ "\n\n- Update <Task #> Complete\n\n- Update <Task #> Incomplete\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
 			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 
 	// Display Help
