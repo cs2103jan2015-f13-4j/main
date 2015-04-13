@@ -100,7 +100,7 @@ public class MessageList {
 			+ "\n- Update <Task #> on <Date/Day>"
 			+ "\n- Update <Task #> from <Time> to <Time>"
 			+ "\n- Update <Task #> every <Day>"
-			+ "\n- Update <Task #> by Date/Every Day\n\n"
+			+ "\n- Update <Task #> by Date/Day\n\n"
 
 			// Display
 			+ "4) Display \n\n- Display All"
@@ -154,9 +154,9 @@ public class MessageList {
 	// Update Help
 	public static final String MESSAGE_UPDATE_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
 			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
-			+ "\n\n- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
+			+ "\n\n- Update <Task #> TaskDesc <Description>\n\n- Update <Task #> By <Date/Day>"
 			+ "\n\n- Update <Task #> Complete\n\n- Update <Task #> Incomplete\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
-			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
+			+ "\n\n- Update<Task#> Every <Day>\n\n- Update<Task #> By date or weekly day\n\n";
 
 	// Display Help
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
