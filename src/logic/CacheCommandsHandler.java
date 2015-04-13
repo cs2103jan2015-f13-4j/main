@@ -46,18 +46,39 @@ public class CacheCommandsHandler {
 		return updateTaskList(smtData);
 	}
 	
+	//@author A0112978W
+	/**
+	 * This method will perform the redo function.
+	 * It makes use of 2 stacks to keep track of the current and the next commands.
+	 * 
+	 * @param smtData
+	 * 			This data contains the task's information.
+	 * 			
+	 * @return The redo command.
+	 */
 	public static String executeRedo(Data smtData) {
 		
+		if (smtData == null) {
+			assert false : "Data object is null.";
+		}
+		
+		// If stack at last item, return error message
 		if(isStackContainsLastItem()) {
 			return MessageList.MESSAGE_LAST_COMMAND;
 		}
 		
+		// Current command stack will push back the top item of the next command stack
 		current.push(aheadCmds.pop());
 		cacheCommandStatus = "redo";
 		
 		return updateTaskList(smtData);
 	}
 	
+	/**
+	 * This method will check if the stack is at last item
+	 * 
+	 * @return The status.
+	 */
 	private static boolean isStackContainsLastItem() {
 		if(aheadCmds.size() == 0) {
 			return true;
