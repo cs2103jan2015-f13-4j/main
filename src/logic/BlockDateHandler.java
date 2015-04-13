@@ -27,7 +27,8 @@ public class BlockDateHandler {
 	private static final int TWO_YEARS_LIMIT = 2;
 	private static final int ADD_ONE_DAY = 1;
 	private static final int ONE_DAY = 1;
-
+	private static final int BASE_VALUE = 0;
+	
 	/**
 	 * This method is used to check whether is it block or unblock
 	 * 
@@ -76,9 +77,8 @@ public class BlockDateHandler {
 		return indicMsg.getMessage();
 	}
 
-	// CHECK IF COMMENTS CORRECT
 	/**
-	 * This method is to check if the time is specified
+	 * This method is to check if the date is specified
 	 * 
 	 * @param keyFieldsList
 	 * @param keyCommand
@@ -168,7 +168,6 @@ public class BlockDateHandler {
 					fromDate, toDate));
 		}
 
-		// change the message
 		DateTime twoYearsLater = DateTime.now().plusYears(TWO_YEARS_LIMIT);
 		if (!checkFromTimeToTimeBothValid(startDate, twoYearsLater)) {
 			return new IndicatorMessagePair(false, String.format(
@@ -183,13 +182,13 @@ public class BlockDateHandler {
 				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
 				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
-			// change the message that the range has exceed 31 days
+		
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
 					toDate));
 		}
 
-		// will execute checkBlockedFailed to check for blocked range
+		
 		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
 	}
 
@@ -218,14 +217,14 @@ public class BlockDateHandler {
 		}
 		// total number of block dates is not fully occupied, will count number
 		// of occupied dates
-		if (countBlockedFailed > totalBlockedDatesPending
+		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
 					fromDate, toDate));
 		}
 		// All block dates are already occupied
-		if (countBlockedFailed > totalBlockedDatesPending
+		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed == totalBlockedDatesPending)) {
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCKED_DATE_NOT_AVAILABLE, fromDate,

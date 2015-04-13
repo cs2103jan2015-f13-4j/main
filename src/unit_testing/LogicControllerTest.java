@@ -516,7 +516,7 @@ public class LogicControllerTest {
 	 */
 	@Test
 	public void testSearchTaskByDescNonExist() {
-		expected = String.format(MessageList.MESSAGE_INVALID_SEARCH,
+		expected = String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 				"!}{JHKDKJH1");
 		controller.commandExecution(task1);
 		controller.commandExecution(task2);

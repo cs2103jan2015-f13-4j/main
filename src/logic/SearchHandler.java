@@ -18,19 +18,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class is use to search task by 1 Task ID,
- * search 2 Task Description and search 3 Task Date
- *
+ * This class is use to search task by 1 Task ID, search 2 Task Description and
+ * search 3 Task Date
+ * 
  */
 public class SearchHandler {
 
 	private static final int KEYWORD = 1;
-	private static final int LENGTH_OF_INPUT = 2;
+	private static final int NUMBER_OF_ELEMENTS = 2;
 	private static final int LENGTH_OF_ARGUMENTS = 1;
 	private static final int EXCEEDED_CRITERIA_LENGTH = 2;
 	private static final int NO_MATCH = 0;
-	
-	//Declaration for Logger
+
+	// Declaration for Logger
 	private static Logger taskLogger = TaskLogging.getInstance();
 
 	/**
@@ -65,7 +65,7 @@ public class SearchHandler {
 
 		String[] searchList = searchCriteria.get(
 				CommandType.Command_Types.SEARCH.name()).split(" ");
-		if (searchList.length < LENGTH_OF_INPUT) {
+		if (searchList.length < NUMBER_OF_ELEMENTS) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -86,14 +86,15 @@ public class SearchHandler {
 	}
 
 	/**
-	 * This is to check for a list of tasks with given deadLine
+	 * This is to check for a list of tasks with given deadline
 	 * 
 	 * @param deadLine
 	 * @param listTask
 	 * @return
 	 */
 	private static String searchTaskDate(String[] deadLine, Data smtData) {
-		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS || deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
+		if (deadLine == null || deadLine.length <= LENGTH_OF_ARGUMENTS
+				|| deadLine.length > EXCEEDED_CRITERIA_LENGTH) {
 			return MessageList.MESSAGE_INVALID_SEARCH_CRITERIA;
 		}
 
@@ -129,7 +130,9 @@ public class SearchHandler {
 	 */
 	private static String searchTaskID(String[] index, Data smtData) {
 
-		if (index.length <= LENGTH_OF_ARGUMENTS || index.length > EXCEEDED_CRITERIA_LENGTH || !checkInteger(index[1])) {
+		if (index.length <= LENGTH_OF_ARGUMENTS
+				|| index.length > EXCEEDED_CRITERIA_LENGTH
+				|| !checkInteger(index[1])) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -138,7 +141,7 @@ public class SearchHandler {
 				return smtData.getATask(i).toString();
 			}
 		}
-		
+
 		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task ID");
 		return String
@@ -153,7 +156,7 @@ public class SearchHandler {
 	 * @return
 	 */
 	private static String searchTaskDesc(Data smtData, String[] wordList) {
-		if (wordList.length <= LENGTH_OF_INPUT) {
+		if (wordList.length < NUMBER_OF_ELEMENTS) {
 			return MessageList.MESSAGE_INVALID_SEARCH;
 		}
 
@@ -169,15 +172,16 @@ public class SearchHandler {
 			return String.format(MessageList.MESSAGE_NO_MATCH_FOUND_BY_DESC,
 					wordAbstracted);
 		}
-		//To log search operation
+		// To log search operation
 		taskLogger.log(Level.INFO, "Search By Task Description");
 		return displayTaskDetails(tempList);
 
 	}
 
-	//CHECK CORRECT NOT THE COMMENT
+	// CHECK CORRECT NOT THE COMMENT
 	/**
 	 * concatinate the string together
+	 * 
 	 * @param wordList
 	 * @return
 	 */
