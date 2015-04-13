@@ -35,7 +35,7 @@ public class MessageList {
 	/**
 	 * These message are for DeleteHandler Class
 	 */
-	public static final String MESSAGE_NO_FILE_DELETED = "There is no file to be deleted";
+	public static final String MESSAGE_NO_FILE_DELETED = "Task not found";
 	public static final String MESSAGE_INVALID_DELETE = "Invalid ID entered, please try again";
 
 	/**
