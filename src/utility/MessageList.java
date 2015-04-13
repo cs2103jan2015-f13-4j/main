@@ -237,6 +237,7 @@ public class MessageList {
 			+ "\n%s dates has never been block.";
 	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
 	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days.";
+	public static final String MESSAGE_PARTIAL_BLOCK = "Some of the date/dates are not block";
 
 	// @author A0111935L
 	/**
