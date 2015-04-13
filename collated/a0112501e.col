@@ -518,7 +518,7 @@ public class BlockDateHandler {
 	private static final int ADD_ONE_DAY = 1;
 	private static final int ONE_DAY = 1;
 	private static final int BASE_VALUE = 0;
-	
+
 	/**
 	 * This method is used to check whether is it block or unblock
 	 * 
@@ -672,13 +672,12 @@ public class BlockDateHandler {
 				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
 				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
-		
+
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
 					toDate));
 		}
 
-		
 		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
 	}
 
@@ -709,9 +708,8 @@ public class BlockDateHandler {
 		// of occupied dates
 		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
-			return new IndicatorMessagePair(true, String.format(
-					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
-					fromDate, toDate));
+			return new IndicatorMessagePair(true,
+					MessageList.MESSAGE_PARTIAL_BLOCK);
 		}
 		// All block dates are already occupied
 		if (countBlockedFailed > BASE_VALUE
@@ -735,6 +733,7 @@ public class BlockDateHandler {
 	 */
 	private static IndicatorMessagePair blockOneDate(String receivedDate,
 			Data smtData) {
+		String errorMessage = "";
 		if (receivedDate.isEmpty()) {
 			return new IndicatorMessagePair(false,
 					MessageList.MESSAGE_NO_DATE_GIVEN);
@@ -742,8 +741,8 @@ public class BlockDateHandler {
 
 		DateTime endDate = DateTimeParser.generateDate(receivedDate);
 		if (endDate == null) {
-			return new IndicatorMessagePair(false, String.format(
-					MessageList.MESSAGE_INCORRECT_DATE_FORMAT, "End"));
+			errorMessage = DateTimeParser.getDateFormatError(receivedDate);
+			return new IndicatorMessagePair(false, errorMessage);
 		}
 
 		// change the message
@@ -3610,7 +3609,7 @@ public class SearchHandlerTest {
 			+ "- Add <Description> from <Time> to <time>\n\n"
 
 			// Delete
-			+ "2) Delete\n\n- Delete <Task #>\n\n "
+			+ "2) Delete\n\n- Delete <Task #>\n\n"
 
 			// Update
 			+ "3) Update\n\n- Update <Task #> TaskDesc <Description>"
@@ -3622,7 +3621,7 @@ public class SearchHandlerTest {
 			+ "\n- Update <Task #> on <Date/Day>"
 			+ "\n- Update <Task #> from <Time> to <Time>"
 			+ "\n- Update <Task #> every <Day>"
-			+ "\n- Update <Task #> by Date/Every Day\n\n"
+			+ "\n- Update <Task #> by Date/Day\n\n"
 
 			// Display
 			+ "4) Display \n\n- Display All"
@@ -3633,7 +3632,7 @@ public class SearchHandlerTest {
 			+ "\n- Display Lastweek [lastwk]"
 			+ "\n- Display Nextweek [nextwk]"
 			+ "\n- Display Pending [pend]"
-			+ "\n- Display Completed [comp]\n\n "
+			+ "\n- Display Completed [comp]"
 			+ "\n- Display Monday [mon]"
 			+ "\n- Display Tuesday [tue]"
 			+ "\n- Display Wednesday [wed]"
@@ -3643,25 +3642,25 @@ public class SearchHandlerTest {
 			+ "\n- Display Sunday [sun]"
 
 			// Search
-			+ "6) Search\n\n"
+			+ "\n\n5) Search\n\n"
 			+ "- Search by Task ID\n Search 1 <Task #> "
 			+ "\n- Search by Task Description\n Search 2 <Task Description>"
 			+ "\n- Search by Date\n Search 3 <Date>\n\n "
 
 			// Block
-			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
+			+ "6) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
 
 			// Unblock
-			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
+			+ "7) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
 
 			// Sort
-			+ "9) Sort\n\n -Sort Description [desc]\n\n Sort Deadline\n\n Sort StartTime\n\n Sort Completed [comp]\n\n Sort Pending [pend]"
+			+ "8) Sort\n\n -Sort Description [desc]\n -Sort Deadline\n -Sort StartTime\n -Sort Completed [comp]\n -Sort Pending [pend]"
 
 			// Undo
-			+ "10) Undo\n\n -Undo\n\n "
+			+ "\n\n9) Undo\n\n -Undo\n\n"
 
 			// Redo
-			+ "11) Redo\n\n -Redo\n\n************************************************************************************";
+			+ "10) Redo\n\n -Redo\n\n************************************************************************************";
 
 	// Add Help
 	public static final String MESSAGE_ADD_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
@@ -3676,9 +3675,9 @@ public class SearchHandlerTest {
 	// Update Help
 	public static final String MESSAGE_UPDATE_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]\n"
 			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
-			+ "\n\n- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
-			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
-			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
+			+ "\n\n- Update <Task #> TaskDesc <Description>\n\n- Update <Task #> By <Date/Day>"
+			+ "\n\n- Update <Task #> Complete\n\n- Update <Task #> Incomplete\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
+			+ "\n\n- Update<Task#> Every <Day>\n\n- Update<Task #> By date or weekly day\n\n";
 
 	// Display Help
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
@@ -3695,7 +3694,7 @@ public class SearchHandlerTest {
 			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
 
 	// Sort Help
-	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n - Sort Completed [comp]"
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n- Sort Completed [comp]"
 			+ "\n\n- Sort Pending [pend]";
 
 	// Block Help
@@ -3759,6 +3758,7 @@ public class SearchHandlerTest {
 			+ "\n%s dates has never been block.";
 	public static final String MESSAGE_BLOCK_DATE_OVER_TWO_YEARS = "Blocking of dates only allow up to 2 years\nstarting from \"%1$s\"";
 	public static final String MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH = "\"%1$s\" to \"%2$s\" has exceeded 31 days.";
+	public static final String MESSAGE_PARTIAL_BLOCK = "Some of the date/dates are not block";
 
 	// End of segment: C:\eclipse\workspace\CS2103_Project\src\utility\MessageList.java
 
