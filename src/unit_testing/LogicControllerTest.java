@@ -107,7 +107,7 @@ public class LogicControllerTest {
 	String sortTaskInvalid = "s0rt";
 	String sortDescValid = "Sort Description";
 	String sortDeadLineValid = "Sort Deadline";
-	String sortStartDateValid = "Sort StartDate";
+	String sortStartTimeValid = "Sort StartTime";
 	String sortCompletedValid = "Sort Completed";
 	String sortPendingValid = "Sort Pending";
 	String sortPendingInvalid = "Sort StartDate";
@@ -786,6 +786,17 @@ public class LogicControllerTest {
 		controller.commandExecution(task2);
 		controller.commandExecution(task3);
 		assertEquals(expected, controller.commandExecution(sortDeadLineValid));
+	}
+	
+	@Test
+	public void testSortStartTimeValid() {
+		expected = "\nTask ID: 3\nDescription: prepare a proposal\nEnd Time: 11.59 PM\nDeadline: 14 May, 2015 (Thu)\nStatus: Pending"
+				+ "\n\nTask ID: 2\nDescription: attending meeting\nEnd Time: 11.59 PM\nDeadline: 20 May, 2015 (Wed)\nStatus: Pending"
+				+ "\n\nTask ID: 1\nDescription: submit report\nEnd Time: 11.59 PM\nDeadline: 18 June, 2015 (Thu)\nStatus: Pending\n";
+		controller.commandExecution(task1);
+		controller.commandExecution(task2);
+		controller.commandExecution(task3);
+		assertEquals(expected, controller.commandExecution(sortStartTimeValid));
 	}
 
 	@Test

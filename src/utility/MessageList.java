@@ -109,28 +109,35 @@ public class MessageList {
 			+ "\n- Search 3 <Date>\n\n "
 			+ "7) Block\n\n- Block <Date>\n-Block from <Date> to <Date>\n\n "
 			+ "8) Unblock\n\n- Unblock <Date>\n- Unblock from <Date> to <Date>\n\n "
-			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort Start\n\n Sort Pending "
+			+ "9) Sort\n\n -Sort Description\n\n Sort Deadline\n\n Sort Completed\n\n Sort StartTime\n\n Sort Pending "
 			+ "10) Undo\n\n -Undo\n\n "
 			+ "11) Redo\n\n************************************************************************************";
 
-	public static final String MESSAGE_ADD_HELP = "- Add <Description>\n\n- Add <Description> by <Date>"
+	public static final String MESSAGE_ADD_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]"
+			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
+			+ "\n\n- Add <Description>\n\n- Add <Description> by <Date>"
 			+ "\n\n- Add <Description> on <Date>\n\n- Add <Description> from <Time> to <Time> by <Date>"
 			+ "\n\n- Add <Description> every <Date>";
 	public static final String MESSAGE_DELETE_HELP = "- Delete #\n\n";
 	public static final String MESSAGE_UNDO_HELP = "- Undo\n\n";
-	public static final String MESSAGE_UNBLOCK_HELP = "- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
-	public static final String MESSAGE_UPDATE_HELP = "- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
+	public static final String MESSAGE_UNBLOCK_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]"
+			+ "\n\n- Unblock <Date>\n\n- Unblock from <Date> to <Date>\n\n";
+	public static final String MESSAGE_UPDATE_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]"
+			+ "\nTime Formats [ 6pm   |   6 pm   |   6.30pm   |   6.30 pm ]"
+			+ "\n\n- Update <Task #> TaskDescription <Description>\n\n- Update <Task #> By <Date/Day>"
 			+ "\n\n- Update <Task #> Completed\n\n- Update <Task #> Pending\n\n- Update<Task #> From <Time>\n\n- Update<Task #> To <Time>"
 			+ "\n\n- Update<Task#> Every <Friday>\n\n- Update<Task #> By date or weekly day\n\n";
 	public static final String MESSAGE_DISPLAY_HELP = "- Display All\n\n- Display Today [tdy]\n\n- Display Tomorrow [tmr]\n\n"
 			+ "- Display Yesterday [ytd]\n\n- Display Thisweek [thiswk]\n\n"
 			+ "- Display Lastweek [lastwk]\n\n- Display Nextweek [nextweek]\n\n"
+			+ "- Display Pending [pend]\n\n- Display Completed [comp]\n\n"
 			+ "- Display Monday [mon]\n\n- Display Tuesday [tue]\n\n- Display Wednesday [wed]\n\n"
 			+ "- Display Thursday [thu]\n\n- Display Friday [fri]\n\n- Display Saturday [sat]\n\n"
-			+ "- Display Sunday [sun]\n\n- Display Pending [pend]\n\n- Display Completed [comp]";
-	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort Completed [comp]"
+			+ "- Display Sunday [sun]";
+	public static final String MESSAGE_SORT_HELP = "- Sort Description [desc]\n\n- Sort Deadline\n\n- Sort StartTime\n\n - Sort Completed [comp]"
 			+ "\n\n- Sort Pending [pend]";
-	public static final String MESSAGE_SEARCH_HELP = "- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
+	public static final String MESSAGE_SEARCH_HELP = "Date Formats [ 25-12-2015   |   25/12/2015   |   2015-12-25   |   2015/12/25 ]"
+			+ "\n\n- Search 1 <Task #>\n  Search by Task ID\n\n- Search 2 <Task Description>"
 			+ "\n  Search by Description\n\n- Search 3 <Date>\n  Search by Date\n";
 	public static final String MESSAGE_EXIT_HELP = "- Exit\n\n";
 	public static final String MESSAGE_BLOCK_HELP = "- Block <Date>\n\n- Block from <Date> to <Date>\n\n";
