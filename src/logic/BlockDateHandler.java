@@ -28,7 +28,7 @@ public class BlockDateHandler {
 	private static final int ADD_ONE_DAY = 1;
 	private static final int ONE_DAY = 1;
 	private static final int BASE_VALUE = 0;
-	
+
 	/**
 	 * This method is used to check whether is it block or unblock
 	 * 
@@ -182,13 +182,12 @@ public class BlockDateHandler {
 				startDate.toLocalDate(), endDate.toLocalDate()).getDays()
 				+ ADD_ONE_DAY;
 		if (numberOfDatesFromThisRange > ONE_MONTH) {
-		
+
 			return new IndicatorMessagePair(true, String.format(
 					MessageList.MESSAGE_BLOCK_RANGE_EXCEED_A_MONTH, fromDate,
 					toDate));
 		}
 
-		
 		return checkBlockedFailed(fromDate, toDate, smtData, startDate, endDate);
 	}
 
@@ -219,9 +218,8 @@ public class BlockDateHandler {
 		// of occupied dates
 		if (countBlockedFailed > BASE_VALUE
 				&& (countBlockedFailed < totalBlockedDatesPending)) {
-			return new IndicatorMessagePair(true, String.format(
-					MessageList.MESSAGE_BLOCKED_CLASHED_WITH_ADD_DATE,
-					fromDate, toDate));
+			return new IndicatorMessagePair(true,
+					MessageList.MESSAGE_PARTIAL_BLOCK);
 		}
 		// All block dates are already occupied
 		if (countBlockedFailed > BASE_VALUE
