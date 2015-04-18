@@ -1,0 +1,28 @@
+//@author: a0112502a-reused
+
+
+
+	/**
+	 * origin: C:\eclipse\workspace\CS2103_Project\src\logic\HintHandler.java
+	 */
+
+	/**
+	 * This method is use to check if the command is valid or invalid
+	 * @param userCmd command that user have typed in so far
+	 * @return true if command is invalid, otherwise return false
+	 */
+	public static boolean isCommandInvalid(String userCmd) {
+
+		boolean isCommandNull = (userCmd == null);
+		boolean isCommandEmpty = !isCommandNull && userCmd.trim().isEmpty();
+		boolean isCommandInvalid = isCommandNull || isCommandEmpty;
+
+		return isCommandInvalid;
+	}
+}
+	// End of segment: C:\eclipse\workspace\CS2103_Project\src\logic\HintHandler.java
+
+
+
+
+
