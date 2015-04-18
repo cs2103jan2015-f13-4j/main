@@ -52,6 +52,7 @@ public class HintHandler {
 		return listOfHint;
 	}
 
+	//@author A0112502A - reused
 	/**
 	 * This method is use to check if the command is valid or invalid
 	 * @param userCmd command that user have typed in so far
